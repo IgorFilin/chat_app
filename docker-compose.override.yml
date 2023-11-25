@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 
 services:
   frontend:
@@ -8,8 +8,9 @@ services:
       args:
         - VITE_APP_DOMEN_PORT=localhost:3000
         - VITE_APP_PROTOCOL=ws
+        - VITE_APP_BUILD=dev
     ports:
-      - "81:80"
+      - '81:80'
     depends_on:
       - backend
 
@@ -20,15 +21,17 @@ services:
       args:
         - NODE_ENV=development
     ports:
-      - "3000:3000"
+      - '3000:3000'
     depends_on:
       - database
 
   database:
-    image: postgres:latest
+    image: postgres:15
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: postgres
+    volumes:
+      - /var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - '5433:5432'

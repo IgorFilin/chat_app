@@ -11,9 +11,16 @@ import { WebsocketModule } from './websocket/websocket.module';
 import { Room } from './websocket/entities/room.entity';
 import { Message } from './websocket/entities/message.entity';
 
+const configEnv =
+  process.env.NODE_ENV === 'production'
+    ? '.env.production'
+    : '.env.development';
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: configEnv,
+    }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule, WebsocketModule],
       useFactory: (configService: ConfigService) => ({
