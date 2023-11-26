@@ -4,7 +4,7 @@
       @openRoom="openRoomHandler"
       :usersOnline="usersOnline" />
     <div
-      v-if="currentChatEvent === 'private_message'"
+      v-if="!isAllChat"
       class="v-mainPage__backAllChatContainer">
       <button
         @click="goToPublicChat"
@@ -51,8 +51,8 @@ import Icon from '@/components/Icon.vue';
 
 let messagesLength = 0;
 
-const currentChatEvent = ref('message') as Ref<'message' | 'private_message'>;
-const privateRoomId = ref(null) as Ref<string | null>;
+const isAllChat = ref(true) as Ref<boolean>;
+const roomId = ref(null) as Ref<string | null>;
 const userToAddPrivate = ref('') as Ref<string>;
 const messages = ref([]) as Ref<Array<MessageType>>;
 const usersOnline = ref([]) as Ref<Array<UserTypeInUsersArrayType>>;
@@ -79,11 +79,12 @@ function sendMessage(message: string) {
   if (connection.readyState === 1 && message !== '') {
     connection.send(
       JSON.stringify({
-        event: currentChatEvent.value,
+        event: 'message',
         data: {
           message: message.trim(),
           id: store.id,
-          roomId: privateRoomId.value,
+          roomId: roomId.value,
+          isAllChat: isAllChat.value,
         },
       })
     );
@@ -117,11 +118,12 @@ function OnDropChatContainer(e: any) {
     if (connection.readyState === 1) {
       connection.send(
         JSON.stringify({
-          event: currentChatEvent.value,
+          event: 'message',
           data: {
             message: Array.from(new Uint8Array(arrayBuffer as ArrayBuffer)),
             id: store.id,
-            roomId: privateRoomId.value,
+            roomId: roomId.value,
+            isAllChat: isAllChat.value,
           },
         })
       );
@@ -130,7 +132,7 @@ function OnDropChatContainer(e: any) {
   reader.readAsArrayBuffer(file);
 }
 
-watch([() => currentChatEvent.value, privateRoomId.value], () => (isLoadingMessages.value = false));
+// watch([() => currentChatEvent.value, roomId.value], () => (isLoadingMessages.value = false));
 
 const memoMessages = computed(() => messages.value);
 
@@ -138,19 +140,19 @@ connection.onmessage = function (event) {
   const data = JSON.parse(event.data);
 
   if (data.openRoom) {
-    privateRoomId.value = data.messages.roomId;
+    roomId.value = data.messages.roomId;
   }
 
-  if (data.messages && data.messages.event !== currentChatEvent.value) {
-    console.log('ВНУТРИ', data.messages.event);
+  // if (data.messages && data.messages.event !== isAllChat.value) {
+  //   console.log('ВНУТРИ', data.messages.event);
+  //   return;
+  // }
+
+  if (data.messages && data.messages.roomId && data.messages.roomId !== roomId.value) {
     return;
   }
 
-  if (data.messages && data.messages.roomId && data.messages.roomId !== privateRoomId.value) {
-    return;
-  }
-
-  if (!privateRoomId.value && data.messages && data.messages.roomId) {
+  if (!roomId.value && data.messages && data.messages.roomId) {
     return;
   }
 
@@ -165,19 +167,18 @@ connection.onmessage = function (event) {
     userToAddPrivate.value = data.userToAddPrivat;
   }
 
-  if (data.messages?.message && Array.isArray(data.messages.message)) {
-    const bufferData = new Uint8Array(data.messages.message);
-    const blobMessage = new Blob([bufferData]);
-    data.messages.message = URL.createObjectURL(blobMessage);
-  }
+  if (data.messages.roomId === roomId.value) {
+    if (data.messages?.message && Array.isArray(data.messages.message)) {
+      const bufferData = new Uint8Array(data.messages.message);
+      const blobMessage = new Blob([bufferData]);
+      data.messages.message = URL.createObjectURL(blobMessage);
+    }
 
-  if (typeof data.messages?.message === 'string') {
-    const base64Image = data.messages.userPhoto;
-    const binaryData = Uint8Array.from(atob(base64Image), (c) => c.charCodeAt(0));
-    const blobImage = new Blob([binaryData]);
-    data.messages.userPhoto = URL.createObjectURL(blobImage);
-
-    if (data.messages.roomId === privateRoomId.value) {
+    if (typeof data.messages?.message === 'string') {
+      const base64Image = data.messages.userPhoto;
+      const binaryData = Uint8Array.from(atob(base64Image), (c) => c.charCodeAt(0));
+      const blobImage = new Blob([binaryData]);
+      data.messages.userPhoto = URL.createObjectURL(blobImage);
       messages.value.unshift(data.messages);
     }
   }
@@ -199,8 +200,8 @@ function OnDragChatContainer(event: any) {
 }
 
 function goToPublicChat() {
-  privateRoomId.value = null;
-  currentChatEvent.value = 'message';
+  roomId.value = null;
+  isAllChat.value = true;
   messages.value = [];
   if (connection.readyState === 1) {
     connection.send(
@@ -221,7 +222,7 @@ function onScroll(event: any) {
 }
 
 function openRoomHandler(id: string) {
-  currentChatEvent.value = 'private_message';
+  isAllChat.value = false;
   messages.value = [];
   if (connection.readyState === 1) {
     connection.send(

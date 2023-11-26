@@ -43,6 +43,7 @@ export class WebsocketService {
     for (let i = 0; i < this.messages.length; i++) {
       client.client.send(
         JSON.stringify({
+          id: i,
           messages: this.messages[i],
           lengthMessages: this.messages.length,
         }),
@@ -128,7 +129,7 @@ export class WebsocketService {
     userId: any,
     message: string | Array<[]>,
     roomId: string,
-    event: 'message' | 'private_message',
+    isAllChat: boolean,
   ) {
     const user = this.clients[userId];
 
@@ -146,17 +147,19 @@ export class WebsocketService {
       name: user.name.trim(),
       userPhoto: '',
       roomId: roomId,
-      event: event,
+      isAllChat: isAllChat,
     };
 
     try {
       const result = await fs.promises.readFile(user.userPhoto, 'base64');
       sendData.userPhoto = result;
-    } catch (e) {}
+    } catch (e) {
+      sendData.userPhoto = '';
+    }
 
     const messages = JSON.stringify({ messages: sendData });
 
-    if (!roomId) {
+    if (isAllChat) {
       if (this.messages.length < 20) {
         this.messages.push(sendData);
       } else {
@@ -186,7 +189,6 @@ export class WebsocketService {
       newMessage.userId = user.id;
       newMessage.userPhoto = user.userPhoto;
       newMessage.room = room;
-
       await this.MessageTable.save(newMessage);
 
       // let roomMessages = await this.RoomTable.createQueryBuilder('room')
@@ -207,24 +209,24 @@ export class WebsocketService {
     await this.broadcastMessage(
       body.id,
       body.message,
-      null,
-      this.publicChatEvent,
-    ); // отправляем данные всем подключенным клиентам
+      body.roomId,
+      body.isAllChat,
+    );
   }
 
-  @SubscribeMessage('private_message')
-  async handlePrivateMessage(@MessageBody() body: any) {
-    await this.broadcastMessage(
-      body.id,
-      body.message,
-      body.roomId,
-      this.privateChatEvent,
-    ); // Личные сообщения
-  }
+  // @SubscribeMessage('private_message')
+  // async handlePrivateMessage(@MessageBody() body: any) {
+  //   await this.broadcastMessage(
+  //     body.id,
+  //     body.message,
+  //     body.roomId,
+  //     this.privateChatEvent,
+  //   );
+  // }
 
   @SubscribeMessage('all_messages_public')
   async handleAllMessage(@MessageBody() body: any) {
-    await this.getAllMessagesPublicChat(body.id); // отправляем данные всем подключенным клиентам
+    await this.getAllMessagesPublicChat(body.id);
   }
 
   @SubscribeMessage('open_room')
@@ -260,7 +262,6 @@ export class WebsocketService {
       .where('message1.roomId = :roomId', { roomId: room.id })
       .getOne(); // получение пака сообщений из подтаблицы Message, если их нет то null
 
-    console.log('MESSAGE', roomMessages);
     if (!roomMessages) {
       client.client.send(
         JSON.stringify({
