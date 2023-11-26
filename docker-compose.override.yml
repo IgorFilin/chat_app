@@ -8,7 +8,6 @@ services:
       args:
         - VITE_APP_DOMEN_PORT=localhost:3000
         - VITE_APP_PROTOCOL=ws
-        - VITE_APP_BUILD=dev
     ports:
       - '81:80'
     depends_on:

@@ -14,7 +14,7 @@
     "editor.defaultFormatter": null
   },
   "[html]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
-  "prettier.printWidth": 480,
+  "prettier.printWidth": 780,
   "gitlens.hovers.currentLine.over": "line",
   "prettier.bracketSameLine": true,
   "workbench.iconTheme": "material-icon-theme",

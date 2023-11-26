@@ -260,6 +260,7 @@ export class WebsocketService {
       .where('message1.roomId = :roomId', { roomId: room.id })
       .getOne(); // получение пака сообщений из подтаблицы Message, если их нет то null
 
+    console.log('MESSAGE', roomMessages);
     if (!roomMessages) {
       client.client.send(
         JSON.stringify({

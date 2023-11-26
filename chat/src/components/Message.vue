@@ -55,8 +55,10 @@ function isMe(id: string | undefined) {
   gap: 5px;
   align-items: center;
   align-self: flex-end;
+  flex-direction: row-reverse;
 
   &.me {
+    flex-direction: row;
     align-self: flex-start;
 
     .v-message__messageName {

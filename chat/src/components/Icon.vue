@@ -1,6 +1,10 @@
 <template>
-  <svg class="v-icon" :class="[color]">
-    <use :xlink:href="`public/sprite.svg#${id}`" overflow="visible" />
+  <svg
+    class="v-icon"
+    :class="[color]">
+    <use
+      :xlink:href="`/sprite.svg#${id}`"
+      overflow="visible" />
   </svg>
 </template>
 
@@ -8,11 +12,11 @@
 const props = defineProps({
   id: {
     type: String,
-    desc: "id иконки",
+    desc: 'id иконки',
   },
   color: {
     type: String,
-    desc: "цвет иконки",
+    desc: 'цвет иконки',
   },
 });
 </script>
