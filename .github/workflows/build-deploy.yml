@@ -12,7 +12,15 @@ jobs:
     steps:
       - name: Качаю репозиторий
         uses: actions/checkout@v2
-      - name: Захожу на VPS и деплою
+      - name: Копирую папку на VPS сервер
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          local: chat_app
+          remote: var/www/
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          password: ${{ secrets.VPS_PASSWORD }}
+      - name: Захожу на VPS и запускаю сборку образа
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.VPS_HOST }}
