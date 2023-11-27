@@ -16,10 +16,6 @@ jobs:
         uses: docker/setup-qemu-action@v3
       - name: Build
         run: docker-compose build
-        with:
-          file: docker-compose
-          push: false
-          tags: user/app:latest
 
       - name: Захожу на VPS и деплою
         uses: appleboy/ssh-action@master
