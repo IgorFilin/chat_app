@@ -12,10 +12,10 @@ jobs:
     steps:
       - name: Качаю репозиторий
         uses: actions/checkout@v2
+
       - name: Задаю переменные окружения из секрета
-        env:
-          VPS_CREDENTIALS: ${{ secrets.VPS_CREDENTIALS }}
-        run: "echo '$VPS_CREDENTIALS' > .env"
+        run: |
+          echo "${{ secrets.VPS_CREDENTIALS }}" > .env
       - name: Захожу на VPS и деплою
         uses: appleboy/ssh-action@master
         with:
