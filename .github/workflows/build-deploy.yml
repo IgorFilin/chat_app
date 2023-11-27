@@ -16,7 +16,7 @@ jobs:
         uses: garygrossgarten/github-action-scp@release
         with:
           local: ./
-          remote: var/www/chat_app
+          remote: ./var/www/chat_app
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
           password: ${{ secrets.VPS_PASSWORD }}
