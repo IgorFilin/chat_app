@@ -12,14 +12,16 @@ jobs:
     steps:
       - name: Качаю репозиторий
         uses: actions/checkout@v2
-
-      - name: Устанавливаю и запускаю Докер
-        run: |
-          sudo apt-get -yqq install docker-compose
-
-      - name: Сборка и пуш образа Докера
-        run: |
-          docker-compose up
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          file: docker-compose
+          push: false
+          tags: user/app:latest
 
       - name: Захожу на VPS и деплою
         uses: appleboy/ssh-action@master
