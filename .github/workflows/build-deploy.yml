@@ -29,7 +29,10 @@ jobs:
             cd /var/www/chat_app/chat_api
             echo "${{ secrets.ENV_BACKEND }}" > .env.development
             cd /var/www/chat_app
-            docker stop $(docker ps -a -q)
+            docker stop chat_app-backend-1
+            docker stop chat_app-frontend-1
+            docker stop chat_app-database-1
+            docker container prune -f
             docker image prune -f
             docker builder prune -f
             docker-compose up -d
