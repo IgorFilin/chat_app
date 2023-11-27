@@ -10,11 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Качаю репозиторий
-        uses: actions/checkout@v2
-      # - name: 'Создаю .env файл'
-      #   run: |
-      #     echo "${{ secrets.ENV_BACKEND }}" > .env
       - name: Копирую папку на VPS сервер
         uses: garygrossgarten/github-action-scp@release
         with:
@@ -33,5 +28,9 @@ jobs:
           script: |
             cd /var/www/chat_app/chat_api
             echo "${{ secrets.ENV_BACKEND }}" > .env.development
+            echo "${{ secrets.ENV_BACKEND }}" > text.txt
             cd /var/www/chat_app
-            docker-compose up -d --build
+            docker stop $(docker ps -a -q)
+            docker image prune
+            docker builder prune 
+            docker-compose up -d
