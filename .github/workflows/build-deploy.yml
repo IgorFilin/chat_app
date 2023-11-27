@@ -12,6 +12,9 @@ jobs:
     steps:
       - name: Качаю репозиторий
         uses: actions/checkout@v2
+      # - name: 'Создаю .env файл'
+      #   run: |
+      #     echo "${{ secrets.ENV_BACKEND }}" > .env
       - name: Копирую папку на VPS сервер
         uses: garygrossgarten/github-action-scp@release
         with:
@@ -29,4 +32,5 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           script: |
             cd /var/www/chat_app
+            echo "${{ secrets.ENV_BACKEND }}" > /var/www/chat_app/chat_api/.env.production
             docker-compose up -d --build
