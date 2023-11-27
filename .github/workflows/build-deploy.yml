@@ -15,17 +15,12 @@ jobs:
       - name: Задаю переменные окружения из секрета
         run: |
           echo "${{ secrets.VPS_CREDENTIALS }}" > .env
-      - name: Отладка
-        run: |
-        echo "VPS_HOST: ${{ secrets.VPS_HOST }}"
-        echo "VPS_USERNAME: ${{ secrets.VPS_USERNAME }}"
-        echo "VPS_PASSWORD: ${{ secrets.VPS_PASSWORD }}"
       - name: Захожу на VPS и деплою
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USERNAME }}
-          password: ${{ secrets.VPS_SSH_KEY }}
+          host: ${{ env.VPS_HOST }}
+          username: ${{ env.VPS_USERNAME }}
+          password: ${{ env.VPS_SSH_KEY }}
           script: |
             cd /var/www/chat_app
             docker-compose -up -d --build
