@@ -12,10 +12,14 @@ jobs:
     steps:
       - name: Качаю репозиторий
         uses: actions/checkout@v2
-
       - name: Задаю переменные окружения из секрета
         run: |
           echo "${{ secrets.VPS_CREDENTIALS }}" > .env
+      - name: Отладка
+        run: |
+        echo "VPS_HOST: ${{ secrets.VPS_HOST }}"
+        echo "VPS_USERNAME: ${{ secrets.VPS_USERNAME }}"
+        echo "VPS_PASSWORD: ${{ secrets.VPS_PASSWORD }}"
       - name: Захожу на VPS и деплою
         uses: appleboy/ssh-action@master
         with:
@@ -25,8 +29,3 @@ jobs:
           script: |
             cd /var/www/chat_app
             docker-compose -up -d --build
-      - name: Отладка
-        run: |
-        echo "VPS_HOST: ${{ secrets.VPS_HOST }}"
-        echo "VPS_USERNAME: ${{ secrets.VPS_USERNAME }}"
-        echo "VPS_PASSWORD: ${{ secrets.VPS_PASSWORD }}"
