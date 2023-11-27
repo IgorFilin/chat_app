@@ -43,7 +43,6 @@ export class WebsocketService {
     for (let i = 0; i < this.messages.length; i++) {
       client.client.send(
         JSON.stringify({
-          id: i,
           messages: this.messages[i],
           lengthMessages: this.messages.length,
         }),
@@ -133,7 +132,7 @@ export class WebsocketService {
   ) {
     const user = this.clients[userId];
 
-    const maxMessageSize = 300 * 1024; // Максимальный размер сообщения для изобращения
+    const maxMessageSize = 600 * 1024; // Максимальный размер сообщения для изобращения
 
     if (Array.isArray(message) && message.length >= maxMessageSize) {
       return; // Отклоните слишком большое сообщение
@@ -190,7 +189,7 @@ export class WebsocketService {
       newMessage.userPhoto = user.userPhoto;
       newMessage.room = room;
       await this.MessageTable.save(newMessage);
-
+      console.log(newMessage);
       // let roomMessages = await this.RoomTable.createQueryBuilder('room')
       //   .leftJoinAndSelect('room.messages', 'message1')
       //   .where('message1.roomId = :roomId', { roomId: room.id })
@@ -213,16 +212,6 @@ export class WebsocketService {
       body.isAllChat,
     );
   }
-
-  // @SubscribeMessage('private_message')
-  // async handlePrivateMessage(@MessageBody() body: any) {
-  //   await this.broadcastMessage(
-  //     body.id,
-  //     body.message,
-  //     body.roomId,
-  //     this.privateChatEvent,
-  //   );
-  // }
 
   @SubscribeMessage('all_messages_public')
   async handleAllMessage(@MessageBody() body: any) {

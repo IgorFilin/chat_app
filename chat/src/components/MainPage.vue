@@ -25,16 +25,14 @@
       @dragleave.prevent="onDragClass = false"
       @drop.prevent="OnDropChatContainer">
       <Message
+        v-if="isLoadingMessages"
         :key="message.message.toString()"
         v-for="(message, index) in memoMessages"
         v-bind="message" />
-      <!-- <Loader
+      <Loader
         v-else
-        loaderFor="message" /> -->
+        loaderFor="message" />
     </div>
-    <!-- <div>"isLoadingMessages"{{ isLoadingMessages }}</div>
-    <div>"messagesLength"{{ messagesLength }}</div>
-    <div>"messages.length"{{ messages.length }}</div> -->
     <InputSendButton @sendMessage="sendMessage" />
   </div>
 </template>
@@ -43,13 +41,13 @@
 import { useAuthStore } from '@/store/auth_store.ts';
 import InputSendButton from '@/components/InputSendButton.vue';
 import router from '@/router/router';
-import { Ref, computed, onMounted, onUnmounted, ref, watch } from 'vue';
+import { Ref, computed, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue';
 import Message from '@/components/Message.vue';
 import UserOnlineContainer from '@/components/UserOnlineContainer.vue';
 import Loader from '@/components/Loader.vue';
 import Icon from '@/components/Icon.vue';
 
-let messagesLength = 0;
+let messagesLength = ref(0);
 
 const isAllChat = ref(true) as Ref<boolean>;
 const roomId = ref(null) as Ref<string | null>;
@@ -103,13 +101,13 @@ function OnDropChatContainer(e: any) {
   //   return;
   // }  // Добавить возможность сохранения текстовых файлов для клиентов
 
-  if (file.type !== 'image/webp' && file.type !== 'image/png') {
+  if (file.type !== 'image/webp' && file.type !== 'image/png' && file.type !== 'image/jpeg') {
     store.toast('К сожалению пока не поддерживаемый формат файлов (Доступны только изображения форматов png и webp)');
     return;
   }
 
-  if (file.size > 300 * 1024) {
-    store.toast('Изображение слишком большое. Максимальный размер - 300 КБ.');
+  if (file.size > 600 * 1024) {
+    store.toast('Изображение слишком большое. Максимальный размер - 600 КБ.');
     return;
   }
 
@@ -132,7 +130,9 @@ function OnDropChatContainer(e: any) {
   reader.readAsArrayBuffer(file);
 }
 
-// watch([() => currentChatEvent.value, roomId.value], () => (isLoadingMessages.value = false));
+watchEffect(() => {
+  isLoadingMessages.value = messagesLength.value === messages.value.length;
+});
 
 const memoMessages = computed(() => messages.value);
 
@@ -143,32 +143,16 @@ connection.onmessage = function (event) {
     roomId.value = data.messages.roomId;
   }
 
-  // if (data.messages && data.messages.event !== isAllChat.value) {
-  //   console.log('ВНУТРИ', data.messages.event);
-  //   return;
-  // }
-
-  if (data.messages && data.messages.roomId && data.messages.roomId !== roomId.value) {
-    return;
-  }
-
-  if (!roomId.value && data.messages && data.messages.roomId) {
-    return;
-  }
-
-  if (data.lengthMessages === 0 || data.lengthMessages !== messagesLength) {
-    messagesLength = data.lengthMessages;
-    // console.log('ВНУТРИ МЕССЕНДЖЕЙ');
-    // console.log('data.lengthMessages', data.lengthMessages);
-    // console.log('messagesLength', messagesLength);
+  if (data.lengthMessages !== messagesLength.value) {
+    messagesLength.value = data.lengthMessages;
   }
 
   if (data.userToAddPrivat && data.userToAddPrivat !== userToAddPrivate.value) {
     userToAddPrivate.value = data.userToAddPrivat;
   }
 
-  if (data.messages.roomId === roomId.value) {
-    if (data.messages?.message && Array.isArray(data.messages.message)) {
+  if (data.messages?.roomId === roomId.value) {
+    if (Array.isArray(data.messages?.message)) {
       const bufferData = new Uint8Array(data.messages.message);
       const blobMessage = new Blob([bufferData]);
       data.messages.message = URL.createObjectURL(blobMessage);
@@ -186,10 +170,6 @@ connection.onmessage = function (event) {
   if (data.clients) {
     usersOnline.value = data.clients;
   }
-
-  if ((data.lengthMessages && messages.value.length === messagesLength) || data.lengthMessages === 0) {
-    isLoadingMessages.value = true;
-  }
 };
 
 function OnDragChatContainer(event: any) {
@@ -200,8 +180,9 @@ function OnDragChatContainer(event: any) {
 }
 
 function goToPublicChat() {
-  roomId.value = null;
+  isLoadingMessages.value = false;
   isAllChat.value = true;
+  roomId.value = null;
   messages.value = [];
   if (connection.readyState === 1) {
     connection.send(
