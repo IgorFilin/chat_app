@@ -1,0 +1,31 @@
+name: build & deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Качаю репозиторий
+        uses: actions/checkout@v2
+
+      - name: Устанавливаю и запускаю Докер
+        run: |
+          sudo apt-get -yqq install docker-compose
+
+      - name: Сборка и пуш образа Докера
+        run: |
+          docker-compose build
+
+      - name: Захожу на VPS и деплою
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd /var/www/chat_app
