@@ -12,6 +12,10 @@ jobs:
     steps:
       - name: Качаю репозиторий
         uses: actions/checkout@v2
+      - name: Задаю переменные окружения из секрета
+        env:
+          DOCKER_COMPOSE_ENV: ${{ secrets.DOCKER_COMPOSE_ENV }}
+        run: echo "$DOCKER_COMPOSE_ENV" > .env
       - name: Build the stack
         run: docker-compose up -d
       - name: Захожу на VPS и деплою
