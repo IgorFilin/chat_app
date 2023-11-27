@@ -12,10 +12,8 @@ jobs:
     steps:
       - name: Качаю репозиторий
         uses: actions/checkout@v2
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Build
-        run: docker-compose build
+      - name: Build the stack
+        run: docker-compose up -d
 
       - name: Захожу на VPS и деплою
         uses: appleboy/ssh-action@master
