@@ -4,16 +4,14 @@
       <button
         v-if="!store.isAuth"
         class="v-header__navigateButton"
-        @click="goTo('/registration')"
-      >
+        @click="goTo('/registration')">
         Регистрация
       </button>
       <button
         v-if="!store.isAuth"
         class="v-header__navigateButton"
-        @click="goTo('/login')"
-      >
-        Логинизация
+        @click="goTo('/login')">
+        Логинизация1
       </button>
     </div>
     <div class="v-header__nameLogoutContainer">
@@ -23,25 +21,24 @@
             class="v-header__photoUser"
             :src="store.userPhoto"
             :key="store.userPhoto"
-            alt="Аватар"
-          />
+            alt="Аватар" />
           <input
             id="download"
             @change="downloadPhoto"
             hidden
             type="file"
-            accept="image/webp,image/png"
-          />
+            accept="image/webp,image/png" />
         </div>
       </label>
-      <div class="v-header__userName" v-if="store.name">
+      <div
+        class="v-header__userName"
+        v-if="store.name">
         {{ store.name }}
       </div>
       <button
         v-if="store.isAuth"
         class="v-header__navigateButton"
-        @click="onExitAccount"
-      >
+        @click="onExitAccount">
         Выход
       </button>
     </div>
@@ -49,8 +46,8 @@
 </template>
 
 <script setup lang="ts">
-import router from "@/router/router";
-import { useAuthStore } from "@/store/auth_store";
+import router from '@/router/router';
+import { useAuthStore } from '@/store/auth_store';
 
 const store = useAuthStore();
 
@@ -61,7 +58,7 @@ function goTo(route: string) {
 async function onExitAccount() {
   if (store.isAuth) {
     await store.logout();
-    router.push("/login");
+    router.push('/login');
   }
 }
 
@@ -110,7 +107,7 @@ function downloadPhoto(event: any) {
 }
 .v-header__userName {
   color: white;
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   text-decoration: underline;
   align-self: center;
 }

@@ -14,11 +14,9 @@ jobs:
         uses: actions/checkout@v2
       - name: Задаю переменные окружения из секрета
         env:
-          DOCKER_COMPOSE_ENV: ${{ secrets.DOCKER_COMPOSE_ENV }}
-        run: echo "$DOCKER_COMPOSE_ENV" > .env
-        run: echo "$DOCKER_COMPOSE_ENV_BACKEND" > chat_api/.env.production
-      - name: Build the stack
-        run: docker-compose up -d
+          DOCKER_COMPOSE_ENV: ${{ secrets.VPS_CREDENTIALS }}
+        run: echo "$VPS_CREDENTIALS > .env
+
       - name: Захожу на VPS и деплою
         uses: appleboy/ssh-action@master
         with:
@@ -27,3 +25,4 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             cd /var/www/chat_app
+            docker-compose -up -d --build
