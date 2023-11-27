@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  frontend:
+    build:
+      context: ./chat
+      dockerfile: Dockerfile
+      args:
+        - VITE_APP_DOMEN_PORT=filin-hub.online:3000
+        - VITE_APP_PROTOCOL=ws
+    ports:
+      - '81:80'
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./chat_api
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    depends_on:
+      - database
+
+  database:
+    image: postgres:15
+    env_file: .env
+    volumes:
+      - /var/lib/postgresql/data
+    ports:
+      - '5432:5432'

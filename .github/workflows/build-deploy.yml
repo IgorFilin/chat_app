@@ -14,7 +14,6 @@ jobs:
         uses: actions/checkout@v2
       - name: Build the stack
         run: docker-compose up -d
-
       - name: Захожу на VPS и деплою
         uses: appleboy/ssh-action@master
         with:
