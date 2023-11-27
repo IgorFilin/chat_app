@@ -19,7 +19,7 @@ jobs:
 
       - name: Сборка и пуш образа Докера
         run: |
-          docker-compose build
+          docker-compose up
 
       - name: Захожу на VPS и деплою
         uses: appleboy/ssh-action@master
