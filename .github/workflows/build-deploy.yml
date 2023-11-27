@@ -25,3 +25,8 @@ jobs:
           script: |
             cd /var/www/chat_app
             docker-compose -up -d --build
+      - name: Отладка
+        run: |
+        echo "VPS_HOST: ${{ secrets.VPS_HOST }}"
+        echo "VPS_USERNAME: ${{ secrets.VPS_USERNAME }}"
+        echo "VPS_PASSWORD: ${{ secrets.VPS_PASSWORD }}"
