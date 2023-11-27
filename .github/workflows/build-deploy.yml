@@ -31,6 +31,7 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           password: ${{ secrets.VPS_PASSWORD }}
           script: |
+            cd /var/www/chat_app/chat_api
+            echo "${{ secrets.ENV_BACKEND }}" > .env.production
             cd /var/www/chat_app
-            echo "${{ secrets.ENV_BACKEND }}" > /var/www/chat_app/chat_api/.env.production
             docker-compose up -d --build
