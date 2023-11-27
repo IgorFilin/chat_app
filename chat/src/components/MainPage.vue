@@ -47,8 +47,6 @@ import UserOnlineContainer from '@/components/UserOnlineContainer.vue';
 import Loader from '@/components/Loader.vue';
 import Icon from '@/components/Icon.vue';
 
-let messagesLength = ref(0);
-
 const isAllChat = ref(true) as Ref<boolean>;
 const roomId = ref(null) as Ref<string | null>;
 const userToAddPrivate = ref('') as Ref<string>;
@@ -56,6 +54,7 @@ const messages = ref([]) as Ref<Array<MessageType>>;
 const usersOnline = ref([]) as Ref<Array<UserTypeInUsersArrayType>>;
 const onDragClass = ref(false) as Ref<boolean>;
 const isLoadingMessages = ref(false) as Ref<boolean>;
+const messagesLength = ref(0);
 
 const store = useAuthStore();
 
@@ -130,9 +129,7 @@ function OnDropChatContainer(e: any) {
   reader.readAsArrayBuffer(file);
 }
 
-watchEffect(() => {
-  isLoadingMessages.value = messagesLength.value === messages.value.length;
-});
+watch([() => isAllChat.value, () => roomId.value], () => (isLoadingMessages.value = messagesLength.value === messages.value.length));
 
 const memoMessages = computed(() => messages.value);
 
@@ -167,6 +164,10 @@ connection.onmessage = function (event) {
     }
   }
 
+  if (messagesLength.value === messages.value.length) {
+    isLoadingMessages.value = true;
+  }
+
   if (data.clients) {
     usersOnline.value = data.clients;
   }
@@ -180,7 +181,6 @@ function OnDragChatContainer(event: any) {
 }
 
 function goToPublicChat() {
-  isLoadingMessages.value = false;
   isAllChat.value = true;
   roomId.value = null;
   messages.value = [];
