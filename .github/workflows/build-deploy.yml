@@ -16,10 +16,11 @@ jobs:
         uses: garygrossgarten/github-action-scp@release
         with:
           local: ./
-          remote: var/www/
+          remote: var/www/chat_app
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
           password: ${{ secrets.VPS_PASSWORD }}
+          rmRemote: true
       - name: Захожу на VPS и запускаю сборку образа
         uses: appleboy/ssh-action@master
         with:
