@@ -35,4 +35,4 @@ jobs:
             docker container prune -f
             docker image prune -f
             docker builder prune -f
-            docker-compose up -d
+            docker-compose -f docker-compose.yml up -d
