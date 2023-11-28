@@ -1,9 +1,14 @@
 <template>
   <div class="v-registration-container">
-    <h2 class="v-registration-title">Логинизация</h2>
+    <h2 class="v-registration-title">Вход</h2>
     <div class="v-form-group">
       <label for="email">Email:</label>
-      <input autocomplete="on" auto type="email" id="email" v-model="email" />
+      <input
+        autocomplete="on"
+        auto
+        type="email"
+        id="email"
+        v-model="email" />
     </div>
     <div class="v-form-group">
       <label for="password">Пароль:</label>
@@ -12,21 +17,24 @@
         type="password"
         id="password"
         @keypress.enter="submitForm"
-        v-model="password"
-      />
+        v-model="password" />
     </div>
-    <button class="v-registration-button" @click="submitForm">Войти</button>
+    <button
+      class="v-registration-button"
+      @click="submitForm">
+      Войти
+    </button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import { useAuthStore } from "@/store/auth_store.ts";
-import { LoginUserType } from "@/api/typesApi";
-import router from "@/router/router";
+import { ref, watch } from 'vue';
+import { useAuthStore } from '@/store/auth_store.ts';
+import { LoginUserType } from '@/api/typesApi';
+import router from '@/router/router';
 
-let email = ref("");
-let password = ref("");
+let email = ref('');
+let password = ref('');
 
 const store = useAuthStore();
 
@@ -35,14 +43,14 @@ async function submitForm() {
     email: email.value,
     password: password.value,
   } as LoginUserType);
-  email.value = "";
-  password.value = "";
+  email.value = '';
+  password.value = '';
 }
 
 watch(
   () => store.isAuth,
   () => {
-    router.push("/main");
+    router.push('/main');
   }
 );
 </script>

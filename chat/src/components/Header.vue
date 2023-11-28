@@ -11,7 +11,7 @@
         v-if="!store.isAuth"
         class="v-header__navigateButton"
         @click="goTo('/login')">
-        Логинизация1
+        Вход
       </button>
     </div>
     <div class="v-header__nameLogoutContainer">
