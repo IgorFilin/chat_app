@@ -32,10 +32,5 @@ jobs:
             cd /var/www/chat_app/chat_api
             echo "${{ secrets.ENV_BACKEND }}" > .env.production
             cd /var/www/chat_app
-            docker stop chat_app-backend-1
-            docker stop chat_app-frontend-1
-            docker stop chat_app-database-1
-            docker container prune -f
-            docker builder prune -af
-            docker image prune -af
-            docker-compose -f docker-compose.yml up -d
+            docker-compose -f docker-compose.yml up --build -d
+            rm -rf /var/www/chat_app/
