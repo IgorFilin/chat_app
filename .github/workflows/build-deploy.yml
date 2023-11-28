@@ -4,11 +4,9 @@ on:
   push:
     branches:
       - master
-
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Качаю репозиторий
         uses: actions/checkout@v2
