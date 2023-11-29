@@ -236,13 +236,9 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column-reverse;
   padding: 20px;
-  width: 75%;
+  width: 74%;
   height: 650px;
   overflow-y: auto;
-  background: #ffffff;
-  -webkit-box-shadow: 0px 0px 80px -28px rgba(0, 0, 0, 0.16);
-  -moz-box-shadow: 0px 0px 80px -28px rgba(2, 2, 2, 0.16);
-  box-shadow: 0px 0px 80px -28px rgba(0, 0, 0, 0.16);
   gap: 10px;
 
   &::-webkit-scrollbar-thumb {
@@ -263,17 +259,21 @@ onUnmounted(() => {
 
 .v-mainPage__buttonBackAllChat {
   display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
   background-color: #141416;
-  transition: 0.5s;
+  transition: 0.3s;
+  border: none;
   color: white;
   padding: 5px 10px;
   margin: 0;
-  gap: 5px;
+  gap: 10px;
+  height: 30px;
 
   &:hover {
-    transition: 0.5s;
-    border: 2px solid #000;
+    border: none;
+    transition: 0.3s;
     color: #000;
     background-color: #fff;
 

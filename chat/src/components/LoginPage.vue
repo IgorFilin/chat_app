@@ -58,6 +58,7 @@ watch(
 <style scoped lang="scss">
 .v-registration-container {
   background-color: #202020;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
   padding: 20px;
   color: white;
   max-width: 400px;
@@ -105,10 +106,8 @@ input:focus {
 
 .v-registration-button {
   padding: 10px 20px;
-  background-color: red;
-  color: white;
+  background-color: #053972;
   border: none;
-  border-radius: 4px;
   cursor: pointer;
   margin-bottom: 20px;
 }

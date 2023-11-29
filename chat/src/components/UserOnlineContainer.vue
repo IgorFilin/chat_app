@@ -111,16 +111,16 @@ const filteredActiveOrNotUsers = computed(() => {
 
 <style lang="scss">
 .v-usersOnline {
+  display: flex;
+  flex-direction: column;
   position: absolute;
   padding: 20px 0 20px 20px;
-  width: 300px;
+  width: 250px;
   height: 70%;
   max-height: 700px;
   background-color: #1e1c1c;
-  border-radius: 30px 0 20px 0;
-  box-shadow: 0px 0px 80px -28px rgba(0, 0, 0, 0.16);
   transition: 0.5s;
-  left: -320px;
+  left: -250px;
   z-index: 100;
 
   &.active {
@@ -128,13 +128,15 @@ const filteredActiveOrNotUsers = computed(() => {
   }
 
   .v-usersOnline__search {
-    background-color: #ededed;
+    background-color: #053972;
     border: 1px solid #141416;
     display: inline-block;
     vertical-align: middle;
     resize: none;
     padding: 5px;
     margin-bottom: 10px;
+    width: 90%;
+    height: 25px;
 
     &:focus-visible {
       outline: none;

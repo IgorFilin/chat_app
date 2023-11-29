@@ -4,21 +4,28 @@
     <form class="registration-form">
       <div class="form-group">
         <label for="name">Имя:</label>
-        <input type="text" id="name" v-model="requestDataUser.name" />
+        <input
+          type="text"
+          id="name"
+          v-model="requestDataUser.name" />
       </div>
       <div class="form-group">
         <label for="email">Email:</label>
-        <input type="email" id="email" v-model="requestDataUser.email" />
+        <input
+          type="email"
+          id="email"
+          v-model="requestDataUser.email" />
       </div>
       <div class="form-group">
         <label for="password">Пароль:</label>
         <input
           type="password"
           id="password"
-          v-model="requestDataUser.password"
-        />
+          v-model="requestDataUser.password" />
       </div>
-      <button class="registration-button" @click="submitForm">
+      <button
+        class="registration-button"
+        @click="submitForm">
         Зарегистрироваться
       </button>
     </form>
@@ -26,15 +33,15 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from "@/store/auth_store.ts";
-import { onUpdated, ref, watch } from "vue";
-import { RegisterUserType } from "@/api/typesApi";
-import router from "@/router/router";
+import { useAuthStore } from '@/store/auth_store.ts';
+import { onUpdated, ref, watch } from 'vue';
+import { RegisterUserType } from '@/api/typesApi';
+import router from '@/router/router';
 
 const requestDataUser = ref<RegisterUserType | {}>({
-  name: "",
-  email: "",
-  password: "",
+  name: '',
+  email: '',
+  password: '',
 });
 
 const store = useAuthStore();
@@ -49,7 +56,7 @@ watch(
   () => store.confirmReg,
   () => {
     if (store.confirmReg) {
-      router.push("/confirm");
+      router.push('/confirm');
       store.confirmReg = false;
     }
   }
@@ -59,6 +66,7 @@ watch(
 <style scoped lang="scss">
 .registration-container {
   background-color: #202020;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
   padding: 20px;
   color: white;
   max-width: 400px;
@@ -96,7 +104,7 @@ input {
   padding: 8px;
   border-radius: 4px;
   border: none;
-  background-color: #f1f1f1;
+  background-color: #303030;
 }
 
 input:focus {
@@ -105,10 +113,8 @@ input:focus {
 
 .registration-button {
   padding: 10px 20px;
-  background-color: red;
-  color: white;
+  background-color: #053972;
   border: none;
-  border-radius: 4px;
   cursor: pointer;
   margin-bottom: 20px;
 }

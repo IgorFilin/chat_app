@@ -4,24 +4,25 @@
       @keyup.enter="sendMessage"
       v-model="message"
       class="v-inputSendButton__Input"
-      type="text"
-    />
-    <button class="v-inputSendButton_chatButton" @click="sendMessage">
+      type="text" />
+    <button
+      class="v-inputSendButton_chatButton"
+      @click="sendMessage">
       Отправить сообщение
     </button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Ref, ref } from "vue";
+import { Ref, ref } from 'vue';
 
 const emit = defineEmits();
 
-let message = ref("") as Ref<string>;
+let message = ref('') as Ref<string>;
 
 function sendMessage() {
-  emit("sendMessage", message.value);
-  message.value = "";
+  emit('sendMessage', message.value);
+  message.value = '';
 }
 </script>
 
@@ -29,13 +30,14 @@ function sendMessage() {
 .v-inputSendButton {
   display: flex;
   width: 80%;
+  margin-top: 5px;
 }
 
 .v-inputSendButton__Input {
   width: 100%;
-  background-color: #ededed;
+  background-color: #053972;
   padding-left: 10px;
-  border: 1px solid #141416;
+  border: 0;
   display: inline-block;
   vertical-align: middle;
   resize: none;
@@ -51,12 +53,13 @@ function sendMessage() {
   padding: 5px 10px;
   justify-content: center;
   align-items: center;
-  color: #fff;
   background-color: #141416;
-  transition: 0.5s;
+  transition: 0.3s;
+  border: none;
 
   &:hover {
-    border: 2px solid #000;
+    cursor: pointer;
+    border: none;
     color: #000;
     background-color: #fff;
   }

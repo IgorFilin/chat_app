@@ -1,6 +1,6 @@
 <template>
   <div class="v-header__container">
-    <div>
+    <div class="v-header__buttonsContainer">
       <button
         v-if="!store.isAuth"
         class="v-header__navigateButton"
@@ -70,7 +70,7 @@ function downloadPhoto(event: any) {
 
 <style scoped lang="scss">
 .v-header__container {
-  background-color: #202020;
+  background-color: #000000;
   height: 40px;
   display: flex;
   justify-content: space-between;
@@ -78,8 +78,13 @@ function downloadPhoto(event: any) {
   padding: 0 20px;
 }
 
+.v-header__buttonsContainer {
+  display: flex;
+  gap: 15px;
+}
+
 .v-header__navigateButton {
-  background-color: #202020;
+  background-color: initial;
   color: white;
   border: none;
   cursor: pointer;
@@ -106,8 +111,6 @@ function downloadPhoto(event: any) {
   }
 }
 .v-header__userName {
-  color: white;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   text-decoration: underline;
   align-self: center;
 }

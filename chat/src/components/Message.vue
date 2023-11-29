@@ -65,7 +65,7 @@ function isMe(id: string | undefined) {
       display: flex;
       flex-direction: column;
       align-self: flex-start;
-      background: #a3b8bc;
+      background: none;
       border-radius: 0 8px 8px 8px;
 
       // &:after {
@@ -95,11 +95,14 @@ function isMe(id: string | undefined) {
 
 .v-message__messageName {
   word-break: break-all;
+  border: 1px solid black;
   display: flex;
   padding: 14px 16px;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
   word-wrap: break-word;
+
   flex-direction: column;
-  background: #f0f0f0;
+  background: none;
   font-size: 14px;
   line-height: 20px;
   justify-content: flex-end;
