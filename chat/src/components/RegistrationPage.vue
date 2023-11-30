@@ -38,7 +38,7 @@ import { onUpdated, ref, watch } from 'vue';
 import { RegisterUserType } from '@/api/typesApi';
 import router from '@/router/router';
 
-const requestDataUser = ref<RegisterUserType | {}>({
+const requestDataUser = ref<RegisterUserType>({
   name: '',
   email: '',
   password: '',
@@ -46,21 +46,26 @@ const requestDataUser = ref<RegisterUserType | {}>({
 
 const store = useAuthStore();
 
-function submitForm(e: Event) {
+async function submitForm(e: Event) {
   e.preventDefault();
-  store.registration(requestDataUser.value);
-  requestDataUser.value = {};
+  await store.registration(requestDataUser.value);
+  console.log(store.isAcceptKey);
+  requestDataUser.value.name = '';
+  requestDataUser.value.email = '';
+  requestDataUser.value.password = '';
 }
-
-watch(
-  () => store.confirmReg,
-  () => {
-    if (store.confirmReg) {
-      router.push('/confirm');
-      store.confirmReg = false;
-    }
-  }
-);
+// console.log(store.confirmReg);
+// watch(
+//   () => store.confirmReg,
+//   () => {
+//     console.log(store.confirmReg);
+//     if (store.confirmReg) {
+//       router.push('/confirm');
+//       store.confirmReg = false;
+//     }
+//   },
+//   { deep: true }
+// );
 </script>
 
 <style scoped lang="scss">

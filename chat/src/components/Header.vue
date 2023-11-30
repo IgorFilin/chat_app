@@ -13,6 +13,12 @@
         @click="goTo('/login')">
         Вход
       </button>
+      <button
+        v-if="store.isAcceptKey === false"
+        class="v-header__navigateButton"
+        @click="goTo('/confirm')">
+        Подтвердить почту
+      </button>
     </div>
     <div class="v-header__nameLogoutContainer">
       <label for="download">
@@ -48,12 +54,21 @@
 <script setup lang="ts">
 import router from '@/router/router';
 import { useAuthStore } from '@/store/auth_store';
+import { watch } from 'vue';
 
 const store = useAuthStore();
 
 function goTo(route: string) {
   router.push(route);
 }
+
+watch(
+  () => store.isAcceptKey,
+  () => {
+    console.log('acceptKey', store.isAcceptKey);
+  },
+  { immediate: true }
+);
 
 async function onExitAccount() {
   if (store.isAuth) {

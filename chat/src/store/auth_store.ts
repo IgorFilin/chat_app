@@ -1,16 +1,16 @@
-import { defineStore } from "pinia";
-import { authApi } from "@/api/appApi";
-import { LoginUserType } from "@/api/typesApi";
-import { useToast } from "vue-toastification";
-import { dataRegisterUser } from "@/api/typesApi";
-import { errorStore } from "@/utils/storeError";
+import { defineStore } from 'pinia';
+import { authApi } from '@/api/appApi';
+import { LoginUserType } from '@/api/typesApi';
+import { useToast } from 'vue-toastification';
+import { dataRegisterUser } from '@/api/typesApi';
+import { errorStore } from '@/utils/storeError';
+import router from '@/router/router';
 
 interface UserType {
   name: string;
-  isAdmin: boolean | null;
   isAuth: boolean;
-  messages: string;
-  confirmReg: boolean;
+  messages: any;
+  isAcceptKey: boolean | null;
   id: string;
   isLoading: boolean;
   userPhoto: any;
@@ -18,17 +18,16 @@ interface UserType {
 
 const toast = useToast();
 
-export const useAuthStore: any = defineStore("auth_store", {
+export const useAuthStore: any = defineStore('auth_store', {
   state: () => {
     return {
-      name: "",
-      isAdmin: null,
+      name: '',
       isAuth: false,
-      confirmReg: false,
-      messages: "" as string | undefined,
+      isAcceptKey: null,
+      messages: '',
       isLoading: false,
-      id: "",
-      userPhoto: "",
+      id: '',
+      userPhoto: '',
     } as UserType;
   },
   getters: {},
@@ -53,19 +52,24 @@ export const useAuthStore: any = defineStore("auth_store", {
       try {
         this.isLoading = true;
         const result = await authApi.registerUser(dataUser);
-        this.confirmReg = result.data.isRegConfirm;
+        this.isAcceptKey = result.data.isAcceptKey;
+        // @ts-ignore
+        JSON.stringify(localStorage.setItem('isAcceptKey', result.data.isAcceptKey));
         this.messages = result.data.message;
+        router.push('/confirm');
       } catch (error) {
-        errorStore(error);
+        this.messages = errorStore(error);
       } finally {
         this.isLoading = false;
         toast(this.messages);
-        this.messages = "";
+        this.messages = '';
       }
     },
     async auth() {
       try {
         this.isLoading = true;
+        // @ts-ignore
+        this.isAcceptKey = JSON.parse(localStorage.getItem('isAcceptKey'));
         const result = await authApi.auth();
         this.isAuth = result.data.isAuth;
         this.name = result.data.name;
@@ -92,8 +96,9 @@ export const useAuthStore: any = defineStore("auth_store", {
         this.isLoading = true;
         const result = await authApi.logout();
         this.isAuth = result.data.isAuth;
-        this.name = "";
-        toast("Вы успешно вышли, возвращайтесь!");
+        this.name = '';
+        localStorage.removeItem('isAcceptKey');
+        toast('Вы успешно вышли, возвращайтесь!');
       } catch (error) {
         this.messages = errorStore(error);
       } finally {
@@ -104,21 +109,22 @@ export const useAuthStore: any = defineStore("auth_store", {
       try {
         this.isLoading = true;
         const result = await authApi.confirmReg(key);
-        this.name = result.data.name;
         this.messages = result.data.message;
+        // @ts-ignore
+        localStorage.setItem('isAcceptKey', result.data.isAcceptKey);
         await this.auth();
       } catch (error) {
         this.messages = errorStore(error);
       } finally {
         this.isLoading = false;
         toast(this.messages);
-        this.messages = "";
+        this.messages = '';
       }
     },
     async sendAvatarUser(file: any) {
       try {
         const formDataFile = new FormData();
-        formDataFile.append("avatar", file);
+        formDataFile.append('avatar', file);
         const result = await authApi.setPhoto(this.id, formDataFile);
         if (this.userPhoto) {
           URL.revokeObjectURL(this.userPhoto);

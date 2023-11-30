@@ -12,7 +12,7 @@ export interface RegisterUserType {
 export interface ResponseLoginType {
   message: string;
   name: string;
-  isAuth: true;
+  isAuth: boolean;
   id: string;
 }
 export interface dataRegisterUser {
@@ -26,13 +26,12 @@ export interface ResponseLogoutType {
 }
 
 export interface ResponseConfirmRegType {
-  name: string;
   message: string;
-  id: string;
+  isAcceptKey: boolean;
 }
 
 export interface ResponseRegisterUserType {
-  isRegConfirm: boolean;
+  isAcceptKey: boolean;
   message: string;
 }
 

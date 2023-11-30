@@ -1,36 +1,39 @@
 <template>
   <div class="v-confirmRef">
     <div class="v-confirmRef__container">
-      <div class="v-confirmRef__text">
-        Введите ключ подтверждение с вашего почтового ящика
-      </div>
+      <div class="v-confirmRef__text">Подтверждение почты</div>
+      <div class="v-confirmRef__textDescription">Введите в поле код который отправлен на вашу почту, на некоторых сервисах он может находиться в папке "Спам"</div>
       <div class="v-confirmRef__inputCode">
         <input v-model="keyAccept" />
       </div>
-      <button @click="sendKey">Отправить</button>
+      <button
+        @click="sendKey"
+        class="v-confirmRef__button">
+        Отправить
+      </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import router from "@/router/router";
-import { useAuthStore } from "@/store/auth_store";
-import { ref, watch } from "vue";
+import router from '@/router/router';
+import { useAuthStore } from '@/store/auth_store';
+import { ref, watch } from 'vue';
 
-const keyAccept = ref("");
+const keyAccept = ref('');
 
 const store = useAuthStore();
 
 function sendKey() {
   store.confirmRegistration(keyAccept.value);
-  keyAccept.value = "";
+  keyAccept.value = '';
 }
 
 watch(
   () => store.isAuth,
   () => {
     if (store.isAuth) {
-      router.push("/main");
+      router.push('/main');
     }
   }
 );
@@ -59,12 +62,27 @@ watch(
 
 .v-confirmRef__inputCode {
   input {
-    padding: 5px;
-    height: 20px;
-    width: 250px;
-    border-radius: 2px;
+    padding: 8px;
+    border-radius: 4px;
     border: none;
-    background-color: #f1f1f1;
+    background-color: #303030;
+    color: white;
   }
+}
+
+.v-confirmRef__text {
+  font-size: 24px;
+}
+
+.v-confirmRef__textDescription {
+  text-align: center;
+}
+
+.v-confirmRef__button {
+  padding: 10px 20px;
+  background-color: #053972;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 20px;
 }
 </style>

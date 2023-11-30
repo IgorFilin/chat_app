@@ -20,7 +20,10 @@ export class User {
   password: string;
 
   @Column()
-  isAcceptKey: string;
+  isAcceptKey: boolean;
+
+  @Column()
+  acceptKey: string;
 
   @Column()
   authToken: string;

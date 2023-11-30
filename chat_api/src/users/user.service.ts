@@ -52,22 +52,23 @@ export class UsersService {
         user.email = createUserDto.email;
         user.password = hashedPassword;
         user.date = new Date();
-        user.isAcceptKey = confirmRegKey;
+        user.isAcceptKey = false;
+        user.acceptKey = confirmRegKey;
         user.authToken = token;
         user.userPhoto = imagePath;
 
-        //Сохраняем в БД пользователя с регистрационным key
+        // Сохраняем в БД пользователя с регистрационным key
         this.UserTable.save(user);
 
-        //Отсылаем на почту ключ подтверждения
+        // Отсылаем на почту ключ подтверждения
         await this.emailService.sendConfirmationEmail(
           user.email,
           confirmRegKey,
         );
 
-        //Возвращаем значение что ключ на почту отправлен
+        // Возвращаем значение что ключ на почту отправлен, но не подтвержден
         return {
-          isRegConfirm: true,
+          isAcceptKey: false,
           message: `Приветствую ${user.name}, пожалуйста введи код подтверждения`,
         };
       }
@@ -76,13 +77,12 @@ export class UsersService {
 
   async confirmRegistration(key: string) {
     try {
-      const acceptUser = await this.UserTable.findOneBy({ isAcceptKey: key });
+      const acceptUser = await this.UserTable.findOneBy({ acceptKey: key });
       if (acceptUser) {
+        acceptUser.isAcceptKey = true;
         return {
-          user: acceptUser,
-          name: acceptUser.name,
+          isAcceptKey: true,
           token: acceptUser.authToken,
-          id: acceptUser.authToken,
           message: `Добро пожаловать ${acceptUser.name}`,
         };
       } else {
@@ -141,9 +141,10 @@ export class UsersService {
   }
 
   async getPhoto(authToken: string) {
+    console.log('authToken', authToken);
     if (authToken) {
       const user = await this.UserTable.findOneBy({ authToken });
-      if (user.authToken) {
+      if (user?.authToken) {
         const image = path.basename(user.userPhoto);
         const dirname = process.cwd();
         const imagePath = path.join(

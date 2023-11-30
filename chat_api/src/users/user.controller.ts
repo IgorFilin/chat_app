@@ -23,11 +23,7 @@ export class UsersController {
   @UsePipes(new ValidationPipe())
   async create(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
     const result = await this.usersService.create(createUserDto);
-    if (result?.isRegConfirm) {
-      return res.send(result);
-    } else {
-      return res.status(401).send({ message: result.message });
-    }
+    return res.send(result);
   }
 
   @Post('login')
@@ -94,17 +90,16 @@ export class UsersController {
   async confirm(@Req() req: Request, @Res() res: Response) {
     const key: any = req.query.key;
     const result = await this.usersService.confirmRegistration(key);
-
-    if (result.user) {
+    if (result.isAcceptKey) {
       const expirationDate = new Date();
       expirationDate.setDate(expirationDate.getDate() + 3);
       res.cookie('authToken', result.token, {
         httpOnly: true,
         expires: expirationDate,
       });
-      res.send({ name: result.name, message: result.message, id: result.id });
+      res.send({ isAcceptKey: result.isAcceptKey, message: result.message });
     } else {
-      res.send({ message: result.message });
+      res.send({ message: result.message }).sendStatus(403);
     }
   }
 
