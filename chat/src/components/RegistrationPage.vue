@@ -3,31 +3,26 @@
     <h2 class="registration-title">Регистрация</h2>
     <form class="registration-form">
       <div class="form-group">
-        <label for="name">Имя:</label>
-        <input
+        <Input
+          labelText="Имя:"
           type="text"
-          id="name"
+          id="text"
           v-model="requestDataUser.name" />
-      </div>
-      <div class="form-group">
-        <label for="email">Email:</label>
-        <input
+        <Input
+          labelText="Почта:"
           type="email"
           id="email"
           v-model="requestDataUser.email" />
-      </div>
-      <div class="form-group">
-        <label for="password">Пароль:</label>
-        <input
+        <Input
+          labelText="Пароль:"
           type="password"
           id="password"
           v-model="requestDataUser.password" />
       </div>
-      <button
+      <Button
         class="registration-button"
-        @click="submitForm">
-        Зарегистрироваться
-      </button>
+        @onClick="submitForm"
+        text="Зарегистрироваться" />
     </form>
   </div>
 </template>
@@ -36,7 +31,8 @@
 import { useAuthStore } from '@/store/auth_store.ts';
 import { onUpdated, ref, watch } from 'vue';
 import { RegisterUserType } from '@/api/typesApi';
-import router from '@/router/router';
+import Input from '@/components/assetsComponent/Input.vue';
+import Button from '@/components/assetsComponent/Button.vue';
 
 const requestDataUser = ref<RegisterUserType>({
   name: '',
@@ -46,26 +42,15 @@ const requestDataUser = ref<RegisterUserType>({
 
 const store = useAuthStore();
 
-async function submitForm(e: Event) {
+function submitForm(e: Event) {
   e.preventDefault();
-  await store.registration(requestDataUser.value);
-  console.log(store.isAcceptKey);
-  requestDataUser.value.name = '';
-  requestDataUser.value.email = '';
-  requestDataUser.value.password = '';
+  store.registration(requestDataUser.value);
+  requestDataUser.value = {
+    name: '',
+    email: '',
+    password: '',
+  };
 }
-// console.log(store.confirmReg);
-// watch(
-//   () => store.confirmReg,
-//   () => {
-//     console.log(store.confirmReg);
-//     if (store.confirmReg) {
-//       router.push('/confirm');
-//       store.confirmReg = false;
-//     }
-//   },
-//   { deep: true }
-// );
 </script>
 
 <style scoped lang="scss">
@@ -98,6 +83,7 @@ async function submitForm(e: Event) {
   margin-bottom: 15px;
   display: flex;
   flex-direction: column;
+  gap: 10px;
 }
 
 label {

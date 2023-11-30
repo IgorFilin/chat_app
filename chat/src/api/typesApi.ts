@@ -6,7 +6,7 @@ export interface LoginUserType {
 export interface RegisterUserType {
   name: string;
   email: string;
-  password: string | number;
+  password: string;
 }
 
 export interface ResponseLoginType {

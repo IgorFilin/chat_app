@@ -52,9 +52,12 @@ export const useAuthStore: any = defineStore('auth_store', {
       try {
         this.isLoading = true;
         const result = await authApi.registerUser(dataUser);
-        this.isAcceptKey = result.data.isAcceptKey;
-        // @ts-ignore
-        JSON.stringify(localStorage.setItem('isAcceptKey', result.data.isAcceptKey));
+        if (typeof result.data.isAcceptKey !== 'undefined') {
+          console.log('ВНУТРИ');
+          this.isAcceptKey = result.data.isAcceptKey;
+          // @ts-ignore
+          JSON.stringify(localStorage.setItem('isAcceptKey', result.data.isAcceptKey));
+        }
         this.messages = result.data.message;
         router.push('/confirm');
       } catch (error) {

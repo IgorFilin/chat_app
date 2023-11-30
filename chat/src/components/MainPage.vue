@@ -45,7 +45,7 @@ import { Ref, computed, onMounted, onUnmounted, ref, watch, watchEffect } from '
 import Message from '@/components/Message.vue';
 import UserOnlineContainer from '@/components/UserOnlineContainer.vue';
 import Loader from '@/components/Loader.vue';
-import Icon from '@/components/Icon.vue';
+import Icon from '@/components/assetsComponent/Icon.vue';
 
 const isAllChat = ref(true) as Ref<boolean>;
 const roomId = ref(null) as Ref<string | null>;

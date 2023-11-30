@@ -23,7 +23,11 @@ export class UsersController {
   @UsePipes(new ValidationPipe())
   async create(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
     const result = await this.usersService.create(createUserDto);
-    return res.send(result);
+    if (result.isAcceptKey === false) {
+      return res.send(result);
+    } else {
+      return res.status(403).send(result);
+    }
   }
 
   @Post('login')

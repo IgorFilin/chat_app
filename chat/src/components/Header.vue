@@ -1,24 +1,13 @@
 <template>
   <div class="v-header__container">
     <div class="v-header__buttonsContainer">
-      <button
-        v-if="!store.isAuth"
+      <Button
+        v-for="({ text, redirect, show }, index) in navigateButtons"
+        :class="{ active: activeButton[index] }"
+        :text="text"
+        v-show="show"
         class="v-header__navigateButton"
-        @click="goTo('/registration')">
-        Регистрация
-      </button>
-      <button
-        v-if="!store.isAuth"
-        class="v-header__navigateButton"
-        @click="goTo('/login')">
-        Вход
-      </button>
-      <button
-        v-if="store.isAcceptKey === false"
-        class="v-header__navigateButton"
-        @click="goTo('/confirm')">
-        Подтвердить почту
-      </button>
+        @onClick="goTo(redirect, index)" />
     </div>
     <div class="v-header__nameLogoutContainer">
       <label for="download">
@@ -54,18 +43,44 @@
 <script setup lang="ts">
 import router from '@/router/router';
 import { useAuthStore } from '@/store/auth_store';
-import { watch } from 'vue';
+import { ref, watch } from 'vue';
+import Button from '@/components/assetsComponent/Button.vue';
 
 const store = useAuthStore();
 
-function goTo(route: string) {
+let activeButton = ref([true]);
+
+const navigateButtons = ref([
+  {
+    text: 'Регистрация',
+    redirect: '/registration',
+    show: true,
+  },
+  {
+    text: 'Вход',
+    redirect: '/login',
+    show: true,
+  },
+  {
+    text: 'Подтвердить почту',
+    redirect: '/confirm',
+    show: false,
+  },
+]);
+
+function goTo(route: string, index: number) {
+  console.log('GOTO');
+  activeButton.value = [];
+  activeButton.value[index] = true;
   router.push(route);
 }
 
 watch(
-  () => store.isAcceptKey,
+  [() => store.isAcceptKey, () => store.isAuth],
   () => {
-    console.log('acceptKey', store.isAcceptKey);
+    navigateButtons.value[0].show = !store.isAuth;
+    navigateButtons.value[1].show = !store.isAuth;
+    navigateButtons.value[2].show = store.isAcceptKey === false;
   },
   { immediate: true }
 );
@@ -99,11 +114,16 @@ function downloadPhoto(event: any) {
 }
 
 .v-header__navigateButton {
+  font-size: 15px;
   background-color: initial;
-  color: white;
   border: none;
   cursor: pointer;
   align-self: center;
+  padding: 0;
+
+  &.active {
+    color: #e2e5e8;
+  }
 }
 
 .v-header__nameLogoutContainer {
