@@ -2,8 +2,8 @@
   <div class="v-header__container">
     <div class="v-header__buttonsContainer">
       <Button
-        v-for="({ text, redirect, show }, index) in navigateButtons"
-        :class="{ active: activeButton[index] }"
+        v-for="({ text, redirect, show, isActive }, index) in navigateButtons"
+        :class="{ active: isActive }"
         :text="text"
         v-show="show"
         class="v-header__navigateButton"
@@ -43,38 +43,38 @@
 <script setup lang="ts">
 import router from '@/router/router';
 import { useAuthStore } from '@/store/auth_store';
-import { ref, watch } from 'vue';
+import { onMounted, onUpdated, ref, watch } from 'vue';
 import Button from '@/components/assetsComponent/Button.vue';
 
 const store = useAuthStore();
 
-let activeButton = ref([true]);
+let activeButton = ref([false, true]);
 
 const navigateButtons = ref([
   {
     text: 'Регистрация',
     redirect: '/registration',
     show: true,
+    isActive: false,
   },
   {
     text: 'Вход',
     redirect: '/login',
     show: true,
+    isActive: false,
   },
   {
     text: 'Подтвердить почту',
     redirect: '/confirm',
     show: false,
+    isActive: false,
   },
 ]);
 
 function goTo(route: string, index: number) {
-  console.log('GOTO');
-  activeButton.value = [];
-  activeButton.value[index] = true;
+  setActivNavigationButton(route);
   router.push(route);
 }
-
 watch(
   [() => store.isAcceptKey, () => store.isAuth],
   () => {
@@ -96,6 +96,14 @@ function downloadPhoto(event: any) {
   const file = event.target.files[0];
   store.sendAvatarUser(file);
 }
+
+function setActivNavigationButton(path: string) {
+  console.log(path);
+  navigateButtons.value.map((button) => {
+    button.isActive = button.redirect === path;
+  });
+}
+onMounted(() => console.log(router.currentRoute.value.fullPath));
 </script>
 
 <style scoped lang="scss">
