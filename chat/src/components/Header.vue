@@ -7,7 +7,7 @@
         :text="text"
         v-show="show"
         class="v-header__navigateButton"
-        @onClick="goTo(redirect, index)" />
+        @onClick="goTo(redirect)" />
     </div>
     <div class="v-header__nameLogoutContainer">
       <label for="download">
@@ -48,8 +48,6 @@ import Button from '@/components/assetsComponent/Button.vue';
 
 const store = useAuthStore();
 
-let activeButton = ref([false, true]);
-
 const navigateButtons = ref([
   {
     text: 'Регистрация',
@@ -71,10 +69,10 @@ const navigateButtons = ref([
   },
 ]);
 
-function goTo(route: string, index: number) {
-  setActivNavigationButton(route);
+function goTo(route: string) {
   router.push(route);
 }
+
 watch(
   [() => store.isAcceptKey, () => store.isAuth],
   () => {
@@ -82,6 +80,12 @@ watch(
     navigateButtons.value[1].show = !store.isAuth;
     navigateButtons.value[2].show = store.isAcceptKey === false;
   },
+  { immediate: true }
+);
+
+watch(
+  () => store.currentPath,
+  () => setActivNavigationButton(store.currentPath),
   { immediate: true }
 );
 
@@ -98,12 +102,10 @@ function downloadPhoto(event: any) {
 }
 
 function setActivNavigationButton(path: string) {
-  console.log(path);
   navigateButtons.value.map((button) => {
     button.isActive = button.redirect === path;
   });
 }
-onMounted(() => console.log(router.currentRoute.value.fullPath));
 </script>
 
 <style scoped lang="scss">

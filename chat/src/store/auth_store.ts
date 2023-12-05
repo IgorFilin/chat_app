@@ -14,6 +14,7 @@ interface UserType {
   id: string;
   isLoading: boolean;
   userPhoto: any;
+  currentPath: string;
 }
 
 const toast = useToast();
@@ -28,10 +29,19 @@ export const useAuthStore: any = defineStore('auth_store', {
       isLoading: false,
       id: '',
       userPhoto: '',
+      currentPath: '',
     } as UserType;
   },
-  getters: {},
+  getters: {
+    getPath(state) {
+      return state.currentPath;
+    },
+  },
   actions: {
+    setPath(path: string) {
+      this.currentPath = path;
+      console.log(this.currentPath);
+    },
     async loginAction(data: LoginUserType) {
       try {
         this.isLoading = true;
