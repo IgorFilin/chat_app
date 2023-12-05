@@ -120,7 +120,7 @@ const filteredActiveOrNotUsers = computed(() => {
   max-height: 700px;
   background-color: #1e1c1c;
   transition: 0.5s;
-  left: -250px;
+  left: -270px;
   z-index: 100;
 
   &.active {
@@ -189,6 +189,12 @@ const filteredActiveOrNotUsers = computed(() => {
     border-radius: 0 0 0 0.25em;
     transition: 0.5s;
     cursor: pointer;
+
+    @include phones {
+      width: 50px;
+      height: 50px;
+      right: -24px;
+    }
   }
 
   .v-usersOnline__popup {
