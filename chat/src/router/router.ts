@@ -20,7 +20,6 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  console.log(to.fullPath);
   const store = useAuthStore();
   store.setPath(to.fullPath);
   if (!store.isAuth && to.path === '/main') {

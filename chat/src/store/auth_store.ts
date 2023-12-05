@@ -40,7 +40,6 @@ export const useAuthStore: any = defineStore('auth_store', {
   actions: {
     setPath(path: string) {
       this.currentPath = path;
-      console.log(this.currentPath);
     },
     async loginAction(data: LoginUserType) {
       try {
