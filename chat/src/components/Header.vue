@@ -116,6 +116,7 @@ function setActivNavigationButton(path: string) {
   justify-content: space-between;
   align-items: center;
   padding: 0 20px;
+  position: relative;
 }
 
 .v-header__buttonsContainer {
