@@ -67,7 +67,6 @@ watch(
   flex-direction: column;
   align-items: center;
   max-height: 600px;
-  border-radius: 20px;
   margin: 20vh auto;
 }
 
