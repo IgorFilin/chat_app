@@ -110,7 +110,7 @@ function setActivNavigationButton(path: string) {
 
 <style scoped lang="scss">
 .v-header__container {
-  background-color: #000000;
+  background-color: #090909;
   height: 40px;
   display: flex;
   justify-content: space-between;

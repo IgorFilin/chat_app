@@ -95,7 +95,7 @@ function isMe(id: string | undefined) {
 
 .v-message__messageName {
   word-break: break-all;
-  border: 1px solid black;
+  border: 1px solid #090909;
   display: flex;
   padding: 14px 16px;
   box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);

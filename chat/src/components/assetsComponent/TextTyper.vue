@@ -47,6 +47,6 @@ const props = defineProps({
   left: 0;
   top: 40px;
   z-index: -1;
-  font-size: 17px;
+  font-size: 15px;
 }
 </style>

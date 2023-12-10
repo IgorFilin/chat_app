@@ -55,7 +55,7 @@ function submitForm(e: Event) {
 
 <style scoped lang="scss">
 .registration-container {
-  background-color: #202020;
+  background-color: #090909;
   box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
   padding: 20px;
   color: white;

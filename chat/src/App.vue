@@ -7,8 +7,27 @@
   </transition>
   <Loader v-if="store.isLoading" />
   <TextTyper
-    :text="[
-      `
+    v-if="!store.isAuth"
+    :text="mainPageCodeText" />
+</template>
+
+<script lang="ts" setup>
+import Header from '@/components/Header.vue';
+import Loader from '@/components/Loader.vue';
+import { useAuthStore } from './store/auth_store';
+import { onMounted } from 'vue';
+import TextTyper from '@/components/assetsComponent/TextTyper.vue';
+
+const store = useAuthStore();
+
+onMounted(() => {
+  if (!store.isAuth) {
+    store.auth();
+  }
+});
+
+const mainPageCodeText = [
+  `
     -- Взлом доступа --
     setAccessLevel('admin')
     runHackingScript('mainframe.exe')
@@ -46,23 +65,7 @@
   -- Завершение операции --
     exitWithoutTraces()
     removeHackerSlot()....`,
-    ]" />
-</template>
-
-<script lang="ts" setup>
-import Header from '@/components/Header.vue';
-import Loader from '@/components/Loader.vue';
-import { useAuthStore } from './store/auth_store';
-import { onMounted } from 'vue';
-import TextTyper from '@/components/assetsComponent/TextTyper.vue';
-
-const store = useAuthStore();
-
-onMounted(() => {
-  if (!store.isAuth) {
-    store.auth();
-  }
-});
+];
 </script>
 <style lang="scss">
 * {
@@ -72,7 +75,7 @@ onMounted(() => {
 body {
   margin: 0;
   padding: 0;
-  background-color: #090909;
+  background-color: #000000;
 }
 #app {
   .fade-enter-active,
