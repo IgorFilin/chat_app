@@ -29,9 +29,9 @@ const props = defineProps({
     default: '999999',
   },
   pauseFor: {
-    type: String,
+    type: Number,
     desc: 'Массив строк для печатающего текста',
-    default: '10',
+    default: 10,
   },
   delay: {
     type: String,

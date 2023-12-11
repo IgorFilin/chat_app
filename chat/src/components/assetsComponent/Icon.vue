@@ -17,6 +17,9 @@ const props = defineProps({
   color: {
     type: String,
     desc: 'цвет иконки',
+    validator(value) {
+      return ['white', 'orange'].includes(value);
+    },
   },
 });
 </script>
@@ -28,6 +31,10 @@ const props = defineProps({
 
   &.white {
     color: white;
+  }
+
+  &.orange {
+    color: #0f0;
   }
 }
 </style>

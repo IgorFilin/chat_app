@@ -12,7 +12,6 @@ export function errorStore(error: any) {
       } else {
         messages = err.response?.data.message;
       }
-      console.log(messages);
       return messages;
     }
     return err;
