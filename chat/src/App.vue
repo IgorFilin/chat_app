@@ -9,7 +9,10 @@
   <TextTyper
     v-if="!store.isAuth"
     :text="mainPageCodeText" />
-  <AudioRunner audioSrc="./sound/hack.mp3" />
+  <AudioRunner
+    v-if="!store.isAuth && !store.isLoading"
+    audioSrc="./sound/hack.mp3" />
+  <VantaEffect />
 </template>
 
 <script lang="ts" setup>
@@ -19,6 +22,7 @@ import { useAuthStore } from './store/auth_store';
 import { onMounted, ref } from 'vue';
 import TextTyper from '@/components/assetsComponent/TextTyper.vue';
 import AudioRunner from '@/components/assetsComponent/AudioRunner.vue';
+import VantaEffect from '@/components/assetsComponent/VantaEffect.vue';
 
 const store = useAuthStore();
 
@@ -78,6 +82,7 @@ body {
   margin: 0;
   padding: 0;
   background-color: #000000;
+  overflow: hidden;
 }
 #app {
   .fade-enter-active,
