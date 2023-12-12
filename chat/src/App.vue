@@ -9,18 +9,7 @@
   <TextTyper
     v-if="!store.isAuth"
     :text="mainPageCodeText" />
-  <audio
-    v-if="!store.isAuth"
-    autoplay
-    loop
-    ref="audio"
-    src="./sound/hack.mp3"></audio>
-  <Icon
-    v-if="!store.isAuth"
-    @click="settingVolume"
-    class="v-icon_sound"
-    :id="isVolume ? 'sound_on' : 'sound_off'"
-    color="orange" />
+  <AudioRunner audioSrc="./sound/hack.mp3" />
 </template>
 
 <script lang="ts" setup>
@@ -29,24 +18,9 @@ import Loader from '@/components/Loader.vue';
 import { useAuthStore } from './store/auth_store';
 import { onMounted, ref } from 'vue';
 import TextTyper from '@/components/assetsComponent/TextTyper.vue';
-import Icon from '@/components/assetsComponent/Icon.vue';
+import AudioRunner from '@/components/assetsComponent/AudioRunner.vue';
 
 const store = useAuthStore();
-
-const audio = ref();
-
-const isVolume = ref(true);
-
-function settingVolume() {
-  audio.value.volume = audio.value.volume ? 0 : 1;
-  isVolume.value = !isVolume.value;
-}
-
-onMounted(() => {
-  if (!store.isAuth) {
-    store.auth();
-  }
-});
 
 const mainPageCodeText = [
   `
@@ -88,6 +62,12 @@ const mainPageCodeText = [
     exitWithoutTraces()
     removeHackerSlot()....`,
 ];
+
+onMounted(() => {
+  if (!store.isAuth) {
+    store.auth();
+  }
+});
 </script>
 <style lang="scss">
 * {
@@ -108,19 +88,6 @@ body {
   .fade-enter-from,
   .fade-leave-to {
     opacity: 0;
-  }
-}
-
-.v-icon_sound {
-  width: 40px;
-  height: 40px;
-  position: absolute;
-  right: 80px;
-  bottom: 80px;
-
-  &:hover {
-    cursor: pointer;
-    transform: scale(1.1);
   }
 }
 </style>
