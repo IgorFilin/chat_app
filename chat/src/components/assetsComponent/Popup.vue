@@ -43,7 +43,7 @@ function onSubmit(event: any) {
 <style scoped lang="scss">
 .registration-container {
   background-color: #090909;
-  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+  box-shadow: #0f0 0px 10px 40px 4px;
   padding: 20px;
   color: white;
   max-width: 400px;
