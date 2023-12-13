@@ -7,21 +7,22 @@
       {{ labelText }}
     </label>
     <input
-      :value="modelValue"
+      :value="value"
       :id="id"
       :type="type"
       class="v-input__value"
-      @input="$emit('update:modelValue', $event.currentTarget.value)" />
+      @input="onChange" />
   </div>
 </template>
 
 <script setup lang="ts">
+const emit = defineEmits(['updateValue']);
 const props = defineProps({
   id: {
     type: String,
     desc: 'ID для связи с лейблом',
   },
-  modelValue: {
+  value: {
     type: String,
     desc: 'Значение инпута',
   },
@@ -35,6 +36,10 @@ const props = defineProps({
     desc: 'Текст наж полем ввода',
   },
 });
+
+function onChange(event: any) {
+  emit('updateValue', event.currentTarget.value);
+}
 </script>
 
 <style scoped lang="scss">
