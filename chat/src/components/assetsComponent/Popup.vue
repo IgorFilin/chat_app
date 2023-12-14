@@ -77,21 +77,12 @@ function onSubmit(event: any) {
   flex-direction: column;
   gap: 20px;
 
-  .v-popup__input {
-    padding: 10px;
-    border-radius: 0;
-    border: none;
-    background-color: #303030;
-
-    &::focus {
-      outline: none;
-    }
-
-    label {
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-  }
+  // .v-popup__input {
+  //   padding: 10px;
+  //   border-radius: 0;
+  //   border: none;
+  //   background: #303030;
+  // }
 }
 
 .v-popup__button {

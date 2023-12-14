@@ -7,7 +7,6 @@
 
 <script setup lang="ts">
 import { useAuthStore } from '@/store/auth_store.ts';
-import { onUpdated, ref, watch } from 'vue';
 import { RegisterUserType } from '@/api/typesApi';
 import Popup from '@/components/assetsComponent/Popup.vue';
 
@@ -15,7 +14,7 @@ const inputsRegistration = [
   {
     labelText: 'Имя:',
     changeValue: 'name',
-    id: 'name',
+    id: 'text',
   },
   {
     labelText: 'Почта:',
