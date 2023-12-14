@@ -11,6 +11,7 @@
       :id="id"
       :type="type"
       class="v-input__value"
+      :class="inputClass"
       @input="onChange" />
   </div>
 </template>
@@ -35,6 +36,10 @@ const props = defineProps({
     type: String,
     desc: 'Текст наж полем ввода',
   },
+  inputClass: {
+    type: String,
+    desc: 'Дополнительный класс для инпута',
+  },
 });
 
 function onChange(event: any) {
@@ -42,23 +47,24 @@ function onChange(event: any) {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .v-input {
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  .v-input__value {
-    padding: 8px;
-    border-radius: 4px;
-    border: none;
-    background-color: #303030;
+  gap: 10px;
+}
 
-    &:focus {
-      outline: none;
-    }
+.v-input__value {
+  padding: 8px;
+  border: none;
+  background-color: #303030;
+
+  &:focus {
+    outline: none;
   }
-  .v-input__label {
-    font-weight: bold;
-  }
+}
+
+.v-input__label {
+  font-weight: bold;
 }
 </style>

@@ -1,17 +1,18 @@
 <template>
-  <div class="registration-container">
-    <h2 class="registration-title">Регистрация</h2>
-    <form class="registration-form">
-      <div class="form-group">
+  <div class="v-popup">
+    <h2 class="v-popup__title">{{ title }}</h2>
+    <form class="v-popup__form">
+      <div class="v-popup__formGroup">
         <Input
           v-for="{ labelText, changeValue, id } in inputs"
           :labelText="labelText"
+          inputClass="v-popup__input"
           :type="id"
           :id="id"
           @updateValue="(value) => (inputData[changeValue] = value)" />
       </div>
       <Button
-        class="registration-button"
+        class="v-popup__button"
         @onClick="onSubmit"
         text="Зарегистрироваться" />
     </form>
@@ -19,11 +20,15 @@
 </template>
 
 <script setup lang="ts">
-import { Ref, onUpdated, ref, watch } from 'vue';
+import { Ref, ref } from 'vue';
 import Button from '@/components/assetsComponent/Button.vue';
 import Input from '@/components/assetsComponent/Input.vue';
 
 const props = defineProps({
+  title: {
+    type: String,
+    desc: 'Заголовок попапа',
+  },
   inputs: {
     type: Array<{ changeValue: string; labelText: string; id: string }>,
     desc: 'Массив с инпутами',
@@ -40,8 +45,8 @@ function onSubmit(event: any) {
 }
 </script>
 
-<style scoped lang="scss">
-.registration-container {
+<style lang="scss">
+.v-popup {
   background-color: #090909;
   box-shadow: #0f0 0px 10px 40px 4px;
   padding: 20px;
@@ -55,44 +60,51 @@ function onSubmit(event: any) {
   margin: 20vh auto;
 }
 
-.registration-title {
+.v-popup__title {
   font-size: 24px;
   margin-bottom: 20px;
 }
 
-.registration-form {
+.v-popup__form {
   display: flex;
   flex-direction: column;
+  gap: 20px;
 }
 
-.form-group {
+.v-popup__formGroup {
   margin-bottom: 15px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
+
+  .v-popup__input {
+    padding: 10px;
+    border-radius: 0;
+    border: none;
+    background-color: #303030;
+
+    &::focus {
+      outline: none;
+    }
+
+    label {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+  }
 }
 
-label {
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-input {
-  padding: 8px;
-  border-radius: 4px;
-  border: none;
-  background-color: #303030;
-}
-
-input:focus {
-  outline: none;
-}
-
-.registration-button {
+.v-popup__button {
   padding: 10px 20px;
-  background-color: #053972;
+  background: #053972;
   border: none;
   cursor: pointer;
   margin-bottom: 20px;
+  transition: 0.2s;
+
+  &:hover {
+    background: #1f5084;
+    transition: 0.2s;
+  }
 }
 </style>

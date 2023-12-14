@@ -1,50 +1,37 @@
 <template>
-  <div class="v-registration-container">
-    <h2 class="v-registration-title">Вход</h2>
-    <div class="v-form-group">
-      <label for="email">Email:</label>
-      <input
-        autocomplete="on"
-        auto
-        type="email"
-        id="email"
-        v-model="email" />
-    </div>
-    <div class="v-form-group">
-      <label for="password">Пароль:</label>
-      <input
-        autocomplete="on"
-        type="password"
-        id="password"
-        @keypress.enter="submitForm"
-        v-model="password" />
-    </div>
-    <button
-      class="v-registration-button"
-      @click="submitForm">
-      Войти
-    </button>
-  </div>
+  <Popup
+    :inputs="inputsLogin"
+    title="Вход"
+    @submit="onLogin" />
 </template>
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useAuthStore } from '@/store/auth_store.ts';
 import { LoginUserType } from '@/api/typesApi';
+import Popup from '@/components/assetsComponent/Popup.vue';
 import router from '@/router/router';
 
 let email = ref('');
 let password = ref('');
 
+const inputsLogin = [
+  {
+    labelText: 'Почта:',
+    changeValue: 'email',
+    id: 'email',
+  },
+  {
+    labelText: 'Пароль:',
+    changeValue: 'password',
+    id: 'password',
+  },
+];
+
 const store = useAuthStore();
 
-async function submitForm() {
-  await store.loginAction({
-    email: email.value,
-    password: password.value,
-  } as LoginUserType);
-  email.value = '';
-  password.value = '';
+async function onLogin(data: LoginUserType) {
+  store.loginAction(data);
 }
 
 watch(
