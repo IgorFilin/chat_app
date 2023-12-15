@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { LoginUserType, RegisterUserType, ResponseConfirmRegType, ResponseGetAllUsersType, ResponseLoginType, ResponseLogoutType, ResponseRegisterUserType } from './typesApi';
+import { LoginUserType, RegisterUserType, ResponseConfirmRegType, ResponseGetAllUsersType, ResponseLoginType, ResponseLogoutType, ResponseRegisterUserType } from '../types/typesApi';
 
 const instance = axios.create({
   baseURL: `http://${import.meta.env.VITE_APP_DOMEN_PORT}`,

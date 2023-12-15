@@ -41,7 +41,7 @@ const props = defineProps({
 });
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .v-typewriter {
   position: absolute;
   left: 0;

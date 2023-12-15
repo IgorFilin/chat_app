@@ -8,9 +8,9 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useAuthStore } from '@/store/auth_store.ts';
-import { LoginUserType } from '@/api/typesApi';
 import Popup from '@/components/assetsComponent/Popup.vue';
 import router from '@/router/router';
+import { LoginUserType } from '@/types/typesApi';
 
 let email = ref('');
 let password = ref('');
@@ -73,22 +73,22 @@ watch(
   flex-direction: column;
 }
 
-label {
-  font-weight: bold;
-  margin-bottom: 5px;
-}
+// label {
+//   font-weight: bold;
+//   margin-bottom: 5px;
+// }
 
-input {
-  padding: 8px;
-  border-radius: 4px;
-  border: none;
-  background-color: #303030;
-  color: white;
-}
+// input {
+//   padding: 8px;
+//   border-radius: 4px;
+//   border: none;
+//   background-color: #303030;
+//   color: white;
+// }
 
-input:focus {
-  outline: none;
-}
+// input:focus {
+//   outline: none;
+// }
 
 .v-registration-button {
   padding: 10px 20px;
@@ -98,3 +98,4 @@ input:focus {
   margin-bottom: 20px;
 }
 </style>
+@/types/typesApi

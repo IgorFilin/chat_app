@@ -68,6 +68,7 @@ function onSubmit(event: any) {
 .v-popup__form {
   display: flex;
   flex-direction: column;
+  width: 100%;
   gap: 20px;
 }
 
@@ -75,23 +76,18 @@ function onSubmit(event: any) {
   margin-bottom: 15px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-
-  // .v-popup__input {
-  //   padding: 10px;
-  //   border-radius: 0;
-  //   border: none;
-  //   background: #303030;
-  // }
+  align-items: center;
+  gap: 17px;
 }
 
 .v-popup__button {
-  padding: 10px 20px;
+  padding: 15px 20px;
   background: #053972;
   border: none;
   cursor: pointer;
-  margin-bottom: 20px;
   transition: 0.2s;
+  margin: 0 auto 20px auto;
+  width: 50%;
 
   &:hover {
     background: #1f5084;

@@ -11,7 +11,7 @@ export function inputValidator(data: string, inputType: TypeInputType): { error:
 
   switch (inputType) {
     case TypeInputType.text: {
-      if (inputValue.length >= 15) {
+      if (inputValue.length >= 2) {
         return {
           text: inputValue,
           error: 'Имя должно иметь меньше 15 символов',

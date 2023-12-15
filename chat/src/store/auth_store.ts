@@ -1,8 +1,7 @@
 import { defineStore } from 'pinia';
 import { authApi } from '@/api/appApi';
-import { LoginUserType } from '@/api/typesApi';
+import { LoginUserType, RegisterUserType } from '@/types/typesApi';
 import { useToast } from 'vue-toastification';
-import { dataRegisterUser } from '@/api/typesApi';
 import { errorStore } from '@/utils/storeError';
 import router from '@/router/router';
 
@@ -57,7 +56,7 @@ export const useAuthStore: any = defineStore('auth_store', {
         toast(this.messages);
       }
     },
-    async registration(dataUser: dataRegisterUser) {
+    async registration(dataUser: RegisterUserType) {
       try {
         this.isLoading = true;
         const result = await authApi.registerUser(dataUser);

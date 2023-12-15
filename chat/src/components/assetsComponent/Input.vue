@@ -12,16 +12,20 @@
       :type="type"
       v-model="inputValue"
       :class="[inputClass, { error }]" />
-    <div
-      v-if="error"
-      class="v-input__error">
-      {{ error }}
+    <div class="v-input__error">
+      <TextTyper
+        v-if="error"
+        class="v-input__errorText"
+        delay="50"
+        element="div"
+        :text="[error]" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { inputValidator } from '@/composable/inputValidator.ts';
+import TextTyper from '@/components/assetsComponent/TextTyper.vue';
 import { Ref, onUpdated, ref, watch } from 'vue';
 const emit = defineEmits(['updateValue']);
 
@@ -72,7 +76,8 @@ watch(
   gap: 10px;
 
   input {
-    padding: 10px;
+    padding: 10px 15px;
+    max-width: 195px;
     border: none;
     background: #303030;
     transition: 0.2s;
@@ -87,7 +92,7 @@ watch(
     }
 
     &.error {
-      border: 2px solid red;
+      border: 0.1px solid red;
     }
   }
 }
@@ -98,9 +103,19 @@ watch(
 
 .v-input__error {
   font-size: 14px;
-  word-break: break-word;
-  max-width: 174px;
-  text-align: center;
-  color: #da2d2d;
+  width: max-content;
+  white-space: pre;
+  left: -50px;
+  position: relative;
+
+  .v-input__errorText {
+    max-width: 380px;
+    top: -5px;
+    z-index: 2;
+
+    .Typewriter__wrapper {
+      color: red;
+    }
+  }
 }
 </style>

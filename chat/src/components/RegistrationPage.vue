@@ -7,8 +7,8 @@
 
 <script setup lang="ts">
 import { useAuthStore } from '@/store/auth_store.ts';
-import { RegisterUserType } from '@/api/typesApi';
 import Popup from '@/components/assetsComponent/Popup.vue';
+import { RegisterUserType } from '@/types/typesApi';
 
 const inputsRegistration = [
   {
