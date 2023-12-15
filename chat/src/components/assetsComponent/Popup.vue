@@ -9,10 +9,11 @@
           inputClass="v-popup__input"
           :type="id"
           :id="id"
-          @updateValue="(value) => (inputData[changeValue] = value)" />
+          @updateValue="(dataInput) => onInputUpdated(dataInput, changeValue)" />
       </div>
       <Button
         class="v-popup__button"
+        :isDisabled="isError"
         @onClick="onSubmit"
         text="Зарегистрироваться" />
     </form>
@@ -37,11 +38,18 @@ const props = defineProps({
 
 const inputData = ref({}) as Ref<any>;
 
+const isError = ref(true) as Ref<boolean>;
+
 const emit = defineEmits(['submit']);
 
 function onSubmit(event: any) {
   event.preventDefault();
   emit('submit', inputData.value);
+}
+
+function onInputUpdated(dataInput: { value: string; error: boolean }, changeValue: string) {
+  inputData.value[changeValue] = dataInput.value;
+  isError.value = dataInput.error;
 }
 </script>
 

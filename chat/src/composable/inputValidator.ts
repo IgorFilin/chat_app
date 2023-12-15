@@ -7,18 +7,17 @@ export enum TypeInputType {
 }
 
 export function inputValidator(data: string, inputType: TypeInputType): { error: string } | { text: string } | '' {
-  const inputValue = data;
-
+  console.log(!/^[a-zА-яё 0-9-]+$/.test(data));
   switch (inputType) {
     case TypeInputType.text: {
-      if (inputValue.length >= 2) {
+      if (!/^[A-zА-яё 0-9-]+$/.test(data) || data.length >= 15) {
         return {
-          text: inputValue,
-          error: 'Имя должно иметь меньше 15 символов',
+          text: data,
+          error: 'Некорректное имя',
         };
       }
       return {
-        text: inputValue,
+        text: data,
       };
     }
     default: {

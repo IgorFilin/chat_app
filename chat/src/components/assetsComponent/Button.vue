@@ -6,6 +6,8 @@
   <button
     v-else
     class="v-button"
+    :class="{ disabled: isDisabled }"
+    :disabled="isDisabled"
     @click="onClick($event)">
     {{ text }}
   </button>
@@ -22,6 +24,11 @@ const props = defineProps({
     type: String,
     desc: 'Ссылка кнопки',
   },
+  isDisabled: {
+    type: Boolean,
+    desc: 'Дизейблим ли кнопку',
+    default: false,
+  },
 });
 
 function onClick(event) {
@@ -35,5 +42,14 @@ function onClick(event) {
   background-color: #053972;
   border: none;
   cursor: pointer;
+
+  &.disabled {
+    opacity: 0.4;
+
+    &:hover {
+      background: #053972;
+      cursor: auto;
+    }
+  }
 }
 </style>

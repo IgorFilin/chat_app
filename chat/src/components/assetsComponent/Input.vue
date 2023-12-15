@@ -11,6 +11,7 @@
       :id="id"
       :type="type"
       v-model="inputValue"
+      @blur="onBlur"
       :class="[inputClass, { error }]" />
     <div class="v-input__error">
       <TextTyper
@@ -55,6 +56,12 @@ const props = defineProps({
   },
 });
 
+function onBlur() {
+  if (!inputValue.value.length) {
+    error.value = '';
+  }
+}
+
 watch(
   () => inputValue.value,
   () => {
@@ -64,7 +71,7 @@ watch(
     } else {
       error.value = '';
     }
-    // emit('updateValue', value);
+    emit('updateValue', { value: inputValue.value, error: !!error.value });
   }
 );
 </script>
@@ -105,10 +112,12 @@ watch(
   font-size: 14px;
   width: max-content;
   white-space: pre;
-  left: -50px;
   position: relative;
+  width: 100%;
 
   .v-input__errorText {
+    left: 50%;
+    transform: translateX(-50%);
     max-width: 380px;
     top: -5px;
     z-index: 2;
