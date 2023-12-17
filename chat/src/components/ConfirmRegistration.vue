@@ -1,32 +1,34 @@
 <template>
-  <div class="v-confirmRef">
-    <div class="v-confirmRef__container">
+  <Popup
+    :inputs="inputConfirm"
+    title="Регистрация"
+    @submit="sendKey" />
+  <!-- <div class="v-confirmRef__container">
       <div class="v-confirmRef__text">Подтверждение почты</div>
       <div class="v-confirmRef__textDescription">Введите в поле код который отправлен на вашу почту, на некоторых сервисах он может находиться в папке "Спам"</div>
       <div class="v-confirmRef__inputCode">
         <input v-model="keyAccept" />
-      </div>
-      <button
-        @click="sendKey"
-        class="v-confirmRef__button">
-        Отправить
-      </button>
-    </div>
-  </div>
+      </div> -->
 </template>
 
 <script setup lang="ts">
 import router from '@/router/router';
 import { useAuthStore } from '@/store/auth_store';
+import Popup from '@/components/assetsComponent/Popup.vue';
 import { ref, watch } from 'vue';
 
-const keyAccept = ref('');
+const inputConfirm = [
+  {
+    labelText: 'Ваш код:',
+    changeValue: 'code',
+    id: 'text',
+  },
+];
 
 const store = useAuthStore();
 
-function sendKey() {
-  store.confirmRegistration(keyAccept.value);
-  keyAccept.value = '';
+function sendKey(keyData: { code: string }) {
+  store.confirmRegistration(keyData.code);
 }
 
 watch(

@@ -7,6 +7,7 @@
           v-for="{ labelText, changeValue, id } in inputs"
           :key="id"
           :labelText="labelText"
+          :changeValue="changeValue"
           inputClass="v-popup__input"
           :type="id"
           :id="id"

@@ -1,15 +1,16 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 
 export enum TypeInputType {
-  text = 'text',
+  name = 'name',
   password = 'password',
   email = 'email',
+  code = 'code',
 }
 
 type InputValidatorResponseType =
   | {
       error?: string;
-      text?: string;
+      name?: string;
       email?: string;
       password?: string;
     }
@@ -17,15 +18,15 @@ type InputValidatorResponseType =
 
 export function inputValidator(data: string, inputType: TypeInputType): InputValidatorResponseType {
   switch (inputType) {
-    case TypeInputType.text: {
+    case TypeInputType.name: {
       if (!/^[A-zА-яё 0-9-]+$/.test(data) || data.length >= 15) {
         return {
-          text: data,
+          name: data,
           error: 'Некорректное имя',
         };
       }
       return {
-        text: data,
+        name: data,
       };
     }
     case TypeInputType.email: {
@@ -44,6 +45,17 @@ export function inputValidator(data: string, inputType: TypeInputType): InputVal
         return {
           password: data,
           error: 'Некорректный пароль',
+        };
+      }
+      return {
+        password: data,
+      };
+    }
+    case TypeInputType.code: {
+      if (data.length === 0) {
+        return {
+          password: data,
+          error: 'Некорректный проверочный код',
         };
       }
       return {

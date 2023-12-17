@@ -51,6 +51,13 @@ const props = defineProps({
     type: String,
     desc: 'Дополнительный класс для инпута',
   },
+  changeValue: {
+    type: String,
+    desc: 'Какой инпут изменяется',
+    validator(value: string) {
+      return ['name', 'password', 'email', 'code'].includes(value);
+    },
+  },
 });
 
 function onBlur() {
@@ -60,7 +67,7 @@ function onBlur() {
 }
 
 watch([() => inputValue.value], () => {
-  const value: any = inputValidator(inputValue.value, props.type);
+  const value: any = inputValidator(inputValue.value, props.changeValue);
   if (value?.error) {
     error.value = value.error;
   } else {
