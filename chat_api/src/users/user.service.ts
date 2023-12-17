@@ -98,6 +98,9 @@ export class UsersService {
       );
     }
     const user = await this.UserTable.findOneBy({ email: LoginUserDto.email });
+    if (!user.isAcceptKey) {
+      throw new BadRequestException('Пожалуйста подтвердите вашу почту');
+    }
     if (user && Object.keys(user).length) {
       const userPasswordValid = await bcrypt.compare(
         LoginUserDto.password,
