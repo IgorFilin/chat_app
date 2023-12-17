@@ -61,7 +61,6 @@ export const useAuthStore: any = defineStore('auth_store', {
         this.isLoading = true;
         const result = await authApi.registerUser(dataUser);
         if (typeof result.data.isAcceptKey !== 'undefined') {
-          console.log('ВНУТРИ');
           this.isAcceptKey = result.data.isAcceptKey;
           // @ts-ignore
           JSON.stringify(localStorage.setItem('isAcceptKey', result.data.isAcceptKey));

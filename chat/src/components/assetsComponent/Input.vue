@@ -66,7 +66,6 @@ watch([() => inputValue.value], () => {
   } else {
     error.value = '';
   }
-  console.log('WATCH');
   emit('updateValue', { value: inputValue.value, error: !!error.value });
 });
 </script>

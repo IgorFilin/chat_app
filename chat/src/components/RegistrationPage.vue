@@ -31,8 +31,7 @@ const inputsRegistration = [
 const store = useAuthStore();
 
 function onRegistration(data: RegisterUserType) {
-  console.log(data);
-  // store.registration(data);
+  store.registration(data);
 }
 </script>
 

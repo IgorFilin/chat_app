@@ -12,9 +12,6 @@ import Popup from '@/components/assetsComponent/Popup.vue';
 import router from '@/router/router';
 import { LoginUserType } from '@/types/typesApi';
 
-let email = ref('');
-let password = ref('');
-
 const inputsLogin = [
   {
     labelText: 'Почта:',
@@ -42,60 +39,4 @@ watch(
 );
 </script>
 
-<style scoped lang="scss">
-.v-registration-container {
-  background-color: #090909;
-  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
-  padding: 20px;
-  color: white;
-  max-width: 400px;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-  max-height: 600px;
-  margin: 20vh auto;
-}
-
-.v-registration-title {
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-
-.v-registration-form {
-  display: flex;
-  flex-direction: column;
-}
-
-.v-form-group {
-  margin-bottom: 15px;
-  display: flex;
-  flex-direction: column;
-}
-
-// label {
-//   font-weight: bold;
-//   margin-bottom: 5px;
-// }
-
-// input {
-//   padding: 8px;
-//   border-radius: 4px;
-//   border: none;
-//   background-color: #303030;
-//   color: white;
-// }
-
-// input:focus {
-//   outline: none;
-// }
-
-.v-registration-button {
-  padding: 10px 20px;
-  background-color: #053972;
-  border: none;
-  cursor: pointer;
-  margin-bottom: 20px;
-}
-</style>
-@/types/typesApi
+<style scoped lang="scss"></style>
