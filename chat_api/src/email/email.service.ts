@@ -21,11 +21,22 @@ export class EmailService {
       },
     });
 
+    const htmlTemplate = `
+    <div style="width: 100%; background-color: #1a1a1a; color: #ffa500; padding: 20px; text-align: center;">
+    <h2 style="color: #ffa500;">Доброго времени суток!</h2>
+    <p style="color: #ffa500;">Уважаемый(ая) ${email}</p>
+    <p style="color: #ffa500;">Ваш код подтверждения: <b>${confirmationCode}</b></p>
+    <p style="color: #ffa500;">Вы также можете подтвердить почту на странице:</p>
+    <a href="http://filin-hub.online/confirm" style="color: #ffa500; font-weight: bold;">Страница подтверждения</a>
+    <p style="color: #ffa500;">Спасибо за регистрацию!</p>
+    </div>
+  `;
+
     const mailOptions = {
       from: 'Your App <chat.info@inbox.ru>',
       to: email,
       subject: 'Confirm your email',
-      text: `Your confirmation code is ${confirmationCode}.`,
+      html: htmlTemplate,
     };
 
     const result = await transporter.sendMail(mailOptions);
