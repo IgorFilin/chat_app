@@ -7,26 +7,23 @@
       {{ labelText }}
     </label>
     <input
-      :value="inputValue"
       :id="id"
       :type="type"
       v-model="inputValue"
       @blur="onBlur"
       :class="[inputClass, { error }]" />
     <div class="v-input__error">
-      <TextTyper
+      <span
         v-if="error"
-        class="v-input__errorText"
-        delay="50"
-        element="div"
-        :text="[error]" />
+        class="v-input__errorText">
+        {{ error }}
+      </span>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { inputValidator } from '@/composable/inputValidator.ts';
-import TextTyper from '@/components/assetsComponent/TextTyper.vue';
 import { Ref, onUpdated, ref, watch } from 'vue';
 const emit = defineEmits(['updateValue']);
 
@@ -62,18 +59,16 @@ function onBlur() {
   }
 }
 
-watch(
-  () => inputValue.value,
-  () => {
-    const value: any = inputValidator(inputValue.value, props.type);
-    if (value?.error) {
-      error.value = value.error;
-    } else {
-      error.value = '';
-    }
-    emit('updateValue', { value: inputValue.value, error: !!error.value });
+watch([() => inputValue.value], () => {
+  const value: any = inputValidator(inputValue.value, props.type);
+  if (value?.error) {
+    error.value = value.error;
+  } else {
+    error.value = '';
   }
-);
+  console.log('WATCH');
+  emit('updateValue', { value: inputValue.value, error: !!error.value });
+});
 </script>
 
 <style lang="scss">
@@ -98,6 +93,10 @@ watch(
       background: #232121;
     }
 
+    &:active {
+      background: #1c1b1b;
+    }
+
     &.error {
       border: 0.1px solid red;
     }
@@ -116,15 +115,13 @@ watch(
   width: 100%;
 
   .v-input__errorText {
+    position: absolute;
     left: 50%;
     transform: translateX(-50%);
     max-width: 380px;
     top: -5px;
     z-index: 2;
-
-    .Typewriter__wrapper {
-      color: red;
-    }
+    color: red;
   }
 }
 </style>

@@ -5,6 +5,7 @@
       <div class="v-popup__formGroup">
         <Input
           v-for="{ labelText, changeValue, id } in inputs"
+          :key="id"
           :labelText="labelText"
           inputClass="v-popup__input"
           :type="id"
@@ -21,9 +22,11 @@
 </template>
 
 <script setup lang="ts">
-import { Ref, ref } from 'vue';
+import { Ref, onUpdated, reactive, ref, watch } from 'vue';
 import Button from '@/components/assetsComponent/Button.vue';
 import Input from '@/components/assetsComponent/Input.vue';
+
+type InputsType = { changeValue: string; labelText: string; id: string };
 
 const props = defineProps({
   title: {
@@ -31,13 +34,12 @@ const props = defineProps({
     desc: 'Заголовок попапа',
   },
   inputs: {
-    type: Array<{ changeValue: string; labelText: string; id: string }>,
+    type: Array<InputsType>,
     desc: 'Массив с инпутами',
   },
 });
 
-const inputData = ref({}) as Ref<any>;
-
+const inputData = ref({}) as any;
 const isError = ref(true) as Ref<boolean>;
 
 const emit = defineEmits(['submit']);
@@ -46,6 +48,16 @@ function onSubmit(event: any) {
   event.preventDefault();
   emit('submit', inputData.value);
 }
+
+watch(
+  () => inputData.value,
+  () => {
+    if (Object.values(inputData.value).includes('')) {
+      isError.value = true;
+    }
+  },
+  { deep: true }
+);
 
 function onInputUpdated(dataInput: { value: string; error: boolean }, changeValue: string) {
   inputData.value[changeValue] = dataInput.value;
