@@ -2,6 +2,7 @@
   <Popup
     :inputs="inputsLogin"
     title="Вход"
+    buttonText="Войти"
     @submit="onLogin" />
 </template>
 

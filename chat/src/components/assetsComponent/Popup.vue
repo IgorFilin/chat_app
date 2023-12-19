@@ -17,7 +17,7 @@
         class="v-popup__button"
         :isDisabled="isError"
         @onClick="onSubmit"
-        text="Зарегистрироваться" />
+        :text="buttonText" />
     </form>
   </div>
 </template>
@@ -33,6 +33,10 @@ const props = defineProps({
   title: {
     type: String,
     desc: 'Заголовок попапа',
+  },
+  buttonText: {
+    type: String,
+    desc: 'Текст кнопки',
   },
   inputs: {
     type: Array<InputsType>,

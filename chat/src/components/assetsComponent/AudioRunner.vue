@@ -1,23 +1,17 @@
 <template>
   <div class="v-audioRunner">
-    <audio
-      :autoplay="autoplay"
-      :loop="loop"
-      ref="audio"
-      :src="audioSrc" />
     <Icon
-      @click="settingVolume"
+      @click="isPlayed = !isPlayed"
       class="v-audioRunner__sound"
-      :class="iconClass"
-      :id="isVolume ? 'sound_on' : 'sound_off'"
+      :class="[iconClass, { soundOff: !isPlayed }]"
+      :id="isPlayed ? 'sound_on' : 'sound_off'"
       color="orange" />
   </div>
 </template>
 
 <script setup>
 import Icon from '@/components/assetsComponent/Icon.vue';
-import { ref } from 'vue';
-
+import { ref, watch } from 'vue';
 const props = defineProps({
   loop: {
     type: Boolean,
@@ -35,14 +29,23 @@ const props = defineProps({
   },
 });
 
-const audio = ref();
+const isPlayed = ref(false);
 
-const isVolume = ref(true);
+const audio = new Audio(props.audioSrc);
+audio.autoplay = props.autoplay;
+audio.loop = props.loop;
 
-function settingVolume() {
-  audio.value.volume = audio.value.volume ? 0 : 1;
-  isVolume.value = !isVolume.value;
-}
+watch(
+  () => isPlayed.value,
+  () => {
+    if (!isPlayed.value) {
+      audio.pause();
+      audio.currentTime = 0.0;
+    } else {
+      audio.play();
+    }
+  }
+);
 </script>
 
 <style lang="scss">
@@ -53,8 +56,22 @@ function settingVolume() {
   right: 80px;
   bottom: 80px;
 
+  &.soundOff {
+    @keyframes shake {
+      20%,
+      60% {
+        transform: translateX(0);
+      }
+      20% {
+        transform: scale(1.1);
+      }
+    }
+    animation: shake 0.5s ease infinite;
+  }
+
   &:hover {
     cursor: pointer;
+    animation: none;
     transform: scale(1.1);
   }
 }

@@ -2,6 +2,7 @@
   <Popup
     :inputs="inputsRegistration"
     title="Регистрация"
+    buttonText="Зарегистрироваться"
     @submit="onRegistration" />
 </template>
 
