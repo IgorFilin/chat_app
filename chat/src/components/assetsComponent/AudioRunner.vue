@@ -11,7 +11,7 @@
 
 <script setup>
 import Icon from '@/components/assetsComponent/Icon.vue';
-import { ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 const props = defineProps({
   loop: {
     type: Boolean,
@@ -46,6 +46,11 @@ watch(
     }
   }
 );
+
+onMounted(() => {
+  audio.pause();
+  audio.currentTime = 0.0;
+});
 </script>
 
 <style lang="scss">
