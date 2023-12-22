@@ -27,9 +27,6 @@ services:
     env_file: .env
     restart: always
     volumes:
-      - data_BD:/var/lib/postgresql/data
+      - /var/postgress_data:/var/lib/postgresql/data
     ports:
       - '5432:5432'
-volumes:
-  data_BD:
-    external: true
