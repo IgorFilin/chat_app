@@ -42,9 +42,7 @@ const inputs = [
     id: 'password',
   },
 ];
-onUpdated(() => {
-  console.log(textValue.value);
-});
+onUpdated(() => {});
 </script>
 <style lang="scss">
 .test {
