@@ -27,7 +27,7 @@ services:
     env_file: .env
     restart: always
     volumes:
-      - ./db-data/:/var/lib/postgresql/data
+      - data_BD:/var/lib/postgresql/data
     ports:
       - '5432:5432'
 volumes:
