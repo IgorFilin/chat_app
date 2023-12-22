@@ -42,6 +42,7 @@ const inputs = [
     id: 'password',
   },
 ];
+onUpdated(() => {});
 </script>
 <style lang="scss">
 .test {
