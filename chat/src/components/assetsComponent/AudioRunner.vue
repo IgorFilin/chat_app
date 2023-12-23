@@ -1,6 +1,7 @@
 <template>
   <div class="v-audioRunner">
     <Icon
+      v-if="icon"
       @click="isPlayed = !isPlayed"
       class="v-audioRunner__sound"
       :class="[iconClass, { soundOff: !isPlayed }]"
@@ -11,7 +12,10 @@
 
 <script setup>
 import Icon from '@/components/assetsComponent/Icon.vue';
-import { ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
+
+const emit = defineEmits(['audio']);
+
 const props = defineProps({
   loop: {
     type: Boolean,
@@ -23,6 +27,10 @@ const props = defineProps({
   },
   audioSrc: {
     type: String,
+  },
+  icon: {
+    type: Boolean,
+    default: true,
   },
   iconClass: {
     type: String,
@@ -40,12 +48,17 @@ watch(
   () => {
     if (!isPlayed.value) {
       audio.pause();
-      audio.currentTime = 0.0;
     } else {
       audio.play();
     }
   }
 );
+
+onMounted(() => {
+  emit('audio', audio);
+  audio.pause();
+  audio.currentTime = 0.0;
+});
 </script>
 
 <style lang="scss">

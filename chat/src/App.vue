@@ -1,18 +1,25 @@
 <template>
-  <Header />
-  <transition
-    name="fade"
-    mode="out-in">
-    <router-view></router-view>
-  </transition>
-  <Loader v-if="store.isLoading" />
-  <TextTyper
-    v-if="!store.isAuth"
-    :text="mainPageCodeText" />
-  <AudioRunner
-    v-if="!store.isAuth && !store.isLoading"
-    audioSrc="./sound/hack.mp3" />
-  <VantaEffect />
+  <div @click="audio.play()">
+    <Header />
+    <transition
+      name="fade"
+      mode="out-in">
+      <router-view></router-view>
+    </transition>
+    <Loader v-if="store.isLoading" />
+    <TextTyper
+      v-if="!store.isAuth"
+      :text="mainPageCodeText" />
+    <AudioRunner
+      v-if="!store.isAuth && !store.isLoading"
+      audioSrc="./sound/hack.mp3" />
+    <AudioRunner
+      :icon="false"
+      :loop="false"
+      @audio="(e) => (audio = e)"
+      audioSrc="./sound/click.mp3" />
+    <VantaEffect />
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -23,6 +30,8 @@ import { onMounted, ref } from 'vue';
 import TextTyper from '@/components/assetsComponent/TextTyper.vue';
 import AudioRunner from '@/components/assetsComponent/AudioRunner.vue';
 import VantaEffect from '@/components/assetsComponent/VantaEffect.vue';
+
+const audio = ref();
 
 const store = useAuthStore();
 
