@@ -99,7 +99,7 @@ export class UsersService {
       );
     }
     const user = await this.UserTable.findOneBy({ email: LoginUserDto.email });
-    if (!user.isAcceptKey) {
+    if (user && !user.isAcceptKey) {
       throw new BadRequestException('Пожалуйста подтвердите вашу почту');
     }
     if (user && Object.keys(user).length) {
@@ -145,7 +145,6 @@ export class UsersService {
   }
 
   async getPhoto(authToken: string) {
-    console.log('authToken', authToken);
     if (authToken) {
       const user = await this.UserTable.findOneBy({ authToken });
       if (user?.authToken) {

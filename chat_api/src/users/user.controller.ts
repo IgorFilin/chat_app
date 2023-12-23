@@ -51,6 +51,7 @@ export class UsersController {
     if (result?.isAuth) {
       resultObject.name = result.name;
       resultObject.id = result.id;
+      resultObject.isAcceptKey = true;
     }
     res.send(resultObject);
   }
@@ -93,6 +94,7 @@ export class UsersController {
   @Get('confirm')
   async confirm(@Req() req: Request, @Res() res: Response) {
     const key: any = req.query.key;
+    const mail: any = !!req.query.mail;
     const result = await this.usersService.confirmRegistration(key);
     if (result.isAcceptKey) {
       const expirationDate = new Date();
@@ -101,6 +103,9 @@ export class UsersController {
         httpOnly: true,
         expires: expirationDate,
       });
+      if (mail) {
+        return res.redirect('http://localhost:5173/');
+      }
       res.send({ isAcceptKey: result.isAcceptKey, message: result.message });
     } else {
       res.send({ message: result.message }).sendStatus(403);

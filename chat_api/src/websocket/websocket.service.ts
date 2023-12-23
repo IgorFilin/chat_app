@@ -191,7 +191,6 @@ export class WebsocketService {
       newMessage.userPhoto = user.userPhoto;
       newMessage.room = room;
       await this.MessageTable.save(newMessage);
-      console.log(newMessage);
       // let roomMessages = await this.RoomTable.createQueryBuilder('room')
       //   .leftJoinAndSelect('room.messages', 'message1')
       //   .where('message1.roomId = :roomId', { roomId: room.id })

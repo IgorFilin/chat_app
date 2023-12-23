@@ -11,7 +11,6 @@ import { WebsocketModule } from './websocket/websocket.module';
 import { Room } from './websocket/entities/room.entity';
 import { Message } from './websocket/entities/message.entity';
 
-console.log(process.env.NODE_ENV);
 const configEnv =
   process.env.NODE_ENV === 'production'
     ? '.env.production'

@@ -22,12 +22,15 @@ export class EmailService {
     });
 
     const htmlTemplate = `
+    <meta name="unsub" content="mailto:chat.info@inbox.ru">
+    <meta name="unsub-post" content="Подтверждения почты">
+    <meta name="X-Mailer" content="My Mailer">
     <div style="width: 100%; background-color: #1a1a1a; color: #ffa500; padding: 20px; text-align: center;">
     <h2 style="color: #ffa500;">Доброго времени суток!</h2>
     <p style="color: #ffa500;">Уважаемый(ая) ${email}</p>
     <p style="color: #ffa500;">Ваш код подтверждения: <b>${confirmationCode}</b></p>
-    <p style="color: #ffa500;">Вы также можете подтвердить почту на странице:</p>
-    <a href="http://filin-hub.online/confirm" style="color: #ffa500; font-weight: bold;">Страница подтверждения</a>
+    <p style="color: #ffa500;">Вы также можете подтвердить почту вручную или кликнув во ссылке:</p>
+    <a href="http://filin-hub.online:3000/user/confirm?mail=true&key=${confirmationCode}" style="display: inline-block; padding: 10px 20px; background-color: #ffa500; color: #1a1a1a; text-decoration: none; font-weight: bold; border-radius: 5px;">Клик для подтверждения</a>
     <p style="color: #ffa500;">Спасибо за регистрацию!</p>
     </div>
   `;
