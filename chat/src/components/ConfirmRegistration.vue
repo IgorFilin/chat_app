@@ -1,14 +1,9 @@
 <template>
   <Popup
     :inputs="inputConfirm"
-    title="Регистрация"
+    title="Подтверждение почты"
+    buttonText="Подтвердить"
     @submit="sendKey" />
-  <!-- <div class="v-confirmRef__container">
-      <div class="v-confirmRef__text">Подтверждение почты</div>
-      <div class="v-confirmRef__textDescription">Введите в поле код который отправлен на вашу почту, на некоторых сервисах он может находиться в папке "Спам"</div>
-      <div class="v-confirmRef__inputCode">
-        <input v-model="keyAccept" />
-      </div> -->
 </template>
 
 <script setup lang="ts">
@@ -41,50 +36,4 @@ watch(
 );
 </script>
 
-<style scoped lang="scss">
-.v-confirmRef {
-  width: 100%;
-  height: 95vh;
-}
-
-.v-confirmRef__container {
-  background-color: #202020;
-  padding: 20px;
-  color: white;
-  max-width: 400px;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  gap: 20px;
-  align-items: center;
-  max-height: 600px;
-  border-radius: 20px;
-  margin: 20vh auto;
-}
-
-.v-confirmRef__inputCode {
-  input {
-    padding: 8px;
-    border-radius: 4px;
-    border: none;
-    background-color: #303030;
-    color: white;
-  }
-}
-
-.v-confirmRef__text {
-  font-size: 24px;
-}
-
-.v-confirmRef__textDescription {
-  text-align: center;
-}
-
-.v-confirmRef__button {
-  padding: 10px 20px;
-  background-color: #053972;
-  border: none;
-  cursor: pointer;
-  margin-bottom: 20px;
-}
-</style>
+<style scoped lang="scss"></style>

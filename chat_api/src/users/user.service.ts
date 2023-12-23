@@ -80,6 +80,7 @@ export class UsersService {
       const acceptUser = await this.UserTable.findOneBy({ acceptKey: key });
       if (acceptUser) {
         acceptUser.isAcceptKey = true;
+        await this.UserTable.save(acceptUser);
         return {
           isAcceptKey: true,
           token: acceptUser.authToken,

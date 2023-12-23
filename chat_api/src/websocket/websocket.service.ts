@@ -34,8 +34,10 @@ export class WebsocketService {
   privateChatEvent = 'private_message' as 'private_message';
 
   async updatedClientsAfterUpdateDataBase(user: any) {
-    const searchedUser = this.clients[user.id];
-    searchedUser.userPhoto = user.userPhoto;
+    try {
+      const searchedUser = this.clients[user.id];
+      searchedUser.userPhoto = user.userPhoto;
+    } catch (e) {}
   }
 
   async getAllMessagesPublicChat(userId: string) {
