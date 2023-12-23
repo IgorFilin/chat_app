@@ -104,7 +104,7 @@ export class UsersController {
         expires: expirationDate,
       });
       if (mail) {
-        return res.redirect('http://localhost:5173/');
+        return res.redirect('http://filin-hub.online/');
       }
       res.send({ isAcceptKey: result.isAcceptKey, message: result.message });
     } else {
