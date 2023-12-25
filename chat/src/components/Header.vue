@@ -78,7 +78,7 @@ watch(
   () => {
     navigateButtons.value[0].show = !store.isAuth;
     navigateButtons.value[1].show = !store.isAuth;
-    navigateButtons.value[2].show = !store.isAcceptKey;
+    navigateButtons.value[2].show = store.isAcceptKey === false;
   },
   { immediate: true }
 );
