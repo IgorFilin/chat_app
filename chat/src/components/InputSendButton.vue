@@ -61,7 +61,7 @@ function sendMessage() {
     cursor: pointer;
     border: none;
     color: #000;
-    background-color: #fff;
+    background: #fff;
   }
 }
 </style>
