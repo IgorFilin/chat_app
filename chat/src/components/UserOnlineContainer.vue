@@ -5,6 +5,7 @@
     @click="showPopup = false">
     <div
       class="v-usersOnline__clickElem"
+      :class="{ notActive: !isActiveUserContainer }"
       @click="onActiveUserContainer" />
     <input
       class="v-usersOnline__search"
@@ -183,12 +184,34 @@ const filteredActiveOrNotUsers = computed(() => {
     clip-path: polygon(0% 0%, 100% 100%, 0% 100%);
     transform: rotate(225deg);
     z-index: 99;
-    background-color: #202020;
+    background: $cacaoBlack;
     right: -14px;
     top: 50%;
     border-radius: 0 0 0 0.25em;
     transition: 0.5s;
     cursor: pointer;
+
+    &.notActive {
+      background: $orange;
+    }
+
+    &.pulse {
+      @keyframes pulse {
+        0% {
+          transform: rotate(225deg) scale(1);
+          opacity: 0.5;
+        }
+        50% {
+          transform: rotate(225deg) scale(1.2);
+          opacity: 1;
+        }
+        100% {
+          transform: rotate(225deg) scale(1);
+          opacity: 0.5;
+        }
+      }
+      animation: pulse 1.5s ease infinite;
+    }
 
     @include phones {
       width: 50px;
