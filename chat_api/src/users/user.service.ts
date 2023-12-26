@@ -160,7 +160,14 @@ export class UsersService {
           'image',
           isPicturePresent ? image : 'default_photo_user.webp',
         );
-        return imagePath;
+
+        // Если id пользователя равен id найденного пользоваетля, проверка на всякий случай
+        if (user.authToken === authToken) {
+          user.userPhoto = imagePath;
+          this.UserTable.save(user);
+
+          return imagePath;
+        }
       }
     }
   }
