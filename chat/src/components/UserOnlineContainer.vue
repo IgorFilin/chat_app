@@ -200,7 +200,6 @@ const filteredActiveOrNotUsers = computed(() => {
   .v-usersOnline__popup {
     position: absolute;
     background: #090909;
-    // border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     width: fit-content;
     height: fit-content;

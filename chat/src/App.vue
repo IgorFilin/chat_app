@@ -85,12 +85,12 @@ onMounted(() => {
 <style lang="scss">
 * {
   font-family: monospace, sans-serif;
-  color: #0f0;
+  color: $orange;
 }
 body {
   margin: 0;
   padding: 0;
-  background-color: #000000;
+  background-color: $darkBlack;
   overflow: hidden;
 }
 #app {
