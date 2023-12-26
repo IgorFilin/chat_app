@@ -189,7 +189,7 @@ export class WebsocketService {
       newMessage.message = messageToSaveDB;
       newMessage.name = user.name;
       newMessage.userId = user.id;
-      newMessage.userPhoto = user.userPhoto;
+      // newMessage.userPhoto = user.userPhoto;
       newMessage.room = room;
       await this.MessageTable.save(newMessage);
       // let roomMessages = await this.RoomTable.createQueryBuilder('room')
@@ -269,33 +269,39 @@ export class WebsocketService {
       );
       return;
     }
-    const dirname = process.cwd();
 
     for (let i = 0; i < roomMessages.messages.length; i++) {
-      roomMessages.messages[i].userPhoto = await fs.promises.readFile(
-        this.clients[roomMessages.messages[i].userId].userPhoto,
-        'base64',
-      );
-
-      if (isJSON(roomMessages.messages[i].message)) {
-        roomMessages.messages[i].message = JSON.parse(
-          roomMessages.messages[i].message,
+      try {
+        const userPhoto = await fs.promises.readFile(
+          roomMessages.messages[i].userId === creator.id
+            ? creator.userPhoto
+            : userToAdd.userPhoto,
+          'base64',
         );
-      }
 
-      client.client.send(
-        JSON.stringify({
-          lengthMessages: roomMessages.messages.length,
-          userToAddPrivat: userToAdd.name,
-          openRoom: true,
-          messages: {
-            event: this.privateChatEvent,
-            roomId: room.id,
-            roomName: room.name,
-            ...roomMessages.messages[i],
-          },
-        }),
-      );
+        if (isJSON(roomMessages.messages[i].message)) {
+          roomMessages.messages[i].message = JSON.parse(
+            roomMessages.messages[i].message,
+          );
+        }
+
+        client.client.send(
+          JSON.stringify({
+            lengthMessages: roomMessages.messages.length,
+            userToAddPrivat: userToAdd.name,
+            openRoom: true,
+            messages: {
+              event: this.privateChatEvent,
+              roomId: room.id,
+              roomName: room.name,
+              userPhoto,
+              ...roomMessages.messages[i],
+            },
+          }),
+        );
+      } catch (e) {
+        console.log(e);
+      }
     }
   }
 
