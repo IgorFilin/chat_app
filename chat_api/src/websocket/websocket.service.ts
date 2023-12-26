@@ -12,6 +12,7 @@ import * as fs from 'node:fs';
 import { Room } from './entities/room.entity';
 import { Message } from './entities/message.entity';
 import { isJSON } from 'class-validator';
+import * as path from 'path';
 
 @WebSocketGateway()
 export class WebsocketService {
@@ -42,7 +43,7 @@ export class WebsocketService {
 
   async getAllMessagesPublicChat(userId: string) {
     const client = this.clients[userId];
-    for (let i = 0; i < this.messages.length; i++) {
+    for (let i = 0; i <= this.messages.length; i++) {
       client.client.send(
         JSON.stringify({
           messages: this.messages[i],
@@ -268,10 +269,11 @@ export class WebsocketService {
       );
       return;
     }
+    const dirname = process.cwd();
 
     for (let i = 0; i < roomMessages.messages.length; i++) {
       roomMessages.messages[i].userPhoto = await fs.promises.readFile(
-        roomMessages.messages[i].userPhoto,
+        this.clients[roomMessages.messages[i].userId].userPhoto,
         'base64',
       );
 

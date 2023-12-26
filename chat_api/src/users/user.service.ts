@@ -150,25 +150,36 @@ export class UsersService {
       if (user?.authToken) {
         const image = path.basename(user.userPhoto);
         const dirname = process.cwd();
+        const isPicturePresent = fs.existsSync(
+          path.join(dirname, 'dist', 'static', 'image', image),
+        );
         const imagePath = path.join(
           dirname,
           'dist',
           'static',
           'image',
-          image ? image : 'default_photo_user.webp',
+          isPicturePresent ? image : 'default_photo_user.webp',
         );
-        return imagePath;
+
+        // Если id пользователя равен id найденного пользоваетля, проверка на всякий случай
+        if (user.authToken === authToken) {
+          user.userPhoto = imagePath;
+          this.UserTable.save(user);
+
+          return imagePath;
+        }
       }
     }
   }
 
   async setPhoto(userId: string, newAvatar: any) {
     try {
+      console.log(newAvatar.avatar.originalName);
       // Сохраняем файл по дефолтному пути, в папку dist сборки проекта.
       const dirname = process.cwd();
       const savePath = path.join(
         dirname,
-        'src',
+        'dist',
         'static',
         'image',
         newAvatar.avatar.originalName,

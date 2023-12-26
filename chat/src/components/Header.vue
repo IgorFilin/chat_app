@@ -78,7 +78,7 @@ watch(
   () => {
     navigateButtons.value[0].show = !store.isAuth;
     navigateButtons.value[1].show = !store.isAuth;
-    navigateButtons.value[2].show = !store.isAcceptKey;
+    navigateButtons.value[2].show = store.isAcceptKey === false;
   },
   { immediate: true }
 );
@@ -110,7 +110,7 @@ function setActivNavigationButton(path: string) {
 
 <style scoped lang="scss">
 .v-header__container {
-  background-color: #090909;
+  background-color: $black;
   height: 40px;
   display: flex;
   justify-content: space-between;
