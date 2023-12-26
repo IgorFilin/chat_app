@@ -22,8 +22,8 @@ export class Message {
   @Column()
   userId: string;
 
-  @Column()
-  userPhoto: string;
+  // @Column()
+  // userPhoto: string;
 
   @ManyToOne(() => Room, (room) => room.messages)
   room: Room;
