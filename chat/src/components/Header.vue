@@ -45,7 +45,11 @@
     <div
       class="v-header__modalWindow"
       v-if="isOpenModal">
-      <div class="v-header__modalItem">Профиль</div>
+      <div
+        class="v-header__modalItem"
+        @click="goTo('/profile'), (isOpenModal = false)">
+        Профиль
+      </div>
       <div
         class="v-header__modalItem close"
         @click="isOpenModal = false">

@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, watchEffect } from 'vue';
 import { useAuthStore } from '@/store/auth_store.ts';
 import Popup from '@/components/assetsComponent/Popup.vue';
 import router from '@/router/router';
@@ -32,12 +32,9 @@ async function onLogin(data: LoginUserType) {
   store.loginAction(data);
 }
 
-watch(
-  () => store.isAuth,
-  () => {
-    router.push('/main');
-  }
-);
+watchEffect(() => {
+  if (store.isAuth) router.push('/main');
+});
 </script>
 
 <style scoped lang="scss"></style>
