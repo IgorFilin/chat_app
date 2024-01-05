@@ -104,4 +104,9 @@ body {
     opacity: 0;
   }
 }
+.Vue-Toastification__toast--default.my-custom-toast-class {
+  background-color: $blue;
+  border-radius: 0;
+  top: 20px;
+}
 </style>

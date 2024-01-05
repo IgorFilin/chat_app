@@ -9,7 +9,9 @@ import VueTypewriterEffect from 'vue-typewriter-effect';
 
 const options = {
   // Setting the global default position
-  position: 'bottom-left',
+  position: 'top-left',
+  icon: true,
+  toastClassName: 'my-custom-toast-class',
 };
 const pinia = createPinia();
 
