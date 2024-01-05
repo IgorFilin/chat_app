@@ -6,14 +6,12 @@
     <div
       v-if="!isAllChat"
       class="v-mainPage__backAllChatContainer">
-      <button
-        @click="goToPublicChat"
-        class="v-mainPage__buttonBackAllChat">
-        <Icon
-          id="arrow_back"
-          color="white" />
-        В общий чат
-      </button>
+      <Button
+        @onClick="goToPublicChat"
+        text="В общий чат"
+        isIcon
+        iconId="arrow_back"
+        iconColor="white" />
       <div>В диалоге {{ userToAddPrivate }}</div>
     </div>
     <div
@@ -27,7 +25,7 @@
       <Message
         v-if="isLoadingMessages"
         :key="message.message.toString()"
-        v-for="(message, index) in memoMessages"
+        v-for="message in memoMessages"
         v-bind="message" />
       <Loader
         v-else
@@ -45,7 +43,7 @@ import { Ref, computed, onMounted, onUnmounted, ref, watch, watchEffect } from '
 import Message from '@/components/Message.vue';
 import UserOnlineContainer from '@/components/UserOnlineContainer.vue';
 import Loader from '@/components/Loader.vue';
-import Icon from '@/components/assetsComponent/Icon.vue';
+import Button from '@/components/assetsComponent/Button.vue';
 
 const isAllChat = ref(true) as Ref<boolean>;
 const roomId = ref(null) as Ref<string | null>;

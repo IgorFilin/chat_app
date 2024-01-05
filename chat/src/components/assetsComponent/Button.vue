@@ -9,12 +9,19 @@
     :class="{ disabled: isDisabled }"
     :disabled="isDisabled"
     @click="onClick($event)">
+    <Icon
+      v-if="isIcon"
+      :id="iconId"
+      :color="iconColor" />
     {{ text }}
   </button>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import Icon from '@/components/assetsComponent/Icon.vue';
+
 const emit = defineEmits(['onClick']);
+
 const props = defineProps({
   text: {
     type: String,
@@ -29,9 +36,23 @@ const props = defineProps({
     desc: 'Дизейблим ли кнопку',
     default: false,
   },
+  isIcon: {
+    type: Boolean,
+    desc: 'Отображать ли иконку',
+    default: false,
+  },
+  iconId: {
+    type: String,
+    desc: 'id иконки',
+  },
+  iconColor: {
+    type: String,
+    desc: 'Цвет иконки',
+    default: 'orange',
+  },
 });
 
-function onClick(event) {
+function onClick(event: any) {
   emit('onClick', event);
 }
 </script>
@@ -39,17 +60,19 @@ function onClick(event) {
 <style lang="scss">
 .v-button {
   padding: 10px 20px;
-  background-color: #053972;
+  background-color: $blue;
   border: none;
   cursor: pointer;
+  transition: 0.3s;
 
   &.disabled {
     opacity: 0.4;
+    cursor: auto;
+  }
 
-    &:hover {
-      background: #053972;
-      cursor: auto;
-    }
+  &:hover {
+    transition: 0.3s;
+    background: $darkBlue;
   }
 }
 </style>
