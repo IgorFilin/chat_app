@@ -1,2 +1,13 @@
 @import './colors.scss';
 @import './mixin.scss';
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 90vh;
+  width: 100%;
+  max-width: 1980px;
+  margin: auto;
+}

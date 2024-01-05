@@ -1,5 +1,5 @@
 <template>
-  <div class="v-mainPage">
+  <div class="container">
     <UserOnlineContainer
       @openRoom="openRoomHandler"
       :usersOnline="usersOnline" />
@@ -67,7 +67,9 @@ if (!store.isAuth) {
 const connection = new WebSocket(`${import.meta.env.VITE_APP_PROTOCOL}://${import.meta.env.VITE_APP_DOMEN_PORT}?userID=${store.id}`);
 
 connection.onclose = function (event) {
-  store.toast('К сожалению соединение разорвано');
+  if (router.currentRoute.value.path !== '/profile') {
+    store.toast('К сожалению соединение разорвано');
+  }
 };
 
 function sendMessage(message: string) {
@@ -219,17 +221,6 @@ onUnmounted(() => {
 </script>
 
 <style scoped lang="scss">
-.v-mainPage {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  height: 90vh;
-  width: 100%;
-  max-width: 1980px;
-  margin: auto;
-}
-
 .v-mainPage__chatContainer {
   display: flex;
   flex-direction: column-reverse;
