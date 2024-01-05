@@ -67,7 +67,7 @@ if (!store.isAuth) {
 const connection = new WebSocket(`${import.meta.env.VITE_APP_PROTOCOL}://${import.meta.env.VITE_APP_DOMEN_PORT}?userID=${store.id}`);
 
 connection.onclose = function (event) {
-  if (router.currentRoute.value.path !== '/profile') {
+  if (router.currentRoute.value.path !== '/profile' && router.currentRoute.value.path !== '/login') {
     store.toast('К сожалению соединение разорвано');
   }
 };
