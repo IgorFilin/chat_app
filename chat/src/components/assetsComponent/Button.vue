@@ -59,8 +59,12 @@ function onClick(event: any) {
 
 <style lang="scss">
 .v-button {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
   padding: 10px 20px;
-  background-color: $blue;
+  background: $blue;
   border: none;
   cursor: pointer;
   transition: 0.3s;
@@ -68,6 +72,10 @@ function onClick(event: any) {
   &.disabled {
     opacity: 0.4;
     cursor: auto;
+
+    &:hover {
+      background: $blue;
+    }
   }
 
   &:hover {
