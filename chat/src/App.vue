@@ -96,12 +96,17 @@ body {
 #app {
   .fade-enter-active,
   .fade-leave-active {
-    transition: opacity 0.5s ease;
+    transition: opacity 0.1s ease;
   }
 
   .fade-enter-from,
   .fade-leave-to {
     opacity: 0;
   }
+}
+.Vue-Toastification__toast--default.my-custom-toast-class {
+  background-color: $blue;
+  border-radius: 0;
+  top: 20px;
 }
 </style>

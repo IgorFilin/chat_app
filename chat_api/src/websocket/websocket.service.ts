@@ -38,7 +38,9 @@ export class WebsocketService {
     try {
       const searchedUser = this.clients[user.id];
       searchedUser.userPhoto = user.userPhoto;
-    } catch (e) {}
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async getAllMessagesPublicChat(userId: string) {
@@ -227,9 +229,18 @@ export class WebsocketService {
     const creator = await this.UserTable.findOneBy({ id: body.myId });
     const userToAdd = await this.UserTable.findOneBy({ id: body.userId });
 
+    const dirname = process.cwd();
+    const defaultImagePath = path.join(
+      dirname,
+      'dist',
+      'static',
+      'image',
+      'default_photo_user.webp',
+    );
+
     const client = this.clients[body.myId];
 
-    // Получает комнату в которой есть 2 пользователя, вы и пользователь собеседник
+    // Получаем комнату в которой есть 2 пользователя, вы и пользователь собеседник
     let room = await this.RoomTable.createQueryBuilder('room')
       .innerJoin('room.users', 'user1') // Делает связь свойства сущности room с массивом подтаблицей users
       .innerJoin('room.users', 'user2') // Делает связь свойства сущности room с массивом подтаблицей users 2 раз
@@ -272,10 +283,15 @@ export class WebsocketService {
 
     for (let i = 0; i < roomMessages.messages.length; i++) {
       try {
-        const userPhoto = await fs.promises.readFile(
+        const currentUserPhotoPath =
           roomMessages.messages[i].userId === creator.id
             ? creator.userPhoto
-            : userToAdd.userPhoto,
+            : userToAdd.userPhoto;
+
+        const userPhoto = await fs.promises.readFile(
+          fs.existsSync(currentUserPhotoPath)
+            ? currentUserPhotoPath
+            : defaultImagePath,
           'base64',
         );
 

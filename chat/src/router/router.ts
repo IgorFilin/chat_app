@@ -3,6 +3,7 @@ import RegistrationPage from '../components/RegistrationPage.vue';
 import LoginPage from '@/components/LoginPage.vue';
 import MainPage from '@/components/MainPage.vue';
 import ConfirmRegistration from '@/components/ConfirmRegistration.vue';
+import ProfilePage from '@/components/ProfilePage.vue';
 import Test from '@/components/Test.vue';
 import { useAuthStore } from '@/store/auth_store';
 
@@ -12,6 +13,7 @@ const routes = [
   { path: '/main', component: MainPage },
   { path: '/confirm', component: ConfirmRegistration },
   { path: '/test', component: Test },
+  { path: '/profile', component: ProfilePage },
 ];
 
 const router = createRouter({
@@ -22,13 +24,10 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const store = useAuthStore();
   store.setPath(to.fullPath);
+
   if (!store.isAuth && to.path === '/main') {
     next({ path: '/login' });
   } else if (to.path === '/') {
-    next({ path: '/main' });
-  } else if (store.isAuth && to.path !== '/main') {
-    next({ path: '/main' });
-  } else if (store.isAuth && to.path == '/login') {
     next({ path: '/main' });
   } else {
     next();

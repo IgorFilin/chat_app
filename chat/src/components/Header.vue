@@ -27,6 +27,7 @@
       </label>
       <div
         class="v-header__userName"
+        @click="isOpenModal = !isOpenModal"
         v-if="store.name">
         {{ store.name }}
       </div>
@@ -38,6 +39,24 @@
       </button>
     </div>
   </div>
+  <transition
+    name="fade"
+    mode="out-in">
+    <div
+      class="v-header__modalWindow"
+      v-if="isOpenModal">
+      <div
+        class="v-header__modalItem"
+        @click="goTo('/profile'), (isOpenModal = false)">
+        Профиль
+      </div>
+      <div
+        class="v-header__modalItem close"
+        @click="isOpenModal = false">
+        Закрыть
+      </div>
+    </div>
+  </transition>
 </template>
 
 <script setup lang="ts">
@@ -47,6 +66,8 @@ import { onMounted, onUpdated, ref, watch } from 'vue';
 import Button from '@/components/assetsComponent/Button.vue';
 
 const store = useAuthStore();
+
+const isOpenModal = ref(false);
 
 const navigateButtons = ref([
   {
@@ -139,7 +160,7 @@ function setActivNavigationButton(path: string) {
 
 .v-header__nameLogoutContainer {
   display: flex;
-  gap: 20px;
+  gap: 25px;
   align-self: center;
 }
 
@@ -157,7 +178,38 @@ function setActivNavigationButton(path: string) {
   }
 }
 .v-header__userName {
-  text-decoration: underline;
   align-self: center;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.v-header__modalWindow {
+  position: absolute;
+  text-align: center;
+  top: 60px;
+  right: 30px;
+  max-width: 150px;
+  width: 100%;
+  background: $blue;
+
+  &::after {
+    top: -39px;
+    transform: translateX(-50%);
+    position: absolute;
+    content: '';
+    border: 20px solid transparent;
+    border-bottom: 20px solid $orange;
+  }
+}
+
+.v-header__modalItem {
+  border: 2px solid $orange;
+  cursor: pointer;
+  padding: 5px;
+
+  &.close {
+    background: $orange;
+    color: $black;
+  }
 }
 </style>

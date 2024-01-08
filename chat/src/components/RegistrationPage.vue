@@ -10,6 +10,8 @@
 import { useAuthStore } from '@/store/auth_store.ts';
 import Popup from '@/components/assetsComponent/Popup.vue';
 import { RegisterUserType } from '@/types/typesApi';
+import { watchEffect } from 'vue';
+import router from '@/router/router';
 
 const inputsRegistration = [
   {
@@ -34,6 +36,10 @@ const store = useAuthStore();
 function onRegistration(data: RegisterUserType) {
   store.registration(data);
 }
+
+watchEffect(() => {
+  if (store.isAuth) router.push('/main');
+});
 </script>
 
 <style scoped lang="scss"></style>

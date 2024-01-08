@@ -1,19 +1,17 @@
 <template>
-  <div class="v-mainPage">
+  <div class="container">
     <UserOnlineContainer
       @openRoom="openRoomHandler"
       :usersOnline="usersOnline" />
     <div
       v-if="!isAllChat"
       class="v-mainPage__backAllChatContainer">
-      <button
-        @click="goToPublicChat"
-        class="v-mainPage__buttonBackAllChat">
-        <Icon
-          id="arrow_back"
-          color="white" />
-        В общий чат
-      </button>
+      <Button
+        @onClick="goToPublicChat"
+        text="В общий чат"
+        isIcon
+        iconId="arrow_back"
+        iconColor="white" />
       <div>В диалоге {{ userToAddPrivate }}</div>
     </div>
     <div
@@ -27,7 +25,7 @@
       <Message
         v-if="isLoadingMessages"
         :key="message.message.toString()"
-        v-for="(message, index) in memoMessages"
+        v-for="message in memoMessages"
         v-bind="message" />
       <Loader
         v-else
@@ -45,7 +43,7 @@ import { Ref, computed, onMounted, onUnmounted, ref, watch, watchEffect } from '
 import Message from '@/components/Message.vue';
 import UserOnlineContainer from '@/components/UserOnlineContainer.vue';
 import Loader from '@/components/Loader.vue';
-import Icon from '@/components/assetsComponent/Icon.vue';
+import Button from '@/components/assetsComponent/Button.vue';
 
 const isAllChat = ref(true) as Ref<boolean>;
 const roomId = ref(null) as Ref<string | null>;
@@ -69,7 +67,9 @@ if (!store.isAuth) {
 const connection = new WebSocket(`${import.meta.env.VITE_APP_PROTOCOL}://${import.meta.env.VITE_APP_DOMEN_PORT}?userID=${store.id}`);
 
 connection.onclose = function (event) {
-  store.toast('К сожалению соединение разорвано');
+  if (router.currentRoute.value.path !== '/profile' && router.currentRoute.value.path !== '/login') {
+    store.toast('К сожалению соединение разорвано');
+  }
 };
 
 function sendMessage(message: string) {
@@ -221,17 +221,6 @@ onUnmounted(() => {
 </script>
 
 <style scoped lang="scss">
-.v-mainPage {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  height: 90vh;
-  width: 100%;
-  max-width: 1980px;
-  margin: auto;
-}
-
 .v-mainPage__chatContainer {
   display: flex;
   flex-direction: column-reverse;

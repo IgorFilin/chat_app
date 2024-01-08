@@ -5,16 +5,21 @@
       v-model="message"
       class="v-inputSendButton__Input"
       type="text" />
-    <button
+    <!-- <button
       class="v-inputSendButton_chatButton"
       @click="sendMessage">
-      Отправить сообщение
-    </button>
+      
+    </button> -->
+    <Button
+      @onClick="sendMessage"
+      text="Отправить сообщение"
+      class="v-inputSendButton_chatButton" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { Ref, ref } from 'vue';
+import Button from './assetsComponent/Button.vue';
 
 const emit = defineEmits();
 
@@ -51,8 +56,6 @@ function sendMessage() {
 .v-inputSendButton_chatButton {
   display: flex;
   padding: 5px 10px;
-  justify-content: center;
-  align-items: center;
   background-color: #141416;
   transition: 0.3s;
   border: none;
@@ -60,8 +63,7 @@ function sendMessage() {
   &:hover {
     cursor: pointer;
     border: none;
-    color: #000;
-    background: #fff;
+    background: $cacaoBlack;
   }
 }
 </style>

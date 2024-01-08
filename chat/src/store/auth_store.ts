@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { authApi } from '@/api/appApi';
 import { LoginUserType, RegisterUserType } from '@/types/typesApi';
+import { geolocationDataUser } from '@/api/appApi.ts';
 import { useToast } from 'vue-toastification';
 import { errorStore } from '@/utils/storeError';
 import router from '@/router/router';
@@ -14,6 +15,14 @@ interface UserType {
   isLoading: boolean;
   userPhoto: any;
   currentPath: string;
+  geolocationData: {
+    ip: null | string;
+    city: null | string;
+    region: null | string;
+    country: null | string;
+    postal: null | string;
+    currency: null | string;
+  };
 }
 
 const toast = useToast();
@@ -29,6 +38,14 @@ export const useAuthStore: any = defineStore('auth_store', {
       id: '',
       userPhoto: '',
       currentPath: '',
+      geolocationData: {
+        ip: null,
+        city: null,
+        region: null,
+        country: null,
+        postal: null,
+        currency: null,
+      },
     } as UserType;
   },
   getters: {
@@ -86,10 +103,24 @@ export const useAuthStore: any = defineStore('auth_store', {
         this.name = result.data.name;
         this.id = result.data.id;
         this.getAvatar();
+        this.geolocation();
       } catch (error) {
         this.messages = errorStore(error);
       } finally {
         this.isLoading = false;
+      }
+    },
+    async geolocation() {
+      try {
+        const geolocation = await geolocationDataUser.getGeolocationData();
+        this.geolocationData.ip = geolocation.data.ip;
+        this.geolocationData.city = geolocation.data.city;
+        this.geolocationData.region = geolocation.data.region;
+        this.geolocationData.country = geolocation.data.country_name;
+        this.geolocationData.currency = geolocation.data.currency_name;
+        this.geolocationData.postal = geolocation.data.postal;
+      } catch (error) {
+        this.messages = errorStore(error);
       }
     },
     async getAvatar() {
