@@ -92,21 +92,21 @@ onMounted(async () => {
 }
 
 .v-profile__photo {
-  width: 150px;
-  height: 150px;
+  width: 120px;
+  height: 120px;
 }
 
 .v-profile__content {
   margin-top: 100px;
   display: flex;
-  gap: 70px;
+  gap: 100px;
 }
 
 .v-profile__userInfo {
   position: relative;
   top: 0;
   display: flex;
-  font-size: 20px;
-  line-height: 25px;
+  font-size: 15px;
+  line-height: 15px;
 }
 </style>
