@@ -1,35 +1,39 @@
 import axios, { AxiosResponse } from 'axios';
 import { LoginUserType, RegisterUserType, ResponseConfirmRegType, ResponseGetAllUsersType, ResponseLoginType, ResponseLogoutType, ResponseRegisterUserType } from '../types/typesApi';
 
-const instance = axios.create({
+const authInstance = axios.create({
   baseURL: `http://${import.meta.env.VITE_APP_DOMEN_PORT}`,
   withCredentials: true,
   credentials: 'include',
 } as any);
 
+const geolocationInstance = axios.create({
+  baseURL: 'https://ipapi.co',
+});
+
 export const authApi = {
   registerUser(userData: RegisterUserType) {
-    return instance.post<ResponseRegisterUserType>('/user/registration', userData);
+    return authInstance.post<ResponseRegisterUserType>('/user/registration', userData);
   },
   loginUser(userData: LoginUserType) {
-    return instance.post<ResponseLoginType>('/user/login', userData);
+    return authInstance.post<ResponseLoginType>('/user/login', userData);
   },
   auth() {
-    return instance.get('user/auth');
+    return authInstance.get('user/auth');
   },
   logout() {
-    return instance.get<ResponseLogoutType>('user/logout');
+    return authInstance.get<ResponseLogoutType>('user/logout');
   },
   confirmReg(key: string) {
-    return instance.get<ResponseConfirmRegType>('user/confirm', {
+    return authInstance.get<ResponseConfirmRegType>('user/confirm', {
       params: { key },
     });
   },
   getPhoto() {
-    return instance.get('user/avatar', { responseType: 'blob' });
+    return authInstance.get('user/avatar', { responseType: 'blob' });
   },
   setPhoto(id: string, formdata: any) {
-    return instance.post(`user/avatar?id=${id}`, formdata, {
+    return authInstance.post(`user/avatar?id=${id}`, formdata, {
       headers: { 'Content-Type': 'multipart/form-data' },
       responseType: 'blob',
     });
@@ -38,6 +42,12 @@ export const authApi = {
 
 export const userApi = {
   getAllUsers() {
-    return instance.get<Array<ResponseGetAllUsersType>>('user/users_list');
+    return authInstance.get<Array<ResponseGetAllUsersType>>('user/users_list');
+  },
+};
+
+export const geolocationDataUser = {
+  getGeolocationData() {
+    return geolocationInstance.get('/json/');
   },
 };
