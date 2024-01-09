@@ -52,8 +52,10 @@ export class UsersController {
       resultObject.name = result.name;
       resultObject.id = result.id;
       resultObject.isAcceptKey = true;
+      res.status(201).send(resultObject);
+    } else {
+      res.status(404).send(resultObject);
     }
-    res.send(resultObject);
   }
 
   @Get('avatar')

@@ -67,10 +67,10 @@ disconnectFromDatabase()
 getUserInfo()
 
   Страна: ${store.geolocationData.country}
-  ip-адресс: ${store.geolocationData.ip},
-  Город: ${store.geolocationData.city},
-  Регион: ${store.geolocationData.region},
-  Почтовый-индекс: ${store.geolocationData.postal},
+  ip-адресс: ${store.geolocationData.ip}
+  Город: ${store.geolocationData.city}
+  Регион: ${store.geolocationData.region}
+  Почтовый-индекс: ${store.geolocationData.postal}
   Валюта: ${store.geolocationData.currency}
 `;
 

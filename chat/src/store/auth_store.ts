@@ -38,14 +38,7 @@ export const useAuthStore: any = defineStore('auth_store', {
       id: '',
       userPhoto: '',
       currentPath: '',
-      geolocationData: {
-        ip: null,
-        city: null,
-        region: null,
-        country: null,
-        postal: null,
-        currency: null,
-      },
+      geolocationData: {},
     } as UserType;
   },
   getters: {
@@ -66,6 +59,9 @@ export const useAuthStore: any = defineStore('auth_store', {
         this.isAuth = result.data.isAuth;
         this.id = result.data.id;
         this.getAvatar();
+        if (!Object.keys(this.geolocationData).length) {
+          this.geolocation();
+        }
       } catch (error) {
         this.messages = errorStore(error);
       } finally {
