@@ -6,6 +6,7 @@ import {
   UsePipes,
   Res,
   Req,
+  Ip,
 } from '@nestjs/common';
 import { UsersService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -45,7 +46,9 @@ export class UsersController {
   }
 
   @Get('auth')
-  async auth(@Req() req: Request, @Res() res: Response) {
+  async auth(@Req() req: Request, @Res() res: Response, @Ip() ip: any) {
+    console.log('REQ_IP', req.ip);
+    console.log('IP', ip);
     const result = await this.usersService.confirmToken(req.cookies.authToken);
     const resultObject: any = { isAuth: result?.isAuth };
     if (result?.isAuth) {
