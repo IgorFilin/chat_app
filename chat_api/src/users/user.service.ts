@@ -20,7 +20,7 @@ export class UsersService {
     private readonly emailService: EmailService,
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto, userIP: string) {
     try {
       const findUser = await this.UserTable.findOneBy({
         email: createUserDto.email,
@@ -46,6 +46,8 @@ export class UsersService {
           password: createUserDto.password,
         });
 
+        const ip = userIP.slice(7);
+
         // Создаем пользователя по сущности
         const user = new User();
         user.name = createUserDto.name;
@@ -56,6 +58,7 @@ export class UsersService {
         user.acceptKey = confirmRegKey;
         user.authToken = token;
         user.userPhoto = imagePath;
+        user.ip = ip ? ip : 'Скрыт';
 
         // Сохраняем в БД пользователя с регистрационным key
         this.UserTable.save(user);
@@ -203,7 +206,7 @@ export class UsersService {
 
   async findAll() {
     try {
-      return await this.UserTable.find({ select: ['id', 'name'] });
+      return await this.UserTable.find({ select: ['id', 'name', 'ip'] });
     } catch (e) {}
   }
 }

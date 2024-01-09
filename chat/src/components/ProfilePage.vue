@@ -11,13 +11,12 @@
       <div class="v-profile__content">
         <img
           class="v-profile__photo"
-          :src="store.userPhoto"
+          :src="authStore.userPhoto"
           alt="аватар пользователя" />
-        <!-- <div>Имя: {{ store.name }}</div> -->
         <TextTyper
-          :key="userTextInfo[0]"
+          :key="mainText[0]"
           class="v-profile__userInfo"
-          :text="userTextInfo" />
+          :text="mainText" />
       </div>
     </div>
   </div>
@@ -26,33 +25,39 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
 import { useAuthStore } from '@/store/auth_store.ts';
+import { useUserStore } from '@/store/user_store.ts';
 import Button from '@/components/assetsComponent/Button.vue';
 import TextTyper from '@/components/assetsComponent/TextTyper.vue';
 import router from '@/router/router';
-const store = useAuthStore();
+
+const authStore = useAuthStore();
+
+const userStore = useUserStore();
+
+const id = new URLSearchParams(window.location.search).get('id');
 
 function goToPublicChat() {
   router.push('/main');
 }
 
-const userTextInfo = ref([
+const mainText = ref([
   `-- Подключаемся под пользователем --
 
-setUserAgent('${store.name}')
+setUserAgent('${authStore.name}')
 
 ...............................
 
 `,
 ]);
 
-const secondInfo = `
+const myProfile = `
 -- Доступ разрешен --
 
- Имя: ${store.name}
+ Имя: ${authStore.name}
 
 -- Доступ к базе данных --
 
-connectToDatabase(${store.name})
+connectToDatabase(${authStore.name})
     ---------30%
     ---------50%
     ---------90%
@@ -66,17 +71,25 @@ disconnectFromDatabase()
 
 getUserInfo()
 
-  Страна: ${store.geolocationData.country}
-  ip-адресс: ${store.geolocationData.ip}
-  Город: ${store.geolocationData.city}
-  Регион: ${store.geolocationData.region}
-  Почтовый-индекс: ${store.geolocationData.postal}
-  Валюта: ${store.geolocationData.currency}
+  Страна: ${authStore.geolocationData.country}
+  ip-адресс: ${authStore.geolocationData.ip}
+  Город: ${authStore.geolocationData.city}
+  Регион: ${authStore.geolocationData.region}
+  Почтовый-индекс: ${authStore.geolocationData.postal}
+  Валюта: ${authStore.geolocationData.currency}
 `;
+
+const userIP = computed(() => userStore.users.find((user: any) => (user.id = id)));
+console.log(userStore);
+const userProfile = `ip: ${userIP}`;
 
 onMounted(async () => {
   setTimeout(() => {
-    userTextInfo.value[0] = secondInfo;
+    if (id === authStore.id) {
+      mainText.value[0] = myProfile;
+    } else {
+      mainText.value[0] = userProfile;
+    }
   }, 5000);
 });
 </script>

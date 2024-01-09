@@ -1,20 +1,20 @@
-import { defineStore } from "pinia";
-import { userApi } from "@/api/appApi";
-import { useToast } from "vue-toastification";
-import { errorStore } from "@/utils/storeError";
+import { defineStore } from 'pinia';
+import { userApi } from '@/api/appApi';
+import { useToast } from 'vue-toastification';
+import { errorStore } from '@/utils/storeError';
 
 interface UserStoreType {
   users: Array<{}>;
-  messages: string;
+  messages: any;
 }
 
 const toast = useToast();
 
-export const useUserStore: any = defineStore("user_store", {
+export const useUserStore: any = defineStore('user_store', {
   state: () => {
     return {
       users: [],
-      messages: "",
+      messages: '',
     } as UserStoreType;
   },
   getters: {},

@@ -22,8 +22,12 @@ export class UsersController {
 
   @Post('registration')
   @UsePipes(new ValidationPipe())
-  async create(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
-    const result = await this.usersService.create(createUserDto);
+  async create(
+    @Body() createUserDto: CreateUserDto,
+    @Res() res: Response,
+    @Ip() ip: string,
+  ) {
+    const result = await this.usersService.create(createUserDto, ip);
     if (result.isAcceptKey === false) {
       return res.send(result);
     } else {
@@ -46,9 +50,7 @@ export class UsersController {
   }
 
   @Get('auth')
-  async auth(@Req() req: Request, @Res() res: Response, @Ip() ip: any) {
-    console.log('REQ_IP', req.ip);
-    console.log('IP', ip);
+  async auth(@Req() req: Request, @Res() res: Response) {
     const result = await this.usersService.confirmToken(req.cookies.authToken);
     const resultObject: any = { isAuth: result?.isAuth };
     if (result?.isAuth) {
@@ -123,6 +125,8 @@ export class UsersController {
     if (result.isAuth) {
       const users = await this.usersService.findAll();
       res.status(201).send(users);
+    } else {
+      res.status(404);
     }
   }
 }

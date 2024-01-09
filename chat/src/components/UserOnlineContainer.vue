@@ -27,6 +27,11 @@
             @click="onPrivateRoomHandler($event, user.id)">
             В личку
           </div>
+          <div
+            class="v-usersOnline__popupText"
+            @click="goTo(`/profile/?id=${user.id}`)">
+            Профиль
+          </div>
         </div>
       </div>
     </div>
@@ -37,6 +42,7 @@
 import { ref, computed, onMounted, watch, Ref } from 'vue';
 import { useUserStore } from '@/store/user_store.ts';
 import { useAuthStore } from '@/store/auth_store.ts';
+import router from '@/router/router';
 
 const emit = defineEmits();
 
@@ -61,6 +67,10 @@ const props = defineProps({
     },
   },
 });
+
+function goTo(route: string) {
+  router.push(route);
+}
 
 function onActiveUserContainer() {
   isActiveUserContainer.value = !isActiveUserContainer.value;

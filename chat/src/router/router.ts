@@ -27,6 +27,8 @@ router.beforeEach(async (to, from, next) => {
 
   if (!store.isAuth && to.path === '/main') {
     next({ path: '/login' });
+  } else if (!store.isAuth && to.path === '/profile') {
+    next({ path: '/' });
   } else if (to.path === '/') {
     next({ path: '/main' });
   } else {

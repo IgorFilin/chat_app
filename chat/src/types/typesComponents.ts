@@ -1,6 +1,7 @@
 interface UserType {
   id: string;
   name: string;
+  ip: string;
 }
 
 interface UserTypeInUsersArrayType extends UserType {

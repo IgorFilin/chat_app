@@ -37,7 +37,9 @@ export class WebsocketService {
   async updatedClientsAfterUpdateDataBase(user: any) {
     try {
       const searchedUser = this.clients[user.id];
-      searchedUser.userPhoto = user.userPhoto;
+      if (user && searchedUser) {
+        searchedUser.userPhoto = user.userPhoto;
+      }
     } catch (e) {
       console.log(e);
     }
