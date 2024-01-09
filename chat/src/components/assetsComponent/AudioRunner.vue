@@ -12,7 +12,7 @@
 
 <script setup>
 import Icon from '@/components/assetsComponent/Icon.vue';
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
 
 const emit = defineEmits(['audio']);
 
@@ -56,6 +56,12 @@ watch(
 
 onMounted(() => {
   emit('audio', audio);
+  audio.pause();
+  audio.currentTime = 0.0;
+});
+
+onUnmounted(() => {
+  isPlayed.value = false;
   audio.pause();
   audio.currentTime = 0.0;
 });
