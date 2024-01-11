@@ -47,7 +47,7 @@
       v-if="isOpenModal">
       <div
         class="v-header__modalItem"
-        @click="goTo(`/profile?id=${store.id}`), (isOpenModal = false)">
+        @click="goTo(`/profile/${store.id}/`), (isOpenModal = false)">
         Профиль
       </div>
       <div

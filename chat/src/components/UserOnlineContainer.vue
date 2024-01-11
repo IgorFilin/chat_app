@@ -29,7 +29,7 @@
           </div>
           <div
             class="v-usersOnline__popupText"
-            @click="goTo(`/profile/?id=${user.id}`)">
+            @click="goTo(`/profile/${user.id}/`)">
             Профиль
           </div>
         </div>

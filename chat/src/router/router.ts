@@ -13,7 +13,7 @@ const routes = [
   { path: '/main', component: MainPage },
   { path: '/confirm', component: ConfirmRegistration },
   { path: '/test', component: Test },
-  { path: '/profile', component: ProfilePage },
+  { path: '/profile/:id', component: ProfilePage },
 ];
 
 const router = createRouter({
@@ -27,7 +27,7 @@ router.beforeEach(async (to, from, next) => {
 
   if (!store.isAuth && to.path === '/main') {
     next({ path: '/login' });
-  } else if (!store.isAuth && to.path === '/profile') {
+  } else if ((!store.isAuth && to.path === '/profile') || (!store.isAuth && to.path === '/profile/:id')) {
     next({ path: '/' });
   } else if (to.path === '/') {
     next({ path: '/main' });

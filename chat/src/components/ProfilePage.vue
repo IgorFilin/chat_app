@@ -23,32 +23,36 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onMounted, onUpdated, ref, watch } from 'vue';
 import { useAuthStore } from '@/store/auth_store.ts';
 import { useUserStore } from '@/store/user_store.ts';
 import Button from '@/components/assetsComponent/Button.vue';
 import TextTyper from '@/components/assetsComponent/TextTyper.vue';
 import router from '@/router/router';
+import { useRoute } from 'vue-router';
 
 const authStore = useAuthStore();
-
 const userStore = useUserStore();
-
-const id = new URLSearchParams(window.location.search).get('id');
+const route = useRoute();
+const userID = route.params.id;
 
 function goToPublicChat() {
   router.push('/main');
 }
 
+const user: any = computed(() => userStore.users.find((user: any) => user.id === userID));
+
 const mainText = ref([
   `-- Подключаемся под пользователем --
 
-setUserAgent('${authStore.name}')
+setUserAgent('${userID === authStore.id ? authStore.name : user.name}')
 
 ...............................
 
 `,
 ]);
+
+const userProfile = `ip: ${user.ip}`;
 
 const myProfile = `
 -- Доступ разрешен --
@@ -63,7 +67,7 @@ connectToDatabase(${authStore.name})
     ---------90%
     ---------100%
 
--- Доступ разрешен -- 
+-- Доступ разрешен --
 
 disconnectFromDatabase()
 
@@ -79,13 +83,9 @@ getUserInfo()
   Валюта: ${authStore.geolocationData.currency}
 `;
 
-const userIP = computed(() => userStore.users.find((user: any) => (user.id = id)));
-console.log(userStore);
-const userProfile = `ip: ${userIP}`;
-
-onMounted(async () => {
+onMounted(() => {
   setTimeout(() => {
-    if (id === authStore.id) {
+    if (userID === authStore.id) {
       mainText.value[0] = myProfile;
     } else {
       mainText.value[0] = userProfile;
