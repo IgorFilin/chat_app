@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUpdated, ref, watch } from 'vue';
+import { computed, onMounted, onUpdated, ref, watch, watchEffect } from 'vue';
 import { useAuthStore } from '@/store/auth_store.ts';
 import { useUserStore } from '@/store/user_store.ts';
 import Button from '@/components/assetsComponent/Button.vue';
@@ -42,19 +42,14 @@ function goToPublicChat() {
 
 const user: any = computed(() => userStore.users.find((user: any) => user.id === userID));
 
-const mainText = ref([
-  `-- Подключаемся под пользователем --
+const mainText = ref([]) as any;
 
-setUserAgent('${userID === authStore.id ? authStore.name : user.name}')
+const userProfile = `ip: ${user.value?.ip}`;
 
-...............................
+const myProfile = ref();
 
-`,
-]);
-
-const userProfile = `ip: ${user.ip}`;
-
-const myProfile = `
+watchEffect(() => {
+  myProfile.value = `
 -- Доступ разрешен --
 
  Имя: ${authStore.name}
@@ -82,11 +77,21 @@ getUserInfo()
   Почтовый-индекс: ${authStore.geolocationData.postal}
   Валюта: ${authStore.geolocationData.currency}
 `;
+  mainText.value = [
+    `-- Подключаемся под пользователем --
 
+setUserAgent('${userID === authStore.id ? authStore.name : user.value?.name}')
+
+...............................
+
+`,
+  ];
+});
 onMounted(() => {
+  authStore.geolocation();
   setTimeout(() => {
     if (userID === authStore.id) {
-      mainText.value[0] = myProfile;
+      mainText.value[0] = myProfile.value;
     } else {
       mainText.value[0] = userProfile;
     }

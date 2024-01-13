@@ -99,7 +99,6 @@ export const useAuthStore: any = defineStore('auth_store', {
         this.name = result.data.name;
         this.id = result.data.id;
         this.getAvatar();
-        this.geolocation();
       } catch (error) {
         this.messages = errorStore(error);
       } finally {
