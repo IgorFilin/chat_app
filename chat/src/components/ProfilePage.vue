@@ -23,13 +23,22 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUpdated, ref, watch, watchEffect } from 'vue';
+import { Ref, computed, nextTick, onMounted, onUpdated, ref, watch, watchEffect } from 'vue';
 import { useAuthStore } from '@/store/auth_store.ts';
 import { useUserStore } from '@/store/user_store.ts';
 import Button from '@/components/assetsComponent/Button.vue';
 import TextTyper from '@/components/assetsComponent/TextTyper.vue';
 import router from '@/router/router';
 import { useRoute } from 'vue-router';
+
+interface GeolocationDataType {
+  ip: null | string;
+  city: null | string;
+  region: null | string;
+  country: null | string;
+  postal: null | string;
+  currency: null | string;
+}
 
 const authStore = useAuthStore();
 const userStore = useUserStore();
@@ -40,23 +49,35 @@ function goToPublicChat() {
   router.push('/main');
 }
 
-const user: any = computed(() => userStore.users.find((user: any) => user.id === userID));
+const geolocationData = ref({
+  ip: null,
+  city: null,
+  region: null,
+  country: null,
+  currency: null,
+  postal: null,
+}) as Ref<GeolocationDataType>;
 
 const mainText = ref([]) as any;
+const profileData = ref();
 
-const userProfile = `ip: ${user.value?.ip}`;
+const isMe = computed(() => {
+  return userID === authStore.id;
+});
 
-const myProfile = ref();
+const user: any = computed(() => userStore.users.find((user: any) => user.id === userID));
 
-watchEffect(() => {
-  myProfile.value = `
+watch(
+  () => geolocationData.value,
+  () => {
+    profileData.value = `
 -- Доступ разрешен --
 
- Имя: ${authStore.name}
+ Имя: ${isMe.value ? authStore.name : user.value.name}
 
 -- Доступ к базе данных --
 
-connectToDatabase(${authStore.name})
+connectToDatabase(${isMe.value ? authStore.name : user.value.name})
     ---------30%
     ---------50%
     ---------90%
@@ -70,31 +91,49 @@ disconnectFromDatabase()
 
 getUserInfo()
 
-  Страна: ${authStore.geolocationData.country}
-  ip-адресс: ${authStore.geolocationData.ip}
-  Город: ${authStore.geolocationData.city}
-  Регион: ${authStore.geolocationData.region}
-  Почтовый-индекс: ${authStore.geolocationData.postal}
-  Валюта: ${authStore.geolocationData.currency}
+  Страна: ${geolocationData.value.country}
+  ip-адресс: ${geolocationData.value.ip}
+  Город: ${geolocationData.value.city}
+  Регион: ${geolocationData.value.region}
+  Почтовый-индекс: ${geolocationData.value.postal}
+  Валюта: ${geolocationData.value.currency}
 `;
-  mainText.value = [
-    `-- Подключаемся под пользователем --
+    mainText.value = [
+      `-- Подключаемся под пользователем --
 
-setUserAgent('${userID === authStore.id ? authStore.name : user.value?.name}')
+setUserAgent('${isMe.value ? authStore.name : user.value?.name}')
 
 ...............................
 
 `,
-  ];
-});
-onMounted(() => {
-  authStore.geolocation();
-  setTimeout(() => {
-    if (userID === authStore.id) {
-      mainText.value[0] = myProfile.value;
-    } else {
-      mainText.value[0] = userProfile;
+    ];
+  }
+);
+
+watch(
+  () => isMe.value,
+  async (newValue, oldValue) => {
+    if (!Object.keys(userStore.users).length) {
+      await userStore.getAllUsers();
     }
+    if (newValue !== oldValue) {
+      const result = await authStore.geolocation(isMe.value ? '' : user.value?.ip);
+      geolocationData.value = {
+        ip: result.data.ip,
+        city: result.data.city,
+        region: result.data.region,
+        country: result.data.country_name,
+        currency: result.data.currency_name,
+        postal: result.data.postal,
+      };
+    }
+  },
+  { immediate: true }
+);
+
+onMounted(async () => {
+  setTimeout(() => {
+    mainText.value[0] = profileData.value;
   }, 5000);
 });
 </script>

@@ -15,14 +15,6 @@ interface UserType {
   isLoading: boolean;
   userPhoto: any;
   currentPath: string;
-  geolocationData: {
-    ip: null | string;
-    city: null | string;
-    region: null | string;
-    country: null | string;
-    postal: null | string;
-    currency: null | string;
-  };
 }
 
 const toast = useToast();
@@ -38,7 +30,6 @@ export const useAuthStore: any = defineStore('auth_store', {
       id: '',
       userPhoto: '',
       currentPath: '',
-      geolocationData: {},
     } as UserType;
   },
   getters: {
@@ -59,9 +50,6 @@ export const useAuthStore: any = defineStore('auth_store', {
         this.isAuth = result.data.isAuth;
         this.id = result.data.id;
         this.getAvatar();
-        if (!Object.keys(this.geolocationData).length) {
-          this.geolocation();
-        }
       } catch (error) {
         this.messages = errorStore(error);
       } finally {
@@ -105,15 +93,9 @@ export const useAuthStore: any = defineStore('auth_store', {
         this.isLoading = false;
       }
     },
-    async geolocation() {
+    async geolocation(ip: string) {
       try {
-        const geolocation = await geolocationDataUser.getGeolocationData();
-        this.geolocationData.ip = geolocation.data.ip;
-        this.geolocationData.city = geolocation.data.city;
-        this.geolocationData.region = geolocation.data.region;
-        this.geolocationData.country = geolocation.data.country_name;
-        this.geolocationData.currency = geolocation.data.currency_name;
-        this.geolocationData.postal = geolocation.data.postal;
+        return await geolocationDataUser.getGeolocationData(ip);
       } catch (error) {
         this.messages = errorStore(error);
       }

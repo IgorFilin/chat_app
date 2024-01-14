@@ -252,6 +252,7 @@ const filteredActiveOrNotUsers = computed(() => {
 
     &:hover {
       cursor: pointer;
+      background: $cacaoBlack;
     }
   }
 

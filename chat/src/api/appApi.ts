@@ -47,7 +47,7 @@ export const userApi = {
 };
 
 export const geolocationDataUser = {
-  getGeolocationData() {
-    return geolocationInstance.get('/json/');
+  getGeolocationData(ip: string) {
+    return geolocationInstance.get(`${ip}/json/`);
   },
 };
