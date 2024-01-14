@@ -234,9 +234,8 @@ const filteredActiveOrNotUsers = computed(() => {
     position: absolute;
     background: #090909;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    width: fit-content;
+    width: 85px;
     height: fit-content;
-    padding: 10px 12px;
     opacity: 1;
     color: #555;
     top: -10px;
@@ -245,6 +244,11 @@ const filteredActiveOrNotUsers = computed(() => {
 
   .v-usersOnline__popupText {
     font-size: 15px;
+    border: 1px solid $orange;
+    box-sizing: border-box;
+    padding: 2px;
+    width: 100%;
+    text-align: center;
 
     &:hover {
       cursor: pointer;
