@@ -79,10 +79,12 @@ export const useAuthStore: any = defineStore('auth_store', {
     async auth() {
       try {
         this.isLoading = true;
-        const result = await authApi.auth();
+        console.log('ITEM', localStorage.getItem('isAcceptKey'));
         if (localStorage.getItem('isAcceptKey')) {
+          console.log('GET');
           this.isAcceptKey = JSON.parse(localStorage.getItem('isAcceptKey')!);
         }
+        const result = await authApi.auth();
         this.isAuth = result.data.isAuth;
         this.name = result.data.name;
         this.id = result.data.id;
