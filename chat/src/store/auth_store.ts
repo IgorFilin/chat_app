@@ -79,17 +79,20 @@ export const useAuthStore: any = defineStore('auth_store', {
     async auth() {
       try {
         this.isLoading = true;
-        if (localStorage.getItem('isAcceptKey')) {
-          this.isAcceptKey = JSON.parse(localStorage.getItem('isAcceptKey')!);
-        }
         const result = await authApi.auth();
         this.isAuth = result.data.isAuth;
         this.name = result.data.name;
         this.id = result.data.id;
+        this.isAcceptKey = result.data.isAcceptKey;
         this.getAvatar();
       } catch (error) {
         this.messages = errorStore(error);
       } finally {
+        if (this.isAcceptKey && !!localStorage.getItem('isAcceptKey')) {
+          localStorage.setItem('isAcceptKey', 'true');
+        } else {
+          this.isAcceptKey = JSON.parse(localStorage.getItem('isAcceptKey')!);
+        }
         this.isLoading = false;
       }
     },
