@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { Ref, computed, nextTick, onMounted, onUpdated, ref, watch, watchEffect } from 'vue';
+import { Ref, computed, nextTick, onMounted, onUnmounted, onUpdated, ref, watch, watchEffect } from 'vue';
 import { useAuthStore } from '@/store/auth_store.ts';
 import { useUserStore } from '@/store/user_store.ts';
 import Button from '@/components/assetsComponent/Button.vue';
@@ -43,7 +43,6 @@ interface GeolocationDataType {
 const authStore = useAuthStore();
 const userStore = useUserStore();
 const route = useRoute();
-const userID = route.params.id;
 
 function goToPublicChat() {
   router.push('/main');
@@ -60,12 +59,14 @@ const geolocationData = ref({
 
 const mainText = ref([]) as any;
 const profileData = ref();
+const userID = ref(route.params.id);
+let timeoutId: any;
 
 const isMe = computed(() => {
-  return userID === authStore.id;
+  return userID.value === authStore.id;
 });
 
-const user: any = computed(() => userStore.users.find((user: any) => user.id === userID));
+const user: any = computed(() => userStore.users.find((user: any) => user.id === userID.value));
 
 watch(
   () => geolocationData.value,
@@ -111,7 +112,15 @@ setUserAgent('${isMe.value ? authStore.name : user.value?.name}')
 );
 
 watch(
-  () => isMe.value,
+  () => route.params.id,
+  () => {
+    userID.value = route.params.id;
+    clearTimeout(timeoutId);
+  }
+);
+
+watch(
+  () => [isMe.value, userID.value],
   async (newValue, oldValue) => {
     if (!Object.keys(userStore.users).length) {
       await userStore.getAllUsers();
@@ -127,15 +136,13 @@ watch(
         postal: result.data.postal,
       };
     }
+
+    timeoutId = setTimeout(() => {
+      mainText.value[0] = profileData.value;
+    }, 5000);
   },
   { immediate: true }
 );
-
-onMounted(async () => {
-  setTimeout(() => {
-    mainText.value[0] = profileData.value;
-  }, 5000);
-});
 </script>
 
 <style scoped lang="scss">
