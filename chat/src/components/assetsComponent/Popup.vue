@@ -16,6 +16,10 @@
           @reset=""
           @updateValue="(dataInput) => onInputUpdated(dataInput, changeValue)" />
       </div>
+      <div class="v-popup__slotAdditional">
+        <slot name="additional"></slot>
+      </div>
+
       <Button
         class="v-popup__button"
         :isDisabled="isError"
@@ -108,6 +112,27 @@ function onInputUpdated(dataInput: { value: string; error: boolean }, changeValu
   flex-direction: column;
   align-items: center;
   gap: 17px;
+}
+
+.v-popup__slotAdditional {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 5px;
+
+  .sendButton {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  .disabled {
+    opacity: 0.3;
+
+    &:hover {
+      cursor: default;
+    }
+  }
 }
 
 .v-popup__button {
