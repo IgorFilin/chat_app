@@ -88,12 +88,12 @@ export const useAuthStore: any = defineStore('auth_store', {
       } catch (error) {
         this.messages = errorStore(error);
       } finally {
+        this.isLoading = false;
         if (this.isAcceptKey && !!localStorage.getItem('isAcceptKey')) {
           localStorage.setItem('isAcceptKey', 'true');
         } else {
           this.isAcceptKey = JSON.parse(localStorage.getItem('isAcceptKey')!);
         }
-        this.isLoading = false;
       }
     },
     async geolocation(ip: string) {

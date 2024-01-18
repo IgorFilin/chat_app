@@ -8,9 +8,12 @@
           :key="id"
           :labelText="labelText"
           :changeValue="changeValue"
+          :clear="clearInputs"
+          @cleared="clearInputs = false"
           inputClass="v-popup__input"
           :type="id"
           :id="id"
+          @reset=""
           @updateValue="(dataInput) => onInputUpdated(dataInput, changeValue)" />
       </div>
       <Button
@@ -46,12 +49,14 @@ const props = defineProps({
 
 const inputData = ref({}) as any;
 const isError = ref(true) as Ref<boolean>;
+const clearInputs = ref(false) as Ref<boolean>;
 
 const emit = defineEmits(['submit']);
 
 function onSubmit(event: any) {
   event.preventDefault();
   emit('submit', inputData.value);
+  clearInputs.value = true;
 }
 
 watch(

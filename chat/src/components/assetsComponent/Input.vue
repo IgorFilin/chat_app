@@ -24,11 +24,8 @@
 
 <script setup lang="ts">
 import { inputValidator } from '@/composable/inputValidator.ts';
-import { Ref, onUpdated, ref, watch } from 'vue';
-const emit = defineEmits(['updateValue']);
-
-const error = ref('') as Ref<any>;
-const inputValue = ref('');
+import { Ref, ref, watch } from 'vue';
+const emit = defineEmits(['updateValue', 'cleared']);
 
 const props = defineProps({
   id: {
@@ -51,6 +48,10 @@ const props = defineProps({
     type: String,
     desc: 'Дополнительный класс для инпута',
   },
+  clear: {
+    type: Boolean,
+    desc: 'Флажок для инициализации очистки полей ввода',
+  },
   changeValue: {
     type: String,
     desc: 'Какой инпут изменяется',
@@ -60,20 +61,36 @@ const props = defineProps({
   },
 });
 
+const error = ref('') as Ref<any>;
+const inputValue = ref('');
+
 function onBlur() {
   if (!inputValue.value.length) {
     error.value = '';
   }
 }
 
-watch([() => inputValue.value], () => {
-  const value: any = inputValidator(inputValue.value, props.changeValue);
-  if (value?.error) {
-    error.value = value.error;
-  } else {
-    error.value = '';
+watch(
+  () => props.clear,
+  () => {
+    if (props.clear) {
+      inputValue.value = '';
+      error.value = '';
+      emit('cleared');
+    }
   }
-  emit('updateValue', { value: inputValue.value, error: !!error.value });
+);
+
+watch([() => inputValue.value], () => {
+  if (inputValue.value.length) {
+    const value: any = inputValidator(inputValue.value, props.changeValue);
+    if (value?.error) {
+      error.value = value.error;
+    } else {
+      error.value = '';
+    }
+    emit('updateValue', { value: inputValue.value, error: !!error.value });
+  }
 });
 </script>
 

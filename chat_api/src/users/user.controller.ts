@@ -103,6 +103,7 @@ export class UsersController {
     const key: any = req.query.key;
     const mail: any = !!req.query.mail;
     const result = await this.usersService.confirmRegistration(key);
+    console.log(result.isAcceptKey);
     if (result.isAcceptKey) {
       const expirationDate = new Date();
       expirationDate.setDate(expirationDate.getDate() + 3);
@@ -115,7 +116,7 @@ export class UsersController {
       }
       res.send({ isAcceptKey: result.isAcceptKey, message: result.message });
     } else {
-      res.send({ message: result.message }).sendStatus(403);
+      res.status(403).send({ message: result.message });
     }
   }
 
