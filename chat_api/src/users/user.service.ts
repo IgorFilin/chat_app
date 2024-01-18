@@ -78,6 +78,10 @@ export class UsersService {
     } catch (e) {}
   }
 
+  async sendMainConfirm() {
+    console.log('DEBUGG');
+  }
+
   async confirmRegistration(key: string) {
     try {
       const acceptUser = await this.UserTable.findOneBy({ acceptKey: key });
