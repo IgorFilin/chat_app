@@ -68,7 +68,6 @@ const connection = new WebSocket(`${import.meta.env.VITE_APP_PROTOCOL}://${impor
 
 connection.onclose = function (event) {
   if (router.currentRoute.value.matched[0].path !== '/profile/:id' && router.currentRoute.value.path !== '/login') {
-    console.log('DEBUG', router);
     store.toast('К сожалению соединение разорвано');
   }
 };

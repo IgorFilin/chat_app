@@ -159,6 +159,18 @@ export const useAuthStore: any = defineStore('auth_store', {
         toast(this.messages);
       }
     },
+    async repeatSendMailMessage() {
+      try {
+        const result = await authApi.repeatedConfirmReg();
+        this.messages = result.data.message;
+      } catch (error) {
+        this.messages = errorStore(error);
+      } finally {
+        this.isLoading = false;
+        toast(this.messages);
+        this.messages = '';
+      }
+    },
     toast(message: string) {
       toast(message);
     },

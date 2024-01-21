@@ -20,6 +20,8 @@ export class UsersService {
     private readonly emailService: EmailService,
   ) {}
 
+  blockedKeysSendingMails = {};
+
   async create(createUserDto: CreateUserDto, userIP: string) {
     try {
       const findUser = await this.UserTable.findOneBy({
@@ -78,8 +80,31 @@ export class UsersService {
     } catch (e) {}
   }
 
-  async sendMainConfirm() {
-    console.log('DEBUGG');
+  async sendMainConfirm(key: string) {
+    const user = await this.UserTable.findOneBy({ acceptKey: key });
+    console.log('DEBUG', key, this.blockedKeysSendingMails);
+    try {
+      if (user && !this.blockedKeysSendingMails[key]) {
+        this.blockedKeysSendingMails[key] = true;
+        // await this.emailService.sendConfirmationEmail(
+        //   user.email,
+        //   user.acceptKey,
+        // );
+        setTimeout(() => {
+          delete this.blockedKeysSendingMails[key];
+        }, 7000);
+        return {
+          message: 'Повторное сообщение с кодом отправлено вам на почту',
+        };
+      } else {
+        return {
+          message: 'Пожалуйста отправьте повторное письмо чуть позже',
+          isBlocked: true,
+        };
+      }
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async confirmRegistration(key: string) {

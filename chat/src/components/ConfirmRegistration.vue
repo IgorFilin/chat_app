@@ -6,7 +6,12 @@
     @submit="sendKey">
     <template #additional>
       <div v-if="isDisabledSecondSend">Следующая отправка через: {{ counter }}</div>
-      <div :class="['sendButton', isDisabledSecondSend && 'disabled']">Повторить отправку</div>
+      <Button
+        text="Повторить отправку"
+        @onClick="repeatedSendMail"
+        :isDisabled="isDisabledSecondSend"
+        :class="['v-confirmRegistration__repeatSendBtn']"
+        class="empty" />
     </template>
   </Popup>
 </template>
@@ -15,7 +20,8 @@
 import router from '@/router/router';
 import { useAuthStore } from '@/store/auth_store';
 import Popup from '@/components/assetsComponent/Popup.vue';
-import { ref, watch } from 'vue';
+import Button from './assetsComponent/Button.vue';
+import { Ref, ref, watch } from 'vue';
 
 const inputConfirm = [
   {
@@ -28,11 +34,16 @@ const inputConfirm = [
 const store = useAuthStore();
 
 const isDisabledSecondSend = ref(true);
-const counter = ref(20);
+const counter = ref(0) as Ref<number>;
 let intervalId: any;
 
 function sendKey(keyData: { code: string }) {
   store.confirmRegistration(keyData.code);
+}
+
+async function repeatedSendMail() {
+  store.repeatSendMailMessage();
+  isDisabledSecondSend.value = true;
 }
 
 watch(
@@ -48,6 +59,7 @@ watch(
   () => isDisabledSecondSend.value,
   () => {
     if (isDisabledSecondSend.value) {
+      counter.value = 20;
       intervalId = setInterval(() => {
         counter.value--;
         if (counter.value === 0) {
@@ -61,5 +73,8 @@ watch(
   { immediate: true }
 );
 </script>
-
-<style scoped lang="scss"></style>
+<style lang="scss">
+.v-confirmRegistration__repeatSendBtn {
+  font-size: 16px;
+}
+</style>

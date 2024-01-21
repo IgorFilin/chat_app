@@ -20,8 +20,11 @@ export interface ResponseLogoutType {
   isAuth: boolean;
 }
 
-export interface ResponseConfirmRegType {
+export interface ResponseRepeatSendMailConfirmType {
   message: string;
+}
+
+export interface ResponseConfirmRegType extends ResponseRepeatSendMailConfirmType {
   isAcceptKey: boolean;
 }
 

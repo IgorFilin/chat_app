@@ -107,7 +107,6 @@ function onInputUpdated(dataInput: { value: string; error: boolean }, changeValu
 }
 
 .v-popup__formGroup {
-  margin-bottom: 15px;
   display: flex;
   flex-direction: column;
   align-items: center;

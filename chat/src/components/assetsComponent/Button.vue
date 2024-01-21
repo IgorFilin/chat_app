@@ -82,5 +82,14 @@ function onClick(event: any) {
     transition: 0.3s;
     background: $darkBlue;
   }
+
+  &.empty {
+    background: initial;
+    padding: 0;
+
+    &:hover {
+      background: initial;
+    }
+  }
 }
 </style>

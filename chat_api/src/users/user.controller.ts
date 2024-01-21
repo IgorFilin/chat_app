@@ -119,9 +119,18 @@ export class UsersController {
     }
   }
 
-  @Post('send_mail_confirm')
+  @Get('send_mail_confirm')
   async sendMailConfirm(@Req() req: Request, @Res() res: Response) {
-    const result = await this.usersService.sendMainConfirm();
+    console.log(req.cookies);
+    const result = await this.usersService.sendMainConfirm(
+      req.cookies.authToken,
+    );
+    let statusCode: number;
+    if (result) {
+      if (!result.isBlocked) statusCode = 201;
+      else statusCode = 429;
+      res.status(statusCode).send(result);
+    }
   }
 
   @Get('users_list')
