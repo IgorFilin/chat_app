@@ -64,7 +64,6 @@ export class UsersService {
 
         // Сохраняем в БД пользователя с регистрационным key
         this.UserTable.save(user);
-
         // Отсылаем на почту ключ подтверждения
         await this.emailService.sendConfirmationEmail(
           user.email,
@@ -74,6 +73,7 @@ export class UsersService {
         // Возвращаем значение что ключ на почту отправлен, но не подтвержден
         return {
           isAcceptKey: false,
+          email: user.email,
           message: `Приветствую ${user.name}, пожалуйста введи код подтверждения`,
         };
       }

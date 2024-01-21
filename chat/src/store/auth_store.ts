@@ -12,6 +12,7 @@ interface UserType {
   messages: any;
   isAcceptKey: boolean | null;
   id: string;
+  email: string;
   isLoading: boolean;
   userPhoto: any;
   currentPath: string;
@@ -26,6 +27,7 @@ export const useAuthStore: any = defineStore('auth_store', {
       isAuth: false,
       isAcceptKey: null,
       messages: '',
+      email: '',
       isLoading: false,
       id: '',
       userPhoto: '',
@@ -63,8 +65,10 @@ export const useAuthStore: any = defineStore('auth_store', {
         const result = await authApi.registerUser(dataUser);
         if (typeof result.data.isAcceptKey !== 'undefined') {
           this.isAcceptKey = result.data.isAcceptKey;
+          this.email = result.data.email;
           // @ts-ignore
           JSON.stringify(localStorage.setItem('isAcceptKey', result.data.isAcceptKey));
+          JSON.stringify(localStorage.setItem('email', result.data.email));
         }
         this.messages = result.data.message;
         router.push('/confirm');
@@ -134,6 +138,7 @@ export const useAuthStore: any = defineStore('auth_store', {
         this.messages = result.data.message;
         // @ts-ignore
         localStorage.setItem('isAcceptKey', result.data.isAcceptKey);
+        localStorage.removeItem('email');
         await this.auth();
       } catch (error) {
         this.messages = errorStore(error);
@@ -159,9 +164,9 @@ export const useAuthStore: any = defineStore('auth_store', {
         toast(this.messages);
       }
     },
-    async repeatSendMailMessage() {
+    async repeatSendMailMessage(acceptKey: string) {
       try {
-        const result = await authApi.repeatedConfirmReg();
+        const result = await authApi.repeatedConfirmReg(acceptKey);
         this.messages = result.data.message;
       } catch (error) {
         this.messages = errorStore(error);

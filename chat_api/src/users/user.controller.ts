@@ -121,7 +121,7 @@ export class UsersController {
 
   @Get('send_mail_confirm')
   async sendMailConfirm(@Req() req: Request, @Res() res: Response) {
-    console.log(req.cookies);
+    console.log(req.query);
     const result = await this.usersService.sendMainConfirm(
       req.cookies.authToken,
     );

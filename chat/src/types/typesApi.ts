@@ -31,6 +31,7 @@ export interface ResponseConfirmRegType extends ResponseRepeatSendMailConfirmTyp
 export interface ResponseRegisterUserType {
   isAcceptKey: boolean;
   message: string;
+  email: string;
 }
 
 export interface ResponseGetAllUsersType {

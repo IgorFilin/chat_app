@@ -35,6 +35,7 @@ const store = useAuthStore();
 
 const isDisabledSecondSend = ref(true);
 const counter = ref(0) as Ref<number>;
+const acceptKeyRepeatSend = ref(store.email ?? JSON.parse(localStorage.getItem('email')!)) as any;
 let intervalId: any;
 
 function sendKey(keyData: { code: string }) {
@@ -42,7 +43,7 @@ function sendKey(keyData: { code: string }) {
 }
 
 async function repeatedSendMail() {
-  store.repeatSendMailMessage();
+  store.repeatSendMailMessage(acceptKeyRepeatSend);
   isDisabledSecondSend.value = true;
 }
 
