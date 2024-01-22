@@ -67,8 +67,8 @@ export const useAuthStore: any = defineStore('auth_store', {
           this.isAcceptKey = result.data.isAcceptKey;
           this.email = result.data.email;
           // @ts-ignore
-          JSON.stringify(localStorage.setItem('isAcceptKey', result.data.isAcceptKey));
-          JSON.stringify(localStorage.setItem('email', result.data.email));
+          localStorage.setItem('isAcceptKey', result.data.isAcceptKey);
+          localStorage.setItem('email', result.data.email);
         }
         this.messages = result.data.message;
         router.push('/confirm');
@@ -96,7 +96,7 @@ export const useAuthStore: any = defineStore('auth_store', {
         if (this.isAcceptKey && !!localStorage.getItem('isAcceptKey')) {
           localStorage.setItem('isAcceptKey', 'true');
         } else {
-          this.isAcceptKey = JSON.parse(localStorage.getItem('isAcceptKey')!);
+          this.isAcceptKey = !localStorage.getItem('isAcceptKey');
         }
       }
     },
@@ -164,9 +164,9 @@ export const useAuthStore: any = defineStore('auth_store', {
         toast(this.messages);
       }
     },
-    async repeatSendMailMessage(acceptKey: string) {
+    async repeatSendMailMessage(email: string) {
       try {
-        const result = await authApi.repeatedConfirmReg(acceptKey);
+        const result = await authApi.repeatedConfirmReg(email);
         this.messages = result.data.message;
       } catch (error) {
         this.messages = errorStore(error);

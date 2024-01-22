@@ -80,18 +80,17 @@ export class UsersService {
     } catch (e) {}
   }
 
-  async sendMainConfirm(key: string) {
-    const user = await this.UserTable.findOneBy({ acceptKey: key });
-    console.log('DEBUG', key, this.blockedKeysSendingMails);
+  async sendMainConfirm(email: string) {
+    const user = await this.UserTable.findOneBy({ email });
     try {
-      if (user && !this.blockedKeysSendingMails[key]) {
-        this.blockedKeysSendingMails[key] = true;
-        // await this.emailService.sendConfirmationEmail(
-        //   user.email,
-        //   user.acceptKey,
-        // );
+      if (user && !this.blockedKeysSendingMails.hasOwnProperty(email)) {
+        this.blockedKeysSendingMails[email] = true;
+        await this.emailService.sendConfirmationEmail(
+          user.email,
+          user.acceptKey,
+        );
         setTimeout(() => {
-          delete this.blockedKeysSendingMails[key];
+          delete this.blockedKeysSendingMails[email];
         }, 7000);
         return {
           message: 'Повторное сообщение с кодом отправлено вам на почту',

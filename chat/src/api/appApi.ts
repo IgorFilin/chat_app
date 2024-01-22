@@ -38,8 +38,8 @@ export const authApi = {
       responseType: 'blob',
     });
   },
-  repeatedConfirmReg(acceptKey: string) {
-    return authInstance.get<ResponseConfirmRegType>('user/send_mail_confirm', { params: acceptKey });
+  repeatedConfirmReg(email: string) {
+    return authInstance.get<ResponseConfirmRegType>('user/send_mail_confirm', { params: { email } });
   },
 };
 export const userApi = {

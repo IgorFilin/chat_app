@@ -121,10 +121,8 @@ export class UsersController {
 
   @Get('send_mail_confirm')
   async sendMailConfirm(@Req() req: Request, @Res() res: Response) {
-    console.log(req.query);
-    const result = await this.usersService.sendMainConfirm(
-      req.cookies.authToken,
-    );
+    const email: any = req.query.email;
+    const result = await this.usersService.sendMainConfirm(email);
     let statusCode: number;
     if (result) {
       if (!result.isBlocked) statusCode = 201;
