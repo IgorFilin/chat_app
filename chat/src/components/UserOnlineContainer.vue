@@ -32,6 +32,11 @@
             @click="goTo(`/profile/${user.id}/`)">
             Профиль
           </div>
+          <div
+            class="v-usersOnline__popupText"
+            @click="goTo(`/games/${user.id}/`)">
+            Поиграть
+          </div>
         </div>
       </div>
     </div>

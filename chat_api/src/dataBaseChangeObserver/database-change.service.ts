@@ -5,14 +5,14 @@ import {
   UpdateEvent,
 } from 'typeorm';
 import { User } from '../users/entities/user.entity';
-import { WebsocketService } from 'src/websocket/websocket.service';
+import { WebsocketService } from '../websocket/websocket.service';
 
 // Слушатель изменения БД
 @EventSubscriber()
 export class UserSubscriber implements EntitySubscriberInterface<User> {
   constructor(
     dataSource: DataSource,
-    private readonly appGateway: WebsocketService,
+    private readonly WebsocketService: WebsocketService,
   ) {
     dataSource.subscribers.push(this);
   }
@@ -23,6 +23,6 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
 
   // После обновления чего то в БД, получаем обновлённую сущность
   beforeUpdate(event: UpdateEvent<any>) {
-    this.appGateway.updatedClientsAfterUpdateDataBase(event.entity);
+    this.WebsocketService.updatedClientsAfterUpdateDataBase(event.entity);
   }
 }

@@ -1,11 +1,4 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-  SubscribeMessage,
-  WebSocketGateway,
-  WebSocketServer,
-  MessageBody,
-} from '@nestjs/websockets';
-import { Socket, Server } from 'socket.io';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import * as fs from 'node:fs';
@@ -13,8 +6,9 @@ import { Room } from './entities/room.entity';
 import { Message } from './entities/message.entity';
 import { isJSON } from 'class-validator';
 import * as path from 'path';
+import { Injectable } from '@nestjs/common';
 
-@WebSocketGateway()
+@Injectable()
 export class WebsocketService {
   constructor(
     @InjectRepository(User)
@@ -27,14 +21,13 @@ export class WebsocketService {
     private MessageTable: Repository<Message>,
   ) {}
 
-  @WebSocketServer()
-  server: Server;
   clients = {};
   messages = [];
   publicChatEvent = 'message' as 'message';
   privateChatEvent = 'private_message' as 'private_message';
 
   async updatedClientsAfterUpdateDataBase(user: any) {
+    console.log(user);
     try {
       const searchedUser = this.clients[user.id];
       if (user && searchedUser) {
@@ -209,27 +202,9 @@ export class WebsocketService {
     }
   }
 
-  @SubscribeMessage('message')
-  async handleMessage(@MessageBody() body: any) {
-    await this.broadcastMessage(
-      body.id,
-      body.message,
-      body.roomId,
-      body.isAllChat,
-    );
-  }
-
-  @SubscribeMessage('all_messages_public')
-  async handleAllMessage(@MessageBody() body: any) {
-    await this.getAllMessagesPublicChat(body.id);
-  }
-
-  @SubscribeMessage('open_room')
-  async handleOpenPrivateRoom(
-    @MessageBody() body: { myId: string; userId: string },
-  ) {
-    const creator = await this.UserTable.findOneBy({ id: body.myId });
-    const userToAdd = await this.UserTable.findOneBy({ id: body.userId });
+  async openPrivateRoom(myId: string, userId: string) {
+    const creator = await this.UserTable.findOneBy({ id: myId });
+    const userToAdd = await this.UserTable.findOneBy({ id: userId });
 
     const dirname = process.cwd();
     const defaultImagePath = path.join(
@@ -240,7 +215,7 @@ export class WebsocketService {
       'default_photo_user.webp',
     );
 
-    const client = this.clients[body.myId];
+    const client = this.clients[myId];
 
     // Получаем комнату в которой есть 2 пользователя, вы и пользователь собеседник
     let room = await this.RoomTable.createQueryBuilder('room')
@@ -321,13 +296,5 @@ export class WebsocketService {
         console.log(e);
       }
     }
-  }
-
-  async handleDisconnect(disconnectedClient: any, ...args: any) {
-    await this.disconnectUser(disconnectedClient);
-  }
-
-  async handleConnection(client: Socket, ...args: any) {
-    await this.connectedUser(client, args);
   }
 }
