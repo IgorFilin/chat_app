@@ -12,7 +12,7 @@ import { WebsocketService } from '../websocket/websocket.service';
 export class UserSubscriber implements EntitySubscriberInterface<User> {
   constructor(
     dataSource: DataSource,
-    private readonly WebsocketService: WebsocketService,
+    private readonly DataBaseChanger: WebsocketService,
   ) {
     dataSource.subscribers.push(this);
   }
@@ -23,6 +23,6 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
 
   // После обновления чего то в БД, получаем обновлённую сущность
   beforeUpdate(event: UpdateEvent<any>) {
-    this.WebsocketService.updatedClientsAfterUpdateDataBase(event.entity);
+    this.DataBaseChanger.updatedClientsAfterUpdateDataBase(event.entity);
   }
 }

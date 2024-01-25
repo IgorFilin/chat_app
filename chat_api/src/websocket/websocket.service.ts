@@ -27,7 +27,6 @@ export class WebsocketService {
   privateChatEvent = 'private_message' as 'private_message';
 
   async updatedClientsAfterUpdateDataBase(user: any) {
-    console.log(user);
     try {
       const searchedUser = this.clients[user.id];
       if (user && searchedUser) {
@@ -131,7 +130,6 @@ export class WebsocketService {
     isAllChat: boolean,
   ) {
     const user = this.clients[userId];
-
     const maxMessageSize = 600 * 1024; // Максимальный размер сообщения для изобращения
 
     if (Array.isArray(message) && message.length >= maxMessageSize) {
