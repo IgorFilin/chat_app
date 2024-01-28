@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onUnmounted, ref } from 'vue';
 
 type SelectDataType = {
   text: string;
@@ -61,7 +61,12 @@ function onClickContentHandler(event: any, emitName: any, action: any) {
 function onClickAdditionalTextHandler(event: any, type: string) {
   event.stopPropagation();
   emit('sendInviteGame', type);
+  isOpenAdditionalList.value = false;
 }
+
+onUnmounted(() => {
+  isOpenAdditionalList.value = false;
+});
 
 const emit = defineEmits(['onPrivateRoomHandler', 'goTo', 'sendInviteGame']);
 </script>

@@ -25,7 +25,7 @@ div
           :selectData="selectData"
           @onPrivateRoomHandler="(e) => onPrivateRoomHandler(e, user.id)"
           @goTo="goTo(`/profile/${user.id}/`)"
-          @sendInviteGame="(game) => emit('sendInviteGame', user.id, game)" />
+          @sendInviteGame="(game) => sendInviteGameHandler(user.id, game)" />
       </div>
     </div>
   </div>
@@ -100,8 +100,13 @@ function onPrivateRoomHandler(event: MouseEvent, id: string) {
   isActiveUserContainer.value = false;
 }
 
-function searchedGameHandler(game: string) {
-  console.log(game);
+function sendInviteGameHandler(userId: string, game: string) {
+  if (props.usersOnline.some((user) => user.id === userId)) {
+    emit('sendInviteGame', userId, game);
+    auth_store.toast('Приглашение отправлено');
+  } else {
+    auth_store.toast('К сожалению пользователя нет онлайн');
+  }
 }
 
 onMounted(() => {

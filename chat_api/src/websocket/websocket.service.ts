@@ -295,4 +295,25 @@ export class WebsocketService {
       }
     }
   }
+
+  async inviteGameUser(
+    myId: string,
+    userId: string,
+    game: string,
+    isAccept: boolean | undefined,
+  ) {
+    const myData = this.clients[myId];
+    const sendInvite = {
+      userSendedInvite: myData.name,
+      isAllChat: false,
+      inviteGame: game,
+      sendInviteUserId: myId,
+    } as any;
+
+    if (isAccept === undefined) sendInvite.isInvite = true;
+    else sendInvite.isAccept = isAccept;
+
+    const user = this.clients[userId];
+    user.client.send(JSON.stringify(sendInvite));
+  }
 }

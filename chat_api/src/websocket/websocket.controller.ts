@@ -38,7 +38,12 @@ export class WebsocketController {
 
   @SubscribeMessage('invite_game')
   async handleInviteGame(@MessageBody() body: any) {
-    console.log(body);
+    await this.WebsocketService.inviteGameUser(
+      body.myId,
+      body.userId,
+      body.game,
+      body.isAccept,
+    );
   }
 
   async handleDisconnect(disconnectedClient: any, ...args: any) {

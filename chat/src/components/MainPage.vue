@@ -33,6 +33,20 @@
         loaderFor="message" />
     </div>
     <InputSendButton @sendMessage="sendMessage" />
+    <Popup
+      v-if="isOpenPopupInviteGame"
+      class="v-mainPage__inviteGamePopup"
+      :title="popupInviteGameData.title"
+      isCloseBtn
+      @onClose="isOpenPopupInviteGame = false">
+      <template #additional>
+        <Button
+          v-for="({ text, isAccept }, index) in inviteGameButtons"
+          :key="index"
+          :text="text"
+          @click.prevent="sendInviteGameHandler(popupInviteGameData.sendInviteUserId, popupInviteGameData.game, isAccept)" />
+      </template>
+    </Popup>
   </div>
 </template>
 
@@ -45,6 +59,7 @@ import Message from '@/components/Message.vue';
 import UserOnlineContainer from '@/components/UserOnlineContainer/UserOnlineContainer.vue';
 import Loader from '@/components/Loader.vue';
 import Button from '@/components/assetsComponent/Button.vue';
+import Popup from '@/components/assetsComponent/Popup.vue';
 
 const isAllChat = ref(true) as Ref<boolean>;
 const roomId = ref(null) as Ref<string | null>;
@@ -54,6 +69,24 @@ const usersOnline = ref([]) as Ref<Array<UserTypeInUsersArrayType>>;
 const onDragClass = ref(false) as Ref<boolean>;
 const isLoadingMessages = ref(false) as Ref<boolean>;
 const messagesLength = ref(0);
+const isOpenPopupInviteGame = ref(false);
+
+const popupInviteGameData = ref({
+  title: '',
+  game: '',
+  sendInviteUserId: '',
+});
+
+const inviteGameButtons = [
+  {
+    text: 'Принять приглашение',
+    isAccept: true,
+  },
+  {
+    text: 'Отказаться',
+    isAccept: false,
+  },
+];
 
 const store = useAuthStore();
 
@@ -172,6 +205,24 @@ connection.onmessage = function (event) {
   if (data.clients) {
     usersOnline.value = data.clients;
   }
+
+  if (data.isInvite) {
+    const TypeNameGames = {
+      ticTackToe: 'Крестики нолики',
+    } as any;
+
+    popupInviteGameData.value = {
+      title: `Вас пригласил ${data.userSendedInvite} в&nbsp;игру&nbsp;${TypeNameGames[data.inviteGame]}`,
+      game: data.inviteGame,
+      sendInviteUserId: data.sendInviteUserId,
+    };
+    isOpenPopupInviteGame.value = true;
+  }
+
+  if (data.isAccept !== undefined) {
+    const answer = data.isAccept ? 'принял' : 'отклонил';
+    store.toast(`Пользователь ${data.userSendedInvite} ${answer} предложение`);
+  }
 };
 
 function OnDragChatContainer(event: any) {
@@ -216,15 +267,17 @@ function openRoomHandler(id: string) {
   }
 }
 
-function sendInviteGameHandler(userID: string, game: string) {
+function sendInviteGameHandler(userId: string, game: string, isAccept: boolean | undefined) {
+  console.log(game);
   if (connection.readyState === 1) {
     connection.send(
       JSON.stringify({
         event: 'invite_game',
-        data: { myId: store.id, userID, game },
+        data: { myId: store.id, userId, game, isAccept },
       })
     );
   }
+  isOpenPopupInviteGame.value = false;
 }
 
 onUnmounted(() => {
@@ -232,7 +285,7 @@ onUnmounted(() => {
 });
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .v-mainPage__chatContainer {
   display: flex;
   flex-direction: column-reverse;
@@ -290,5 +343,15 @@ onUnmounted(() => {
   width: 80%;
   margin: 10px 0;
   gap: 10px;
+}
+
+.v-mainPage__inviteGamePopup {
+  position: absolute;
+  min-width: 350px;
+
+  .v-popup__title {
+    font-size: 20px;
+    text-align: center;
+  }
 }
 </style>
