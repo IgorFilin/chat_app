@@ -34,7 +34,7 @@
           </div>
           <div
             class="v-usersOnline__popupText"
-            @click="goTo(`/games/${user.id}/`)">
+            @click="emit('sendInviteGame', user.id)">
             Поиграть
           </div>
         </div>
@@ -49,7 +49,7 @@ import { useUserStore } from '@/store/user_store.ts';
 import { useAuthStore } from '@/store/auth_store.ts';
 import router from '@/router/router';
 
-const emit = defineEmits();
+const emit = defineEmits(['sendInviteGame']);
 
 const user_store = useUserStore();
 const auth_store = useAuthStore();

@@ -120,21 +120,32 @@ watch(
 );
 
 watch(
-  () => [isMe.value, userID.value],
+  () => userID.value,
   async (newValue, oldValue) => {
     if (!Object.keys(userStore.users).length) {
       await userStore.getAllUsers();
     }
     if (newValue !== oldValue) {
-      const result = await authStore.geolocation(isMe.value ? '' : user.value?.ip);
-      geolocationData.value = {
-        ip: result.data.ip,
-        city: result.data.city,
-        region: result.data.region,
-        country: result.data.country_name,
-        currency: result.data.currency_name,
-        postal: result.data.postal,
-      };
+      const result = await authStore.geolocation(user.value?.ip);
+      if (result) {
+        geolocationData.value = {
+          ip: result.data.ip,
+          city: result.data.city,
+          region: result.data.region,
+          country: result.data.country_name,
+          currency: result.data.currency_name,
+          postal: result.data.postal,
+        };
+      } else {
+        geolocationData.value = {
+          ip: 'Anonimous',
+          city: 'Anonimous',
+          region: 'Anonimous',
+          country: 'Anonimous',
+          currency: 'Anonimous',
+          postal: 'Anonimous',
+        };
+      }
     }
 
     timeoutId = setTimeout(() => {

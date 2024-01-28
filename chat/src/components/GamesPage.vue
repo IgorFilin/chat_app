@@ -1,5 +1,5 @@
 <template>
-  <div class="v-games"></div>
+  <div class="v-games">GAMES</div>
 </template>
 
 <script setup lang="ts">

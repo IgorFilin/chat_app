@@ -2,6 +2,7 @@
   <div class="container">
     <UserOnlineContainer
       @openRoom="openRoomHandler"
+      @sendInviteGame="sendInviteGameHandler"
       :usersOnline="usersOnline" />
     <div
       v-if="!isAllChat"
@@ -213,6 +214,10 @@ function openRoomHandler(id: string) {
       })
     );
   }
+}
+
+function sendInviteGameHandler(userID: string) {
+  console.log(userID);
 }
 
 onUnmounted(() => {
