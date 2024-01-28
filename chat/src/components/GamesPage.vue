@@ -1,14 +1,33 @@
 <template>
-  <div class="v-games">GAMES</div>
+  <div class="v-games">
+    <!-- <TextTyper
+      class="v-games__title"
+      deleteSpeed="60"
+      :pauseFor="1500"
+      delay="60"
+      :text="title" /> -->
+    <TicTacToe />
+  </div>
 </template>
 
 <script setup lang="ts">
-import router from '@/router/router';
-import { useAuthStore } from '@/store/auth_store';
 import { onMounted, onUpdated, ref, watch } from 'vue';
-import Button from '@/components/assetsComponent/Button.vue';
+// import TextTyper from '@/components/assetsComponent/TextTyper.vue';
+import TicTacToe from '@/components/games/TicTacToe.vue';
 
-const store = useAuthStore();
+const title = ref(['Добро пожаловать в игровую комнату', 'Тут вы можете подключиться к комнате в которую у вас есть доступ']);
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.v-games {
+  width: 100%;
+  height: 90vh;
+  text-align: center;
+}
+
+.v-games__title {
+  font-size: 25px;
+  position: relative;
+  margin: 0 auto;
+}
+</style>
