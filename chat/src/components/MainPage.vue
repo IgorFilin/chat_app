@@ -42,7 +42,7 @@ import InputSendButton from '@/components/InputSendButton.vue';
 import router from '@/router/router';
 import { Ref, computed, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue';
 import Message from '@/components/Message.vue';
-import UserOnlineContainer from '@/components/UserOnlineContainer.vue';
+import UserOnlineContainer from '@/components/UserOnlineContainer/UserOnlineContainer.vue';
 import Loader from '@/components/Loader.vue';
 import Button from '@/components/assetsComponent/Button.vue';
 

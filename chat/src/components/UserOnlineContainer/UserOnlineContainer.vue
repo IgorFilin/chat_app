@@ -19,7 +19,7 @@
         v-for="user in filteredActiveOrNotUsers"
         :key="user.id">
         {{ user.name }}
-        <div
+        <!-- <div
           v-if="showPopup && clikedUser.id === user.id && clikedUser.id !== auth_store.id"
           class="v-usersOnline__popup">
           <div
@@ -37,7 +37,13 @@
             @click="emit('sendInviteGame', user.id)">
             Поиграть
           </div>
-        </div>
+        </div> -->
+        <UserOnlineContainerSelect
+          :isOpen="showPopup && clikedUser.id === user.id && clikedUser.id !== auth_store.id"
+          :selectData="selectData"
+          @onPrivateRoomHandler="(e) => onPrivateRoomHandler(e, user.id)"
+          @goTo="goTo(`/profile/${user.id}/`)"
+          @sendInviteGame="emit('sendInviteGame', user.id)" />
       </div>
     </div>
   </div>
@@ -45,11 +51,12 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch, Ref } from 'vue';
+import UserOnlineContainerSelect from '@/components/UserOnlineContainer/UserOnlineContainerSelect.vue';
 import { useUserStore } from '@/store/user_store.ts';
 import { useAuthStore } from '@/store/auth_store.ts';
 import router from '@/router/router';
 
-const emit = defineEmits(['sendInviteGame']);
+const emit = defineEmits(['sendInviteGame', 'openRoom']);
 
 const user_store = useUserStore();
 const auth_store = useAuthStore();
@@ -62,6 +69,21 @@ const clikedUser = ref({
   name: '',
   id: '',
 }) as Ref<UserType>;
+
+const selectData = [
+  {
+    text: 'В личку',
+    emitName: 'onPrivateRoomHandler',
+  },
+  {
+    text: 'Профиль',
+    emitName: 'goTo',
+  },
+  {
+    text: 'Играть',
+    emitName: 'sendInviteGame',
+  },
+];
 
 const props = defineProps({
   usersOnline: {
@@ -232,32 +254,6 @@ const filteredActiveOrNotUsers = computed(() => {
       width: 50px;
       height: 50px;
       right: -24px;
-    }
-  }
-
-  .v-usersOnline__popup {
-    position: absolute;
-    background: #090909;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    width: 85px;
-    height: fit-content;
-    opacity: 1;
-    color: #555;
-    top: -10px;
-    right: -90px;
-  }
-
-  .v-usersOnline__popupText {
-    font-size: 15px;
-    border: 1px solid $orange;
-    box-sizing: border-box;
-    padding: 2px;
-    width: 100%;
-    text-align: center;
-
-    &:hover {
-      cursor: pointer;
-      background: $cacaoBlack;
     }
   }
 
