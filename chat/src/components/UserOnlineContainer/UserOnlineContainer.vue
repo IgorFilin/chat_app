@@ -1,3 +1,4 @@
+div
 <template>
   <div
     class="v-usersOnline"
@@ -43,7 +44,8 @@
           :selectData="selectData"
           @onPrivateRoomHandler="(e) => onPrivateRoomHandler(e, user.id)"
           @goTo="goTo(`/profile/${user.id}/`)"
-          @sendInviteGame="emit('sendInviteGame', user.id)" />
+          @sendInviteGame="emit('sendInviteGame', user.id)"
+          @searchedGame="searchedGameHandler" />
       </div>
     </div>
   </div>
@@ -81,7 +83,9 @@ const selectData = [
   },
   {
     text: 'Играть',
-    emitName: 'sendInviteGame',
+    additionalList: [{ text: 'Кр.Нолики', type: 'ticTackToe' }],
+
+    action: 'isOpenAdditionalList',
   },
 ];
 
@@ -114,6 +118,10 @@ function onPrivateRoomHandler(event: MouseEvent, id: string) {
   showPopup.value = false;
   emit('openRoom', id);
   isActiveUserContainer.value = false;
+}
+
+function searchedGameHandler(game: string) {
+  console.log(game);
 }
 
 onMounted(() => {

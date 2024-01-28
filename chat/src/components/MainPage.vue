@@ -217,7 +217,14 @@ function openRoomHandler(id: string) {
 }
 
 function sendInviteGameHandler(userID: string) {
-  console.log(userID);
+  if (connection.readyState === 1) {
+    connection.send(
+      JSON.stringify({
+        event: 'invite_game',
+        data: { myId: store.id, userID },
+      })
+    );
+  }
 }
 
 onUnmounted(() => {

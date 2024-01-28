@@ -4,19 +4,36 @@
     class="v-usersOnline__popup">
     <div
       class="v-usersOnline__popupText"
-      v-for="({ text, emitName }, index) in selectData"
+      v-for="({ text, emitName, action, additionalList }, index) in selectData"
       :key="index"
-      @click="(event) => emit(emitName, event)">
-      {{ text }}
+      @click="(event) => onClickContentHandler(event, emitName, action)">
+      <span>{{ text }}</span>
+      <div
+        v-if="additionalList && isOpenAdditionalList"
+        class="v-usersOnline__additionalList">
+        <div
+          v-for="({ text, type }, additionalIndex) in additionalList"
+          :key="additionalIndex"
+          class="v-usersOnline__popupText"
+          @click="(event) => onClickAdditionalTextHandler(event, type)">
+          {{ text }}
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
+
 type SelectDataType = {
   text: string;
-  emitName: any;
+  additionalList?: Array<{ text: string; type: string }>;
+  emitName?: string;
+  action?: string;
 };
+
+const isOpenAdditionalList = ref(false);
 
 const props = defineProps({
   isOpen: {
@@ -29,7 +46,24 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['onPrivateRoomHandler', 'goTo', 'sendInviteGame']);
+function onClickContentHandler(event: any, emitName: any, action: any) {
+  if (emitName) {
+    emit(emitName, event);
+  }
+  switch (action) {
+    case 'isOpenAdditionalList': {
+      isOpenAdditionalList.value = !isOpenAdditionalList.value;
+      break;
+    }
+  }
+}
+
+function onClickAdditionalTextHandler(event: any, type: string) {
+  event.stopPropagation();
+  emit('searchedGame', type);
+}
+
+const emit = defineEmits(['onPrivateRoomHandler', 'goTo', 'sendInviteGame', 'searchedGame']);
 </script>
 
 <style lang="scss">
@@ -57,5 +91,11 @@ const emit = defineEmits(['onPrivateRoomHandler', 'goTo', 'sendInviteGame']);
     cursor: pointer;
     background: $cacaoBlack;
   }
+}
+
+.v-usersOnline__additionalList {
+  position: absolute;
+  right: 103%;
+  top: 0;
 }
 </style>
