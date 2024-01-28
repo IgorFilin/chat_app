@@ -36,6 +36,11 @@ export class WebsocketController {
     await this.WebsocketService.openPrivateRoom(body.myId, body.userId);
   }
 
+  @SubscribeMessage('invite_game')
+  async handleInviteGame(@MessageBody() body: any) {
+    console.log(body);
+  }
+
   async handleDisconnect(disconnectedClient: any, ...args: any) {
     await this.WebsocketService.disconnectUser(disconnectedClient);
   }

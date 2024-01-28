@@ -216,12 +216,12 @@ function openRoomHandler(id: string) {
   }
 }
 
-function sendInviteGameHandler(userID: string) {
+function sendInviteGameHandler(userID: string, game: string) {
   if (connection.readyState === 1) {
     connection.send(
       JSON.stringify({
         event: 'invite_game',
-        data: { myId: store.id, userID },
+        data: { myId: store.id, userID, game },
       })
     );
   }

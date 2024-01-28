@@ -20,32 +20,12 @@ div
         v-for="user in filteredActiveOrNotUsers"
         :key="user.id">
         {{ user.name }}
-        <!-- <div
-          v-if="showPopup && clikedUser.id === user.id && clikedUser.id !== auth_store.id"
-          class="v-usersOnline__popup">
-          <div
-            class="v-usersOnline__popupText"
-            @click="onPrivateRoomHandler($event, user.id)">
-            В личку
-          </div>
-          <div
-            class="v-usersOnline__popupText"
-            @click="goTo(`/profile/${user.id}/`)">
-            Профиль
-          </div>
-          <div
-            class="v-usersOnline__popupText"
-            @click="emit('sendInviteGame', user.id)">
-            Поиграть
-          </div>
-        </div> -->
         <UserOnlineContainerSelect
           :isOpen="showPopup && clikedUser.id === user.id && clikedUser.id !== auth_store.id"
           :selectData="selectData"
           @onPrivateRoomHandler="(e) => onPrivateRoomHandler(e, user.id)"
           @goTo="goTo(`/profile/${user.id}/`)"
-          @sendInviteGame="emit('sendInviteGame', user.id)"
-          @searchedGame="searchedGameHandler" />
+          @sendInviteGame="(game) => emit('sendInviteGame', user.id, game)" />
       </div>
     </div>
   </div>

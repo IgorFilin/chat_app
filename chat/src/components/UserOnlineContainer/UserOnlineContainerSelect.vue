@@ -60,10 +60,10 @@ function onClickContentHandler(event: any, emitName: any, action: any) {
 
 function onClickAdditionalTextHandler(event: any, type: string) {
   event.stopPropagation();
-  emit('searchedGame', type);
+  emit('sendInviteGame', type);
 }
 
-const emit = defineEmits(['onPrivateRoomHandler', 'goTo', 'sendInviteGame', 'searchedGame']);
+const emit = defineEmits(['onPrivateRoomHandler', 'goTo', 'sendInviteGame']);
 </script>
 
 <style lang="scss">
