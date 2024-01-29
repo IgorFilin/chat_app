@@ -1,26 +1,34 @@
 <template>
   <div class="v-ticTacToe">
-    {{ winner }}
     <div class="v-ticTacToe__board">
       <div
         v-for="(cell, index) in board"
         @click.prevent="onClickCell(index)"
         :key="index"
+        :class="{ winner: patternWinner.includes(index) }"
         class="v-ticTacToe__cell">
         {{ cell }}
       </div>
     </div>
+    <span
+      class="v-ticTacToe__winner"
+      v-if="winner">
+      Победитель: {{ winner }}
+    </span>
+    {{ patternWinner }}
   </div>
 </template>
 
 <script setup lang="ts">
-import { Ref, ref, watch } from 'vue';
+import { Ref, reactive, ref, watch } from 'vue';
 
-const board = ref(Array(9)) as any;
+const board = reactive(Array(9)) as any;
 
 const winner = ref('');
 
 const patternWinner = ref([]) as any;
+
+let isX = false;
 
 const winsPatterns = [
   [0, 4, 8],
@@ -33,31 +41,32 @@ const winsPatterns = [
   [2, 5, 8],
 ];
 
-watch(
-  () => board.value,
-  () => {
-    winsPatterns.forEach((arr: Array<number>) => {
-      console.log('DEBUG');
-      let tempValue = '';
-      for (let i = 0; i < arr.length; i++) {
-        let winnerIndex = arr[i];
-        if (i === 0) {
-          tempValue = board.value[winnerIndex];
-        }
-        if (tempValue !== board.value[winnerIndex]) {
-          break;
-        }
-        if (i === 2) {
-          winner.value = tempValue;
-          patternWinner.value = arr;
-        }
+watch(board, () => {
+  let potencialWinner = '';
+  let isWin = winsPatterns.some((array) => {
+    let winPattern = array.every((el, indexEl) => {
+      if (board[el] && indexEl === 0) {
+        potencialWinner = board[el];
+        return true;
+      }
+      if (indexEl > 0) {
+        return board[el] === potencialWinner;
       }
     });
-  }
-);
+    if (winPattern) {
+      patternWinner.value = array;
+      return true;
+    }
+  });
+  if (isWin) winner.value = potencialWinner;
+});
 
 function onClickCell(index: number) {
-  board.value[index] = 'o';
+  if (!winner.value) {
+    isX = !isX;
+    let value = isX ? 'x' : 'o';
+    board[index] = value;
+  }
 }
 </script>
 
@@ -66,7 +75,9 @@ function onClickCell(index: number) {
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 50px;
 }
 
 .v-ticTacToe__board {
@@ -83,5 +94,13 @@ function onClickCell(index: number) {
 .v-ticTacToe__cell {
   border: 1px solid black;
   font-size: 90px;
+
+  &.winner {
+    background: red;
+  }
+}
+
+.v-ticTacToe__winner {
+  font-size: 25px;
 }
 </style>
