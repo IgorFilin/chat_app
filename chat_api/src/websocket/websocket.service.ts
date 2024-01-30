@@ -23,6 +23,7 @@ export class WebsocketService {
 
   clients = {};
   messages = [];
+  gameRooms = {};
   publicChatEvent = 'message' as 'message';
   privateChatEvent = 'private_message' as 'private_message';
 
@@ -310,8 +311,29 @@ export class WebsocketService {
       sendInviteUserId: myId,
     } as any;
 
+    // Если "Подтверждёный статус" не приходит то отправить пользаку 2 приглашение,
+    // Если пришёл "Статус подтверждено" то сздать комнату и разослать спустя какое то время
+    // Приглашение в эту комнату двум игрокам
     if (isAccept === undefined) sendInvite.isInvite = true;
-    else sendInvite.isAccept = isAccept;
+    else {
+      const gameRoomId = myId + '-' + userId;
+
+      this.gameRooms[gameRoomId] = {
+        game,
+        isAllChat: false,
+        gameRoomId,
+      };
+
+      sendInvite.isAccept = isAccept;
+
+      setTimeout(() => {
+        for (let id of [myId, userId]) {
+          const user = this.clients[id];
+          user.client.send(JSON.stringify(this.gameRooms[gameRoomId]));
+        }
+        console.log(this.gameRooms[gameRoomId]);
+      }, 1500);
+    }
 
     const user = this.clients[userId];
     user.client.send(JSON.stringify(sendInvite));

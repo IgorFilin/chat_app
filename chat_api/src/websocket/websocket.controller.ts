@@ -4,7 +4,7 @@ import {
   WebSocketServer,
   MessageBody,
 } from '@nestjs/websockets';
-import { Socket, Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { WebsocketService } from './websocket.service';
 
 @WebSocketGateway()

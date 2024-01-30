@@ -60,6 +60,7 @@ import UserOnlineContainer from '@/components/UserOnlineContainer/UserOnlineCont
 import Loader from '@/components/Loader.vue';
 import Button from '@/components/assetsComponent/Button.vue';
 import Popup from '@/components/assetsComponent/Popup.vue';
+import { useGameStore } from '@/store/game_store.ts';
 
 const isAllChat = ref(true) as Ref<boolean>;
 const roomId = ref(null) as Ref<string | null>;
@@ -89,6 +90,7 @@ const inviteGameButtons = [
 ];
 
 const store = useAuthStore();
+const gameStore = useGameStore();
 
 if (!store.isAuth) {
   router.push('/login');
@@ -101,7 +103,7 @@ if (!store.isAuth) {
 const connection = new WebSocket(`${import.meta.env.VITE_APP_PROTOCOL}://${import.meta.env.VITE_APP_DOMEN_PORT}?userID=${store.id}`);
 
 connection.onclose = function (event) {
-  if (router.currentRoute.value.matched[0].path !== '/profile/:id' && router.currentRoute.value.path !== '/login') {
+  if (router.currentRoute.value.matched[0].path !== '/games/:id' && router.currentRoute.value.matched[0].path !== '/profile/:id' && router.currentRoute.value.path !== '/login') {
     store.toast('К сожалению соединение разорвано');
   }
 };
@@ -223,6 +225,10 @@ connection.onmessage = function (event) {
     const answer = data.isAccept ? 'принял' : 'отклонил';
     store.toast(`Пользователь ${data.userSendedInvite} ${answer} предложение`);
   }
+
+  if (data.gameRoomId) {
+    gameStore.setRoomId(data.gameRoomId);
+  }
 };
 
 function OnDragChatContainer(event: any) {
@@ -268,7 +274,6 @@ function openRoomHandler(id: string) {
 }
 
 function sendInviteGameHandler(userId: string, game: string, isAccept: boolean | undefined) {
-  console.log(game);
   if (connection.readyState === 1) {
     connection.send(
       JSON.stringify({

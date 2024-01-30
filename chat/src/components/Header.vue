@@ -64,8 +64,10 @@ import router from '@/router/router';
 import { useAuthStore } from '@/store/auth_store';
 import { onMounted, onUpdated, ref, watch } from 'vue';
 import Button from '@/components/assetsComponent/Button.vue';
+import { useGameStore } from '@/store/game_store.ts';
 
 const store = useAuthStore();
+const gameStore = useGameStore();
 
 const isOpenModal = ref(false);
 
@@ -88,6 +90,12 @@ const navigateButtons = ref([
     show: false,
     isActive: false,
   },
+  {
+    text: 'Войти в игровую комнату',
+    redirect: `/games/${gameStore.gameRoomId}`,
+    show: false,
+    isActive: false,
+  },
 ]);
 
 function goTo(route: string) {
@@ -95,11 +103,15 @@ function goTo(route: string) {
 }
 
 watch(
-  [() => store.isAcceptKey, () => store.isAuth],
+  [() => store.isAcceptKey, () => store.isAuth, () => gameStore.gameRoomId],
   () => {
     navigateButtons.value[0].show = !store.isAuth;
     navigateButtons.value[1].show = !store.isAuth;
     navigateButtons.value[2].show = store.isAcceptKey === false;
+    if (gameStore.gameRoomId) {
+      navigateButtons.value[3].show = gameStore.gameRoomId;
+      navigateButtons.value[3].redirect = `/games/${gameStore.gameRoomId}`;
+    }
   },
   { immediate: true }
 );

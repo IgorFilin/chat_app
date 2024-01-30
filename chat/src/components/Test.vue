@@ -21,7 +21,7 @@
     :text="[textValue[2]]" />
 </template>
 <script setup>
-import TextTyper from '@/components/assetsComponent/TextTyper.vue';
+import TextTyper from '@/components/AssetsComponent/TextTyper.vue';
 import { onUpdated, ref } from 'vue';
 const valueIn = ref('');
 const textValue = ref({});

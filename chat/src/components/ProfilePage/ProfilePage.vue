@@ -27,7 +27,7 @@ import { Ref, computed, nextTick, onMounted, onUnmounted, onUpdated, ref, watch,
 import { useAuthStore } from '@/store/auth_store.ts';
 import { useUserStore } from '@/store/user_store.ts';
 import Button from '@/components/assetsComponent/Button.vue';
-import TextTyper from '@/components/assetsComponent/TextTyper.vue';
+import TextTyper from '@/components/AssetsComponent/TextTyper.vue';
 import router from '@/router/router';
 import { useRoute } from 'vue-router';
 
