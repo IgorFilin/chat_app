@@ -61,6 +61,7 @@ import Loader from '@/components/Loader.vue';
 import Button from '@/components/assetsComponent/Button.vue';
 import Popup from '@/components/assetsComponent/Popup.vue';
 import { useGameStore } from '@/store/game_store.ts';
+import { webSocketEntity } from '@/composable/socket.ts';
 
 const isAllChat = ref(true) as Ref<boolean>;
 const roomId = ref(null) as Ref<string | null>;
@@ -71,6 +72,8 @@ const onDragClass = ref(false) as Ref<boolean>;
 const isLoadingMessages = ref(false) as Ref<boolean>;
 const messagesLength = ref(0);
 const isOpenPopupInviteGame = ref(false);
+
+const { socket, state } = webSocketEntity();
 
 const popupInviteGameData = ref({
   title: '',
@@ -100,13 +103,13 @@ if (!store.isAuth) {
 //   console.log({ key, target, type })
 // ); // Тест производительности
 
-const connection = new WebSocket(`${import.meta.env.VITE_APP_PROTOCOL}://${import.meta.env.VITE_APP_DOMEN_PORT}?userID=${store.id}`);
+// const connection = new WebSocket(`${import.meta.env.VITE_APP_PROTOCOL}://${import.meta.env.VITE_APP_DOMEN_PORT}?userID=${store.id}`);
 
-connection.onclose = function (event) {
-  if (router.currentRoute.value.matched[0].path !== '/games/:id' && router.currentRoute.value.matched[0].path !== '/profile/:id' && router.currentRoute.value.path !== '/login') {
-    store.toast('К сожалению соединение разорвано');
-  }
-};
+// connection.onclose = function (event) {
+//   if (router.currentRoute.value.matched[0].path !== '/games/:id' && router.currentRoute.value.matched[0].path !== '/profile/:id' && router.currentRoute.value.path !== '/login') {
+//     store.toast('К сожалению соединение разорвано');
+//   }
+// };
 
 function sendMessage(message: string) {
   if (connection.readyState === 1 && message !== '') {
@@ -169,67 +172,67 @@ watch([() => isAllChat.value, () => roomId.value], () => (isLoadingMessages.valu
 
 const memoMessages = computed(() => messages.value);
 
-connection.onmessage = function (event) {
-  const data = JSON.parse(event.data);
+// connection.onmessage = function (event) {
+//   const data = JSON.parse(event.data);
 
-  if (data.openRoom) {
-    roomId.value = data.messages.roomId;
-  }
+//   if (data.openRoom) {
+//     roomId.value = data.messages.roomId;
+//   }
 
-  if (data.lengthMessages !== messagesLength.value) {
-    messagesLength.value = data.lengthMessages;
-  }
+//   if (data.lengthMessages !== messagesLength.value) {
+//     messagesLength.value = data.lengthMessages;
+//   }
 
-  if (data.userToAddPrivat && data.userToAddPrivat !== userToAddPrivate.value) {
-    userToAddPrivate.value = data.userToAddPrivat;
-  }
+//   if (data.userToAddPrivat && data.userToAddPrivat !== userToAddPrivate.value) {
+//     userToAddPrivate.value = data.userToAddPrivat;
+//   }
 
-  if (data.messages?.roomId === roomId.value) {
-    if (Array.isArray(data.messages?.message)) {
-      const bufferData = new Uint8Array(data.messages.message);
-      const blobMessage = new Blob([bufferData]);
-      data.messages.message = URL.createObjectURL(blobMessage);
-    }
+//   if (data.messages?.roomId === roomId.value) {
+//     if (Array.isArray(data.messages?.message)) {
+//       const bufferData = new Uint8Array(data.messages.message);
+//       const blobMessage = new Blob([bufferData]);
+//       data.messages.message = URL.createObjectURL(blobMessage);
+//     }
 
-    if (typeof data.messages?.message === 'string') {
-      const base64Image = data.messages.userPhoto;
-      const binaryData = Uint8Array.from(atob(base64Image), (c) => c.charCodeAt(0));
-      const blobImage = new Blob([binaryData]);
-      data.messages.userPhoto = URL.createObjectURL(blobImage);
-      messages.value.unshift(data.messages);
-    }
-  }
+//     if (typeof data.messages?.message === 'string') {
+//       const base64Image = data.messages.userPhoto;
+//       const binaryData = Uint8Array.from(atob(base64Image), (c) => c.charCodeAt(0));
+//       const blobImage = new Blob([binaryData]);
+//       data.messages.userPhoto = URL.createObjectURL(blobImage);
+//       messages.value.unshift(data.messages);
+//     }
+//   }
 
-  if (messagesLength.value === messages.value.length) {
-    isLoadingMessages.value = true;
-  }
+//   if (messagesLength.value === messages.value.length) {
+//     isLoadingMessages.value = true;
+//   }
 
-  if (data.clients) {
-    usersOnline.value = data.clients;
-  }
+//   if (data.clients) {
+//     usersOnline.value = data.clients;
+//   }
 
-  if (data.isInvite) {
-    const TypeNameGames = {
-      ticTackToe: 'Крестики нолики',
-    } as any;
+//   if (data.isInvite) {
+//     const TypeNameGames = {
+//       ticTackToe: 'Крестики нолики',
+//     } as any;
 
-    popupInviteGameData.value = {
-      title: `Вас пригласил ${data.userSendedInvite} в&nbsp;игру&nbsp;${TypeNameGames[data.inviteGame]}`,
-      game: data.inviteGame,
-      sendInviteUserId: data.sendInviteUserId,
-    };
-    isOpenPopupInviteGame.value = true;
-  }
+//     popupInviteGameData.value = {
+//       title: `Вас пригласил ${data.userSendedInvite} в&nbsp;игру&nbsp;${TypeNameGames[data.inviteGame]}`,
+//       game: data.inviteGame,
+//       sendInviteUserId: data.sendInviteUserId,
+//     };
+//     isOpenPopupInviteGame.value = true;
+//   }
 
-  if (data.isAccept !== undefined) {
-    const answer = data.isAccept ? 'принял' : 'отклонил';
-    store.toast(`Пользователь ${data.userSendedInvite} ${answer} предложение`);
-  }
+//   if (data.isAccept !== undefined) {
+//     const answer = data.isAccept ? 'принял' : 'отклонил';
+//     store.toast(`Пользователь ${data.userSendedInvite} ${answer} предложение`);
+//   }
 
-  if (data.gameRoomId) {
-    gameStore.setRoomId(data.gameRoomId);
-  }
-};
+//   if (data.gameRoomId) {
+//     gameStore.setRoomId(data.gameRoomId);
+//   }
+// };
 
 function OnDragChatContainer(event: any) {
   event.preventDefault();
@@ -242,14 +245,14 @@ function goToPublicChat() {
   isAllChat.value = true;
   roomId.value = null;
   messages.value = [];
-  if (connection.readyState === 1) {
-    connection.send(
-      JSON.stringify({
-        event: 'all_messages_public',
-        data: { id: store.id },
-      })
-    );
-  }
+  // if (connection.readyState === 1) {
+  //   connection.send(
+  //     JSON.stringify({
+  //       event: 'all_messages_public',
+  //       data: { id: store.id },
+  //     })
+  //   );
+  // }
 }
 
 function onScroll(event: any) {
@@ -263,30 +266,33 @@ function onScroll(event: any) {
 function openRoomHandler(id: string) {
   isAllChat.value = false;
   messages.value = [];
-  if (connection.readyState === 1) {
-    connection.send(
-      JSON.stringify({
-        event: 'open_room',
-        data: { myId: store.id, userId: id },
-      })
-    );
-  }
+  // if (connection.readyState === 1) {
+  //   connection.send(
+  //     JSON.stringify({
+  //       event: 'open_room',
+  //       data: { myId: store.id, userId: id },
+  //     })
+  //   );
+  // }
 }
 
 function sendInviteGameHandler(userId: string, game: string, isAccept: boolean | undefined) {
-  if (connection.readyState === 1) {
-    connection.send(
-      JSON.stringify({
-        event: 'invite_game',
-        data: { myId: store.id, userId, game, isAccept },
-      })
-    );
-  }
+  // if (connection.readyState === 1) {
+  //   connection.send(
+  //     JSON.stringify({
+  //       event: 'invite_game',
+  //       data: { myId: store.id, userId, game, isAccept },
+  //     })
+  //   );
+  // }
   isOpenPopupInviteGame.value = false;
 }
+onMounted(() => {
+  socket.connect();
+});
 
 onUnmounted(() => {
-  connection.close();
+  // connection.close();
 });
 </script>
 
