@@ -52,7 +52,7 @@ export class WebsocketService {
 
   async disconnectUser(disconnectedClient: any) {
     // Удаляем клиента который отключился
-    delete this.clients[disconnectedClient.userId];
+    delete this.clients[disconnectedClient.handshake.query.userID];
 
     const sendClients = [];
 
@@ -92,7 +92,7 @@ export class WebsocketService {
     }
 
     // Добавляет обьекту клиента веб сокета id, для успешной идентификации и удаления при дисконнекте
-    client['userId'] = userId;
+    // client['userId'] = userId;
 
     // Создаем новый массив для отправки подключенных пользователей на клиент
     const sendClients = [];
@@ -113,12 +113,15 @@ export class WebsocketService {
     //   );
     // }
 
-    // for (let i = 0; i <= this.messages.length; i++) {
-    //   client.emit('message', {
-    //     messages: this.messages[i],
-    //     lengthMessages: this.messages.length,
-    //   });
-    // }
+    for (let i = 0; i <= this.messages.length; i++) {
+      client.emit(
+        'message',
+        JSON.stringify({
+          messages: this.messages[i],
+          lengthMessages: this.messages.length,
+        }),
+      );
+    }
 
     return { sendClients };
   }
@@ -129,7 +132,9 @@ export class WebsocketService {
     roomId: string,
     isAllChat: boolean,
   ) {
+    console.log(userId);
     const user = this.clients[userId];
+
     const maxMessageSize = 600 * 1024; // Максимальный размер сообщения для изобращения
 
     if (Array.isArray(message) && message.length >= maxMessageSize) {
@@ -163,9 +168,12 @@ export class WebsocketService {
         this.messages.pop();
         this.messages.push(sendData);
       }
-      for (const client in this.clients) {
-        this.clients[client].client.send(messages);
-      }
+      // console.log(this.clients);
+      // for (const client of Object.values(this.clients)) {
+      //   // client.emit('message', messages);
+      //   console.log('---', client);
+      // }
+      return { messages };
     } else {
       const room = await this.RoomTable.findOne({
         where: { id: roomId },
@@ -194,7 +202,7 @@ export class WebsocketService {
 
       for (let user of room.users) {
         if (this.clients[user.id]) {
-          this.clients[user.id].client.send(messages);
+          this.clients[user.id].client.emit('message', messages);
         }
       }
     }

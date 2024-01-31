@@ -20,16 +20,6 @@ export class WebsocketController implements OnGatewayConnection {
   @WebSocketServer()
   private server: Server;
 
-  // @SubscribeMessage('message')
-  // async handleMessage(@MessageBody() body: any) {
-  //   await this.WebsocketService.broadcastMessage(
-  //     body.id,
-  //     body.message,
-  //     body.roomId,
-  //     body.isAllChat,
-  //   );
-  // }
-
   // @SubscribeMessage('all_messages_public')
   // async handleAllMessage(@MessageBody() body: any) {
   //   await this.WebsocketService.getAllMessagesPublicChat(body.id);
@@ -51,10 +41,21 @@ export class WebsocketController implements OnGatewayConnection {
   //     body.isAccept,
   //   );
   // }
-  @SubscribeMessage('test')
-  async test(@MessageBody() dto: any, @ConnectedSocket() client: Socket) {}
+  // @SubscribeMessage('test')
+  // async test(@MessageBody() dto: any, @ConnectedSocket() client: Socket) {}
 
-  async handleDisconnect(client: any) {
+  @SubscribeMessage('message')
+  async handleMessage(@MessageBody() body: any) {
+    const { messages } = await this.WebsocketService.broadcastMessage(
+      body.data.id,
+      body.data.message,
+      body.data.roomId,
+      body.data.isAllChat,
+    );
+    this.server.emit('message', messages);
+  }
+
+  async handleDisconnect(@ConnectedSocket() client: Socket) {
     const { sendClients } = await this.WebsocketService.disconnectUser(client);
     console.log(sendClients);
     this.server.emit('clients', { clients: sendClients });

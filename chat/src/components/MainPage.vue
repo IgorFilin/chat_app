@@ -5,7 +5,7 @@
       @sendInviteGame="sendInviteGameHandler"
       :usersOnline="state.onlineClients" />
     <div
-      v-if="!isAllChat"
+      v-if="!state.isAllChat"
       class="v-mainPage__backAllChatContainer">
       <Button
         @onClick="goToPublicChat"
@@ -13,18 +13,18 @@
         isIcon
         iconId="arrow_back"
         iconColor="white" />
-      <div>В диалоге {{ userToAddPrivate }}</div>
+      <div>В диалоге {{ state.userToAddPrivate }}</div>
     </div>
     <div
       class="v-mainPage__chatContainer"
-      :class="{ drag: onDragClass }"
+      :class="{ drag: state.onDragClass }"
       @scroll="onScroll"
       @dragstart.prevent
       @dragover.prevent="OnDragChatContainer"
-      @dragleave.prevent="onDragClass = false"
+      @dragleave.prevent="state.onDragClass = false"
       @drop.prevent="OnDropChatContainer">
       <Message
-        v-if="isLoadingMessages"
+        v-if="state.isLoadingMessages"
         :key="message.message.toString()"
         v-for="message in memoMessages"
         v-bind="message" />
@@ -63,14 +63,6 @@ import Popup from '@/components/assetsComponent/Popup.vue';
 import { useGameStore } from '@/store/game_store.ts';
 import { webSocketEntity } from '@/composable/socket.ts';
 
-const isAllChat = ref(true) as Ref<boolean>;
-const roomId = ref(null) as Ref<string | null>;
-const userToAddPrivate = ref('') as Ref<string>;
-const messages = ref([]) as Ref<Array<MessageType>>;
-const usersOnline = ref([]) as Ref<Array<UserTypeInUsersArrayType>>;
-const onDragClass = ref(false) as Ref<boolean>;
-const isLoadingMessages = ref(false) as Ref<boolean>;
-const messagesLength = ref(0);
 const isOpenPopupInviteGame = ref(false);
 
 const { socket, state } = webSocketEntity();
@@ -112,25 +104,22 @@ if (!store.isAuth) {
 // };
 
 function sendMessage(message: string) {
-  if (connection.readyState === 1 && message !== '') {
-    connection.send(
-      JSON.stringify({
-        event: 'message',
-        data: {
-          message: message.trim(),
-          id: store.id,
-          roomId: roomId.value,
-          isAllChat: isAllChat.value,
-        },
-      })
-    );
-  }
+  const sendMessage = {
+    event: 'message',
+    data: {
+      message: message.trim(),
+      id: store.id,
+      roomId: state.roomId,
+      isAllChat: state.isAllChat,
+    },
+  };
+  socket.emit('message', sendMessage);
 }
 
 function OnDropChatContainer(e: any) {
   e.preventDefault();
 
-  onDragClass.value = false;
+  state.onDragClass = false;
   const file = e.dataTransfer.files[0];
   const reader = new FileReader();
 
@@ -139,38 +128,38 @@ function OnDropChatContainer(e: any) {
   //   return;
   // }  // Добавить возможность сохранения текстовых файлов для клиентов
 
-  if (file.type !== 'image/webp' && file.type !== 'image/png' && file.type !== 'image/jpeg') {
-    store.toast('К сожалению пока не поддерживаемый формат файлов (Доступны только изображения форматов png и webp)');
-    return;
-  }
+  // if (file.type !== 'image/webp' && file.type !== 'image/png' && file.type !== 'image/jpeg') {
+  //   store.toast('К сожалению пока не поддерживаемый формат файлов (Доступны только изображения форматов png и webp)');
+  //   return;
+  // }
 
-  if (file.size > 600 * 1024) {
-    store.toast('Изображение слишком большое. Максимальный размер - 600 КБ.');
-    return;
-  }
+  // if (file.size > 600 * 1024) {
+  //   store.toast('Изображение слишком большое. Максимальный размер - 600 КБ.');
+  //   return;
+  // }
 
-  reader.onload = function (eventReader) {
-    const arrayBuffer = eventReader.target?.result;
-    if (connection.readyState === 1) {
-      connection.send(
-        JSON.stringify({
-          event: 'message',
-          data: {
-            message: Array.from(new Uint8Array(arrayBuffer as ArrayBuffer)),
-            id: store.id,
-            roomId: roomId.value,
-            isAllChat: isAllChat.value,
-          },
-        })
-      );
-    }
-  };
-  reader.readAsArrayBuffer(file);
+  // reader.onload = function (eventReader) {
+  //   const arrayBuffer = eventReader.target?.result;
+  //   if (connection.readyState === 1) {
+  //     connection.send(
+  //       JSON.stringify({
+  //         event: 'message',
+  //         data: {
+  //           message: Array.from(new Uint8Array(arrayBuffer as ArrayBuffer)),
+  //           id: store.id,
+  //           roomId: roomId.value,
+  //           isAllChat: isAllChat.value,
+  //         },
+  //       })
+  //     );
+  //   }
+  // };
+  // reader.readAsArrayBuffer(file);
 }
 
-watch([() => isAllChat.value, () => roomId.value], () => (isLoadingMessages.value = messagesLength.value === messages.value.length));
+watch([() => state.isAllChat, () => state.roomId], () => (state.isLoadingMessages = state.messagesLength === state.messages.length));
 
-const memoMessages = computed(() => messages.value);
+const memoMessages = computed(() => state.messages);
 
 // connection.onmessage = function (event) {
 //   const data = JSON.parse(event.data);
@@ -235,16 +224,16 @@ const memoMessages = computed(() => messages.value);
 // };
 
 function OnDragChatContainer(event: any) {
-  event.preventDefault();
-  if (!onDragClass.value) {
-    onDragClass.value = true;
-  }
+  // event.preventDefault();
+  // if (!onDragClass.value) {
+  //   onDragClass.value = true;
+  // }
 }
 
 function goToPublicChat() {
-  isAllChat.value = true;
-  roomId.value = null;
-  messages.value = [];
+  // isAllChat.value = true;
+  // roomId.value = null;
+  // messages.value = [];
   // if (connection.readyState === 1) {
   //   connection.send(
   //     JSON.stringify({
@@ -264,8 +253,8 @@ function onScroll(event: any) {
 }
 
 function openRoomHandler(id: string) {
-  isAllChat.value = false;
-  messages.value = [];
+  // isAllChat.value = false;
+  // messages.value = [];
   // if (connection.readyState === 1) {
   //   connection.send(
   //     JSON.stringify({
@@ -289,9 +278,6 @@ function sendInviteGameHandler(userId: string, game: string, isAccept: boolean |
 }
 onMounted(() => {
   socket.connect();
-  setTimeout(() => {
-    socket.emit('test', { text: 'test' });
-  }, 5000);
 });
 
 onUnmounted(() => {
