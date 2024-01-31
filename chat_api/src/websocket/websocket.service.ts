@@ -63,21 +63,20 @@ export class WebsocketService {
       });
     }
 
-    // При отключении определенного клиента, отправляем список всех пользователей и себя в частности, на клиент
-    for (const clientId in this.clients) {
-      this.clients[clientId].client.send(
-        JSON.stringify({ clients: sendClients }),
-      );
-    }
+    // // При отключении определенного клиента, отправляем список всех пользователей и себя в частности, на клиент
+    // for (const clientId in this.clients) {
+    //   this.clients[clientId].client.send(
+    //     JSON.stringify({ clients: sendClients }),
+    //   );
+    // }
 
     console.log('Client disconnect');
+    return { sendClients };
   }
 
-  async connectedUser(client: any, args: any) {
+  async connectedUser(client: any) {
     // Вытаскием id с квери параметров
-    const url = new URLSearchParams(args[0].url);
-    const userId = url.get('/?userID');
-
+    const userId = client.handshake.query.userID;
     // Ищем пользака по этому id
     const user = await this.UserTable.findOneBy({
       id: userId,
@@ -105,23 +104,23 @@ export class WebsocketService {
       });
     }
 
-    // При подключении определенного клиента, отправляем список всех пользователей и себя в частности, на клиент
-    for (const clientId in this.clients) {
-      this.clients[clientId].client.send(
-        JSON.stringify({ clients: sendClients }),
-      );
-    }
+    // // При подключении определенного клиента, отправляем список всех пользователей и себя в частности, на клиент
+    // for (const clientId in this.clients) {
+    //   console.log(this.clients[clientId].client);
+    //   this.clients[clientId].client.emit(
+    //     'test',
+    //     JSON.stringify({ clients: sendClients }),
+    //   );
+    // }
 
-    for (let i = 0; i <= this.messages.length; i++) {
-      client.send(
-        JSON.stringify({
-          messages: this.messages[i],
-          lengthMessages: this.messages.length,
-        }),
-      );
-    }
+    // for (let i = 0; i <= this.messages.length; i++) {
+    //   client.emit('message', {
+    //     messages: this.messages[i],
+    //     lengthMessages: this.messages.length,
+    //   });
+    // }
 
-    console.log(`Client ${user.name} connected`);
+    return { sendClients };
   }
 
   async broadcastMessage(

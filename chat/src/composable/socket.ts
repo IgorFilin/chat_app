@@ -7,8 +7,7 @@ export function webSocketEntity() {
 
   const state = reactive({
     connected: false,
-    fooEvents: [],
-    barEvents: [],
+    onlineClients: [],
   });
 
   // "undefined" means the URL will be computed from the `window.location` object
@@ -18,20 +17,15 @@ export function webSocketEntity() {
 
   socket.on('connect', () => {
     state.connected = true;
+    console.log('CONNECTED');
   });
 
   socket.on('disconnect', () => {
     state.connected = false;
   });
 
-  socket.on('foo', (...args) => {
-    //@ts-ignore
-    state.fooEvents.push(args);
-  });
-
-  socket.on('bar', (...args) => {
-    //@ts-ignore
-    state.barEvents.push(args);
+  socket.on('clients', (data) => {
+    state.onlineClients = data.clients;
   });
 
   return { state, socket };

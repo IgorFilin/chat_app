@@ -3,7 +3,7 @@
     <UserOnlineContainer
       @openRoom="openRoomHandler"
       @sendInviteGame="sendInviteGameHandler"
-      :usersOnline="usersOnline" />
+      :usersOnline="state.onlineClients" />
     <div
       v-if="!isAllChat"
       class="v-mainPage__backAllChatContainer">
@@ -289,10 +289,13 @@ function sendInviteGameHandler(userId: string, game: string, isAccept: boolean |
 }
 onMounted(() => {
   socket.connect();
+  setTimeout(() => {
+    socket.emit('test', { text: 'test' });
+  }, 5000);
 });
 
 onUnmounted(() => {
-  // connection.close();
+  socket.close();
 });
 </script>
 
