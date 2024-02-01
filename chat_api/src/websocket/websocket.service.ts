@@ -293,6 +293,7 @@ export class WebsocketService {
     isAccept: boolean | undefined,
   ) {
     const myData = this.clients[myId];
+
     const sendInvite = {
       userSendedInvite: myData.name,
       isAllChat: false,
@@ -324,6 +325,6 @@ export class WebsocketService {
     }
 
     const user = this.clients[userId];
-    user.client.emit('test', sendInvite);
+    user.client.emit('inviteGame', sendInvite);
   }
 }

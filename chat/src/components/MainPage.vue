@@ -34,17 +34,17 @@
     </div>
     <InputSendButton @sendMessage="sendMessage" />
     <Popup
-      v-if="isOpenPopupInviteGame"
+      v-if="state.isOpenPopupInviteGame"
       class="v-mainPage__inviteGamePopup"
-      :title="popupInviteGameData.title"
+      :title="state.popupInviteGameData.title"
       isCloseBtn
-      @onClose="isOpenPopupInviteGame = false">
+      @onClose="state.isOpenPopupInviteGame = false">
       <template #additional>
         <Button
           v-for="({ text, isAccept }, index) in inviteGameButtons"
           :key="index"
           :text="text"
-          @click.prevent="sendInviteGameHandler(popupInviteGameData.sendInviteUserId, popupInviteGameData.game, isAccept)" />
+          @click.prevent="sendInviteGameHandler(state.popupInviteGameData.sendInviteUserId, state.popupInviteGameData.game, isAccept)" />
       </template>
     </Popup>
   </div>
@@ -62,8 +62,6 @@ import Button from '@/components/assetsComponent/Button.vue';
 import Popup from '@/components/assetsComponent/Popup.vue';
 import { useGameStore } from '@/store/game_store.ts';
 import { webSocketEntity } from '@/composable/socket.ts';
-
-const isOpenPopupInviteGame = ref(false);
 
 const { socket, state } = webSocketEntity();
 
@@ -180,7 +178,8 @@ function openRoomHandler(id: string) {
 }
 
 function sendInviteGameHandler(userId: string, game: string, isAccept: boolean | undefined) {
-  isOpenPopupInviteGame.value = false;
+  state.isOpenPopupInviteGame = false;
+  socket.emit('inviteGame', { myId: store.id, userId, game, isAccept });
 }
 onMounted(() => {
   socket.connect();

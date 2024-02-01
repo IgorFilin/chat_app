@@ -33,17 +33,15 @@ export class WebsocketController implements OnGatewayConnection {
     );
   }
 
-  // @SubscribeMessage('invite_game')
-  // async handleInviteGame(@MessageBody() body: any) {
-  //   await this.WebsocketService.inviteGameUser(
-  //     body.myId,
-  //     body.userId,
-  //     body.game,
-  //     body.isAccept,
-  //   );
-  // }
-  // @SubscribeMessage('test')
-  // async test(@MessageBody() dto: any, @ConnectedSocket() client: Socket) {}
+  @SubscribeMessage('inviteGame')
+  async handleInviteGame(@MessageBody() body: any) {
+    await this.WebsocketService.inviteGameUser(
+      body.myId,
+      body.userId,
+      body.game,
+      body.isAccept,
+    );
+  }
 
   @SubscribeMessage('message')
   async handleMessage(@MessageBody() body: any) {

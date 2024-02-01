@@ -2,6 +2,7 @@ import { reactive } from 'vue';
 import { io } from 'socket.io-client';
 import { useAuthStore } from '@/store/auth_store.ts';
 import router from '@/router/router';
+import data from '@/components/ProfilePage/data';
 
 export function webSocketEntity() {
   const store = useAuthStore();
@@ -15,6 +16,8 @@ export function webSocketEntity() {
     messages: [] as Array<MessageType>,
     onDragClass: false as boolean,
     isLoadingMessages: false as boolean,
+    popupInviteGameData: {} as any,
+    isOpenPopupInviteGame: false as boolean,
     messagesLength: 0,
   });
 
@@ -72,18 +75,21 @@ export function webSocketEntity() {
     if (state.messagesLength === state.messages.length) {
       state.isLoadingMessages = true;
     }
+  });
 
+  socket.on('inviteGame', (data) => {
+    console.log(data);
     if (data.isInvite) {
       const TypeNameGames = {
         ticTackToe: 'Крестики нолики',
       } as any;
 
-      // state.popupInviteGameData = {
-      //   title: `Вас пригласил ${data.userSendedInvite} в&nbsp;игру&nbsp;${TypeNameGames[data.inviteGame]}`,
-      //   game: data.inviteGame,
-      //   sendInviteUserId: data.sendInviteUserId,
-      // };
-      // state.isOpenPopupInviteGame = true;
+      state.popupInviteGameData = {
+        title: `Вас пригласил ${data.userSendedInvite} в&nbsp;игру&nbsp;${TypeNameGames[data.inviteGame]}`,
+        game: data.inviteGame,
+        sendInviteUserId: data.sendInviteUserId,
+      };
+      state.isOpenPopupInviteGame = true;
     }
 
     if (data.isAccept !== undefined) {
