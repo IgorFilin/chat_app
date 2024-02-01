@@ -32,7 +32,7 @@ div
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch, Ref } from 'vue';
+import { ref, computed, onMounted, watch, Ref, onUpdated } from 'vue';
 import UserOnlineContainerSelect from '@/components/UserOnlineContainer/UserOnlineContainerSelect.vue';
 import { useUserStore } from '@/store/user_store.ts';
 import { useAuthStore } from '@/store/auth_store.ts';
@@ -113,23 +113,28 @@ onMounted(() => {
   user_store.getAllUsers();
 });
 
-watch([() => props.usersOnline, () => user_store.users], () => {
-  if (props.usersOnline) {
-    users.value = user_store.users
-      .map((user: UserType) => {
-        if (props.usersOnline.some((userOnline: UserTypeInUsersArrayType) => userOnline.id === user.id)) {
-          return {
-            online: true,
-            name: user.name,
-            id: user.id,
-          };
-        } else {
-          return user;
-        }
-      })
-      .sort((a: any, b: any) => (a.online && !b.online ? -1 : 1));
-  }
-});
+watch(
+  [() => props.usersOnline, () => user_store.users],
+  () => {
+    console.log('WATCH');
+    if (props.usersOnline) {
+      users.value = user_store.users
+        .map((user: UserType) => {
+          if (props.usersOnline.some((userOnline: UserTypeInUsersArrayType) => userOnline.id === user.id)) {
+            return {
+              online: true,
+              name: user.name,
+              id: user.id,
+            };
+          } else {
+            return user;
+          }
+        })
+        .sort((a: any, b: any) => (a.online && !b.online ? -1 : 1));
+    }
+  },
+  { immediate: true }
+);
 
 const filteredActiveOrNotUsers = computed(() => {
   const seachValue = searchedUser.value.toLowerCase().trim();

@@ -20,17 +20,18 @@ export class WebsocketController implements OnGatewayConnection {
   @WebSocketServer()
   private server: Server;
 
-  // @SubscribeMessage('all_messages_public')
-  // async handleAllMessage(@MessageBody() body: any) {
-  //   await this.WebsocketService.getAllMessagesPublicChat(body.id);
-  // }
+  @SubscribeMessage('getAllMessages')
+  async handleAllMessage(@MessageBody() body: any) {
+    await this.WebsocketService.getAllMessagesPublicChat(body.data.id);
+  }
 
-  // @SubscribeMessage('open_room')
-  // async handleOpenPrivateRoom(
-  //   @MessageBody() body: { myId: string; userId: string },
-  // ) {
-  //   await this.WebsocketService.openPrivateRoom(body.myId, body.userId);
-  // }
+  @SubscribeMessage('openRoom')
+  async handleOpenPrivateRoom(@MessageBody() body: any) {
+    await this.WebsocketService.openPrivateRoom(
+      body.data.myId,
+      body.data.userId,
+    );
+  }
 
   // @SubscribeMessage('invite_game')
   // async handleInviteGame(@MessageBody() body: any) {
@@ -46,13 +47,13 @@ export class WebsocketController implements OnGatewayConnection {
 
   @SubscribeMessage('message')
   async handleMessage(@MessageBody() body: any) {
-    const { messages } = await this.WebsocketService.broadcastMessage(
+    const messages = await this.WebsocketService.broadcastMessage(
       body.data.id,
       body.data.message,
       body.data.roomId,
       body.data.isAllChat,
     );
-    this.server.emit('message', messages);
+    if (messages) this.server.emit('message', messages);
   }
 
   async handleDisconnect(@ConnectedSocket() client: Socket) {

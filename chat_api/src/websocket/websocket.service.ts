@@ -41,12 +41,10 @@ export class WebsocketService {
   async getAllMessagesPublicChat(userId: string) {
     const client = this.clients[userId];
     for (let i = 0; i <= this.messages.length; i++) {
-      client.client.send(
-        JSON.stringify({
-          messages: this.messages[i],
-          lengthMessages: this.messages.length,
-        }),
-      );
+      client.client.emit('message', {
+        messages: this.messages[i],
+        lengthMessages: this.messages.length,
+      });
     }
   }
 
@@ -104,7 +102,7 @@ export class WebsocketService {
       });
     }
 
-    // // При подключении определенного клиента, отправляем список всех пользователей и себя в частности, на клиент
+    // При подключении определенного клиента, отправляем список всех пользователей и себя в частности, на клиент
     // for (const clientId in this.clients) {
     //   console.log(this.clients[clientId].client);
     //   this.clients[clientId].client.emit(
@@ -114,13 +112,10 @@ export class WebsocketService {
     // }
 
     for (let i = 0; i <= this.messages.length; i++) {
-      client.emit(
-        'message',
-        JSON.stringify({
-          messages: this.messages[i],
-          lengthMessages: this.messages.length,
-        }),
-      );
+      client.emit('message', {
+        messages: this.messages[i],
+        lengthMessages: this.messages.length,
+      });
     }
 
     return { sendClients };
@@ -132,7 +127,6 @@ export class WebsocketService {
     roomId: string,
     isAllChat: boolean,
   ) {
-    console.log(userId);
     const user = this.clients[userId];
 
     const maxMessageSize = 600 * 1024; // Максимальный размер сообщения для изобращения
@@ -159,7 +153,7 @@ export class WebsocketService {
       sendData.userPhoto = '';
     }
 
-    const messages = JSON.stringify({ messages: sendData });
+    const messages = { messages: sendData };
 
     if (isAllChat) {
       if (this.messages.length < 20) {
@@ -173,7 +167,7 @@ export class WebsocketService {
       //   // client.emit('message', messages);
       //   console.log('---', client);
       // }
-      return { messages };
+      return messages;
     } else {
       const room = await this.RoomTable.findOne({
         where: { id: roomId },
@@ -220,7 +214,6 @@ export class WebsocketService {
       'image',
       'default_photo_user.webp',
     );
-
     const client = this.clients[myId];
 
     // Получаем комнату в которой есть 2 пользователя, вы и пользователь собеседник
@@ -248,19 +241,17 @@ export class WebsocketService {
       .getOne(); // получение пака сообщений из подтаблицы Message, если их нет то null
 
     if (!roomMessages) {
-      client.client.send(
-        JSON.stringify({
-          lengthMessages: 0,
-          userToAddPrivat: userToAdd.name,
-          openRoom: true,
-          messages: {
-            roomId: room.id,
-            roomName: room.name,
-            event: this.privateChatEvent,
-            messages: [],
-          },
-        }),
-      );
+      client.client.emit('message', {
+        lengthMessages: 0,
+        userToAddPrivat: userToAdd.name,
+        openRoom: true,
+        messages: {
+          roomId: room.id,
+          roomName: room.name,
+          event: this.privateChatEvent,
+          messages: [],
+        },
+      });
       return;
     }
 
@@ -284,20 +275,18 @@ export class WebsocketService {
           );
         }
 
-        client.client.send(
-          JSON.stringify({
-            lengthMessages: roomMessages.messages.length,
-            userToAddPrivat: userToAdd.name,
-            openRoom: true,
-            messages: {
-              event: this.privateChatEvent,
-              roomId: room.id,
-              roomName: room.name,
-              userPhoto,
-              ...roomMessages.messages[i],
-            },
-          }),
-        );
+        client.client.emit('message', {
+          lengthMessages: roomMessages.messages.length,
+          userToAddPrivat: userToAdd.name,
+          openRoom: true,
+          messages: {
+            event: this.privateChatEvent,
+            roomId: room.id,
+            roomName: room.name,
+            userPhoto,
+            ...roomMessages.messages[i],
+          },
+        });
       } catch (e) {
         console.log(e);
       }
@@ -336,13 +325,12 @@ export class WebsocketService {
       setTimeout(() => {
         for (let id of [myId, userId]) {
           const user = this.clients[id];
-          user.client.send(JSON.stringify(this.gameRooms[gameRoomId]));
+          user.client.emit('inviteGame', this.gameRooms[gameRoomId]);
         }
-        console.log(this.gameRooms[gameRoomId]);
       }, 1500);
     }
 
     const user = this.clients[userId];
-    user.client.send(JSON.stringify(sendInvite));
+    user.client.emit('test', sendInvite);
   }
 }

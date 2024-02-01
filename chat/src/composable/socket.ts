@@ -1,6 +1,7 @@
 import { reactive } from 'vue';
 import { io } from 'socket.io-client';
 import { useAuthStore } from '@/store/auth_store.ts';
+import router from '@/router/router';
 
 export function webSocketEntity() {
   const store = useAuthStore();
@@ -28,6 +29,9 @@ export function webSocketEntity() {
 
   socket.on('disconnect', () => {
     state.connected = false;
+    if (router.currentRoute.value.matched[0].path !== '/games/:id' && router.currentRoute.value.matched[0].path !== '/profile/:id' && router.currentRoute.value.path !== '/login') {
+      store.toast('К сожалению соединение разорвано');
+    }
   });
 
   socket.on('clients', (data) => {
@@ -36,7 +40,7 @@ export function webSocketEntity() {
 
   socket.on('message', (responseData) => {
     console.log(responseData);
-    const data = JSON.parse(responseData);
+    const data = responseData;
 
     console.log('+++', data);
     if (data.openRoom) {

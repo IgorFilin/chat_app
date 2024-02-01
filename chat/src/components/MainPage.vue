@@ -54,7 +54,7 @@
 import { useAuthStore } from '@/store/auth_store.ts';
 import InputSendButton from '@/components/InputSendButton.vue';
 import router from '@/router/router';
-import { Ref, computed, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue';
+import { Ref, computed, onMounted, onUnmounted, onUpdated, ref, watch, watchEffect } from 'vue';
 import Message from '@/components/Message.vue';
 import UserOnlineContainer from '@/components/UserOnlineContainer/UserOnlineContainer.vue';
 import Loader from '@/components/Loader.vue';
@@ -95,14 +95,6 @@ if (!store.isAuth) {
 //   console.log({ key, target, type })
 // ); // Тест производительности
 
-// const connection = new WebSocket(`${import.meta.env.VITE_APP_PROTOCOL}://${import.meta.env.VITE_APP_DOMEN_PORT}?userID=${store.id}`);
-
-// connection.onclose = function (event) {
-//   if (router.currentRoute.value.matched[0].path !== '/games/:id' && router.currentRoute.value.matched[0].path !== '/profile/:id' && router.currentRoute.value.path !== '/login') {
-//     store.toast('К сожалению соединение разорвано');
-//   }
-// };
-
 function sendMessage(message: string) {
   const sendMessage = {
     event: 'message',
@@ -123,125 +115,54 @@ function OnDropChatContainer(e: any) {
   const file = e.dataTransfer.files[0];
   const reader = new FileReader();
 
-  // if (file.type === 'text/plain' || file.type === 'application/pdf' || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-  //   store.toast('К сожалению пока не поддерживаемый формат файлов');
-  //   return;
-  // }  // Добавить возможность сохранения текстовых файлов для клиентов
+  if (file.type === 'text/plain' || file.type === 'application/pdf' || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+    store.toast('К сожалению пока не поддерживаемый формат файлов');
+    return;
+  } // Добавить возможность сохранения текстовых файлов для клиентов
 
-  // if (file.type !== 'image/webp' && file.type !== 'image/png' && file.type !== 'image/jpeg') {
-  //   store.toast('К сожалению пока не поддерживаемый формат файлов (Доступны только изображения форматов png и webp)');
-  //   return;
-  // }
+  if (file.type !== 'image/webp' && file.type !== 'image/png' && file.type !== 'image/jpeg') {
+    store.toast('К сожалению пока не поддерживаемый формат файлов (Доступны только изображения форматов png и webp)');
+    return;
+  }
 
-  // if (file.size > 600 * 1024) {
-  //   store.toast('Изображение слишком большое. Максимальный размер - 600 КБ.');
-  //   return;
-  // }
+  if (file.size > 600 * 1024) {
+    store.toast('Изображение слишком большое. Максимальный размер - 600 КБ.');
+    return;
+  }
 
-  // reader.onload = function (eventReader) {
-  //   const arrayBuffer = eventReader.target?.result;
-  //   if (connection.readyState === 1) {
-  //     connection.send(
-  //       JSON.stringify({
-  //         event: 'message',
-  //         data: {
-  //           message: Array.from(new Uint8Array(arrayBuffer as ArrayBuffer)),
-  //           id: store.id,
-  //           roomId: roomId.value,
-  //           isAllChat: isAllChat.value,
-  //         },
-  //       })
-  //     );
-  //   }
-  // };
-  // reader.readAsArrayBuffer(file);
+  reader.onload = function (eventReader) {
+    const arrayBuffer = eventReader.target?.result;
+    socket.emit('message', {
+      data: {
+        message: Array.from(new Uint8Array(arrayBuffer as ArrayBuffer)),
+        id: store.id,
+        roomId: state.roomId,
+        isAllChat: state.isAllChat,
+      },
+    });
+  };
+  reader.readAsArrayBuffer(file);
 }
 
 watch([() => state.isAllChat, () => state.roomId], () => (state.isLoadingMessages = state.messagesLength === state.messages.length));
 
 const memoMessages = computed(() => state.messages);
 
-// connection.onmessage = function (event) {
-//   const data = JSON.parse(event.data);
-
-//   if (data.openRoom) {
-//     roomId.value = data.messages.roomId;
-//   }
-
-//   if (data.lengthMessages !== messagesLength.value) {
-//     messagesLength.value = data.lengthMessages;
-//   }
-
-//   if (data.userToAddPrivat && data.userToAddPrivat !== userToAddPrivate.value) {
-//     userToAddPrivate.value = data.userToAddPrivat;
-//   }
-
-//   if (data.messages?.roomId === roomId.value) {
-//     if (Array.isArray(data.messages?.message)) {
-//       const bufferData = new Uint8Array(data.messages.message);
-//       const blobMessage = new Blob([bufferData]);
-//       data.messages.message = URL.createObjectURL(blobMessage);
-//     }
-
-//     if (typeof data.messages?.message === 'string') {
-//       const base64Image = data.messages.userPhoto;
-//       const binaryData = Uint8Array.from(atob(base64Image), (c) => c.charCodeAt(0));
-//       const blobImage = new Blob([binaryData]);
-//       data.messages.userPhoto = URL.createObjectURL(blobImage);
-//       messages.value.unshift(data.messages);
-//     }
-//   }
-
-//   if (messagesLength.value === messages.value.length) {
-//     isLoadingMessages.value = true;
-//   }
-
-//   if (data.clients) {
-//     usersOnline.value = data.clients;
-//   }
-
-//   if (data.isInvite) {
-//     const TypeNameGames = {
-//       ticTackToe: 'Крестики нолики',
-//     } as any;
-
-//     popupInviteGameData.value = {
-//       title: `Вас пригласил ${data.userSendedInvite} в&nbsp;игру&nbsp;${TypeNameGames[data.inviteGame]}`,
-//       game: data.inviteGame,
-//       sendInviteUserId: data.sendInviteUserId,
-//     };
-//     isOpenPopupInviteGame.value = true;
-//   }
-
-//   if (data.isAccept !== undefined) {
-//     const answer = data.isAccept ? 'принял' : 'отклонил';
-//     store.toast(`Пользователь ${data.userSendedInvite} ${answer} предложение`);
-//   }
-
-//   if (data.gameRoomId) {
-//     gameStore.setRoomId(data.gameRoomId);
-//   }
-// };
-
 function OnDragChatContainer(event: any) {
-  // event.preventDefault();
-  // if (!onDragClass.value) {
-  //   onDragClass.value = true;
-  // }
+  event.preventDefault();
+  if (!state.onDragClass) {
+    state.onDragClass = true;
+  }
 }
 
 function goToPublicChat() {
-  // isAllChat.value = true;
-  // roomId.value = null;
-  // messages.value = [];
-  // if (connection.readyState === 1) {
-  //   connection.send(
-  //     JSON.stringify({
-  //       event: 'all_messages_public',
-  //       data: { id: store.id },
-  //     })
-  //   );
-  // }
+  state.isAllChat = true;
+  state.roomId = null;
+  state.messages = [];
+  socket.emit('getAllMessages', {
+    event: 'all_messages_public',
+    data: { id: store.id },
+  });
 }
 
 function onScroll(event: any) {
@@ -253,27 +174,12 @@ function onScroll(event: any) {
 }
 
 function openRoomHandler(id: string) {
-  // isAllChat.value = false;
-  // messages.value = [];
-  // if (connection.readyState === 1) {
-  //   connection.send(
-  //     JSON.stringify({
-  //       event: 'open_room',
-  //       data: { myId: store.id, userId: id },
-  //     })
-  //   );
-  // }
+  state.isAllChat = false;
+  state.messages = [];
+  socket.emit('openRoom', { data: { myId: store.id, userId: id } });
 }
 
 function sendInviteGameHandler(userId: string, game: string, isAccept: boolean | undefined) {
-  // if (connection.readyState === 1) {
-  //   connection.send(
-  //     JSON.stringify({
-  //       event: 'invite_game',
-  //       data: { myId: store.id, userId, game, isAccept },
-  //     })
-  //   );
-  // }
   isOpenPopupInviteGame.value = false;
 }
 onMounted(() => {
