@@ -39,10 +39,8 @@ export function webSocketEntity() {
   });
 
   socket.on('message', (responseData) => {
-    console.log(responseData);
     const data = responseData;
 
-    console.log('+++', data);
     if (data.openRoom) {
       state.roomId = data.messages.roomId;
     }

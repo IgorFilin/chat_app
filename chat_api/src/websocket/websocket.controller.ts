@@ -58,7 +58,6 @@ export class WebsocketController implements OnGatewayConnection {
 
   async handleDisconnect(@ConnectedSocket() client: Socket) {
     const { sendClients } = await this.WebsocketService.disconnectUser(client);
-    console.log(sendClients);
     this.server.emit('clients', { clients: sendClients });
   }
 

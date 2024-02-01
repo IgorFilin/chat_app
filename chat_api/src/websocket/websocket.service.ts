@@ -128,8 +128,7 @@ export class WebsocketService {
     isAllChat: boolean,
   ) {
     const user = this.clients[userId];
-
-    const maxMessageSize = 600 * 1024; // Максимальный размер сообщения для изобращения
+    const maxMessageSize = 300 * 1024; // Максимальный размер сообщения для изобращения
 
     if (Array.isArray(message) && message.length >= maxMessageSize) {
       return; // Отклоните слишком большое сообщение
@@ -162,11 +161,6 @@ export class WebsocketService {
         this.messages.pop();
         this.messages.push(sendData);
       }
-      // console.log(this.clients);
-      // for (const client of Object.values(this.clients)) {
-      //   // client.emit('message', messages);
-      //   console.log('---', client);
-      // }
       return messages;
     } else {
       const room = await this.RoomTable.findOne({
@@ -181,7 +175,6 @@ export class WebsocketService {
       } else {
         messageToSaveDB = message.trim();
       } // Нужно добавить поддержку отправку фото в личку
-
       const newMessage = new Message();
       newMessage.message = messageToSaveDB;
       newMessage.name = user.name;

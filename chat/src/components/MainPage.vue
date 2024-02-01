@@ -114,7 +114,6 @@ function OnDropChatContainer(e: any) {
   state.onDragClass = false;
   const file = e.dataTransfer.files[0];
   const reader = new FileReader();
-
   if (file.type === 'text/plain' || file.type === 'application/pdf' || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
     store.toast('К сожалению пока не поддерживаемый формат файлов');
     return;
@@ -125,8 +124,8 @@ function OnDropChatContainer(e: any) {
     return;
   }
 
-  if (file.size > 600 * 1024) {
-    store.toast('Изображение слишком большое. Максимальный размер - 600 КБ.');
+  if (file.size > 300 * 1024) {
+    store.toast('Изображение слишком большое. Максимальный размер - 300 КБ.');
     return;
   }
 
@@ -141,6 +140,7 @@ function OnDropChatContainer(e: any) {
       },
     });
   };
+
   reader.readAsArrayBuffer(file);
 }
 
