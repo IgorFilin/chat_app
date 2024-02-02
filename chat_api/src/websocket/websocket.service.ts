@@ -321,16 +321,16 @@ export class WebsocketService {
         this.gameRooms[gameRoomId] = {
           game,
           isAllChat: false,
-          gameRoomId,
+          id: gameRoomId,
         };
         you.client.emit('inviteGame', {
           ...sendInvite,
-          gameRoomId: this.gameRooms[gameRoomId],
+          gameRoom: this.gameRooms[gameRoomId],
         });
         user.client.emit('inviteGame', {
           userSendedInvite: sendInvite.userSendedInvite,
           isAccept,
-          gameRoomId: this.gameRooms[gameRoomId],
+          gameRoom: this.gameRooms[gameRoomId],
         });
         // for (let id of [myId, userId]) {
         //   const user = this.clients[id];

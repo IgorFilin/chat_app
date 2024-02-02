@@ -3,13 +3,14 @@ import { io } from 'socket.io-client';
 import { useAuthStore } from '@/store/auth_store.ts';
 import router from '@/router/router';
 import { useGameStore } from '@/store/game_store.ts';
+import { useSocketStore } from '@/store/socket_store.ts';
 
 export function webSocketEntity() {
   const store = useAuthStore();
   const gameStore = useGameStore();
+  const socketStore = useSocketStore();
 
   const state = reactive({
-    connected: false,
     onlineClients: [] as Array<UserTypeInUsersArrayType>,
     isAllChat: true as boolean,
     roomId: null as string | null,
@@ -28,11 +29,11 @@ export function webSocketEntity() {
   const socket = io(address);
 
   socket.on('connect', () => {
-    state.connected = true;
+    socketStore.setConnectionSocket(socket, true);
   });
 
   socket.on('disconnect', () => {
-    state.connected = false;
+    socketStore.setConnectionSocket(socket, false);
     if (router.currentRoute.value.matched[0].path !== '/games/:id' && router.currentRoute.value.matched[0].path !== '/profile/:id' && router.currentRoute.value.path !== '/login') {
       store.toast('К сожалению соединение разорвано');
     }
@@ -97,8 +98,9 @@ export function webSocketEntity() {
       store.toast(`Пользователь ${data.userSendedInvite} ${answer} предложение`);
     }
 
-    if (data.gameRoomId) {
-      gameStore.setRoomId(data.gameRoomId);
+    if (data.gameRoom) {
+      console.log(data.gameRoomId);
+      gameStore.setRoomId(data.gameRoom.id);
     }
   });
 

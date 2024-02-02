@@ -15,17 +15,17 @@ import { onMounted, onUpdated, ref, watch } from 'vue';
 // import TextTyper from '@/components/assetsComponent/TextTyper.vue';
 import TicTacToe from '@/components/Games/TicTacToe.vue';
 import { useAuthStore } from '@/store/auth_store.ts';
+import { webSocketEntity } from '@/composable/socket.ts';
+import { useSocketStore } from '@/store/socket_store.ts';
 
 const store = useAuthStore();
+const socketStore = useSocketStore();
 
-const connection = new WebSocket(`${import.meta.env.VITE_APP_PROTOCOL}://${import.meta.env.VITE_APP_DOMEN_PORT}/game?roomId=${store.id}`);
+let socket;
 
-connection.onclose = function (event) {
-  store.toast('К сожалению соединение разорвано');
-};
-connection.onmessage = function (event) {
-  console.log(event);
-};
+if (!socketStore.socketConnected) socket = webSocketEntity();
+else socket = socketStore.socket;
+
 const title = ref(['Добро пожаловать в игровую комнату', 'Тут вы можете подключиться к комнате в которую у вас есть доступ']);
 </script>
 
