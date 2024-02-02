@@ -2,10 +2,11 @@ import { reactive } from 'vue';
 import { io } from 'socket.io-client';
 import { useAuthStore } from '@/store/auth_store.ts';
 import router from '@/router/router';
-import data from '@/components/ProfilePage/data';
+import { useGameStore } from '@/store/game_store.ts';
 
 export function webSocketEntity() {
   const store = useAuthStore();
+  const gameStore = useGameStore();
 
   const state = reactive({
     connected: false,
@@ -78,7 +79,6 @@ export function webSocketEntity() {
   });
 
   socket.on('inviteGame', (data) => {
-    console.log(data);
     if (data.isInvite) {
       const TypeNameGames = {
         ticTackToe: 'Крестики нолики',
@@ -98,7 +98,7 @@ export function webSocketEntity() {
     }
 
     if (data.gameRoomId) {
-      // state.gameStore.setRoomId(data.gameRoomId);
+      gameStore.setRoomId(data.gameRoomId);
     }
   });
 

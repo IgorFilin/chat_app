@@ -60,16 +60,9 @@ import UserOnlineContainer from '@/components/UserOnlineContainer/UserOnlineCont
 import Loader from '@/components/Loader.vue';
 import Button from '@/components/assetsComponent/Button.vue';
 import Popup from '@/components/assetsComponent/Popup.vue';
-import { useGameStore } from '@/store/game_store.ts';
 import { webSocketEntity } from '@/composable/socket.ts';
 
 const { socket, state } = webSocketEntity();
-
-const popupInviteGameData = ref({
-  title: '',
-  game: '',
-  sendInviteUserId: '',
-});
 
 const inviteGameButtons = [
   {
@@ -83,7 +76,6 @@ const inviteGameButtons = [
 ];
 
 const store = useAuthStore();
-const gameStore = useGameStore();
 
 if (!store.isAuth) {
   router.push('/login');
@@ -186,7 +178,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  socket.close();
+  if (router.currentRoute.value.matched[0].path !== '/games/:id' && router.currentRoute.value.matched[0].path !== '/games/') socket.close();
 });
 </script>
 

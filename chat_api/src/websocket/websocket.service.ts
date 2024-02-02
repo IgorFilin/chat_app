@@ -292,39 +292,56 @@ export class WebsocketService {
     game: string,
     isAccept: boolean | undefined,
   ) {
-    const myData = this.clients[myId];
+    const you = this.clients[myId];
+    const user = this.clients[userId];
 
     const sendInvite = {
-      userSendedInvite: myData.name,
+      userSendedInvite: you.name,
       isAllChat: false,
       inviteGame: game,
       sendInviteUserId: myId,
     } as any;
 
-    // Если "Подтверждёный статус" не приходит то отправить пользаку 2 приглашение,
-    // Если пришёл "Статус подтверждено" то сздать комнату и разослать спустя какое то время
+    // Если "Подтверждёный статус" не приходит то отправить пользаку c userId приглашение,
+    // Если пришёл "Статус подтверждено" то создать комнату и разослать спустя какое то время
     // Приглашение в эту комнату двум игрокам
-    if (isAccept === undefined) sendInvite.isInvite = true;
-    else {
-      const gameRoomId = myId + '-' + userId;
+    switch (isAccept) {
+      case undefined: {
+        sendInvite.isInvite = true;
+        user.client.emit('inviteGame', sendInvite);
+        break;
+      }
+      case false: {
+        user.client.emit('inviteGame', { ...sendInvite, isAccept });
+        break;
+      }
+      case true: {
+        const gameRoomId = myId + '-' + userId;
 
-      this.gameRooms[gameRoomId] = {
-        game,
-        isAllChat: false,
-        gameRoomId,
-      };
-
-      sendInvite.isAccept = isAccept;
-
-      setTimeout(() => {
-        for (let id of [myId, userId]) {
-          const user = this.clients[id];
-          user.client.emit('inviteGame', this.gameRooms[gameRoomId]);
-        }
-      }, 1500);
+        this.gameRooms[gameRoomId] = {
+          game,
+          isAllChat: false,
+          gameRoomId,
+        };
+        you.client.emit('inviteGame', {
+          ...sendInvite,
+          gameRoomId: this.gameRooms[gameRoomId],
+        });
+        user.client.emit('inviteGame', {
+          userSendedInvite: sendInvite.userSendedInvite,
+          isAccept,
+          gameRoomId: this.gameRooms[gameRoomId],
+        });
+        // for (let id of [myId, userId]) {
+        //   const user = this.clients[id];
+        //   user.client.emit('inviteGame', {
+        //     ...sendInvite,
+        //     isAccept,
+        //     gameRoomId: this.gameRooms[gameRoomId],
+        //   });
+        // }
+        break;
+      }
     }
-
-    const user = this.clients[userId];
-    user.client.emit('inviteGame', sendInvite);
   }
 }

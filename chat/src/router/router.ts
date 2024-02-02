@@ -16,6 +16,7 @@ const routes = [
   { path: '/test', component: Test },
   { path: '/profile/:id', component: ProfilePage },
   { path: '/games/:id', component: GamesPage },
+  { path: '/games', component: GamesPage },
 ];
 
 const router = createRouter({
