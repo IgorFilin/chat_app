@@ -99,9 +99,12 @@ export function webSocketEntity() {
     }
 
     if (data.gameRoom) {
-      console.log(data.gameRoomId);
       gameStore.setRoomId(data.gameRoom.id);
     }
+  });
+
+  socket.on('gaming', (data) => {
+    gameStore.setGame(data);
   });
 
   return { state, socket };

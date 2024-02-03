@@ -6,7 +6,7 @@
       :pauseFor="1500"
       delay="60"
       :text="title" /> -->
-    <TicTacToe />
+    <TicTacToe @changeBoard="(data) => console.log(data)" />
   </div>
 </template>
 
@@ -15,18 +15,24 @@ import { onMounted, onUpdated, ref, watch } from 'vue';
 // import TextTyper from '@/components/assetsComponent/TextTyper.vue';
 import TicTacToe from '@/components/Games/TicTacToe.vue';
 import { useAuthStore } from '@/store/auth_store.ts';
-import { webSocketEntity } from '@/composable/socket.ts';
 import { useSocketStore } from '@/store/socket_store.ts';
+import { useGameStore } from '@/store/game_store.ts';
+import { webSocketEntity } from '@/composable/socket.ts';
 
 const store = useAuthStore();
+const gameStore = useGameStore();
 const socketStore = useSocketStore();
 
-let socket;
+let socket: any;
 
 if (!socketStore.socketConnected) socket = webSocketEntity();
 else socket = socketStore.socket;
 
 const title = ref(['Добро пожаловать в игровую комнату', 'Тут вы можете подключиться к комнате в которую у вас есть доступ']);
+
+onMounted(() => {
+  socket.emit('gaming', { roomId: gameStore.gameRoomId });
+});
 </script>
 
 <style scoped lang="scss">

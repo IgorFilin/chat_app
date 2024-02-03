@@ -43,6 +43,11 @@ export class WebsocketController implements OnGatewayConnection {
     );
   }
 
+  @SubscribeMessage('gaming')
+  async gameFlow(@MessageBody() body: any) {
+    await this.WebsocketService.gameFlow(body.roomId, body.data);
+  }
+
   @SubscribeMessage('message')
   async handleMessage(@MessageBody() body: any) {
     const messages = await this.WebsocketService.broadcastMessage(

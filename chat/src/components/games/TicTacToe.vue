@@ -21,8 +21,13 @@
 
 <script setup lang="ts">
 import { Ref, reactive, ref, watch } from 'vue';
+import { useGameStore } from '@/store/game_store.ts';
 
-const board = reactive(Array(9)) as any;
+const emit = defineEmits(['changeBoard']);
+
+const gameStore = useGameStore();
+
+const board = reactive(gameStore.games['ticTackToe']) as any;
 
 const winner = ref('');
 
@@ -41,31 +46,35 @@ const winsPatterns = [
   [2, 5, 8],
 ];
 
-watch(board, () => {
-  let potencialWinner = '';
-  let isWin = winsPatterns.some((array) => {
-    let winPattern = array.every((el, indexEl) => {
-      if (board[el] && indexEl === 0) {
-        potencialWinner = board[el];
+watch(
+  () => board,
+  () => {
+    let potencialWinner = '';
+    let isWin = winsPatterns.some((array) => {
+      let winPattern = array.every((el, indexEl) => {
+        if (board[el] && indexEl === 0) {
+          potencialWinner = board[el];
+          return true;
+        }
+        if (indexEl > 0) {
+          return board[el] === potencialWinner;
+        }
+      });
+      if (winPattern) {
+        patternWinner.value = array;
         return true;
       }
-      if (indexEl > 0) {
-        return board[el] === potencialWinner;
-      }
     });
-    if (winPattern) {
-      patternWinner.value = array;
-      return true;
-    }
-  });
-  if (isWin) winner.value = potencialWinner;
-});
+    if (isWin) winner.value = potencialWinner;
+  }
+);
 
 function onClickCell(index: number) {
   if (!winner.value) {
     isX = !isX;
     let value = isX ? 'x' : 'o';
     board[index] = value;
+    emit('changeBoard', board);
   }
 }
 </script>

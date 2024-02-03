@@ -317,12 +317,14 @@ export class WebsocketService {
       }
       case true: {
         const gameRoomId = myId + '-' + userId;
-
+        console.log('DEBUG');
         this.gameRooms[gameRoomId] = {
           game,
           isAllChat: false,
           id: gameRoomId,
+          // users: [you, user],
         };
+
         you.client.emit('inviteGame', {
           ...sendInvite,
           gameRoom: this.gameRooms[gameRoomId],
@@ -332,16 +334,53 @@ export class WebsocketService {
           isAccept,
           gameRoom: this.gameRooms[gameRoomId],
         });
-        // for (let id of [myId, userId]) {
-        //   const user = this.clients[id];
-        //   user.client.emit('inviteGame', {
-        //     ...sendInvite,
-        //     isAccept,
-        //     gameRoomId: this.gameRooms[gameRoomId],
-        //   });
-        // }
+
+        this.gameRooms[gameRoomId].users = [you, user];
         break;
       }
+    }
+  }
+
+  async gameFlow(game: string, roomId: string, data: Array<any>) {
+    const gameRoom = this.gameRooms[roomId];
+
+    switch (game) {
+      case 'ticTackToe': {
+        let patternWinner = [];
+        const winsPatterns = [
+          [0, 4, 8],
+          [2, 4, 6],
+          [0, 1, 2],
+          [3, 4, 5],
+          [6, 7, 8],
+          [0, 3, 6],
+          [1, 4, 7],
+          [2, 5, 8],
+        ];
+        let potencialWinner = '';
+        let isWin = winsPatterns.some((array) => {
+          let winPattern = array.every((el, indexEl) => {
+            if (data[el] && indexEl === 0) {
+              potencialWinner = data[el];
+              return true;
+            }
+            if (indexEl > 0) {
+              return data[el] === potencialWinner;
+            }
+          });
+          if (winPattern) {
+            patternWinner = array;
+          }
+        });
+        // if (isWin) winner.value = potencialWinner;
+      }
+    }
+
+    for (const { client } of gameRoom.users) {
+      client.emit('gaming', {
+        game: gameRoom.game,
+        dataGame: !data ? Array(9) : data,
+      });
     }
   }
 }
