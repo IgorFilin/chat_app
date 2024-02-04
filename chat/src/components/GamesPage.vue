@@ -30,9 +30,7 @@ else socket = socketStore.socket;
 
 const title = ref(['Добро пожаловать в игровую комнату', 'Тут вы можете подключиться к комнате в которую у вас есть доступ']);
 
-onMounted(() => {
-  socket.emit('gaming', { roomId: gameStore.gameRoomId });
-});
+socket.emit('gaming', { game: 'ticTacToe', roomId: gameStore.gameRoomId, data: [] });
 </script>
 
 <style scoped lang="scss">

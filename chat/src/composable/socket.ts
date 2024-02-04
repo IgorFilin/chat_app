@@ -104,6 +104,7 @@ export function webSocketEntity() {
   });
 
   socket.on('gaming', (data) => {
+    console.log(data.game, data.dataGame);
     gameStore.setGame(data);
   });
 

@@ -1,12 +1,10 @@
 import { defineStore } from 'pinia';
-import { userApi } from '@/api/appApi';
 import { useToast } from 'vue-toastification';
-import { errorStore } from '@/utils/storeError';
 
 interface GameStoreType {
   gameRoomId: string;
   games: {
-    [game: string]: Array<any>;
+    [game: string]: Object;
   };
 }
 
@@ -25,6 +23,7 @@ export const useGameStore: any = defineStore('game_store', {
       this.gameRoomId = id;
     },
     setGame(data: { game: string; dataGame: Array<any> }) {
+      console.log('STORE', data);
       this.games[data.game] = data.dataGame;
     },
   },

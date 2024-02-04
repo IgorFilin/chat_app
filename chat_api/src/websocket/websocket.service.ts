@@ -343,9 +343,10 @@ export class WebsocketService {
 
   async gameFlow(game: string, roomId: string, data: Array<any>) {
     const gameRoom = this.gameRooms[roomId];
-
+    console.log(game);
     switch (game) {
-      case 'ticTackToe': {
+      case 'ticTacToe': {
+        console.log('1');
         let patternWinner = [];
         const winsPatterns = [
           [0, 4, 8],
@@ -358,8 +359,9 @@ export class WebsocketService {
           [2, 5, 8],
         ];
         let potencialWinner = '';
+        let winner = '';
         let isWin = winsPatterns.some((array) => {
-          let winPattern = array.every((el, indexEl) => {
+          let patternWin = array.every((el, indexEl) => {
             if (data[el] && indexEl === 0) {
               potencialWinner = data[el];
               return true;
@@ -368,19 +370,31 @@ export class WebsocketService {
               return data[el] === potencialWinner;
             }
           });
-          if (winPattern) {
+          if (patternWin) {
             patternWinner = array;
           }
         });
-        // if (isWin) winner.value = potencialWinner;
+        if (isWin) winner = potencialWinner;
+        for (const { client } of gameRoom.users) {
+          client.emit('gaming', {
+            game: gameRoom.game,
+            dataGame: {
+              board: !data.length ? Array(9) : data,
+              winner,
+              patternWinner,
+            },
+          });
+        }
+        break;
       }
-    }
-
-    for (const { client } of gameRoom.users) {
-      client.emit('gaming', {
-        game: gameRoom.game,
-        dataGame: !data ? Array(9) : data,
-      });
+      default: {
+        console.log('2');
+        for (const { client } of gameRoom.users) {
+          client.emit('gaming', {
+            game: gameRoom.game,
+          });
+        }
+      }
     }
   }
 }

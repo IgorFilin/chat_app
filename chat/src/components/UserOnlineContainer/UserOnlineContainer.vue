@@ -63,7 +63,7 @@ const selectData = [
   },
   {
     text: 'Играть',
-    additionalList: [{ text: 'Кр.Нолики', type: 'ticTackToe' }],
+    additionalList: [{ text: 'Кр.Нолики', type: 'ticTacToe' }],
 
     action: 'isOpenAdditionalList',
   },
