@@ -13,6 +13,7 @@
   "[php]": {
     "editor.defaultFormatter": null
   },
+  "cSpell.enabled": false,
   "[html]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
   "prettier.printWidth": 480,
   "gitlens.hovers.currentLine.over": "line",

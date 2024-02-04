@@ -6,7 +6,7 @@
       :pauseFor="1500"
       delay="60"
       :text="title" /> -->
-    <TicTacToe @changeBoard="(data) => console.log(data)" />
+    <TicTacToe @changeBoard="(index) => tickTacToeHandler(index)" />
   </div>
 </template>
 
@@ -19,9 +19,14 @@ import { useSocketStore } from '@/store/socket_store.ts';
 import { useGameStore } from '@/store/game_store.ts';
 import { webSocketEntity } from '@/composable/socket.ts';
 
-const store = useAuthStore();
+const authStore = useAuthStore();
 const gameStore = useGameStore();
 const socketStore = useSocketStore();
+
+function tickTacToeHandler(index: any) {
+  gameStore.setTicTacToe(index, authStore.id);
+  socket.emit('gaming', { game: 'ticTacToe', roomId: gameStore.gameRoomId, data: [...gameStore.games['ticTacToe'].board] });
+}
 
 let socket: any;
 

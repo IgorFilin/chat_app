@@ -40,7 +40,7 @@ export class WebsocketService {
 
   async getAllMessagesPublicChat(userId: string) {
     const client = this.clients[userId];
-    for (let i = 0; i <= this.messages.length; i++) {
+    for (let i = 0; i < this.messages.length; i++) {
       client.client.emit('message', {
         messages: this.messages[i],
         lengthMessages: this.messages.length,
@@ -343,10 +343,8 @@ export class WebsocketService {
 
   async gameFlow(game: string, roomId: string, data: Array<any>) {
     const gameRoom = this.gameRooms[roomId];
-    console.log(game);
     switch (game) {
       case 'ticTacToe': {
-        console.log('1');
         let patternWinner = [];
         const winsPatterns = [
           [0, 4, 8],
@@ -358,9 +356,13 @@ export class WebsocketService {
           [1, 4, 7],
           [2, 5, 8],
         ];
+        let scores = {
+          x: 0,
+          o: 0,
+        };
         let potencialWinner = '';
         let winner = '';
-        let isWin = winsPatterns.some((array) => {
+        winsPatterns.forEach((array) => {
           let patternWin = array.every((el, indexEl) => {
             if (data[el] && indexEl === 0) {
               potencialWinner = data[el];
@@ -372,14 +374,27 @@ export class WebsocketService {
           });
           if (patternWin) {
             patternWinner = array;
+            winner = potencialWinner;
+            scores[winner] += 1;
           }
         });
-        if (isWin) winner = potencialWinner;
         for (const { client } of gameRoom.users) {
           client.emit('gaming', {
             game: gameRoom.game,
             dataGame: {
               board: !data.length ? Array(9) : data,
+              players: {
+                [gameRoom.users[0].id]: {
+                  name: gameRoom.users[0].name,
+                  symbol: 'x',
+                  score: scores['x'],
+                },
+                [gameRoom.users[1].id]: {
+                  name: gameRoom.users[1].name,
+                  symbol: 'o',
+                  score: scores['o'],
+                },
+              },
               winner,
               patternWinner,
             },
@@ -388,7 +403,6 @@ export class WebsocketService {
         break;
       }
       default: {
-        console.log('2');
         for (const { client } of gameRoom.users) {
           client.emit('gaming', {
             game: gameRoom.game,

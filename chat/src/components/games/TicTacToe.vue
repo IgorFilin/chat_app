@@ -1,6 +1,10 @@
 <template>
   <div class="v-ticTacToe">
     <div class="v-ticTacToe__board">
+      <div class="v-ticTacToe__scored">
+        <div>ОЧКИ:</div>
+        <div v-for="(key, value) in gameStore.games['ticTacToe']?.players">{{ key }}</div>
+      </div>
       <div
         v-for="(cell, index) in gameStore.games['ticTacToe']?.board"
         @click.prevent="onClickCell(index)"
@@ -19,55 +23,11 @@
 </template>
 
 <script setup lang="ts">
-import { Ref, reactive, ref, watch } from 'vue';
 import { useGameStore } from '@/store/game_store.ts';
-import { storeToRefs } from 'pinia';
 
 const emit = defineEmits(['changeBoard']);
 
 const gameStore = useGameStore();
-console.log('TICTACTOE', gameStore);
-// const board = reactive(gameStore.games['ticTackToe']) as any;
-
-// const winner = ref('');
-
-// const patternWinner = ref([]) as any;
-
-// let isX = false;
-
-// const winsPatterns = [
-//   [0, 4, 8],
-//   [2, 4, 6],
-//   [0, 1, 2],
-//   [3, 4, 5],
-//   [6, 7, 8],
-//   [0, 3, 6],
-//   [1, 4, 7],
-//   [2, 5, 8],
-// ];
-
-// watch(
-//   () => board,
-//   () => {
-//     let potencialWinner = '';
-//     let isWin = winsPatterns.some((array) => {
-//       let winPattern = array.every((el, indexEl) => {
-//         if (board[el] && indexEl === 0) {
-//           potencialWinner = board[el];
-//           return true;
-//         }
-//         if (indexEl > 0) {
-//           return board[el] === potencialWinner;
-//         }
-//       });
-//       if (winPattern) {
-//         patternWinner.value = array;
-//         return true;
-//       }
-//     });
-//     if (isWin) winner.value = potencialWinner;
-//   }
-// );
 
 function onClickCell(index: number) {
   // if (!winner.value) {
@@ -87,6 +47,13 @@ function onClickCell(index: number) {
   flex-direction: column;
   align-items: center;
   gap: 50px;
+}
+
+.v-ticTacToe__scored {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .v-ticTacToe__board {

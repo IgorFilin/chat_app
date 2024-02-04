@@ -4,7 +4,7 @@ import { useToast } from 'vue-toastification';
 interface GameStoreType {
   gameRoomId: string;
   games: {
-    [game: string]: Object;
+    [game: string]: any;
   };
 }
 
@@ -23,8 +23,10 @@ export const useGameStore: any = defineStore('game_store', {
       this.gameRoomId = id;
     },
     setGame(data: { game: string; dataGame: Array<any> }) {
-      console.log('STORE', data);
       this.games[data.game] = data.dataGame;
+    },
+    setTicTacToe(index: any, myId: string) {
+      this.games['ticTacToe'].board[index] = this.games['ticTacToe'].players[myId].symbol;
     },
   },
 });
