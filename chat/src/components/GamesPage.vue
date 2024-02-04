@@ -6,7 +6,17 @@
       :pauseFor="1500"
       delay="60"
       :text="title" /> -->
-    <TicTacToe @changeBoard="(index) => tickTacToeHandler(index)" />
+    <TicTacToe
+      @changeBoard="
+        (index) =>
+          tickTacToeHandler({
+            clickCell: {
+              index,
+              symbol: gameStore.games['ticTacToe'].players[authStore.id].symbol,
+            },
+          })
+      "
+      @clearBoard="() => tickTacToeHandler({ isClear: true })" />
   </div>
 </template>
 
@@ -23,18 +33,18 @@ const authStore = useAuthStore();
 const gameStore = useGameStore();
 const socketStore = useSocketStore();
 
-function tickTacToeHandler(index: any) {
-  // gameStore.setTicTacToe(index, authStore.id);
+function tickTacToeHandler(payload: any) {
   socket.emit('gaming', {
     game: 'ticTacToe',
     userId: authStore.id,
     roomId: gameStore.gameRoomId,
-    clickCell: {
-      index,
-      symbol: gameStore.games['ticTacToe'].players[authStore.id].symbol,
-    },
+    ...payload,
   });
 }
+
+// function tickTacToeClear() {
+//   socket.emit('gaming', { game: 'ticTacToe', isClear: true });
+// }
 
 let socket: any;
 

@@ -83,11 +83,11 @@ export function webSocketEntity() {
   socket.on('inviteGame', (data) => {
     if (data.isInvite) {
       const TypeNameGames = {
-        ticTackToe: 'Крестики нолики',
+        ticTacToe: 'Крестики нолики',
       } as any;
-
+      console.log(data);
       state.popupInviteGameData = {
-        title: `Вас пригласил ${data.userSendedInvite} в&nbsp;игру&nbsp;${TypeNameGames[data.inviteGame]}`,
+        title: `Вас пригласил ${data.userSendedInvite} в&nbsp;игру&nbsp;${TypeNameGames[data.game]}`,
         game: data.inviteGame,
         sendInviteUserId: data.sendInviteUserId,
       };

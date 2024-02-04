@@ -1,5 +1,11 @@
 <template>
   <div class="v-ticTacToe">
+    <Button
+      @onClick=""
+      text="Выйти из комнаты"
+      isIcon
+      iconId="arrow_back"
+      iconColor="white" />
     <div class="v-ticTacToe__board">
       <div
         v-for="(cell, index) in gameStore.games['ticTacToe']?.board"
@@ -10,11 +16,6 @@
         {{ cell }}
       </div>
     </div>
-    <span
-      class="v-ticTacToe__winner"
-      v-if="gameStore.games['ticTacToe']?.winner">
-      Победитель: {{ gameStore.games['ticTacToe']?.winner }}
-    </span>
     <div class="v-ticTacToe__scored">
       <div>количество побед:</div>
       <div v-for="stats in gameStore.games['ticTacToe']?.players">
@@ -22,18 +23,31 @@
         <span>{{ ' ' + stats.score }}</span>
       </div>
     </div>
+    <div
+      class="v-ticTacToe__winner"
+      v-if="gameStore.games['ticTacToe']?.winner">
+      Победитель: {{ gameStore.games['ticTacToe']?.winner }}
+      <Button
+        @onClick="onClearBoard"
+        text="Сбросить доску" />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useGameStore } from '@/store/game_store.ts';
+import Button from '@/components/assetsComponent/Button.vue';
 
-const emit = defineEmits(['changeBoard']);
+const emit = defineEmits(['changeBoard', 'clearBoard']);
 
 const gameStore = useGameStore();
 
 function onClickCell(index: number) {
   emit('changeBoard', index);
+}
+
+function onClearBoard() {
+  emit('clearBoard');
 }
 </script>
 
@@ -76,6 +90,9 @@ function onClickCell(index: number) {
 }
 
 .v-ticTacToe__winner {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   font-size: 25px;
 }
 </style>

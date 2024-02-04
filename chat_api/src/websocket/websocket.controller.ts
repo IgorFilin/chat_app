@@ -51,6 +51,7 @@ export class WebsocketController implements OnGatewayConnection {
       body.roomId,
       body.clickCell,
       body.userId,
+      body.isClear,
     );
   }
 
