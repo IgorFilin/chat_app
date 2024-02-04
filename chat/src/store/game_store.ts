@@ -25,8 +25,8 @@ export const useGameStore: any = defineStore('game_store', {
     setGame(data: { game: string; dataGame: Array<any> }) {
       this.games[data.game] = data.dataGame;
     },
-    setTicTacToe(index: any, myId: string) {
-      this.games['ticTacToe'].board[index] = this.games['ticTacToe'].players[myId].symbol;
+    setTicTacToe(data: any) {
+      // this.games['ticTacToe'].board[index] = this.games['ticTacToe'].players[myId].symbol;
     },
   },
 });

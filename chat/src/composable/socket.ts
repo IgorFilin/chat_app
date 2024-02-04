@@ -4,6 +4,7 @@ import { useAuthStore } from '@/store/auth_store.ts';
 import router from '@/router/router';
 import { useGameStore } from '@/store/game_store.ts';
 import { useSocketStore } from '@/store/socket_store.ts';
+import data from '@/components/ProfilePage/data';
 
 export function webSocketEntity() {
   const store = useAuthStore();
@@ -104,7 +105,6 @@ export function webSocketEntity() {
   });
 
   socket.on('gaming', (data) => {
-    console.log(data.game, data.dataGame);
     gameStore.setGame(data);
   });
 

@@ -24,6 +24,7 @@ export class WebsocketService {
   clients = {};
   messages = [];
   gameRooms = {};
+  stateGames = {};
   publicChatEvent = 'message' as 'message';
   privateChatEvent = 'private_message' as 'private_message';
 
@@ -317,7 +318,6 @@ export class WebsocketService {
       }
       case true: {
         const gameRoomId = myId + '-' + userId;
-        console.log('DEBUG');
         this.gameRooms[gameRoomId] = {
           game,
           isAllChat: false,
@@ -341,10 +341,25 @@ export class WebsocketService {
     }
   }
 
-  async gameFlow(game: string, roomId: string, data: Array<any>) {
+  async gameFlow(
+    game: string,
+    roomId: string,
+    clickCell: { index: string; symbol: string },
+    userId: string,
+  ) {
     const gameRoom = this.gameRooms[roomId];
     switch (game) {
       case 'ticTacToe': {
+        if (
+          this.stateGames[game]?.currentUserMoved &&
+          this.stateGames[game]?.currentUserMoved === userId
+        )
+          return;
+        this.stateGames[game] = this.stateGames[game] || {};
+        this.stateGames[game].board = this.stateGames[game].board || Array(9);
+        this.stateGames[game].currentUserMoved = userId;
+        const userOne = gameRoom.users[0];
+        const userTwo = gameRoom.users[1];
         let patternWinner = [];
         const winsPatterns = [
           [0, 4, 8],
@@ -362,35 +377,43 @@ export class WebsocketService {
         };
         let potencialWinner = '';
         let winner = '';
-        winsPatterns.forEach((array) => {
-          let patternWin = array.every((el, indexEl) => {
-            if (data[el] && indexEl === 0) {
-              potencialWinner = data[el];
-              return true;
-            }
-            if (indexEl > 0) {
-              return data[el] === potencialWinner;
+        if (clickCell) {
+          this.stateGames[game].board[clickCell.index] = clickCell.symbol;
+          winsPatterns.forEach((array) => {
+            let patternWin = array.every((el, indexEl) => {
+              if (
+                this.stateGames[game].board[el] === clickCell.symbol &&
+                indexEl === 0
+              ) {
+                potencialWinner = clickCell.symbol;
+                return true;
+              }
+              if (indexEl > 0) {
+                return this.stateGames[game].board[el] === potencialWinner;
+              }
+            });
+            if (patternWin) {
+              patternWinner = array;
+              winner = potencialWinner;
+              scores[winner] += 1;
+              console.log(scores);
             }
           });
-          if (patternWin) {
-            patternWinner = array;
-            winner = potencialWinner;
-            scores[winner] += 1;
-          }
-        });
+        }
+
         for (const { client } of gameRoom.users) {
           client.emit('gaming', {
             game: gameRoom.game,
             dataGame: {
-              board: !data.length ? Array(9) : data,
+              board: this.stateGames[game].board,
               players: {
-                [gameRoom.users[0].id]: {
-                  name: gameRoom.users[0].name,
+                [userOne.id]: {
+                  name: userOne.name,
                   symbol: 'x',
                   score: scores['x'],
                 },
-                [gameRoom.users[1].id]: {
-                  name: gameRoom.users[1].name,
+                [userTwo.id]: {
+                  name: userTwo.name,
                   symbol: 'o',
                   score: scores['o'],
                 },

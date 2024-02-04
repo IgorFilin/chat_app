@@ -24,8 +24,16 @@ const gameStore = useGameStore();
 const socketStore = useSocketStore();
 
 function tickTacToeHandler(index: any) {
-  gameStore.setTicTacToe(index, authStore.id);
-  socket.emit('gaming', { game: 'ticTacToe', roomId: gameStore.gameRoomId, data: [...gameStore.games['ticTacToe'].board] });
+  // gameStore.setTicTacToe(index, authStore.id);
+  socket.emit('gaming', {
+    game: 'ticTacToe',
+    userId: authStore.id,
+    roomId: gameStore.gameRoomId,
+    clickCell: {
+      index,
+      symbol: gameStore.games['ticTacToe'].players[authStore.id].symbol,
+    },
+  });
 }
 
 let socket: any;
@@ -35,7 +43,7 @@ else socket = socketStore.socket;
 
 const title = ref(['Добро пожаловать в игровую комнату', 'Тут вы можете подключиться к комнате в которую у вас есть доступ']);
 
-socket.emit('gaming', { game: 'ticTacToe', roomId: gameStore.gameRoomId, data: [] });
+socket.emit('gaming', { game: 'ticTacToe', roomId: gameStore.gameRoomId });
 </script>
 
 <style scoped lang="scss">

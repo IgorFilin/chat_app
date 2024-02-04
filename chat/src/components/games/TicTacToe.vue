@@ -1,10 +1,6 @@
 <template>
   <div class="v-ticTacToe">
     <div class="v-ticTacToe__board">
-      <div class="v-ticTacToe__scored">
-        <div>ОЧКИ:</div>
-        <div v-for="(key, value) in gameStore.games['ticTacToe']?.players">{{ key }}</div>
-      </div>
       <div
         v-for="(cell, index) in gameStore.games['ticTacToe']?.board"
         @click.prevent="onClickCell(index)"
@@ -19,6 +15,13 @@
       v-if="gameStore.games['ticTacToe']?.winner">
       Победитель: {{ gameStore.games['ticTacToe']?.winner }}
     </span>
+    <div class="v-ticTacToe__scored">
+      <div>количество побед:</div>
+      <div v-for="stats in gameStore.games['ticTacToe']?.players">
+        <span>{{ stats.name }}:</span>
+        <span>{{ ' ' + stats.score }}</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -30,12 +33,7 @@ const emit = defineEmits(['changeBoard']);
 const gameStore = useGameStore();
 
 function onClickCell(index: number) {
-  // if (!winner.value) {
-  //   isX = !isX;
-  //   let value = isX ? 'x' : 'o';
-  //   board[index] = value;
   emit('changeBoard', index);
-  // }
 }
 </script>
 
@@ -46,7 +44,8 @@ function onClickCell(index: number) {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 50px;
+  gap: 30px;
+  margin-top: 20px;
 }
 
 .v-ticTacToe__scored {
