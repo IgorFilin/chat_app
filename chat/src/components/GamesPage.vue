@@ -1,11 +1,11 @@
 <template>
   <div class="v-games">
-    <!-- <TextTyper
+    <TextTyper
       class="v-games__title"
       deleteSpeed="60"
       :pauseFor="1500"
       delay="60"
-      :text="title" /> -->
+      :text="title" />
     <TicTacToe
       @changeBoard="
         (index) =>
@@ -22,13 +22,16 @@
 
 <script setup lang="ts">
 import { onMounted, onUpdated, ref, watch } from 'vue';
-// import TextTyper from '@/components/assetsComponent/TextTyper.vue';
+import TextTyper from '@/components/AssetsComponent/TextTyper.vue';
 import TicTacToe from '@/components/Games/TicTacToe.vue';
 import { useAuthStore } from '@/store/auth_store.ts';
 import { useSocketStore } from '@/store/socket_store.ts';
 import { useGameStore } from '@/store/game_store.ts';
 import { webSocketEntity } from '@/composable/socket.ts';
+import { useRoute } from 'vue-router';
+import router from '@/router/router';
 
+const route = useRoute();
 const authStore = useAuthStore();
 const gameStore = useGameStore();
 const socketStore = useSocketStore();
@@ -41,19 +44,19 @@ function tickTacToeHandler(payload: any) {
     ...payload,
   });
 }
-
-// function tickTacToeClear() {
-//   socket.emit('gaming', { game: 'ticTacToe', isClear: true });
-// }
+const title = ref(['Добро пожаловать в игровую комнату', 'Тут вы можете подключиться к комнате в которую у вас есть доступ']);
 
 let socket: any;
 
-if (!socketStore.socketConnected) socket = webSocketEntity();
-else socket = socketStore.socket;
+onMounted(async () => {
+  if (!socketStore.socketConnected) {
+    await authStore.auth();
+    gameStore.setRoomId(route.params.id);
+    socket = webSocketEntity().socket;
+  } else socket = socketStore.socket;
 
-const title = ref(['Добро пожаловать в игровую комнату', 'Тут вы можете подключиться к комнате в которую у вас есть доступ']);
-
-socket.emit('gaming', { game: 'ticTacToe', roomId: gameStore.gameRoomId });
+  socket.emit('gaming', { game: 'ticTacToe', roomId: gameStore.gameRoomId, userId: authStore.id });
+});
 </script>
 
 <style scoped lang="scss">
@@ -64,7 +67,7 @@ socket.emit('gaming', { game: 'ticTacToe', roomId: gameStore.gameRoomId });
 }
 
 .v-games__title {
-  font-size: 25px;
+  font-size: 18px;
   position: relative;
   margin: 0 auto;
 }

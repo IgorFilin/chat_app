@@ -9,7 +9,7 @@
     <div class="v-ticTacToe__board">
       <div
         v-for="(cell, index) in gameStore.games['ticTacToe']?.board"
-        @click.prevent="onClickCell(index)"
+        @click.prevent.stop="onClickCell(index)"
         :key="index"
         :class="{ winner: gameStore.games['ticTacToe']?.patternWinner.includes(index) }"
         class="v-ticTacToe__cell">
@@ -28,7 +28,7 @@
       v-if="gameStore.games['ticTacToe']?.winner">
       Победитель: {{ gameStore.games['ticTacToe']?.winner }}
       <Button
-        @onClick="onClearBoard"
+        @onClick.stop="onClearBoard"
         text="Сбросить доску" />
     </div>
   </div>

@@ -62,13 +62,33 @@ export class WebsocketService {
       });
     }
 
-    // // При отключении определенного клиента, отправляем список всех пользователей и себя в частности, на клиент
-    // for (const clientId in this.clients) {
-    //   this.clients[clientId].client.send(
-    //     JSON.stringify({ clients: sendClients }),
-    //   );
+    for (const key in this.gameRooms) {
+      const value = this.gameRooms[key];
+      value.users = value.users.filter(
+        (user: { id: string; name: string; userPhoto: string; client: any }) =>
+          user.id !== disconnectedClient.handshake.query.userID,
+      );
+    }
+    console.log(this.gameRooms);
+    // {
+    //   game: 'ticTacToe',
+    //   isAllChat: false,
+    //   id: '60b60c2e-e984-429d-8247-a769b01173ed-38505046-f277-48c8-9f55-7f6c351a2e64',
+    //   users: [
+    //     {
+    //       id: '60b60c2e-e984-429d-8247-a769b01173ed',
+    //       name: 'rove',
+    //       userPhoto: 'D:\\Programming\\my-projects\\chat_app\\chat_api\\dist\\static\\image\\default_photo_user.webp',
+    //       client: [Socket]
+    //     },
+    //     {
+    //       id: '38505046-f277-48c8-9f55-7f6c351a2e64',
+    //       name: 'IGOR',
+    //       userPhoto: 'D:\\Programming\\my-projects\\chat_app\\chat_api\\dist\\static\\image\\default_photo_user.webp',
+    //       client: [Socket]
+    //     }
+    //   ]
     // }
-
     console.log('Client disconnect');
     return { sendClients };
   }
@@ -350,6 +370,11 @@ export class WebsocketService {
     isClear: string,
   ) {
     const gameRoom = this.gameRooms[roomId];
+    if (gameRoom.users.length < 2) {
+      // console.log('userId', userId);
+      // console.log('gameRoom', gameRoom.users);
+      gameRoom.users.push(this.clients[userId]);
+    }
     switch (game) {
       case 'ticTacToe': {
         if (
@@ -409,7 +434,7 @@ export class WebsocketService {
           winner = '';
           patternWinner = [];
         }
-        console.log('debug');
+
         for (const { client } of gameRoom.users) {
           client.emit('gaming', {
             game: gameRoom.game,
@@ -434,13 +459,13 @@ export class WebsocketService {
         }
         break;
       }
-      default: {
-        for (const { client } of gameRoom.users) {
-          client.emit('gaming', {
-            game: gameRoom.game,
-          });
-        }
-      }
+      // default: {
+      //   for (const { client } of gameRoom.users) {
+      //     client.emit('gaming', {
+      //       game: gameRoom.game,
+      //     });
+      //   }
+      // }
     }
   }
 }

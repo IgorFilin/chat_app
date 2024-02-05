@@ -116,7 +116,6 @@ onMounted(() => {
 watch(
   [() => props.usersOnline, () => user_store.users],
   () => {
-    console.log('WATCH');
     if (props.usersOnline) {
       users.value = user_store.users
         .map((user: UserType) => {

@@ -24,7 +24,6 @@ export function webSocketEntity() {
     messagesLength: 0,
   });
 
-  // "undefined" means the URL will be computed from the `window.location` object
   const address = `${import.meta.env.VITE_APP_PROTOCOL}://${import.meta.env.VITE_APP_DOMEN_PORT}?userID=${store.id}`;
 
   const socket = io(address);
@@ -85,7 +84,6 @@ export function webSocketEntity() {
       const TypeNameGames = {
         ticTacToe: 'Крестики нолики',
       } as any;
-      console.log(data);
       state.popupInviteGameData = {
         title: `Вас пригласил ${data.userSendedInvite} в&nbsp;игру&nbsp;${TypeNameGames[data.game]}`,
         game: data.inviteGame,
@@ -105,6 +103,7 @@ export function webSocketEntity() {
   });
 
   socket.on('gaming', (data) => {
+    console.log(data);
     gameStore.setGame(data);
   });
 

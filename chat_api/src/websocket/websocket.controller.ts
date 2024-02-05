@@ -45,7 +45,6 @@ export class WebsocketController implements OnGatewayConnection {
 
   @SubscribeMessage('gaming')
   async gameFlow(@MessageBody() body: any) {
-    console.log('DEB', body);
     await this.WebsocketService.gameFlow(
       body.game,
       body.roomId,
