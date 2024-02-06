@@ -8,9 +8,9 @@ function yandexCaptcha() {
       sitekey: 'ysc1_uEsjdc8w3VueN8qim5rk8kqgh0duyAlDaA9leVmIc20e730c',
       invisible: true,
       webview: true,
-      shieldPosition: 'top-left',
+      shieldPosition: 'top-right',
       callback: callback,
-      test: false,
+      test: true,
     });
   });
 
@@ -20,14 +20,15 @@ function yandexCaptcha() {
   }
 
   async function callback(userToken) {
-    // const response = await fetch(`http://localhost:3000/user/validateCaptcha?token=${userToken}`, {
-    //   method: 'GET',
-    // });
-    // const result = await response.text();
+    const response = await fetch(`http://localhost:3000/user/validateCaptcha?token=${userToken}`, {
+      method: 'GET',
+    });
+    const result = await response.text();
 
-    // if (result === 'Passed') {
-    //   window.smartCaptcha.destroy();
-    // }
+    if (result === 'Passed') {
+      console.log(result);
+      window.smartCaptcha.reset();
+    }
     console.log(userToken);
   }
 
