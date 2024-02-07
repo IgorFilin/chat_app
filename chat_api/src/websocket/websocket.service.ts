@@ -69,7 +69,6 @@ export class WebsocketService {
           user.id !== disconnectedClient.handshake.query.userID,
       );
     }
-    console.log(this.gameRooms);
     // {
     //   game: 'ticTacToe',
     //   isAllChat: false,
@@ -371,8 +370,6 @@ export class WebsocketService {
   ) {
     const gameRoom = this.gameRooms[roomId];
     if (gameRoom.users.length < 2) {
-      // console.log('userId', userId);
-      // console.log('gameRoom', gameRoom.users);
       gameRoom.users.push(this.clients[userId]);
     }
     switch (game) {
@@ -385,7 +382,8 @@ export class WebsocketService {
           return;
 
         this.stateGames[game] = this.stateGames[game] || {};
-        this.stateGames[game].board = this.stateGames[game].board || Array(9);
+        this.stateGames[game].board =
+          this.stateGames[game].board || Array(9).fill(null);
         this.stateGames[game].currentUserMoved = userId;
         const userOne = gameRoom.users[0];
         const userTwo = gameRoom.users[1];
@@ -422,19 +420,24 @@ export class WebsocketService {
                   return this.stateGames[game].board[el] === potencialWinner;
                 }
               });
+              // выйгрыш
               if (patternWin) {
                 patternWinner = array;
                 winner = potencialWinner;
                 this.stateGames[game].scores[winner] += 1;
+                // если ничья
+              } else if (
+                this.stateGames[game].board.every((cell: any) => cell !== null)
+              ) {
+                winner = 'ничья';
               }
             });
           }
         } else {
-          this.stateGames[game].board = Array(9);
+          this.stateGames[game].board = Array(9).fill(null);
           winner = '';
           patternWinner = [];
         }
-
         for (const { client } of gameRoom.users) {
           client.emit('gaming', {
             game: gameRoom.game,

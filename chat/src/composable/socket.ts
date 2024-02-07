@@ -103,7 +103,6 @@ export function webSocketEntity() {
   });
 
   socket.on('gaming', (data) => {
-    console.log(data);
     gameStore.setGame(data);
   });
 
