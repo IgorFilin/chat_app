@@ -368,107 +368,122 @@ export class WebsocketService {
     userId: string,
     isClear: string,
   ) {
-    const gameRoom = this.gameRooms[roomId];
-    if (gameRoom.users.length < 2) {
-      gameRoom.users.push(this.clients[userId]);
-    }
-    switch (game) {
-      case 'ticTacToe': {
-        if (
-          this.stateGames[game]?.currentUserMoved &&
-          this.stateGames[game]?.currentUserMoved === userId &&
-          !isClear
-        )
-          return;
-
-        this.stateGames[game] = this.stateGames[game] || {};
-        this.stateGames[game].board =
-          this.stateGames[game].board || Array(9).fill(null);
-        this.stateGames[game].currentUserMoved = userId;
-        const userOne = gameRoom.users[0];
-        const userTwo = gameRoom.users[1];
-        let patternWinner = [];
-        const winsPatterns = [
-          [0, 4, 8],
-          [2, 4, 6],
-          [0, 1, 2],
-          [3, 4, 5],
-          [6, 7, 8],
-          [0, 3, 6],
-          [1, 4, 7],
-          [2, 5, 8],
-        ];
-        let potencialWinner = '';
-        let winner = '';
-        if (!isClear) {
-          this.stateGames[game].scores = this.stateGames[game].scores || {
-            x: 0,
-            o: 0,
-          };
-          if (clickCell) {
-            this.stateGames[game].board[clickCell.index] = clickCell.symbol;
-            winsPatterns.forEach((array) => {
-              let patternWin = array.every((el, indexEl) => {
-                if (
-                  this.stateGames[game].board[el] === clickCell.symbol &&
-                  indexEl === 0
+    try {
+      if (this.stateGames[game]) {
+        console.log();
+      }
+      if (
+        this.stateGames[game]?.currentUserMoved &&
+        this.stateGames[game]?.currentUserMoved === userId &&
+        !isClear &&
+        clickCell
+      )
+        return;
+      if (
+        this.stateGames[game] &&
+        clickCell &&
+        this.stateGames[game].board[clickCell.index] !== null
+      )
+        return;
+      const gameRoom = this.gameRooms[roomId];
+      if (gameRoom.users.length < 2) {
+        gameRoom.users.push(this.clients[userId]);
+      }
+      switch (game) {
+        case 'ticTacToe': {
+          this.stateGames[game] = this.stateGames[game] || {};
+          this.stateGames[game].board =
+            this.stateGames[game].board || Array(9).fill(null);
+          this.stateGames[game].currentUserMoved = userId;
+          const userOne = gameRoom.users[0];
+          const userTwo = gameRoom.users[1];
+          let patternWinner = [];
+          const winsPatterns = [
+            [0, 4, 8],
+            [2, 4, 6],
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+          ];
+          let potencialWinner = '';
+          let winner = '';
+          if (!isClear) {
+            this.stateGames[game].scores = this.stateGames[game].scores || {
+              x: 0,
+              o: 0,
+            };
+            if (clickCell) {
+              this.stateGames[game].board[clickCell.index] = clickCell.symbol;
+              winsPatterns.forEach((array) => {
+                let patternWin = array.every((el, indexEl) => {
+                  if (
+                    this.stateGames[game].board[el] === clickCell.symbol &&
+                    indexEl === 0
+                  ) {
+                    potencialWinner = clickCell.symbol;
+                    return true;
+                  }
+                  if (indexEl > 0) {
+                    return this.stateGames[game].board[el] === potencialWinner;
+                  }
+                });
+                // выйгрыш
+                if (patternWin) {
+                  patternWinner = array;
+                  winner = potencialWinner;
+                  this.stateGames[game].scores[winner] += 1;
+                  // если ничья
+                } else if (
+                  this.stateGames[game].board.every(
+                    (cell: any) => cell !== null,
+                  )
                 ) {
-                  potencialWinner = clickCell.symbol;
-                  return true;
-                }
-                if (indexEl > 0) {
-                  return this.stateGames[game].board[el] === potencialWinner;
+                  winner = 'ничья';
                 }
               });
-              // выйгрыш
-              if (patternWin) {
-                patternWinner = array;
-                winner = potencialWinner;
-                this.stateGames[game].scores[winner] += 1;
-                // если ничья
-              } else if (
-                this.stateGames[game].board.every((cell: any) => cell !== null)
-              ) {
-                winner = 'ничья';
-              }
+            }
+          } else {
+            this.stateGames[game].board = Array(9).fill(null);
+            winner = '';
+            patternWinner = [];
+          }
+          for (const { client } of gameRoom.users) {
+            client.emit('gaming', {
+              game: gameRoom.game,
+              dataGame: {
+                board: this.stateGames[game].board,
+                players: {
+                  [userOne.id]: {
+                    name: userOne.name,
+                    symbol: 'x',
+                    score: this.stateGames[game].scores.x,
+                  },
+                  [userTwo.id]: {
+                    name: userTwo.name,
+                    symbol: 'o',
+                    score: this.stateGames[game].scores.o,
+                  },
+                },
+                winner,
+                patternWinner,
+              },
             });
           }
-        } else {
-          this.stateGames[game].board = Array(9).fill(null);
-          winner = '';
-          patternWinner = [];
+          break;
         }
-        for (const { client } of gameRoom.users) {
-          client.emit('gaming', {
-            game: gameRoom.game,
-            dataGame: {
-              board: this.stateGames[game].board,
-              players: {
-                [userOne.id]: {
-                  name: userOne.name,
-                  symbol: 'x',
-                  score: this.stateGames[game].scores.x,
-                },
-                [userTwo.id]: {
-                  name: userTwo.name,
-                  symbol: 'o',
-                  score: this.stateGames[game].scores.o,
-                },
-              },
-              winner,
-              patternWinner,
-            },
-          });
-        }
-        break;
+        // default: {
+        //   for (const { client } of gameRoom.users) {
+        //     client.emit('gaming', {
+        //       game: gameRoom.game,
+        //     });
+        //   }
+        // }
       }
-      // default: {
-      //   for (const { client } of gameRoom.users) {
-      //     client.emit('gaming', {
-      //       game: gameRoom.game,
-      //     });
-      //   }
-      // }
+    } catch (e) {
+      console.error(e);
     }
   }
 }

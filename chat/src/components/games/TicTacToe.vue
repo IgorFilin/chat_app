@@ -1,7 +1,7 @@
 <template>
   <div class="v-ticTacToe">
     <Button
-      @onClick=""
+      @onClick="onLeaveGameRoom"
       text="Выйти из комнаты"
       isIcon
       iconId="arrow_back"
@@ -37,6 +37,7 @@
 <script setup lang="ts">
 import { useGameStore } from '@/store/game_store.ts';
 import Button from '@/components/assetsComponent/Button.vue';
+import router from '@/router/router';
 
 const emit = defineEmits(['changeBoard', 'clearBoard']);
 
@@ -44,6 +45,10 @@ const gameStore = useGameStore();
 
 function onClickCell(index: number) {
   emit('changeBoard', index);
+}
+
+function onLeaveGameRoom() {
+  router.push('/main');
 }
 
 function onClearBoard() {
