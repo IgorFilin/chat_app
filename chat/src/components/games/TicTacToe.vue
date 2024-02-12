@@ -16,17 +16,21 @@
         {{ cell }}
       </div>
     </div>
+    <div class="v-ticTacToe__nextMove">
+      Следующий ход за
+      <span>{{ gameStore.games['ticTacToe']?.nextMove.name + `( ${gameStore.games['ticTacToe']?.nextMove.symbol} )` }}</span>
+    </div>
     <div class="v-ticTacToe__scored">
-      <div>количество побед:</div>
+      <div>Статистика:</div>
       <div v-for="stats in gameStore.games['ticTacToe']?.players">
-        <span>{{ stats.name }}:</span>
+        <span class="">{{ stats.name }}:</span>
         <span>{{ ' ' + stats.score }}</span>
       </div>
     </div>
     <div
       class="v-ticTacToe__winner"
       v-if="gameStore.games['ticTacToe']?.winner">
-      Победитель: {{ gameStore.games['ticTacToe']?.winner }}
+      <span>Выйграл: {{ gameStore.games['ticTacToe']?.winner }}</span>
       <Button
         @onClick.stop="onClearBoard"
         text="Сбросить доску" />
@@ -72,6 +76,8 @@ function onClearBoard() {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 10px;
+  padding-bottom: 3px;
 }
 
 .v-ticTacToe__board {
@@ -98,6 +104,14 @@ function onClearBoard() {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  font-size: 25px;
+  font-size: 20px;
+}
+
+.v-ticTacToe__winner,
+.v-ticTacToe__scored,
+.v-ticTacToe__nextMove {
+  span {
+    border-bottom: 2px solid white;
+  }
 }
 </style>

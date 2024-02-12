@@ -369,9 +369,6 @@ export class WebsocketService {
     isClear: string,
   ) {
     try {
-      if (this.stateGames[game]) {
-        console.log();
-      }
       if (
         this.stateGames[game]?.currentUserMoved &&
         this.stateGames[game]?.currentUserMoved === userId &&
@@ -397,6 +394,27 @@ export class WebsocketService {
           this.stateGames[game].currentUserMoved = userId;
           const userOne = gameRoom.users[0];
           const userTwo = gameRoom.users[1];
+          this.stateGames[game].scores = this.stateGames[game].scores || {
+            x: 0,
+            o: 0,
+          };
+          const players = {
+            [userOne.id]: {
+              name: userOne.name,
+              symbol: 'x',
+              score: this.stateGames[game].scores.x,
+            },
+            [userTwo.id]: {
+              name: userTwo.name,
+              symbol: 'o',
+              score: this.stateGames[game].scores.o,
+            },
+          };
+          let nextMovedUser =
+            userId === userOne.id
+              ? { ...players[userTwo.id] }
+              : { ...players[userOne.id] };
+          delete nextMovedUser.score;
           let patternWinner = [];
           const winsPatterns = [
             [0, 4, 8],
@@ -411,10 +429,6 @@ export class WebsocketService {
           let potencialWinner = '';
           let winner = '';
           if (!isClear) {
-            this.stateGames[game].scores = this.stateGames[game].scores || {
-              x: 0,
-              o: 0,
-            };
             if (clickCell) {
               this.stateGames[game].board[clickCell.index] = clickCell.symbol;
               winsPatterns.forEach((array) => {
@@ -450,37 +464,20 @@ export class WebsocketService {
             winner = '';
             patternWinner = [];
           }
+
           for (const { client } of gameRoom.users) {
             client.emit('gaming', {
               game: gameRoom.game,
               dataGame: {
                 board: this.stateGames[game].board,
-                players: {
-                  [userOne.id]: {
-                    name: userOne.name,
-                    symbol: 'x',
-                    score: this.stateGames[game].scores.x,
-                  },
-                  [userTwo.id]: {
-                    name: userTwo.name,
-                    symbol: 'o',
-                    score: this.stateGames[game].scores.o,
-                  },
-                },
-                winner,
+                players,
+                nextMove: nextMovedUser,
                 patternWinner,
               },
             });
           }
           break;
         }
-        // default: {
-        //   for (const { client } of gameRoom.users) {
-        //     client.emit('gaming', {
-        //       game: gameRoom.game,
-        //     });
-        //   }
-        // }
       }
     } catch (e) {
       console.error(e);
