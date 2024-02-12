@@ -1,11 +1,11 @@
 <template>
   <div class="v-games">
-    <TextTyper
+    <!-- <TextTyper
       class="v-games__title"
       deleteSpeed="60"
       :pauseFor="1500"
       delay="60"
-      :text="title" />
+      :text="title" /> -->
     <TicTacToe
       @changeBoard="
         (index) =>
