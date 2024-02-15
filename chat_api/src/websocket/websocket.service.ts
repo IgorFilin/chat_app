@@ -18,7 +18,7 @@ export class WebsocketService {
     private RoomTable: Repository<Room>,
 
     @InjectRepository(Message)
-    private MessageTable: Repository<Message>,
+    private MessageTable: Repository<Message>
   ) {}
 
   clients = {};
@@ -66,7 +66,7 @@ export class WebsocketService {
       const value = this.gameRooms[key];
       value.users = value.users.filter(
         (user: { id: string; name: string; userPhoto: string; client: any }) =>
-          user.id !== disconnectedClient.handshake.query.userID,
+          user.id !== disconnectedClient.handshake.query.userID
       );
     }
     // {
@@ -141,12 +141,7 @@ export class WebsocketService {
     return { sendClients };
   }
 
-  async broadcastMessage(
-    userId: any,
-    message: string | Array<[]>,
-    roomId: string,
-    isAllChat: boolean,
-  ) {
+  async broadcastMessage(userId: any, message: string | Array<[]>, roomId: string, isAllChat: boolean) {
     const user = this.clients[userId];
     const maxMessageSize = 300 * 1024; // Максимальный размер сообщения для изобращения
 
@@ -220,13 +215,7 @@ export class WebsocketService {
     const userToAdd = await this.UserTable.findOneBy({ id: userId });
 
     const dirname = process.cwd();
-    const defaultImagePath = path.join(
-      dirname,
-      'dist',
-      'static',
-      'image',
-      'default_photo_user.webp',
-    );
+    const defaultImagePath = path.join(dirname, 'dist', 'static', 'image', 'default_photo_user.webp');
     const client = this.clients[myId];
 
     // Получаем комнату в которой есть 2 пользователя, вы и пользователь собеседник
@@ -271,21 +260,15 @@ export class WebsocketService {
     for (let i = 0; i < roomMessages.messages.length; i++) {
       try {
         const currentUserPhotoPath =
-          roomMessages.messages[i].userId === creator.id
-            ? creator.userPhoto
-            : userToAdd.userPhoto;
+          roomMessages.messages[i].userId === creator.id ? creator.userPhoto : userToAdd.userPhoto;
 
         const userPhoto = await fs.promises.readFile(
-          fs.existsSync(currentUserPhotoPath)
-            ? currentUserPhotoPath
-            : defaultImagePath,
-          'base64',
+          fs.existsSync(currentUserPhotoPath) ? currentUserPhotoPath : defaultImagePath,
+          'base64'
         );
 
         if (isJSON(roomMessages.messages[i].message)) {
-          roomMessages.messages[i].message = JSON.parse(
-            roomMessages.messages[i].message,
-          );
+          roomMessages.messages[i].message = JSON.parse(roomMessages.messages[i].message);
         }
 
         client.client.emit('message', {
@@ -306,12 +289,7 @@ export class WebsocketService {
     }
   }
 
-  async inviteGameUser(
-    myId: string,
-    userId: string,
-    game: string,
-    isAccept: boolean | undefined,
-  ) {
+  async inviteGameUser(myId: string, userId: string, game: string, isAccept: boolean | undefined) {
     const you = this.clients[myId];
     const user = this.clients[userId];
 
@@ -324,7 +302,7 @@ export class WebsocketService {
     } as any;
 
     // Если "Подтверждёный статус" не приходит то отправить пользаку c userId приглашение,
-    // Если пришёл "Статус подтверждено" то создать комнату и разослать спустя какое то время
+    // Если пришёл "Статус подтверждено" то создать комнату и разослать
     // Приглашение в эту комнату двум игрокам
     switch (isAccept) {
       case undefined: {
@@ -366,55 +344,46 @@ export class WebsocketService {
     roomId: string,
     clickCell: { index: string; symbol: string },
     userId: string,
-    isClear: string,
+    isClear: string
   ) {
     try {
-      if (
-        this.stateGames[game]?.currentUserMoved &&
-        this.stateGames[game]?.currentUserMoved === userId &&
-        !isClear &&
-        clickCell
-      )
-        return;
-      if (
-        this.stateGames[game] &&
-        clickCell &&
-        this.stateGames[game].board[clickCell.index] !== null
-      )
-        return;
+      // Берем текущую комнату в переменную
       const gameRoom = this.gameRooms[roomId];
+
+      // Если в комнате на данный момент меньше 2х игроков, прибавлять к юзерам комнаты текущего игрока
+      // Это помогает возвращаться в комнату при перезагрузке страницы
       if (gameRoom.users.length < 2) {
         gameRoom.users.push(this.clients[userId]);
       }
+
       switch (game) {
         case 'ticTacToe': {
+          if (
+            // Не пропускать нажатие на ячейку для одного и того же игрока
+            (this.stateGames[game]?.currentUserMoved &&
+              this.stateGames[game]?.currentUserMoved === userId &&
+              !isClear &&
+              clickCell) ||
+            (!isClear && this.stateGames[game]?.isWinnered)
+          )
+            return;
+
+          // Если кликнуто по уже заполненой ячейки, то возврат
+          if (this.stateGames[game] && clickCell && this.stateGames[game].board[clickCell.index] !== null) return;
+
           this.stateGames[game] = this.stateGames[game] || {};
-          this.stateGames[game].board =
-            this.stateGames[game].board || Array(9).fill(null);
+          this.stateGames[game].board = this.stateGames[game].board || Array(9).fill(null);
           this.stateGames[game].currentUserMoved = userId;
+
           const userOne = gameRoom.users[0];
           const userTwo = gameRoom.users[1];
+
           this.stateGames[game].scores = this.stateGames[game].scores || {
             x: 0,
             o: 0,
           };
-          const players = {
-            [userOne.id]: {
-              name: userOne.name,
-              symbol: 'x',
-              score: this.stateGames[game].scores.x,
-            },
-            [userTwo.id]: {
-              name: userTwo.name,
-              symbol: 'o',
-              score: this.stateGames[game].scores.o,
-            },
-          };
-          let nextMovedUser =
-            userId === userOne.id
-              ? { ...players[userTwo.id] }
-              : { ...players[userOne.id] };
-          delete nextMovedUser.score;
+
+          // Логика игры в крестики нолики
           let patternWinner = [];
           const winsPatterns = [
             [0, 4, 8],
@@ -428,43 +397,60 @@ export class WebsocketService {
           ];
           let potencialWinner = '';
           let winner = '';
-          if (!isClear) {
-            if (clickCell) {
-              this.stateGames[game].board[clickCell.index] = clickCell.symbol;
-              winsPatterns.forEach((array) => {
-                let patternWin = array.every((el, indexEl) => {
-                  if (
-                    this.stateGames[game].board[el] === clickCell.symbol &&
-                    indexEl === 0
-                  ) {
-                    potencialWinner = clickCell.symbol;
-                    return true;
-                  }
-                  if (indexEl > 0) {
-                    return this.stateGames[game].board[el] === potencialWinner;
-                  }
-                });
-                // выйгрыш
-                if (patternWin) {
-                  patternWinner = array;
-                  winner = potencialWinner;
-                  this.stateGames[game].scores[winner] += 1;
-                  // если ничья
-                } else if (
-                  this.stateGames[game].board.every(
-                    (cell: any) => cell !== null,
-                  )
-                ) {
-                  winner = 'ничья';
+
+          // Если кликнута ячейка
+          if (clickCell) {
+            this.stateGames[game].board[clickCell.index] = clickCell.symbol;
+            for (const pattern of winsPatterns) {
+              let isWinner = pattern.every((el, indexEl) => {
+                if (this.stateGames[game].board[el] === clickCell.symbol && indexEl === 0) {
+                  potencialWinner = clickCell.symbol;
+                  return true;
+                }
+                if (indexEl > 0) {
+                  return this.stateGames[game].board[el] === potencialWinner;
                 }
               });
+              // выйгрыш
+              if (isWinner) {
+                patternWinner = pattern;
+                winner = potencialWinner;
+                this.stateGames[game].scores[winner] += 1;
+
+                this.stateGames[game].isWinnered = true;
+                break;
+                // если ничья
+              } else if (this.stateGames[game].board.every((cell: any) => cell !== null)) {
+                winner = 'ничья';
+              }
             }
-          } else {
+          }
+
+          // Если нажали очистить доску
+          if (isClear) {
             this.stateGames[game].board = Array(9).fill(null);
             winner = '';
+            this.stateGames[game].isWinnered = false;
             patternWinner = [];
           }
 
+          const players = {
+            [userOne.id]: {
+              name: userOne.name,
+              symbol: 'x',
+              score: this.stateGames[game].scores.x,
+            },
+            [userTwo.id]: {
+              name: userTwo.name,
+              symbol: 'o',
+              score: this.stateGames[game].scores.o,
+            },
+          };
+
+          let nextMovedUser = userId === userOne.id ? { ...players[userTwo.id] } : { ...players[userOne.id] };
+          delete nextMovedUser.score;
+
+          // Передача пользователям этой комнаты игровых данных
           for (const { client } of gameRoom.users) {
             client.emit('gaming', {
               game: gameRoom.game,
@@ -473,6 +459,7 @@ export class WebsocketService {
                 players,
                 nextMove: nextMovedUser,
                 patternWinner,
+                winner,
               },
             });
           }
