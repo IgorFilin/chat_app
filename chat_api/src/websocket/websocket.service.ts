@@ -62,9 +62,9 @@ export class WebsocketService {
       });
     }
 
-    for (const key in this.gameRooms) {
-      const value = this.gameRooms[key];
-      value.users = value.users.filter(
+    for (const game in this.gameRooms) {
+      const currentGame = this.gameRooms[game];
+      currentGame.users = currentGame.users.filter(
         (user: { id: string; name: string; userPhoto: string; client: any }) =>
           user.id !== disconnectedClient.handshake.query.userID
       );
@@ -320,7 +320,6 @@ export class WebsocketService {
           game,
           isAllChat: false,
           id: gameRoomId,
-          // users: [you, user],
         };
 
         you.client.emit('inviteGame', {
@@ -355,7 +354,7 @@ export class WebsocketService {
       if (gameRoom.users.length < 2) {
         gameRoom.users.push(this.clients[userId]);
       }
-
+      console.log(gameRoom.users);
       switch (game) {
         case 'ticTacToe': {
           if (
@@ -447,8 +446,18 @@ export class WebsocketService {
             },
           };
 
-          let nextMovedUser = userId === userOne.id ? { ...players[userTwo.id] } : { ...players[userOne.id] };
-          delete nextMovedUser.score;
+          // Временное решение
+          if (!this.stateGames[game].nextMovedUser) {
+            this.stateGames[game].nextMovedUser = { id: userOne.id, ...players[userOne.id] };
+          }
+          if (clickCell) {
+            const tempObjPlayers = { ...players };
+            delete tempObjPlayers[this.stateGames[game].nextMovedUser.id];
+            let userId = Object.keys(tempObjPlayers)[0];
+            this.stateGames[game].nextMovedUser = { id: userId, ...tempObjPlayers[userId] };
+          }
+          delete this.stateGames[game].nextMovedUser.score;
+          // Временное решение
 
           // Передача пользователям этой комнаты игровых данных
           for (const { client } of gameRoom.users) {
@@ -457,7 +466,7 @@ export class WebsocketService {
               dataGame: {
                 board: this.stateGames[game].board,
                 players,
-                nextMove: nextMovedUser,
+                nextMove: this.stateGames[game].nextMovedUser,
                 patternWinner,
                 winner,
               },
