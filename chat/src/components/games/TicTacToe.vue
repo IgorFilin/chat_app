@@ -5,20 +5,27 @@
       text="Выйти из комнаты"
       isIcon
       iconId="arrow_back"
-      iconColor="white" />
+      iconColor="white"
+    />
     <div class="v-ticTacToe__board">
       <div
         v-for="(cell, index) in gameStore.games['ticTacToe']?.board"
         @click.prevent.stop="onClickCell(index)"
         :key="index"
         :class="{ winner: gameStore.games['ticTacToe']?.patternWinner.includes(index) }"
-        class="v-ticTacToe__cell">
+        class="v-ticTacToe__cell"
+      >
         {{ cell }}
       </div>
     </div>
-    <div class="v-ticTacToe__nextMove">
+    <div
+      v-if="!gameStore.games['ticTacToe']?.winner"
+      class="v-ticTacToe__nextMove"
+    >
       Следующий ход за
-      <span>{{ gameStore.games['ticTacToe']?.nextMove.name + `( ${gameStore.games['ticTacToe']?.nextMove.symbol} )` }}</span>
+      <span>
+        {{ gameStore.games['ticTacToe']?.nextMove.name + `( ${gameStore.games['ticTacToe']?.nextMove.symbol} )` }}
+      </span>
     </div>
     <div class="v-ticTacToe__scored">
       <div>Статистика:</div>
@@ -29,11 +36,13 @@
     </div>
     <div
       class="v-ticTacToe__winner"
-      v-if="gameStore.games['ticTacToe']?.winner">
+      v-if="gameStore.games['ticTacToe']?.winner"
+    >
       <span>Выйграл: {{ gameStore.games['ticTacToe']?.winner }}</span>
       <Button
         @onClick.stop="onClearBoard"
-        text="Сбросить доску" />
+        text="Сбросить доску"
+      />
     </div>
   </div>
 </template>

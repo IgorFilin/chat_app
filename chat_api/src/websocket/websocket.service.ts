@@ -354,13 +354,12 @@ export class WebsocketService {
       if (gameRoom.users.length < 2) {
         gameRoom.users.push(this.clients[userId]);
       }
-      console.log(gameRoom.users);
       switch (game) {
         case 'ticTacToe': {
           if (
             // Не пропускать нажатие на ячейку для одного и того же игрока
-            (this.stateGames[game]?.currentUserMoved &&
-              this.stateGames[game]?.currentUserMoved === userId &&
+            (this.stateGames[game]?.nextMovedUser &&
+              this.stateGames[game]?.nextMovedUser.id !== userId &&
               !isClear &&
               clickCell) ||
             (!isClear && this.stateGames[game]?.isWinnered)
@@ -372,7 +371,6 @@ export class WebsocketService {
 
           this.stateGames[game] = this.stateGames[game] || {};
           this.stateGames[game].board = this.stateGames[game].board || Array(9).fill(null);
-          this.stateGames[game].currentUserMoved = userId;
 
           const userOne = gameRoom.users[0];
           const userTwo = gameRoom.users[1];
@@ -380,6 +378,19 @@ export class WebsocketService {
           this.stateGames[game].scores = this.stateGames[game].scores || {
             x: 0,
             o: 0,
+          };
+
+          const players = {
+            [userOne?.id]: {
+              name: userOne.name,
+              symbol: 'x',
+              score: this.stateGames[game].scores.x,
+            },
+            [userTwo?.id]: {
+              name: userTwo.name,
+              symbol: 'o',
+              score: this.stateGames[game].scores.o,
+            },
           };
 
           // Логика игры в крестики нолики
@@ -397,9 +408,15 @@ export class WebsocketService {
           let potencialWinner = '';
           let winner = '';
 
-          // Если кликнута ячейка
+          // если кликнута ячейка
           if (clickCell) {
+            // установка ход для следующего игрока
+            const nextMoveUser = this.gameRooms[roomId].users.find(
+              (user: any) => user.id !== this.stateGames[game].nextMovedUser.id
+            );
+            this.stateGames[game].nextMovedUser = { id: nextMoveUser.id, name: nextMoveUser.name };
             this.stateGames[game].board[clickCell.index] = clickCell.symbol;
+            // перебор паттернов выйгрыша
             for (const pattern of winsPatterns) {
               let isWinner = pattern.every((el, indexEl) => {
                 if (this.stateGames[game].board[el] === clickCell.symbol && indexEl === 0) {
@@ -415,7 +432,8 @@ export class WebsocketService {
                 patternWinner = pattern;
                 winner = potencialWinner;
                 this.stateGames[game].scores[winner] += 1;
-
+                players[userId].score = this.stateGames[game].scores[winner];
+                delete this.stateGames[game].nextMovedUser;
                 this.stateGames[game].isWinnered = true;
                 break;
                 // если ничья
@@ -425,39 +443,20 @@ export class WebsocketService {
             }
           }
 
-          // Если нажали очистить доску
+          // Установка первого игрока при первом запуске
+          if (!this.stateGames[game].nextMovedUser) {
+            const nextMoveUser = this.gameRooms[roomId].users[0];
+            this.stateGames[game].nextMovedUser = { id: nextMoveUser.id, name: nextMoveUser.name };
+          }
+          this.stateGames[game].nextMovedUser.symbol = players[this.stateGames[game].nextMovedUser.id].symbol;
+
+          // eсли нажали очистить доску
           if (isClear) {
             this.stateGames[game].board = Array(9).fill(null);
             winner = '';
             this.stateGames[game].isWinnered = false;
             patternWinner = [];
           }
-
-          const players = {
-            [userOne.id]: {
-              name: userOne.name,
-              symbol: 'x',
-              score: this.stateGames[game].scores.x,
-            },
-            [userTwo.id]: {
-              name: userTwo.name,
-              symbol: 'o',
-              score: this.stateGames[game].scores.o,
-            },
-          };
-
-          // Временное решение
-          if (!this.stateGames[game].nextMovedUser) {
-            this.stateGames[game].nextMovedUser = { id: userOne.id, ...players[userOne.id] };
-          }
-          if (clickCell) {
-            const tempObjPlayers = { ...players };
-            delete tempObjPlayers[this.stateGames[game].nextMovedUser.id];
-            let userId = Object.keys(tempObjPlayers)[0];
-            this.stateGames[game].nextMovedUser = { id: userId, ...tempObjPlayers[userId] };
-          }
-          delete this.stateGames[game].nextMovedUser.score;
-          // Временное решение
 
           // Передача пользователям этой комнаты игровых данных
           for (const { client } of gameRoom.users) {
