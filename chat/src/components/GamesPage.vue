@@ -16,12 +16,13 @@
             },
           })
       "
-      @clearBoard="() => tickTacToeHandler({ isClear: true })" />
+      @clearBoard="() => tickTacToeHandler({ isClear: true })"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUpdated, ref, watch } from 'vue';
+import { onMounted, onUnmounted, onUpdated, ref, watch } from 'vue';
 import TextTyper from '@/components/AssetsComponent/TextTyper.vue';
 import TicTacToe from '@/components/Games/TicTacToe.vue';
 import { useAuthStore } from '@/store/auth_store.ts';
@@ -37,25 +38,29 @@ const gameStore = useGameStore();
 const socketStore = useSocketStore();
 
 function tickTacToeHandler(payload: any) {
-  socket.emit('gaming', {
+  socketStore.socket.emit('gaming', {
     game: 'ticTacToe',
     userId: authStore.id,
     roomId: gameStore.gameRoomId,
     ...payload,
   });
 }
-const title = ref(['Добро пожаловать в игровую комнату', 'Тут вы можете подключиться к комнате в которую у вас есть доступ']);
-
-let socket: any;
+const title = ref([
+  'Добро пожаловать в игровую комнату',
+  'Тут вы можете подключиться к комнате в которую у вас есть доступ',
+]);
 
 onMounted(async () => {
   if (!socketStore.socketConnected) {
     await authStore.auth();
     gameStore.setRoomId(route.params.id);
-    socket = webSocketEntity().socket;
-  } else socket = socketStore.socket;
+    webSocketEntity();
+  }
+  socketStore.socket.emit('gameRoom', { action: 'enter', userId: authStore.id, roomId: gameStore.gameRoomId });
+});
 
-  socket.emit('gaming', { game: 'ticTacToe', roomId: gameStore.gameRoomId, userId: authStore.id });
+onUnmounted(() => {
+  socketStore.socket.emit('gameRoom', { action: 'leave', userId: authStore.id, roomId: gameStore.gameRoomId });
 });
 </script>
 

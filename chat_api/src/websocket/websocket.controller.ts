@@ -27,31 +27,22 @@ export class WebsocketController implements OnGatewayConnection {
 
   @SubscribeMessage('openRoom')
   async handleOpenPrivateRoom(@MessageBody() body: any) {
-    await this.WebsocketService.openPrivateRoom(
-      body.data.myId,
-      body.data.userId,
-    );
+    await this.WebsocketService.openPrivateRoom(body.data.myId, body.data.userId);
   }
 
   @SubscribeMessage('inviteGame')
   async handleInviteGame(@MessageBody() body: any) {
-    await this.WebsocketService.inviteGameUser(
-      body.myId,
-      body.userId,
-      body.game,
-      body.isAccept,
-    );
+    await this.WebsocketService.inviteGameUser(body.myId, body.userId, body.game, body.isAccept);
+  }
+
+  @SubscribeMessage('gameRoom')
+  async gameRoom(@MessageBody() body: any) {
+    await this.WebsocketService.gameRoom(body.action, body.userId, body.roomId);
   }
 
   @SubscribeMessage('gaming')
   async gameFlow(@MessageBody() body: any) {
-    await this.WebsocketService.gameFlow(
-      body.game,
-      body.roomId,
-      body.clickCell,
-      body.userId,
-      body.isClear,
-    );
+    await this.WebsocketService.gameFlow(body.game, body.roomId, body.clickCell, body.userId, body.isClear);
   }
 
   @SubscribeMessage('message')
@@ -60,7 +51,7 @@ export class WebsocketController implements OnGatewayConnection {
       body.data.id,
       body.data.message,
       body.data.roomId,
-      body.data.isAllChat,
+      body.data.isAllChat
     );
     if (messages) this.server.emit('message', messages);
   }

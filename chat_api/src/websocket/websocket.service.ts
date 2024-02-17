@@ -292,6 +292,8 @@ export class WebsocketService {
   async inviteGameUser(myId: string, userId: string, game: string, isAccept: boolean | undefined) {
     const you = this.clients[myId];
     const user = this.clients[userId];
+    you.isOnline = false;
+    user.isOnline = false;
 
     const sendInvite = {
       game,
@@ -316,6 +318,7 @@ export class WebsocketService {
       }
       case true: {
         const gameRoomId = myId + '-' + userId;
+
         this.gameRooms[gameRoomId] = {
           game,
           isAllChat: false,
@@ -326,6 +329,7 @@ export class WebsocketService {
           ...sendInvite,
           gameRoom: this.gameRooms[gameRoomId],
         });
+
         user.client.emit('inviteGame', {
           userSendedInvite: sendInvite.userSendedInvite,
           isAccept,
@@ -348,7 +352,6 @@ export class WebsocketService {
     try {
       // Берем текущую комнату в переменную
       const gameRoom = this.gameRooms[roomId];
-
       // Если в комнате на данный момент меньше 2х игроков, прибавлять к юзерам комнаты текущего игрока
       // Это помогает возвращаться в комнату при перезагрузке страницы
       if (gameRoom.users.length < 2) {
@@ -477,5 +480,12 @@ export class WebsocketService {
     } catch (e) {
       console.error(e);
     }
+  }
+
+  async gameRoom(action: 'enter' | 'leave', userId: string, roomId: string) {
+    const currentUser = this.gameRooms[roomId].users.find((user: any) => user.id === userId);
+
+    if (action === 'enter') currentUser.isOnline = true;
+    else currentUser.isOnline = false;
   }
 }

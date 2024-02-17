@@ -51,10 +51,15 @@
 import { useGameStore } from '@/store/game_store.ts';
 import Button from '@/components/assetsComponent/Button.vue';
 import router from '@/router/router';
+import { useSocketStore } from '@/store/socket_store.ts';
+import { useAuthStore } from '@/store/auth_store.ts';
+import { onMounted } from 'vue';
 
 const emit = defineEmits(['changeBoard', 'clearBoard']);
 
 const gameStore = useGameStore();
+const socketStore = useSocketStore();
+const authStore = useAuthStore();
 
 function onClickCell(index: number) {
   emit('changeBoard', index);
@@ -67,6 +72,10 @@ function onLeaveGameRoom() {
 function onClearBoard() {
   emit('clearBoard');
 }
+
+onMounted(() => {
+  socketStore.socket.emit('gaming', { game: 'ticTacToe', roomId: gameStore.gameRoomId, userId: authStore.id });
+});
 </script>
 
 <style scoped lang="scss">
