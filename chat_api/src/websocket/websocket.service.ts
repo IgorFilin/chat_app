@@ -462,7 +462,11 @@ export class WebsocketService {
           }
 
           // Передача пользователям этой комнаты игровых данных
-          for (const { client } of gameRoom.users) {
+          for (const { client, isOnline, name } of gameRoom.users) {
+            console.log(this.gameRooms[roomId]);
+            console.log(name, isOnline);
+            if (!isOnline) continue;
+
             client.emit('gaming', {
               game: gameRoom.game,
               dataGame: {

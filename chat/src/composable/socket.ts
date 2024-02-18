@@ -4,7 +4,6 @@ import { useAuthStore } from '@/store/auth_store.ts';
 import router from '@/router/router';
 import { useGameStore } from '@/store/game_store.ts';
 import { useSocketStore } from '@/store/socket_store.ts';
-import data from '@/components/ProfilePage/data';
 
 export function webSocketEntity() {
   const store = useAuthStore();
@@ -23,18 +22,23 @@ export function webSocketEntity() {
     isOpenPopupInviteGame: false as boolean,
     messagesLength: 0,
   });
-
   const address = `${import.meta.env.VITE_APP_PROTOCOL}://${import.meta.env.VITE_APP_DOMEN_PORT}?userID=${store.id}`;
 
   const socket = io(address);
 
+  socketStore.setSocket(socket);
+
   socket.on('connect', () => {
-    socketStore.setConnectionSocket(socket, true);
+    socketStore.setConnectionSocket(true);
   });
 
   socket.on('disconnect', () => {
     socketStore.setConnectionSocket(socket, false);
-    if (router.currentRoute.value.matched[0].path !== '/games/:id' && router.currentRoute.value.matched[0].path !== '/profile/:id' && router.currentRoute.value.path !== '/login') {
+    if (
+      router.currentRoute.value.matched[0].path !== '/games/:id' &&
+      router.currentRoute.value.matched[0].path !== '/profile/:id' &&
+      router.currentRoute.value.path !== '/login'
+    ) {
       store.toast('К сожалению соединение разорвано');
     }
   });

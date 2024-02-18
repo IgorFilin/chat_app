@@ -19,9 +19,11 @@ export const useSocketStore: any = defineStore('socket_store', {
   },
   getters: {},
   actions: {
-    setConnectionSocket(socket: any, value: boolean) {
-      this.socket = socket;
+    setConnectionSocket(value: boolean) {
       this.socketConnected = value;
+    },
+    setSocket(socket: any) {
+      this.socket = socket;
     },
   },
 });

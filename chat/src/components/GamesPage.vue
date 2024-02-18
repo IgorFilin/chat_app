@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, onUpdated, ref, watch } from 'vue';
+import { nextTick, onBeforeMount, onMounted, onUnmounted, onUpdated, ref, watch } from 'vue';
 import TextTyper from '@/components/AssetsComponent/TextTyper.vue';
 import TicTacToe from '@/components/Games/TicTacToe.vue';
 import { useAuthStore } from '@/store/auth_store.ts';
@@ -53,9 +53,10 @@ const title = ref([
 onMounted(async () => {
   if (!socketStore.socketConnected) {
     await authStore.auth();
-    gameStore.setRoomId(route.params.id);
     webSocketEntity();
+    gameStore.setRoomId(route.params.id);
   }
+  console.log(socketStore.socket);
   socketStore.socket.emit('gameRoom', { action: 'enter', userId: authStore.id, roomId: gameStore.gameRoomId });
 });
 
