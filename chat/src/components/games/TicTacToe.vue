@@ -12,11 +12,14 @@
         v-for="(cell, index) in gameStore.games['ticTacToe']?.board"
         @click.prevent.stop="onClickCell(index)"
         :key="index"
-        :class="{ winner: gameStore.games['ticTacToe']?.patternWinner.includes(index) }"
+        :class="[
+          { winner: gameStore.games['ticTacToe']?.patternWinner.includes(index) },
+          ,
+          { cross: cell === 'x' },
+          { circle: cell === 'o' },
+        ]"
         class="v-ticTacToe__cell"
-      >
-        {{ cell }}
-      </div>
+      />
     </div>
     <div
       v-if="!gameStore.games['ticTacToe']?.winner"
@@ -114,7 +117,55 @@ onMounted(() => {
   font-size: 90px;
 
   &.winner {
-    background: red;
+    background: $darkBlack;
+  }
+
+  &.circle {
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      width: 57px;
+      height: 57px;
+      border: 3px solid $skyBlue;
+      border-radius: 50%;
+      -webkit-box-shadow: 0 0 30px $skyBlue;
+      box-shadow: 0 0 30px $skyBlue;
+      transition: 1s;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  &.cross {
+    position: relative;
+
+    &::after,
+    &::before {
+      content: '';
+      width: 5px;
+      height: 70px;
+      position: absolute;
+      -webkit-box-shadow: 0 0 20px $skyBlue;
+      border: 3px solid $skyBlue;
+      background-color: $skyBlue;
+      box-shadow: 0 0 20px $skyBlue;
+      width: 60%;
+      height: 4px;
+      background-color: #000;
+      top: 50%;
+      left: 50%;
+    }
+
+    &::after {
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    &::before {
+      transform: translate(-50%, -50%) rotate(-45deg);
+    }
   }
 }
 
