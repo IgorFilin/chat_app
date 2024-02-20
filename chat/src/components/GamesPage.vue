@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, onBeforeMount, onMounted, onUnmounted, onUpdated, ref, watch } from 'vue';
+import { nextTick, onMounted, onUnmounted, onUpdated, ref, watch } from 'vue';
 import TextTyper from '@/components/AssetsComponent/TextTyper.vue';
 import TicTacToe from '@/components/games/TicTacToe.vue';
 import { useAuthStore } from '@/store/auth_store.ts';
