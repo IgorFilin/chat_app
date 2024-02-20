@@ -24,7 +24,7 @@
 <script setup lang="ts">
 import { nextTick, onBeforeMount, onMounted, onUnmounted, onUpdated, ref, watch } from 'vue';
 import TextTyper from '@/components/AssetsComponent/TextTyper.vue';
-import TicTacToe from '@/components/Games/TicTacToe.vue';
+import TicTacToe from '@/components/games/TicTacToe.vue';
 import { useAuthStore } from '@/store/auth_store.ts';
 import { useSocketStore } from '@/store/socket_store.ts';
 import { useGameStore } from '@/store/game_store.ts';
