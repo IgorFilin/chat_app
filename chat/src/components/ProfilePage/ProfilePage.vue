@@ -7,16 +7,19 @@
         text="В общий чат"
         isIcon
         iconId="arrow_back"
-        iconColor="white" />
+        iconColor="white"
+      />
       <div class="v-profile__content">
         <img
           class="v-profile__photo"
           :src="authStore.userPhoto"
-          alt="аватар пользователя" />
+          alt="аватар пользователя"
+        />
         <TextTyper
           :key="mainText[0]"
           class="v-profile__userInfo"
-          :text="mainText" />
+          :text="mainText"
+        />
       </div>
     </div>
   </div>
@@ -27,7 +30,7 @@ import { Ref, computed, nextTick, onMounted, onUnmounted, onUpdated, ref, watch,
 import { useAuthStore } from '@/store/auth_store.ts';
 import { useUserStore } from '@/store/user_store.ts';
 import Button from '@/components/assetsComponent/Button.vue';
-import TextTyper from '@/components/AssetsComponent/TextTyper.vue';
+import TextTyper from '@/components/assetsComponent/TextTyper.vue';
 import router from '@/router/router';
 import { useRoute } from 'vue-router';
 
