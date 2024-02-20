@@ -7,16 +7,19 @@
   },
   "prettier.htmlWhitespaceSensitivity": "ignore",
   "prettier.singleAttributePerLine": true,
+  "prettier.printWidth": 120,
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[php]": {
     "editor.defaultFormatter": null
   },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
   "[html]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
-  "prettier.printWidth": 480,
   "gitlens.hovers.currentLine.over": "line",
-  "prettier.bracketSameLine": true,
+  "prettier.bracketSameLine": false,
   "workbench.iconTheme": "material-icon-theme",
   "diffEditor.ignoreTrimWhitespace": false,
   "prettier.singleQuote": true

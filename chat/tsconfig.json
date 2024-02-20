@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "types": ["vite/client"],
+    "types": ["vite/client", "socket.io-client"],
     "strict": true,
     "jsx": "preserve",
     "composite": true,

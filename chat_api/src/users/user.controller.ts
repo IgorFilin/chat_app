@@ -15,6 +15,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { FormDataRequest, MemoryStoredFile } from 'nestjs-form-data';
 import { FormDataTestDto } from './dto/request-file';
+import * as https from 'https';
 
 @Controller('user')
 export class UsersController {
@@ -140,5 +141,53 @@ export class UsersController {
     } else {
       res.status(404);
     }
+  }
+
+  @Get('validateCaptcha')
+  async captcha(@Req() req: Request, @Res() res: Response) {
+    console.log('debug');
+    const token = req.query.token;
+    const SMARTCAPTCHA_SERVER_KEY =
+      'ysc2_uEsjdc8w3VueN8qim5rkg4f1UFXmRcxCxJWI4Kvpe91bd8df';
+
+    function check_captcha(token, callback) {
+      const options = {
+        hostname: 'smartcaptcha.yandexcloud.net',
+        port: 443,
+        path: `/validate?secret=${SMARTCAPTCHA_SERVER_KEY}&token=${token}`,
+        method: 'GET',
+      };
+      const req = https.request(options, (response) => {
+        let data = '';
+        response.on('data', (chunk) => {
+          data += chunk;
+        });
+        response.on('end', () => {
+          if (response.statusCode !== 200) {
+            console.error(
+              `Allow access due to an error: code=${response.statusCode}; message=${data}`,
+            );
+            callback(true);
+          } else {
+            callback(JSON.parse(data).status === 'ok');
+          }
+        });
+      });
+      req.on('error', (error) => {
+        console.error(error);
+        callback(true);
+      });
+      req.end();
+    }
+
+    check_captcha(token, (passed) => {
+      if (passed) {
+        console.log('Passed');
+        res.send('Passed');
+      } else {
+        console.log('Robot');
+        res.send('Robot');
+      }
+    });
   }
 }

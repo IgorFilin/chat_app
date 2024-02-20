@@ -1,9 +1,12 @@
 <template>
   <div class="v-popup">
-    <h2 class="v-popup__title">{{ title }}</h2>
+    <h2
+      class="v-popup__title"
+      v-html="title"></h2>
     <form class="v-popup__form">
       <div class="v-popup__formGroup">
         <Input
+          v-if="inputs"
           v-for="{ labelText, changeValue, id } in inputs"
           :key="id"
           :labelText="labelText"
@@ -21,11 +24,18 @@
       </div>
 
       <Button
+        v-if="buttonText"
         class="v-popup__button"
         :isDisabled="isError"
         @onClick="onSubmit"
         :text="buttonText" />
     </form>
+    <Icon
+      v-if="isCloseBtn"
+      class="v-popup__iconClose"
+      @click="emit('onClose')"
+      id="close-cross"
+      color="orange" />
   </div>
 </template>
 
@@ -33,6 +43,7 @@
 import { Ref, onUpdated, reactive, ref, watch } from 'vue';
 import Button from '@/components/assetsComponent/Button.vue';
 import Input from '@/components/assetsComponent/Input.vue';
+import Icon from '@/components/assetsComponent/Icon.vue';
 
 type InputsType = { changeValue: string; labelText: string; id: string };
 
@@ -49,13 +60,18 @@ const props = defineProps({
     type: Array<InputsType>,
     desc: 'Массив с инпутами',
   },
+  isCloseBtn: {
+    type: Boolean,
+    desc: 'Флажок для включения иконки закрытия и возвращения события закрытия',
+    default: false,
+  },
 });
 
 const inputData = ref({}) as any;
 const isError = ref(true) as Ref<boolean>;
 const clearInputs = ref(false) as Ref<boolean>;
 
-const emit = defineEmits(['submit']);
+const emit = defineEmits(['submit', 'onClose']);
 
 function onSubmit(event: any) {
   event.preventDefault();
@@ -81,6 +97,7 @@ function onInputUpdated(dataInput: { value: string; error: boolean }, changeValu
 
 <style lang="scss">
 .v-popup {
+  position: relative;
   background-color: #090909;
   box-shadow: #0f0 0px 10px 40px 4px;
   padding: 20px;
@@ -146,6 +163,19 @@ function onInputUpdated(dataInput: { value: string; error: boolean }, changeValu
   &:hover {
     background: #1f5084;
     transition: 0.2s;
+  }
+}
+
+.v-popup__iconClose {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 20px;
+  height: 20px;
+
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.1);
   }
 }
 </style>

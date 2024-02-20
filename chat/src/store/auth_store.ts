@@ -12,6 +12,7 @@ interface UserType {
   messages: any;
   isAcceptKey: boolean | null;
   id: string;
+  socketConnected: boolean;
   email: string;
   isLoading: boolean;
   userPhoto: any;
