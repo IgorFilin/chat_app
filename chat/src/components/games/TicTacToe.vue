@@ -56,7 +56,8 @@ import Button from '@/components/assetsComponent/Button.vue';
 import router from '@/router/router';
 import { useSocketStore } from '@/store/socket_store.ts';
 import { useAuthStore } from '@/store/auth_store.ts';
-import { nextTick, onMounted } from 'vue';
+import { nextTick, onMounted, onUnmounted } from 'vue';
+import { webSocketEntity } from '@/composable/socket';
 
 const emit = defineEmits(['changeBoard', 'clearBoard']);
 
@@ -76,11 +77,13 @@ function onClearBoard() {
   emit('clearBoard');
 }
 
-onMounted(async () => {
-  console.log(socketStore.socket);
-  await nextTick();
+onMounted(() => {
   socketStore.socket.emit('gaming', { game: 'ticTacToe', roomId: gameStore.gameRoomId, userId: authStore.id });
 });
+
+// onUnmounted(() => {
+//   socketStore.socket.emit('gameRoom', { action: 'leave', userId: authStore.id, roomId: gameStore.gameRoomId });
+// });
 </script>
 
 <style scoped lang="scss">
