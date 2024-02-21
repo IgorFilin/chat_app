@@ -64,10 +64,11 @@ export class WebsocketService {
 
     for (const game in this.gameRooms) {
       const currentGame = this.gameRooms[game];
-      currentGame.users = currentGame.users.filter(
+      const currentUser = currentGame.users.find(
         (user: { id: string; name: string; userPhoto: string; client: any }) =>
-          user.id !== disconnectedClient.handshake.query.userID
+          user.id === disconnectedClient.handshake.query.userID
       );
+      currentUser.isOnline = false;
     }
     // {
     //   game: 'ticTacToe',
@@ -93,6 +94,7 @@ export class WebsocketService {
   }
 
   async connectedUser(client: any) {
+    console.log('CONNECT');
     // Вытаскием id с квери параметров
     const userId = client.handshake.query.userID;
     // Ищем пользака по этому id
@@ -354,9 +356,9 @@ export class WebsocketService {
       const gameRoom = this.gameRooms[roomId];
       // Если в комнате на данный момент меньше 2х игроков, прибавлять к юзерам комнаты текущего игрока
       // Это помогает возвращаться в комнату при перезагрузке страницы
-      if (gameRoom.users.length < 2) {
-        gameRoom.users.push(this.clients[userId]);
-      }
+      // if (gameRoom.users.length < 2) {
+      //   gameRoom.users.push(this.clients[userId]);
+      // }
       switch (game) {
         case 'ticTacToe': {
           if (
@@ -463,10 +465,8 @@ export class WebsocketService {
 
           // Передача пользователям этой комнаты игровых данных
           for (const { client, isOnline, name } of gameRoom.users) {
-            console.log(this.gameRooms[roomId]);
-            console.log(name, isOnline);
-            if (!isOnline) continue;
-
+            // if (!isOnline) continue;
+            console.log(name);
             client.emit('gaming', {
               game: gameRoom.game,
               dataGame: {
@@ -488,8 +488,8 @@ export class WebsocketService {
 
   async gameRoom(action: 'enter' | 'leave', userId: string, roomId: string) {
     const currentUser = this.gameRooms[roomId].users.find((user: any) => user.id === userId);
-
     if (action === 'enter') currentUser.isOnline = true;
     else currentUser.isOnline = false;
+    console.log('!1!1!1!', this.gameRooms[roomId].users);
   }
 }

@@ -6,7 +6,7 @@ import { useGameStore } from '@/store/game_store.ts';
 import { useSocketStore } from '@/store/socket_store.ts';
 
 export function webSocketEntity() {
-  const store = useAuthStore();
+  const authStore = useAuthStore();
   const gameStore = useGameStore();
   const socketStore = useSocketStore();
 
@@ -22,32 +22,27 @@ export function webSocketEntity() {
     isOpenPopupInviteGame: false as boolean,
     messagesLength: 0,
   });
-  const address = `${import.meta.env.VITE_APP_PROTOCOL}://${import.meta.env.VITE_APP_DOMEN_PORT}?userID=${store.id}`;
 
-  const socket = io(address);
-
-  socketStore.setSocket(socket);
-
-  socket.on('connect', () => {
+  socketStore.socket.on('connect', () => {
     socketStore.setConnectionSocket(true);
   });
 
-  socket.on('disconnect', () => {
-    socketStore.setConnectionSocket(socket, false);
+  socketStore.socket.on('disconnect', () => {
+    // socketStore.setConnectionSocket(socket, false);
     if (
       router.currentRoute.value.matched[0].path !== '/games/:id' &&
       router.currentRoute.value.matched[0].path !== '/profile/:id' &&
       router.currentRoute.value.path !== '/login'
     ) {
-      store.toast('К сожалению соединение разорвано');
+      authStore.toast('К сожалению соединение разорвано');
     }
   });
 
-  socket.on('clients', (data) => {
+  socketStore.socket.on('clients', (data) => {
     state.onlineClients = data.clients;
   });
 
-  socket.on('message', (responseData) => {
+  socketStore.socket.on('message', (responseData) => {
     const data = responseData;
 
     if (data.openRoom) {
@@ -83,7 +78,7 @@ export function webSocketEntity() {
     }
   });
 
-  socket.on('inviteGame', (data) => {
+  socketStore.socket.on('inviteGame', (data) => {
     if (data.isInvite) {
       const TypeNameGames = {
         ticTacToe: 'Крестики нолики',
@@ -98,7 +93,7 @@ export function webSocketEntity() {
 
     if (data.isAccept !== undefined) {
       const answer = data.isAccept ? 'принял' : 'отклонил';
-      store.toast(`Пользователь ${data.userSendedInvite} ${answer} предложение`);
+      authStore.toast(`Пользователь ${data.userSendedInvite} ${answer} предложение`);
     }
 
     if (data.gameRoom) {
@@ -106,9 +101,10 @@ export function webSocketEntity() {
     }
   });
 
-  socket.on('gaming', (data) => {
+  socketStore.socket.on('gaming', (data) => {
+    console.log('SETGAME');
     gameStore.setGame(data);
   });
 
-  return { state, socket };
+  return { state };
 }

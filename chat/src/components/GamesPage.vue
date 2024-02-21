@@ -24,7 +24,7 @@
 <script setup lang="ts">
 import { nextTick, onBeforeMount, onMounted, onUnmounted, onUpdated, ref, watch } from 'vue';
 import TextTyper from '@/components/AssetsComponent/TextTyper.vue';
-import TicTacToe from '@/components/Games/TicTacToe.vue';
+import TicTacToe from '@/components/games/TicTacToe.vue';
 import { useAuthStore } from '@/store/auth_store.ts';
 import { useSocketStore } from '@/store/socket_store.ts';
 import { useGameStore } from '@/store/game_store.ts';
@@ -50,15 +50,18 @@ const title = ref([
   'Тут вы можете подключиться к комнате в которую у вас есть доступ',
 ]);
 
-onMounted(async () => {
-  if (!socketStore.socketConnected) {
-    await authStore.auth();
-    webSocketEntity();
-    gameStore.setRoomId(route.params.id);
-  }
-  console.log(socketStore.socket);
-  socketStore.socket.emit('gameRoom', { action: 'enter', userId: authStore.id, roomId: gameStore.gameRoomId });
-});
+gameStore.setRoomId(route.params.id);
+
+watch(
+  [() => socketStore.socket, () => gameStore.gameRoomId, () => authStore.id],
+  () => {
+    if (socketStore.socket && gameStore.gameRoomId && authStore.id) {
+      console.log(authStore.id);
+      socketStore.socket.emit('gameRoom', { action: 'enter', userId: authStore.id, roomId: gameStore.gameRoomId });
+    }
+  },
+  { immediate: true }
+);
 
 onUnmounted(() => {
   socketStore.socket.emit('gameRoom', { action: 'leave', userId: authStore.id, roomId: gameStore.gameRoomId });

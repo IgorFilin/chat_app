@@ -4,8 +4,8 @@ import { LoginUserType, RegisterUserType } from '@/types/typesApi';
 import { geolocationDataUser } from '@/api/appApi.ts';
 import { useToast } from 'vue-toastification';
 import { errorStore } from '@/utils/storeError';
+import { useSocketStore } from '@/store/socket_store.ts';
 import router from '@/router/router';
-
 interface UserType {
   name: string;
   isAuth: boolean;
@@ -83,8 +83,10 @@ export const useAuthStore: any = defineStore('auth_store', {
     },
     async auth() {
       try {
+        const socketStore = useSocketStore();
         this.isLoading = true;
         const result = await authApi.auth();
+        await socketStore.connectSocket(result.data.id);
         this.isAuth = result.data.isAuth;
         this.name = result.data.name;
         this.id = result.data.id;

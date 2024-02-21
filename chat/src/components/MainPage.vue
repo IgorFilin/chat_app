@@ -3,16 +3,19 @@
     <UserOnlineContainer
       @openRoom="openRoomHandler"
       @sendInviteGame="sendInviteGameHandler"
-      :usersOnline="state.onlineClients" />
+      :usersOnline="state.onlineClients"
+    />
     <div
       v-if="!state.isAllChat"
-      class="v-mainPage__backAllChatContainer">
+      class="v-mainPage__backAllChatContainer"
+    >
       <Button
         @onClick="goToPublicChat"
         text="В общий чат"
         isIcon
         iconId="arrow_back"
-        iconColor="white" />
+        iconColor="white"
+      />
       <div>В диалоге {{ state.userToAddPrivate }}</div>
     </div>
     <div
@@ -22,15 +25,18 @@
       @dragstart.prevent
       @dragover.prevent="OnDragChatContainer"
       @dragleave.prevent="state.onDragClass = false"
-      @drop.prevent="OnDropChatContainer">
+      @drop.prevent="OnDropChatContainer"
+    >
       <Message
         v-if="state.isLoadingMessages"
         :key="message.message.toString()"
         v-for="message in memoMessages"
-        v-bind="message" />
+        v-bind="message"
+      />
       <Loader
         v-else
-        loaderFor="message" />
+        loaderFor="message"
+      />
     </div>
     <InputSendButton @sendMessage="sendMessage" />
     <Popup
@@ -38,13 +44,17 @@
       class="v-mainPage__inviteGamePopup"
       :title="state.popupInviteGameData.title"
       isCloseBtn
-      @onClose="state.isOpenPopupInviteGame = false">
+      @onClose="state.isOpenPopupInviteGame = false"
+    >
       <template #additional>
         <Button
           v-for="({ text, isAccept }, index) in inviteGameButtons"
           :key="index"
           :text="text"
-          @click.prevent="sendInviteGameHandler(state.popupInviteGameData.sendInviteUserId, state.popupInviteGameData.game, isAccept)" />
+          @click.prevent="
+            sendInviteGameHandler(state.popupInviteGameData.sendInviteUserId, state.popupInviteGameData.game, isAccept)
+          "
+        />
       </template>
     </Popup>
   </div>
@@ -61,8 +71,10 @@ import Loader from '@/components/Loader.vue';
 import Button from '@/components/assetsComponent/Button.vue';
 import Popup from '@/components/assetsComponent/Popup.vue';
 import { webSocketEntity } from '@/composable/socket.ts';
+import { useSocketStore } from '@/store/socket_store.ts';
 
-const { socket, state } = webSocketEntity();
+const socketStore = useSocketStore();
+const { state } = webSocketEntity();
 
 const inviteGameButtons = [
   {
@@ -95,7 +107,7 @@ function sendMessage(message: string) {
       isAllChat: state.isAllChat,
     },
   };
-  socket.emit('message', sendMessage);
+  socketStore.socket.emit('message', sendMessage);
 }
 
 function OnDropChatContainer(e: any) {
@@ -104,7 +116,11 @@ function OnDropChatContainer(e: any) {
   state.onDragClass = false;
   const file = e.dataTransfer.files[0];
   const reader = new FileReader();
-  if (file.type === 'text/plain' || file.type === 'application/pdf' || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+  if (
+    file.type === 'text/plain' ||
+    file.type === 'application/pdf' ||
+    file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+  ) {
     store.toast('К сожалению пока не поддерживаемый формат файлов');
     return;
   } // Добавить возможность сохранения текстовых файлов для клиентов
@@ -121,7 +137,7 @@ function OnDropChatContainer(e: any) {
 
   reader.onload = function (eventReader) {
     const arrayBuffer = eventReader.target?.result;
-    socket.emit('message', {
+    socketStore.socket.emit('message', {
       data: {
         message: Array.from(new Uint8Array(arrayBuffer as ArrayBuffer)),
         id: store.id,
@@ -134,7 +150,10 @@ function OnDropChatContainer(e: any) {
   reader.readAsArrayBuffer(file);
 }
 
-watch([() => state.isAllChat, () => state.roomId], () => (state.isLoadingMessages = state.messagesLength === state.messages.length));
+watch(
+  [() => state.isAllChat, () => state.roomId],
+  () => (state.isLoadingMessages = state.messagesLength === state.messages.length)
+);
 
 const memoMessages = computed(() => state.messages);
 
@@ -149,7 +168,7 @@ function goToPublicChat() {
   state.isAllChat = true;
   state.roomId = null;
   state.messages = [];
-  socket.emit('getAllMessages', {
+  socketStore.socket.emit('getAllMessages', {
     event: 'all_messages_public',
     data: { id: store.id },
   });
@@ -166,19 +185,23 @@ function onScroll(event: any) {
 function openRoomHandler(id: string) {
   state.isAllChat = false;
   state.messages = [];
-  socket.emit('openRoom', { data: { myId: store.id, userId: id } });
+  socketStore.socket.emit('openRoom', { data: { myId: store.id, userId: id } });
 }
 
 function sendInviteGameHandler(userId: string, game: string, isAccept: boolean | undefined) {
   state.isOpenPopupInviteGame = false;
-  socket.emit('inviteGame', { myId: store.id, userId, game, isAccept });
+  socketStore.socket.emit('inviteGame', { myId: store.id, userId, game, isAccept });
 }
 onMounted(() => {
-  socket.connect();
+  socketStore.socket.connect();
 });
 
 onUnmounted(() => {
-  if (router.currentRoute.value.matched[0].path !== '/games/:id' && router.currentRoute.value.matched[0].path !== '/games/') socket.close();
+  if (
+    router.currentRoute.value.matched[0].path !== '/games/:id' &&
+    router.currentRoute.value.matched[0].path !== '/games/'
+  )
+    socket.close();
 });
 </script>
 
