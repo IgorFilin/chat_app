@@ -53,19 +53,18 @@ const title = ref([
 gameStore.setRoomId(route.params.id);
 
 watch(
-  [() => socketStore.socket, () => gameStore.gameRoomId, () => authStore.id],
+  [() => socketStore.socketConnected, () => gameStore.gameRoomId, () => authStore.id],
   () => {
-    if (socketStore.socket && gameStore.gameRoomId && authStore.id) {
-      console.log(authStore.id);
+    if (socketStore.socketConnected && gameStore.gameRoomId && authStore.id) {
       socketStore.socket.emit('gameRoom', { action: 'enter', userId: authStore.id, roomId: gameStore.gameRoomId });
     }
   },
   { immediate: true }
 );
 
-onUnmounted(() => {
-  socketStore.socket.emit('gameRoom', { action: 'leave', userId: authStore.id, roomId: gameStore.gameRoomId });
-});
+// onUnmounted(() => {
+//   socketStore.socket.emit('gameRoom', { action: 'leave', userId: authStore.id, roomId: gameStore.gameRoomId });
+// });
 </script>
 
 <style scoped lang="scss">

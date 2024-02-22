@@ -77,19 +77,14 @@ function onClearBoard() {
 }
 
 watch(
-  [() => socketStore.socket, () => gameStore.gameRoomId, () => authStore.id],
+  [() => socketStore.socketConnected, () => gameStore.gameRoomId, () => authStore.id],
   () => {
-    if (socketStore.socket && gameStore.gameRoomId && authStore.id) {
+    if (socketStore.socketConnected && gameStore.gameRoomId && authStore.id) {
       socketStore.socket.emit('gaming', { game: 'ticTacToe', roomId: gameStore.gameRoomId, userId: authStore.id });
     }
   },
   { immediate: true }
 );
-
-onMounted(async () => {
-  if (socketStore.socket) {
-  }
-});
 </script>
 
 <style scoped lang="scss">

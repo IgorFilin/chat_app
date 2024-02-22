@@ -3,10 +3,10 @@
     <UserOnlineContainer
       @openRoom="openRoomHandler"
       @sendInviteGame="sendInviteGameHandler"
-      :usersOnline="state.onlineClients"
+      :usersOnline="socketStore.onlineClients"
     />
     <div
-      v-if="!state.isAllChat"
+      v-if="!socketStore.isAllChat"
       class="v-mainPage__backAllChatContainer"
     >
       <Button
@@ -16,19 +16,19 @@
         iconId="arrow_back"
         iconColor="white"
       />
-      <div>В диалоге {{ state.userToAddPrivate }}</div>
+      <div>В диалоге {{ socketStore.userToAddPrivate }}</div>
     </div>
     <div
       class="v-mainPage__chatContainer"
-      :class="{ drag: state.onDragClass }"
+      :class="{ drag: socketStore.onDragClass }"
       @scroll="onScroll"
       @dragstart.prevent
       @dragover.prevent="OnDragChatContainer"
-      @dragleave.prevent="state.onDragClass = false"
+      @dragleave.prevent="socketStore.onDragClass = false"
       @drop.prevent="OnDropChatContainer"
     >
       <Message
-        v-if="state.isLoadingMessages"
+        v-if="socketStore.isLoadingMessages"
         :key="message.message.toString()"
         v-for="message in memoMessages"
         v-bind="message"
@@ -40,11 +40,11 @@
     </div>
     <InputSendButton @sendMessage="sendMessage" />
     <Popup
-      v-if="state.isOpenPopupInviteGame"
+      v-if="socketStore.isOpenPopupInviteGame"
       class="v-mainPage__inviteGamePopup"
-      :title="state.popupInviteGameData.title"
+      :title="socketStore.popupInviteGameData.title"
       isCloseBtn
-      @onClose="state.isOpenPopupInviteGame = false"
+      @onClose="socketStore.isOpenPopupInviteGame = false"
     >
       <template #additional>
         <Button
@@ -52,7 +52,11 @@
           :key="index"
           :text="text"
           @click.prevent="
-            sendInviteGameHandler(state.popupInviteGameData.sendInviteUserId, state.popupInviteGameData.game, isAccept)
+            sendInviteGameHandler(
+              socketStore.popupInviteGameData.sendInviteUserId,
+              socketStore.popupInviteGameData.game,
+              isAccept
+            )
           "
         />
       </template>
@@ -74,7 +78,8 @@ import { webSocketEntity } from '@/composable/socket.ts';
 import { useSocketStore } from '@/store/socket_store.ts';
 
 const socketStore = useSocketStore();
-const { state } = webSocketEntity();
+// const { socketStore } = webSocketEntity();
+const store = useAuthStore();
 
 const inviteGameButtons = [
   {
@@ -86,8 +91,6 @@ const inviteGameButtons = [
     isAccept: false,
   },
 ];
-
-const store = useAuthStore();
 
 if (!store.isAuth) {
   router.push('/login');
@@ -103,8 +106,8 @@ function sendMessage(message: string) {
     data: {
       message: message.trim(),
       id: store.id,
-      roomId: state.roomId,
-      isAllChat: state.isAllChat,
+      roomId: socketStore.roomId,
+      isAllChat: socketStore.isAllChat,
     },
   };
   socketStore.socket.emit('message', sendMessage);
@@ -113,7 +116,7 @@ function sendMessage(message: string) {
 function OnDropChatContainer(e: any) {
   e.preventDefault();
 
-  state.onDragClass = false;
+  socketStore.onDragClass = false;
   const file = e.dataTransfer.files[0];
   const reader = new FileReader();
   if (
@@ -141,8 +144,8 @@ function OnDropChatContainer(e: any) {
       data: {
         message: Array.from(new Uint8Array(arrayBuffer as ArrayBuffer)),
         id: store.id,
-        roomId: state.roomId,
-        isAllChat: state.isAllChat,
+        roomId: socketStore.roomId,
+        isAllChat: socketStore.isAllChat,
       },
     });
   };
@@ -151,23 +154,23 @@ function OnDropChatContainer(e: any) {
 }
 
 watch(
-  [() => state.isAllChat, () => state.roomId],
-  () => (state.isLoadingMessages = state.messagesLength === state.messages.length)
+  [() => socketStore.isAllChat, () => socketStore.roomId],
+  () => (socketStore.isLoadingMessages = socketStore.messagesLength === socketStore.messages.length)
 );
 
-const memoMessages = computed(() => state.messages);
+const memoMessages = computed(() => socketStore.messages);
 
 function OnDragChatContainer(event: any) {
   event.preventDefault();
-  if (!state.onDragClass) {
-    state.onDragClass = true;
+  if (!socketStore.onDragClass) {
+    socketStore.onDragClass = true;
   }
 }
 
 function goToPublicChat() {
-  state.isAllChat = true;
-  state.roomId = null;
-  state.messages = [];
+  socketStore.isAllChat = true;
+  socketStore.roomId = null;
+  socketStore.messages = [];
   socketStore.socket.emit('getAllMessages', {
     event: 'all_messages_public',
     data: { id: store.id },
@@ -183,13 +186,13 @@ function onScroll(event: any) {
 }
 
 function openRoomHandler(id: string) {
-  state.isAllChat = false;
-  state.messages = [];
+  socketStore.isAllChat = false;
+  socketStore.messages = [];
   socketStore.socket.emit('openRoom', { data: { myId: store.id, userId: id } });
 }
 
 function sendInviteGameHandler(userId: string, game: string, isAccept: boolean | undefined) {
-  state.isOpenPopupInviteGame = false;
+  socketStore.isOpenPopupInviteGame = false;
   socketStore.socket.emit('inviteGame', { myId: store.id, userId, game, isAccept });
 }
 onMounted(() => {
@@ -197,11 +200,11 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  if (
-    router.currentRoute.value.matched[0].path !== '/games/:id' &&
-    router.currentRoute.value.matched[0].path !== '/games/'
-  )
-    socket.close();
+  // if (
+  //   router.currentRoute.value.matched[0].path !== '/games/:id' &&
+  //   router.currentRoute.value.matched[0].path !== '/games/'
+  // ){}
+  // socket.close();
 });
 </script>
 

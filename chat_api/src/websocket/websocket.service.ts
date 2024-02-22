@@ -94,7 +94,7 @@ export class WebsocketService {
   }
 
   async connectedUser(client: any) {
-    console.log('CONNECT');
+    console.log('ВНУТРИ_КОННЕКТЕД');
     // Вытаскием id с квери параметров
     const userId = client.handshake.query.userID;
     // Ищем пользака по этому id
@@ -467,16 +467,18 @@ export class WebsocketService {
           for (const { client, isOnline, name } of gameRoom.users) {
             // if (!isOnline) continue;
             console.log(name);
-            client.emit('gaming', {
-              game: gameRoom.game,
-              dataGame: {
-                board: this.stateGames[game].board,
-                players,
-                nextMove: this.stateGames[game].nextMovedUser,
-                patternWinner,
-                winner,
-              },
-            });
+            setTimeout(() => {
+              client.emit('gaming', {
+                game: gameRoom.game,
+                dataGame: {
+                  board: this.stateGames[game].board,
+                  players,
+                  nextMove: this.stateGames[game].nextMovedUser,
+                  patternWinner,
+                  winner,
+                },
+              });
+            }, 3000);
           }
           break;
         }
@@ -490,6 +492,6 @@ export class WebsocketService {
     const currentUser = this.gameRooms[roomId].users.find((user: any) => user.id === userId);
     if (action === 'enter') currentUser.isOnline = true;
     else currentUser.isOnline = false;
-    console.log('!1!1!1!', this.gameRooms[roomId].users);
+    console.log('ВНУТРИ_СЕТ_РУМА');
   }
 }

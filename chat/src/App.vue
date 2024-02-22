@@ -32,8 +32,8 @@ import Loader from '@/components/Loader.vue';
 import { useAuthStore } from './store/auth_store';
 import { onMounted, ref } from 'vue';
 import TextTyper from '@/components/AssetsComponent/TextTyper.vue';
-import AudioRunner from '@/components/AssetsComponent/AudioRunner.vue';
-import VantaEffect from '@/components/AssetsComponent/VantaEffect.vue';
+import AudioRunner from '@/components/assetsComponent/AudioRunner.vue';
+import VantaEffect from '@/components/assetsComponent/VantaEffect.vue';
 
 const audio = ref();
 
