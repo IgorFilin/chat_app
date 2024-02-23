@@ -76,15 +76,18 @@ function onClearBoard() {
   emit('clearBoard');
 }
 
-watch(
-  [() => socketStore.socketConnected, () => gameStore.gameRoomId, () => authStore.id],
-  () => {
-    if (socketStore.socketConnected && gameStore.gameRoomId && authStore.id) {
-      socketStore.socket.emit('gaming', { game: 'ticTacToe', roomId: gameStore.gameRoomId, userId: authStore.id });
-    }
-  },
-  { immediate: true }
-);
+onMounted(() => {
+  watch(
+    [() => socketStore.socketConnected, () => gameStore.gameRoomId, () => authStore.id],
+    () => {
+      if (socketStore.socketConnected && gameStore.gameRoomId && authStore.id) {
+        console.log('ticktack');
+        socketStore.socket.emit('gaming', { game: 'ticTacToe', roomId: gameStore.gameRoomId, userId: authStore.id });
+      }
+    },
+    { immediate: true }
+  );
+});
 </script>
 
 <style scoped lang="scss">

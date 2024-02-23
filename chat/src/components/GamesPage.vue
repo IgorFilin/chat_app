@@ -52,15 +52,18 @@ const title = ref([
 
 gameStore.setRoomId(route.params.id);
 
-watch(
-  [() => socketStore.socketConnected, () => gameStore.gameRoomId, () => authStore.id],
-  () => {
-    if (socketStore.socketConnected && gameStore.gameRoomId && authStore.id) {
-      socketStore.socket.emit('gameRoom', { action: 'enter', userId: authStore.id, roomId: gameStore.gameRoomId });
-    }
-  },
-  { immediate: true }
-);
+onMounted(() => {
+  watch(
+    [() => socketStore.socketConnected, () => gameStore.gameRoomId, () => authStore.id],
+    () => {
+      if (socketStore.socketConnected && gameStore.gameRoomId && authStore.id) {
+        console.log('gamePage');
+        socketStore.socket.emit('gameRoom', { action: 'enter', userId: authStore.id, roomId: gameStore.gameRoomId });
+      }
+    },
+    { immediate: true }
+  );
+});
 
 // onUnmounted(() => {
 //   socketStore.socket.emit('gameRoom', { action: 'leave', userId: authStore.id, roomId: gameStore.gameRoomId });

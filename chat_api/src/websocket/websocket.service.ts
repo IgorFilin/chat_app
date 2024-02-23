@@ -338,7 +338,16 @@ export class WebsocketService {
           gameRoom: this.gameRooms[gameRoomId],
         });
 
-        this.gameRooms[gameRoomId].users = [you, user];
+        // При инвайте добавляет только id и name от пользователей
+        for (const client of [you, user]) {
+          const tempPushedUser = {
+            id: client.id,
+            name: client.name,
+            isOnline: false,
+          };
+          this.gameRooms[gameRoomId].users = this.gameRooms[gameRoomId].users || [];
+          this.gameRooms[gameRoomId].users.push(tempPushedUser);
+        }
         break;
       }
     }
@@ -464,21 +473,18 @@ export class WebsocketService {
           }
 
           // Передача пользователям этой комнаты игровых данных
-          for (const { client, isOnline, name } of gameRoom.users) {
+          for (const { id, isOnline, name } of gameRoom.users) {
             // if (!isOnline) continue;
-            console.log(name);
-            setTimeout(() => {
-              client.emit('gaming', {
-                game: gameRoom.game,
-                dataGame: {
-                  board: this.stateGames[game].board,
-                  players,
-                  nextMove: this.stateGames[game].nextMovedUser,
-                  patternWinner,
-                  winner,
-                },
-              });
-            }, 3000);
+            this.clients[id].client.emit('gaming', {
+              game: gameRoom.game,
+              dataGame: {
+                board: this.stateGames[game].board,
+                players,
+                nextMove: this.stateGames[game].nextMovedUser,
+                patternWinner,
+                winner,
+              },
+            });
           }
           break;
         }
