@@ -60,7 +60,6 @@ function yandexCaptcha() {
           yaCaptchaCoontainer.style = '';
         }
         window.smartCaptcha.destroy(widgetId.value);
-
         render();
       }
     }
@@ -78,8 +77,8 @@ function yandexCaptcha() {
       if (responseExecute.data === 'Passed') {
         if (!isInvisibleCaptcha.value) {
           isInvisibleCaptcha.value = true;
-          return true;
         }
+        return true;
       } else {
         // если включена "невидимая капча" и ошибка проверки, включать вторую, "видимую"
         if (isInvisibleCaptcha.value) {
