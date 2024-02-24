@@ -17,7 +17,7 @@ export class UsersService {
     @InjectRepository(User)
     private UserTable: Repository<User>,
     private JwtService: JwtService,
-    private readonly emailService: EmailService,
+    private readonly emailService: EmailService
   ) {}
 
   blockedKeysSendingMails = {};
@@ -35,13 +35,7 @@ export class UsersService {
         const confirmRegKey = randomBytes(5).toString('hex');
 
         const dirname = process.cwd();
-        const imagePath = path.join(
-          dirname,
-          'dist',
-          'static',
-          'image',
-          'default_photo_user.webp',
-        );
+        const imagePath = path.join(dirname, 'dist', 'static', 'image', 'default_photo_user.webp');
 
         const token = this.JwtService.sign({
           name: createUserDto.name,
@@ -65,10 +59,7 @@ export class UsersService {
         // Сохраняем в БД пользователя с регистрационным key
         this.UserTable.save(user);
         // Отсылаем на почту ключ подтверждения
-        await this.emailService.sendConfirmationEmail(
-          user.email,
-          confirmRegKey,
-        );
+        await this.emailService.sendConfirmationEmail(user.email, confirmRegKey);
 
         // Возвращаем значение что ключ на почту отправлен, но не подтвержден
         return {
@@ -85,10 +76,7 @@ export class UsersService {
     try {
       if (user && !this.blockedKeysSendingMails.hasOwnProperty(email)) {
         this.blockedKeysSendingMails[email] = true;
-        await this.emailService.sendConfirmationEmail(
-          user.email,
-          user.acceptKey,
-        );
+        await this.emailService.sendConfirmationEmail(user.email, user.acceptKey);
         setTimeout(() => {
           delete this.blockedKeysSendingMails[email];
         }, 7000);
@@ -125,19 +113,14 @@ export class UsersService {
 
   async login(LoginUserDto: LoginUserDto) {
     if (LoginUserDto.email === '' || LoginUserDto.password === '') {
-      throw new BadRequestException(
-        'К сожалению недостаточно данных для авторизации',
-      );
+      throw new BadRequestException('К сожалению недостаточно данных для авторизации');
     }
     const user = await this.UserTable.findOneBy({ email: LoginUserDto.email });
     if (user && !user.isAcceptKey) {
       throw new BadRequestException('Пожалуйста подтвердите вашу почту');
     }
     if (user && Object.keys(user).length) {
-      const userPasswordValid = await bcrypt.compare(
-        LoginUserDto.password,
-        user.password,
-      );
+      const userPasswordValid = await bcrypt.compare(LoginUserDto.password, user.password);
       if (userPasswordValid) {
         return {
           message: `Добро пожаловать ${user.name}`,
@@ -150,9 +133,7 @@ export class UsersService {
         throw new BadRequestException('Неверный пароль');
       }
     } else {
-      throw new BadRequestException(
-        'К сожалению такого пользователя не существует',
-      );
+      throw new BadRequestException('К сожалению такого пользователя не существует');
     }
   }
 
@@ -181,15 +162,13 @@ export class UsersService {
       if (user?.authToken) {
         const image = path.basename(user.userPhoto);
         const dirname = process.cwd();
-        const isPicturePresent = fs.existsSync(
-          path.join(dirname, 'dist', 'static', 'image', image),
-        );
+        const isPicturePresent = fs.existsSync(path.join(dirname, 'dist', 'static', 'image', image));
         const imagePath = path.join(
           dirname,
           'dist',
           'static',
           'image',
-          isPicturePresent ? image : 'default_photo_user.webp',
+          isPicturePresent ? image : 'default_photo_user.webp'
         );
 
         // Если id пользователя равен id найденного пользователя, проверка на всякий случай
@@ -204,16 +183,9 @@ export class UsersService {
 
   async setPhoto(userId: string, newAvatar: any) {
     try {
-      console.log(newAvatar.avatar.originalName);
       // Сохраняем файл по дефолтному пути, в папку dist сборки проекта.
       const dirname = process.cwd();
-      const savePath = path.join(
-        dirname,
-        'dist',
-        'static',
-        'image',
-        newAvatar.avatar.originalName,
-      );
+      const savePath = path.join(dirname, 'dist', 'static', 'image', newAvatar.avatar.originalName);
       fs.writeFile(savePath, newAvatar.avatar.buffer, () => {});
 
       // Заменяем у пользователя путь к аварке в БД на новый

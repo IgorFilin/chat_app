@@ -81,7 +81,6 @@ onMounted(() => {
     [() => socketStore.socketConnected, () => gameStore.gameRoomId, () => authStore.id],
     () => {
       if (socketStore.socketConnected && gameStore.gameRoomId && authStore.id) {
-        console.log('ticktack');
         socketStore.socket.emit('gaming', { game: 'ticTacToe', roomId: gameStore.gameRoomId, userId: authStore.id });
       }
     },

@@ -94,7 +94,6 @@ export class WebsocketService {
   }
 
   async connectedUser(client: any) {
-    console.log('ВНУТРИ_КОННЕКТЕД');
     // Вытаскием id с квери параметров
     const userId = client.handshake.query.userID;
     // Ищем пользака по этому id

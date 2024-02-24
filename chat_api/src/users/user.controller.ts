@@ -1,13 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  UsePipes,
-  Res,
-  Req,
-  Ip,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, UsePipes, Res, Req, Ip } from '@nestjs/common';
 import { UsersService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
@@ -23,11 +14,7 @@ export class UsersController {
 
   @Post('registration')
   @UsePipes(new ValidationPipe())
-  async create(
-    @Body() createUserDto: CreateUserDto,
-    @Res() res: Response,
-    @Ip() ip: string,
-  ) {
+  async create(@Body() createUserDto: CreateUserDto, @Res() res: Response, @Ip() ip: string) {
     const result = await this.usersService.create(createUserDto, ip);
     if (result.isAcceptKey === false) {
       return res.send(result);
@@ -77,11 +64,7 @@ export class UsersController {
 
   @Post('avatar')
   @FormDataRequest({ storage: MemoryStoredFile })
-  async setAvatar(
-    @Body() newAvatar: FormDataTestDto,
-    @Req() req: Request,
-    @Res() res: Response,
-  ) {
+  async setAvatar(@Body() newAvatar: FormDataTestDto, @Req() req: Request, @Res() res: Response) {
     const userId = req.query.id as string;
     const result: any = await this.usersService.setPhoto(userId, newAvatar);
     if (result.message) {
@@ -145,10 +128,8 @@ export class UsersController {
 
   @Get('validateCaptcha')
   async captcha(@Req() req: Request, @Res() res: Response) {
-    console.log('debug');
     const token = req.query.token;
-    const SMARTCAPTCHA_SERVER_KEY =
-      'ysc2_uEsjdc8w3VueN8qim5rkg4f1UFXmRcxCxJWI4Kvpe91bd8df';
+    const SMARTCAPTCHA_SERVER_KEY = 'ysc2_uEsjdc8w3VueN8qim5rkg4f1UFXmRcxCxJWI4Kvpe91bd8df';
 
     function check_captcha(token, callback) {
       const options = {
@@ -164,9 +145,7 @@ export class UsersController {
         });
         response.on('end', () => {
           if (response.statusCode !== 200) {
-            console.error(
-              `Allow access due to an error: code=${response.statusCode}; message=${data}`,
-            );
+            console.error(`Allow access due to an error: code=${response.statusCode}; message=${data}`);
             callback(true);
           } else {
             callback(JSON.parse(data).status === 'ok');
@@ -182,10 +161,8 @@ export class UsersController {
 
     check_captcha(token, (passed) => {
       if (passed) {
-        console.log('Passed');
         res.send('Passed');
       } else {
-        console.log('Robot');
         res.send('Robot');
       }
     });

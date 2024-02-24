@@ -1,47 +1,99 @@
-import { onMounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
+import { authApi } from '@/api/appApi.ts';
 
 function yandexCaptcha() {
   const widgetId = ref();
+  const isInvisibleCaptcha = ref(true);
 
   onMounted(() => {
-    const resToken = window.smartCaptcha.render('captcha-container', {
-      sitekey: 'ysc1_uEsjdc8w3VueN8qim5rk8kqgh0duyAlDaA9leVmIc20e730c',
-      invisible: true,
-      webview: true,
-      shieldPosition: 'top-right',
-      // callback: callback,
-      test: true,
-    });
-    widgetId.value = resToken;
+    render();
   });
 
-  function execute() {
-    console.log('EXECUTE');
-    window.smartCaptcha.execute();
-    window.smartCaptcha.subscribe(widgetId.value, 'success', (token) => {
-      console.log('successTOKEN', token);
-      window.smartCaptcha.reset(widgetId.value);
+  onUnmounted(() => {
+    window.smartCaptcha.destroy(widgetId.value);
+  });
+
+  function render() {
+    const id = window.smartCaptcha.render('captcha-container', {
+      sitekey: 'ysc1_uEsjdc8w3VueN8qim5rk8kqgh0duyAlDaA9leVmIc20e730c',
+      invisible: isInvisibleCaptcha.value,
+      webview: true,
+      shieldPosition: 'bottom-right',
+      test: false,
     });
-    window.smartCaptcha.subscribe(widgetId.value, 'token-expired', () => {
-      console.log('errorTOKEN');
-      window.smartCaptcha.reset(widgetId.value);
+    widgetId.value = id;
+  }
+
+  function getInvisibleCaptcha() {
+    window.smartCaptcha.execute(widgetId.value);
+    return new Promise((success, expired) => {
+      try {
+        window.smartCaptcha.subscribe(widgetId.value, 'success', (token) => {
+          success(token);
+          window.smartCaptcha.reset(widgetId.value);
+        });
+        window.smartCaptcha.subscribe(widgetId.value, 'token-expired', () => {
+          expired('token-expired');
+          window.smartCaptcha.reset(widgetId.value);
+        });
+      } catch (e) {}
     });
   }
 
-  // async function callback(userToken) {
-  //   const response = await fetch(`http://localhost:3000/user/validateCaptcha?token=${userToken}`, {
-  //     method: 'GET',
-  //   });
-  //   const result = await response.text();
+  function getVisibleCaptacha() {
+    return new Promise((success, expired) => {
+      try {
+        let token = window.smartCaptcha.getResponse(widgetId.value);
+        success(token);
+      } catch (e) {
+        expired('token-expired');
+      }
+    });
+  }
 
-  //   if (result === 'Passed') {
-  //     console.log(result);
-  //     window.smartCaptcha.reset();
-  //   }
-  //   console.log(userToken);
-  // }
+  watch(
+    () => isInvisibleCaptcha.value,
+    (newValue, oldValue) => {
+      if (newValue !== oldValue) {
+        if (isInvisibleCaptcha.value) {
+          const yaCaptchaCoontainer = document.querySelector('#captcha-container');
+          yaCaptchaCoontainer.style = '';
+        }
+        window.smartCaptcha.destroy(widgetId.value);
 
-  return { execute };
+        render();
+      }
+    }
+  );
+
+  async function getCaptchaResponse() {
+    try {
+      let token;
+      if (isInvisibleCaptcha.value) {
+        token = await getInvisibleCaptcha();
+      } else {
+        token = await getVisibleCaptacha();
+      }
+      const responseExecute = await authApi.executeYaCaptcha(token);
+      if (responseExecute.data === 'Passed') {
+        if (!isInvisibleCaptcha.value) {
+          isInvisibleCaptcha.value = true;
+          return true;
+        }
+      } else {
+        // если включена "невидимая капча" и ошибка проверки, включать вторую, "видимую"
+        if (isInvisibleCaptcha.value) {
+          isInvisibleCaptcha.value = false;
+          return;
+        }
+        return false;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  return { getCaptchaResponse };
 }
 
 export default yandexCaptcha;

@@ -57,7 +57,6 @@ onMounted(() => {
     [() => socketStore.socketConnected, () => gameStore.gameRoomId, () => authStore.id],
     () => {
       if (socketStore.socketConnected && gameStore.gameRoomId && authStore.id) {
-        console.log('gamePage');
         socketStore.socket.emit('gameRoom', { action: 'enter', userId: authStore.id, roomId: gameStore.gameRoomId });
       }
     },

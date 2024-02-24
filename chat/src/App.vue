@@ -91,12 +91,14 @@ onMounted(() => {
   font-family: monospace, sans-serif;
   color: $orange;
 }
+
 body {
   margin: 0;
   padding: 0;
   background-color: $darkBlack;
   overflow: hidden;
 }
+
 #app {
   .fade-enter-active,
   .fade-leave-active {
@@ -108,9 +110,15 @@ body {
     opacity: 0;
   }
 }
+
 .Vue-Toastification__toast--default.my-custom-toast-class {
   background-color: $blue;
   border-radius: 0;
   top: 20px;
+}
+
+.SmartCaptcha-Shield {
+  z-index: 9999999999 !important;
+  bottom: 0% !important;
 }
 </style>

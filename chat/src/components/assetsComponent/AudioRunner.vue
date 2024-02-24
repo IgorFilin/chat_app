@@ -6,7 +6,8 @@
       class="v-audioRunner__sound"
       :class="[iconClass, { soundOff: !isPlayed }]"
       :id="isPlayed ? 'sound_on' : 'sound_off'"
-      color="orange" />
+      color="orange"
+    />
   </div>
 </template>
 
@@ -74,6 +75,10 @@ onUnmounted(() => {
   position: absolute;
   right: 80px;
   bottom: 80px;
+
+  @include phones {
+    right: 35px;
+  }
 
   &.soundOff {
     @keyframes shake {

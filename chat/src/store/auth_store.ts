@@ -46,8 +46,10 @@ export const useAuthStore: any = defineStore('auth_store', {
     },
     async loginAction(data: LoginUserType) {
       try {
+        const socketStore = useSocketStore();
         this.isLoading = true;
         const result = await authApi.loginUser(data);
+        await socketStore.connectSocket(result.data.id);
         this.messages = result.data.message;
         this.name = result.data.name;
         this.isAuth = result.data.isAuth;

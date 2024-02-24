@@ -1,5 +1,13 @@
 import axios, { AxiosResponse } from 'axios';
-import { LoginUserType, RegisterUserType, ResponseConfirmRegType, ResponseGetAllUsersType, ResponseLoginType, ResponseLogoutType, ResponseRegisterUserType } from '../types/typesApi';
+import {
+  LoginUserType,
+  RegisterUserType,
+  ResponseConfirmRegType,
+  ResponseGetAllUsersType,
+  ResponseLoginType,
+  ResponseLogoutType,
+  ResponseRegisterUserType,
+} from '../types/typesApi';
 
 const authInstance = axios.create({
   baseURL: `http://${import.meta.env.VITE_APP_DOMEN_PORT}`,
@@ -40,6 +48,9 @@ export const authApi = {
   },
   repeatedConfirmReg(email: string) {
     return authInstance.get<ResponseConfirmRegType>('user/send_mail_confirm', { params: { email } });
+  },
+  executeYaCaptcha(userToken: string) {
+    return authInstance.get(`user/validateCaptcha?token=${userToken}`);
   },
 };
 export const userApi = {

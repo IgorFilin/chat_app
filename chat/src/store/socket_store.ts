@@ -42,7 +42,6 @@ export const useSocketStore: any = defineStore('socket_store', {
 
       this.socket.on('connect', () => {
         this.socketConnected = true;
-        console.log('socketConnected');
       });
 
       this.socket.on('disconnect', () => {
@@ -120,7 +119,6 @@ export const useSocketStore: any = defineStore('socket_store', {
       });
 
       this.socket.on('gaming', (data) => {
-        console.log('В СТОРЕ,ГЕЙМИНГ');
         gameStore.setGame(data);
       });
     },

@@ -3,7 +3,8 @@
     :inputs="inputsLogin"
     title="Вход"
     buttonText="Войти"
-    @submit="onLogin" />
+    @submit="onLogin"
+  />
 </template>
 
 <script setup lang="ts">
@@ -28,7 +29,7 @@ const inputsLogin = [
 
 const store = useAuthStore();
 
-async function onLogin(data: LoginUserType) {
+function onLogin(data: LoginUserType) {
   store.loginAction(data);
 }
 
