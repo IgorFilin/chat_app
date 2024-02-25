@@ -85,6 +85,7 @@ function yandexCaptcha() {
           isInvisibleCaptcha.value = false;
           return;
         }
+
         return false;
       }
     } catch (e) {
