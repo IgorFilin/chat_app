@@ -5,17 +5,8 @@
       @sendInviteGame="sendInviteGameHandler"
       :usersOnline="socketStore.onlineClients"
     />
-    <div
-      v-if="!socketStore.isAllChat"
-      class="v-mainPage__backAllChatContainer"
-    >
-      <Button
-        @onClick="goToPublicChat"
-        text="В общий чат"
-        isIcon
-        iconId="arrow_back"
-        iconColor="white"
-      />
+    <div v-if="!socketStore.isAllChat" class="v-mainPage__backAllChatContainer">
+      <Button @onClick="goToPublicChat" text="В общий чат" isIcon iconId="arrow_back" iconColor="white" />
       <div>В диалоге {{ socketStore.userToAddPrivate }}</div>
     </div>
     <div
@@ -33,10 +24,7 @@
         v-for="message in memoMessages"
         v-bind="message"
       />
-      <Loader
-        v-else
-        loaderFor="message"
-      />
+      <Loader v-else loaderFor="message" />
     </div>
     <InputSendButton @sendMessage="sendMessage" />
     <Popup

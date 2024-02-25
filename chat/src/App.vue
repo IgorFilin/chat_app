@@ -5,7 +5,6 @@
       name="fade"
       mode="out-in"
     >
-      mode="out-in" >
       <router-view></router-view>
     </transition>
     <Loader v-if="store.isLoading" />
@@ -13,19 +12,16 @@
       v-if="!store.isAuth"
       :text="mainPageCodeText"
     />
-    :text="mainPageCodeText" />
     <AudioRunner
       v-if="!store.isAuth && !store.isLoading"
       audioSrc="./sound/hack.mp3"
     />
-    audioSrc="./sound/hack.mp3" />
     <AudioRunner
       :icon="false"
       :loop="false"
       @audio="(e) => (audio = e)"
       audioSrc="./sound/click.mp3"
     />
-    audioSrc="./sound/click.mp3" />
     <VantaEffect />
   </div>
 </template>
