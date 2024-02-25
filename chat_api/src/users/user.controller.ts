@@ -129,13 +129,12 @@ export class UsersController {
   @Get('validateCaptcha')
   async captcha(@Req() req: Request, @Res() res: Response) {
     const token = req.query.token;
-    const SMARTCAPTCHA_SERVER_KEY = 'ysc2_uEsjdc8w3VueN8qim5rkg4f1UFXmRcxCxJWI4Kvpe91bd8df';
 
     function check_captcha(token, callback) {
       const options = {
         hostname: 'smartcaptcha.yandexcloud.net',
         port: 443,
-        path: `/validate?secret=${SMARTCAPTCHA_SERVER_KEY}&token=${token}`,
+        path: `/validate?secret=${process.env.YA_CAPTCHA_SERVER_KEY}&token=${token}`,
         method: 'GET',
       };
       const req = https.request(options, (response) => {

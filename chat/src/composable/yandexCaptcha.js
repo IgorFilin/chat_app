@@ -15,7 +15,7 @@ function yandexCaptcha() {
 
   function render() {
     const id = window.smartCaptcha.render('captcha-container', {
-      sitekey: 'ysc1_uEsjdc8w3VueN8qim5rk8kqgh0duyAlDaA9leVmIc20e730c',
+      sitekey: import.meta.env.VITE_APP_YA_CAPTCHA_KEY,
       invisible: isInvisibleCaptcha.value,
       webview: true,
       shieldPosition: 'bottom-right',
