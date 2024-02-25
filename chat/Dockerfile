@@ -1,13 +1,8 @@
 # этап сборки (build stage)
 FROM node:18 as build-stage
 WORKDIR /app
-COPY package*.json ./
-ARG VITE_APP_DOMEN_PORT
-ARG VITE_APP_PROTOCOL
-ENV VITE_APP_HOST=${VITE_APP_DOMEN_PORT}
-ENV VITE_APP_PROTOCOL=${VITE_APP_PROTOCOL}
-RUN npm install
 COPY . .
+RUN npm install
 RUN npm run build
 
 # этап production (production stage)
