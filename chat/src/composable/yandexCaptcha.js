@@ -1,9 +1,18 @@
-import { onMounted, onUnmounted, ref, watch } from 'vue';
+import { onBeforeUnmount, onMounted, onUnmounted, ref, watch } from 'vue';
 import { authApi } from '@/api/appApi.ts';
+import router from '@/router/router';
 
 function yandexCaptcha() {
+  console.log('ya_captch');
   const widgetId = ref();
   const isInvisibleCaptcha = ref(true);
+
+  // Выход из рендера капчи, в случае если нам это не нужно
+  if (
+    router.currentRoute.value.redirectedFrom?.path === '/main' ||
+    (router.currentRoute.value.path !== '/login' && router.currentRoute.value.path !== '/registration')
+  )
+    return;
 
   onMounted(() => {
     render();
@@ -14,6 +23,7 @@ function yandexCaptcha() {
   });
 
   function render() {
+    console.log('ya_render');
     const id = window.smartCaptcha.render('captcha-container', {
       sitekey: import.meta.env.VITE_APP_YA_CAPTCHA_KEY,
       invisible: isInvisibleCaptcha.value,
@@ -93,7 +103,7 @@ function yandexCaptcha() {
     }
   }
 
-  return { getCaptchaResponse };
+  return getCaptchaResponse;
 }
 
 export default yandexCaptcha;

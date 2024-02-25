@@ -5,8 +5,17 @@
       @sendInviteGame="sendInviteGameHandler"
       :usersOnline="socketStore.onlineClients"
     />
-    <div v-if="!socketStore.isAllChat" class="v-mainPage__backAllChatContainer">
-      <Button @onClick="goToPublicChat" text="В общий чат" isIcon iconId="arrow_back" iconColor="white" />
+    <div
+      v-if="!socketStore.isAllChat"
+      class="v-mainPage__backAllChatContainer"
+    >
+      <Button
+        @onClick="goToPublicChat"
+        text="В общий чат"
+        isIcon
+        iconId="arrow_back"
+        iconColor="white"
+      />
       <div>В диалоге {{ socketStore.userToAddPrivate }}</div>
     </div>
     <div
@@ -24,7 +33,10 @@
         v-for="message in memoMessages"
         v-bind="message"
       />
-      <Loader v-else loaderFor="message" />
+      <Loader
+        v-else
+        loaderFor="message"
+      />
     </div>
     <InputSendButton @sendMessage="sendMessage" />
     <Popup
@@ -62,11 +74,9 @@ import UserOnlineContainer from '@/components/UserOnlineContainer/UserOnlineCont
 import Loader from '@/components/Loader.vue';
 import Button from '@/components/assetsComponent/Button.vue';
 import Popup from '@/components/assetsComponent/Popup.vue';
-import { webSocketEntity } from '@/composable/socket.ts';
 import { useSocketStore } from '@/store/socket_store.ts';
 
 const socketStore = useSocketStore();
-// const { socketStore } = webSocketEntity();
 const store = useAuthStore();
 
 const inviteGameButtons = [
@@ -183,6 +193,7 @@ function sendInviteGameHandler(userId: string, game: string, isAccept: boolean |
   socketStore.isOpenPopupInviteGame = false;
   socketStore.socket.emit('inviteGame', { myId: store.id, userId, game, isAccept });
 }
+
 onMounted(() => {
   socketStore.socket.connect();
 });

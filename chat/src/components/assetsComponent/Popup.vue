@@ -50,9 +50,9 @@ import Button from '@/components/assetsComponent/Button.vue';
 import Input from '@/components/assetsComponent/Input.vue';
 import Icon from '@/components/assetsComponent/Icon.vue';
 import yandexCaptcha from '@/composable/yandexCaptcha.js';
-import { AxiosResponse } from 'axios';
 type InputsType = { changeValue: string; labelText: string; id: string };
-const { getCaptchaResponse } = yandexCaptcha();
+
+const getCaptchaResponse = yandexCaptcha();
 
 const props = defineProps({
   title: {
@@ -82,7 +82,12 @@ const emit = defineEmits(['submit', 'onClose']);
 
 async function onSubmit(event: any) {
   event.preventDefault();
-  const isNotRobot = await getCaptchaResponse();
+  let isNotRobot;
+  if (getCaptchaResponse) {
+    isNotRobot = await getCaptchaResponse();
+  } else {
+    isNotRobot = true;
+  }
   if (isNotRobot) {
     emit('submit', inputData.value);
     clearInputs.value = true;
