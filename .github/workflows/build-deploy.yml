@@ -33,6 +33,7 @@ jobs:
             echo "${{ secrets.ENV_BACKEND }}" > .env.production
             cd /var/www/chat_app/chat
             echo "${{ secrets.ENV_FRONTEND }}" > .env.production
+            echo "${{ secrets.ENV_FRONTEND }}" > text.txt
             cd /var/www/chat_app
             docker-compose down -v
             docker builder prune -af
