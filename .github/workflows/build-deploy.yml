@@ -32,7 +32,7 @@ jobs:
             cd /var/www/chat_app/chat_api
             echo "${{ secrets.ENV_BACKEND }}" > .env.production
             cd /var/www/chat_app/chat
-            echo "${{ secrets.ENV_FRONTEND }}" > .env
+            echo "${{ secrets.ENV_FRONTEND }}" > .env.production
             cd /var/www/chat_app
             docker-compose down -v
             docker builder prune -af

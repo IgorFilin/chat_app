@@ -1,8 +1,12 @@
 # этап сборки (build stage)
 FROM node:18 as build-stage
+
 WORKDIR /app
+
 COPY . .
-COPY .env .env
+
+COPY .env.production .env
+
 RUN npm install
 RUN npm run build
 
