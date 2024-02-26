@@ -98,7 +98,10 @@ async function onSubmit(event: any) {
 watch(
   () => inputData.value,
   () => {
-    if (Object.values(inputData.value).includes('') || Object.values(inputData.value).length < 2) {
+    if (
+      Object.values(inputData.value).includes('') ||
+      (props.inputs?.length && Object.values(inputData.value).length < props.inputs?.length)
+    ) {
       isError.value = true;
     }
   },
