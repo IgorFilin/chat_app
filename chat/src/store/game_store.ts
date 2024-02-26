@@ -22,7 +22,7 @@ export const useGameStore: any = defineStore('game_store', {
     setRoomId(id: string) {
       this.gameRoomId = id;
     },
-    setGame(data: { game: string; dataGame: Array<any> }) {
+    setGame(data: { roomId: string; game: string; dataGame: Array<any> }) {
       this.games[data.game] = data.dataGame;
     },
   },

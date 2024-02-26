@@ -8,6 +8,16 @@ import { isJSON } from 'class-validator';
 import * as path from 'path';
 import { Injectable } from '@nestjs/common';
 
+interface GameRoomsType {
+  [roomId: string]: {
+    games: any[];
+    users: {
+      id: string;
+      name: string;
+      isOnline: boolean;
+    }[];
+  };
+}
 @Injectable()
 export class WebsocketService {
   constructor(
@@ -23,7 +33,7 @@ export class WebsocketService {
 
   clients = {};
   messages = [];
-  gameRooms = {};
+  gameRooms = {} as GameRoomsType;
   stateGames = {};
   publicChatEvent = 'message' as 'message';
   privateChatEvent = 'private_message' as 'private_message';
@@ -64,10 +74,7 @@ export class WebsocketService {
 
     for (const game in this.gameRooms) {
       const currentGame = this.gameRooms[game];
-      const currentUser = currentGame.users.find(
-        (user: { id: string; name: string; userPhoto: string; client: any }) =>
-          user.id === disconnectedClient.handshake.query.userID
-      );
+      const currentUser = currentGame.users.find((user: any) => user.id === disconnectedClient.handshake.query.userID);
       currentUser.isOnline = false;
     }
     // {
@@ -299,7 +306,6 @@ export class WebsocketService {
     const sendInvite = {
       game,
       userSendedInvite: you.name,
-      isAllChat: false,
       inviteGame: game,
       sendInviteUserId: myId,
     } as any;
@@ -320,21 +326,32 @@ export class WebsocketService {
       case true: {
         const gameRoomId = myId + '-' + userId;
 
-        this.gameRooms[gameRoomId] = {
+        // Если нет комнаты то создаём её и добавляем игру
+        // Если нет комнаты и нет данной игры, то добавим её
+        if (!this.gameRooms[gameRoomId]) {
+          this.gameRooms[gameRoomId] = {
+            games: [],
+            users: [],
+          };
+          this.gameRooms[gameRoomId].games.push(game);
+        } else if (!this.gameRooms[gameRoomId].games.includes(game)) {
+          this.gameRooms[gameRoomId].games.push(game);
+        }
+
+        const currentRoom = {
           game,
-          isAllChat: false,
           id: gameRoomId,
         };
 
         you.client.emit('inviteGame', {
           ...sendInvite,
-          gameRoom: this.gameRooms[gameRoomId],
+          gameRoom: currentRoom,
         });
 
         user.client.emit('inviteGame', {
           userSendedInvite: sendInvite.userSendedInvite,
           isAccept,
-          gameRoom: this.gameRooms[gameRoomId],
+          gameRoom: currentRoom,
         });
 
         // При инвайте добавляет только id и name от пользователей
@@ -371,24 +388,32 @@ export class WebsocketService {
         case 'ticTacToe': {
           if (
             // Не пропускать нажатие на ячейку для одного и того же игрока
-            (this.stateGames[game]?.nextMovedUser &&
-              this.stateGames[game]?.nextMovedUser.id !== userId &&
+            (this.stateGames[roomId] &&
+              this.stateGames[roomId][game]?.nextMovedUser &&
+              this.stateGames[roomId][game]?.nextMovedUser.id !== userId &&
               !isClear &&
               clickCell) ||
-            (!isClear && this.stateGames[game]?.isWinnered)
+            (!isClear && this.stateGames[roomId] && this.stateGames[roomId][game]?.isWinnered)
           )
             return;
 
           // Если кликнуто по уже заполненой ячейки, то возврат
-          if (this.stateGames[game] && clickCell && this.stateGames[game].board[clickCell.index] !== null) return;
+          if (
+            this.stateGames[roomId] &&
+            this.stateGames[roomId][game] &&
+            clickCell &&
+            this.stateGames[roomId][game].board[clickCell.index] !== null
+          )
+            return;
 
-          this.stateGames[game] = this.stateGames[game] || {};
-          this.stateGames[game].board = this.stateGames[game].board || Array(9).fill(null);
+          this.stateGames[roomId] = this.stateGames[roomId] || {};
+          this.stateGames[roomId][game] = this.stateGames[roomId][game] || {};
+          this.stateGames[roomId][game].board = this.stateGames[roomId][game].board || Array(9).fill(null);
 
           const userOne = gameRoom.users[0];
           const userTwo = gameRoom.users[1];
 
-          this.stateGames[game].scores = this.stateGames[game].scores || {
+          this.stateGames[roomId][game].scores = this.stateGames[roomId][game].scores || {
             x: 0,
             o: 0,
           };
@@ -397,12 +422,12 @@ export class WebsocketService {
             [userOne?.id]: {
               name: userOne.name,
               symbol: 'x',
-              score: this.stateGames[game].scores.x,
+              score: this.stateGames[roomId][game].scores.x,
             },
             [userTwo?.id]: {
               name: userTwo.name,
               symbol: 'o',
-              score: this.stateGames[game].scores.o,
+              score: this.stateGames[roomId][game].scores.o,
             },
           };
 
@@ -425,49 +450,50 @@ export class WebsocketService {
           if (clickCell) {
             // установка ход для следующего игрока
             const nextMoveUser = this.gameRooms[roomId].users.find(
-              (user: any) => user.id !== this.stateGames[game].nextMovedUser.id
+              (user: any) => user.id !== this.stateGames[roomId][game].nextMovedUser.id
             );
-            this.stateGames[game].nextMovedUser = { id: nextMoveUser.id, name: nextMoveUser.name };
-            this.stateGames[game].board[clickCell.index] = clickCell.symbol;
+            this.stateGames[roomId][game].nextMovedUser = { id: nextMoveUser.id, name: nextMoveUser.name };
+            this.stateGames[roomId][game].board[clickCell.index] = clickCell.symbol;
             // перебор паттернов выйгрыша
             for (const pattern of winsPatterns) {
               let isWinner = pattern.every((el, indexEl) => {
-                if (this.stateGames[game].board[el] === clickCell.symbol && indexEl === 0) {
+                if (this.stateGames[roomId][game].board[el] === clickCell.symbol && indexEl === 0) {
                   potencialWinner = clickCell.symbol;
                   return true;
                 }
                 if (indexEl > 0) {
-                  return this.stateGames[game].board[el] === potencialWinner;
+                  return this.stateGames[roomId][game].board[el] === potencialWinner;
                 }
               });
               // выйгрыш
               if (isWinner) {
                 patternWinner = pattern;
                 winner = potencialWinner;
-                this.stateGames[game].scores[winner] += 1;
-                players[userId].score = this.stateGames[game].scores[winner];
-                delete this.stateGames[game].nextMovedUser;
-                this.stateGames[game].isWinnered = true;
+                this.stateGames[roomId][game].scores[winner] += 1;
+                players[userId].score = this.stateGames[roomId][game].scores[winner];
+                delete this.stateGames[roomId][game].nextMovedUser;
+                this.stateGames[roomId][game].isWinnered = true;
                 break;
                 // если ничья
-              } else if (this.stateGames[game].board.every((cell: any) => cell !== null)) {
+              } else if (this.stateGames[roomId][game].board.every((cell: any) => cell !== null)) {
                 winner = 'ничья';
               }
             }
           }
 
           // Установка первого игрока при первом запуске
-          if (!this.stateGames[game].nextMovedUser) {
+          if (!this.stateGames[roomId][game].nextMovedUser) {
             const nextMoveUser = this.gameRooms[roomId].users[0];
-            this.stateGames[game].nextMovedUser = { id: nextMoveUser.id, name: nextMoveUser.name };
+            this.stateGames[roomId][game].nextMovedUser = { id: nextMoveUser.id, name: nextMoveUser.name };
           }
-          this.stateGames[game].nextMovedUser.symbol = players[this.stateGames[game].nextMovedUser.id].symbol;
+          this.stateGames[roomId][game].nextMovedUser.symbol =
+            players[this.stateGames[roomId][game].nextMovedUser.id].symbol;
 
           // eсли нажали очистить доску
           if (isClear) {
-            this.stateGames[game].board = Array(9).fill(null);
+            this.stateGames[roomId][game].board = Array(9).fill(null);
             winner = '';
-            this.stateGames[game].isWinnered = false;
+            this.stateGames[roomId][game].isWinnered = false;
             patternWinner = [];
           }
 
@@ -475,11 +501,12 @@ export class WebsocketService {
           for (const { id, isOnline, name } of gameRoom.users) {
             // if (!isOnline) continue;
             this.clients[id].client.emit('gaming', {
-              game: gameRoom.game,
+              game,
+              roomId,
               dataGame: {
-                board: this.stateGames[game].board,
+                board: this.stateGames[roomId][game].board,
                 players,
-                nextMove: this.stateGames[game].nextMovedUser,
+                nextMove: this.stateGames[roomId][game].nextMovedUser,
                 patternWinner,
                 winner,
               },
@@ -497,6 +524,5 @@ export class WebsocketService {
     const currentUser = this.gameRooms[roomId].users.find((user: any) => user.id === userId);
     if (action === 'enter') currentUser.isOnline = true;
     else currentUser.isOnline = false;
-    console.log('ВНУТРИ_СЕТ_РУМА');
   }
 }

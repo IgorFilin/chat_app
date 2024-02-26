@@ -119,7 +119,8 @@ export const useSocketStore: any = defineStore('socket_store', {
       });
 
       this.socket.on('gaming', (data) => {
-        gameStore.setGame(data);
+        console.log(data);
+        if (data.roomId === gameStore.gameRoomId) gameStore.setGame(data);
       });
     },
   },
