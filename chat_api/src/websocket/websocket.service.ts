@@ -11,6 +11,9 @@ import { Injectable } from '@nestjs/common';
 interface GameRoomsType {
   [roomId: string]: {
     games: any[];
+    dataGames: {
+      [game: string]: any;
+    };
     users: {
       id: string;
       name: string;
@@ -72,10 +75,10 @@ export class WebsocketService {
       });
     }
 
-    for (const game in this.gameRooms) {
-      const currentGame = this.gameRooms[game];
-      const currentUser = currentGame.users.find((user: any) => user.id === disconnectedClient.handshake.query.userID);
-      currentUser.isOnline = false;
+    for (const roomId in this.gameRooms) {
+      const currentRoom = this.gameRooms[roomId];
+      const currentUser = currentRoom.users.find((user: any) => user.id === disconnectedClient.handshake.query.userID);
+      if (currentUser) currentUser.isOnline = false;
     }
     // {
     //   game: 'ticTacToe',
@@ -331,6 +334,7 @@ export class WebsocketService {
         if (!this.gameRooms[gameRoomId]) {
           this.gameRooms[gameRoomId] = {
             games: [],
+            dataGames: {},
             users: [],
           };
           this.gameRooms[gameRoomId].games.push(game);
@@ -368,7 +372,6 @@ export class WebsocketService {
       }
     }
   }
-
   async gameFlow(
     game: string,
     roomId: string,
@@ -386,34 +389,26 @@ export class WebsocketService {
       // }
       switch (game) {
         case 'ticTacToe': {
+          gameRoom.dataGames[game] = gameRoom.dataGames[game] || {};
+
+          const dataCurrentGame = gameRoom.dataGames[game];
+
+          dataCurrentGame.board = dataCurrentGame.board || Array(9).fill(null);
+
           if (
             // Не пропускать нажатие на ячейку для одного и того же игрока
-            (this.stateGames[roomId] &&
-              this.stateGames[roomId][game]?.nextMovedUser &&
-              this.stateGames[roomId][game]?.nextMovedUser.id !== userId &&
-              !isClear &&
-              clickCell) ||
-            (!isClear && this.stateGames[roomId] && this.stateGames[roomId][game]?.isWinnered)
+            (dataCurrentGame?.nextMovedUser && dataCurrentGame?.nextMovedUser.id !== userId && !isClear && clickCell) ||
+            (!isClear && dataCurrentGame?.isWinnered)
           )
             return;
 
           // Если кликнуто по уже заполненой ячейки, то возврат
-          if (
-            this.stateGames[roomId] &&
-            this.stateGames[roomId][game] &&
-            clickCell &&
-            this.stateGames[roomId][game].board[clickCell.index] !== null
-          )
-            return;
-
-          this.stateGames[roomId] = this.stateGames[roomId] || {};
-          this.stateGames[roomId][game] = this.stateGames[roomId][game] || {};
-          this.stateGames[roomId][game].board = this.stateGames[roomId][game].board || Array(9).fill(null);
+          if (clickCell && dataCurrentGame.board[clickCell.index] !== null) return;
 
           const userOne = gameRoom.users[0];
           const userTwo = gameRoom.users[1];
 
-          this.stateGames[roomId][game].scores = this.stateGames[roomId][game].scores || {
+          dataCurrentGame.scores = dataCurrentGame.scores || {
             x: 0,
             o: 0,
           };
@@ -422,12 +417,12 @@ export class WebsocketService {
             [userOne?.id]: {
               name: userOne.name,
               symbol: 'x',
-              score: this.stateGames[roomId][game].scores.x,
+              score: dataCurrentGame.scores.x,
             },
             [userTwo?.id]: {
               name: userTwo.name,
               symbol: 'o',
-              score: this.stateGames[roomId][game].scores.o,
+              score: dataCurrentGame.scores.o,
             },
           };
 
@@ -449,51 +444,48 @@ export class WebsocketService {
           // если кликнута ячейка
           if (clickCell) {
             // установка ход для следующего игрока
-            const nextMoveUser = this.gameRooms[roomId].users.find(
-              (user: any) => user.id !== this.stateGames[roomId][game].nextMovedUser.id
-            );
-            this.stateGames[roomId][game].nextMovedUser = { id: nextMoveUser.id, name: nextMoveUser.name };
-            this.stateGames[roomId][game].board[clickCell.index] = clickCell.symbol;
+            const nextMoveUser = gameRoom.users.find((user: any) => user.id !== dataCurrentGame.nextMovedUser.id);
+            dataCurrentGame.nextMovedUser = { id: nextMoveUser.id, name: nextMoveUser.name };
+            dataCurrentGame.board[clickCell.index] = clickCell.symbol;
             // перебор паттернов выйгрыша
             for (const pattern of winsPatterns) {
               let isWinner = pattern.every((el, indexEl) => {
-                if (this.stateGames[roomId][game].board[el] === clickCell.symbol && indexEl === 0) {
+                if (dataCurrentGame.board[el] === clickCell.symbol && indexEl === 0) {
                   potencialWinner = clickCell.symbol;
                   return true;
                 }
                 if (indexEl > 0) {
-                  return this.stateGames[roomId][game].board[el] === potencialWinner;
+                  return dataCurrentGame.board[el] === potencialWinner;
                 }
               });
               // выйгрыш
               if (isWinner) {
                 patternWinner = pattern;
                 winner = potencialWinner;
-                this.stateGames[roomId][game].scores[winner] += 1;
-                players[userId].score = this.stateGames[roomId][game].scores[winner];
-                delete this.stateGames[roomId][game].nextMovedUser;
-                this.stateGames[roomId][game].isWinnered = true;
+                dataCurrentGame.scores[winner] += 1;
+                players[userId].score = dataCurrentGame.scores[winner];
+                delete dataCurrentGame.nextMovedUser;
+                dataCurrentGame.isWinnered = true;
                 break;
                 // если ничья
-              } else if (this.stateGames[roomId][game].board.every((cell: any) => cell !== null)) {
+              } else if (dataCurrentGame.board.every((cell: any) => cell !== null)) {
                 winner = 'ничья';
               }
             }
           }
 
           // Установка первого игрока при первом запуске
-          if (!this.stateGames[roomId][game].nextMovedUser) {
-            const nextMoveUser = this.gameRooms[roomId].users[0];
-            this.stateGames[roomId][game].nextMovedUser = { id: nextMoveUser.id, name: nextMoveUser.name };
+          if (!dataCurrentGame.nextMovedUser) {
+            const nextMoveUser = gameRoom.users[0];
+            dataCurrentGame.nextMovedUser = { id: nextMoveUser.id, name: nextMoveUser.name };
           }
-          this.stateGames[roomId][game].nextMovedUser.symbol =
-            players[this.stateGames[roomId][game].nextMovedUser.id].symbol;
+          dataCurrentGame.nextMovedUser.symbol = players[dataCurrentGame.nextMovedUser.id].symbol;
 
           // eсли нажали очистить доску
           if (isClear) {
-            this.stateGames[roomId][game].board = Array(9).fill(null);
+            dataCurrentGame.board = Array(9).fill(null);
             winner = '';
-            this.stateGames[roomId][game].isWinnered = false;
+            dataCurrentGame.isWinnered = false;
             patternWinner = [];
           }
 
@@ -504,9 +496,9 @@ export class WebsocketService {
               game,
               roomId,
               dataGame: {
-                board: this.stateGames[roomId][game].board,
+                board: dataCurrentGame.board,
                 players,
-                nextMove: this.stateGames[roomId][game].nextMovedUser,
+                nextMove: dataCurrentGame.nextMovedUser,
                 patternWinner,
                 winner,
               },
