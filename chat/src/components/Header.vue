@@ -7,7 +7,8 @@
         :text="text"
         v-show="show"
         class="v-header__navigateButton"
-        @onClick="goTo(redirect)" />
+        @onClick="goTo(redirect)"
+      />
     </div>
     <div class="v-header__nameLogoutContainer">
       <label for="download">
@@ -16,43 +17,51 @@
             class="v-header__photoUser"
             :src="store.userPhoto"
             :key="store.userPhoto"
-            alt="Аватар" />
+            alt="Аватар"
+          />
           <input
             id="download"
             @change="downloadPhoto"
             hidden
             type="file"
-            accept="image/webp,image/png" />
+            accept="image/webp,image/png"
+          />
         </div>
       </label>
       <div
         class="v-header__userName"
         @click="isOpenModal = !isOpenModal"
-        v-if="store.name">
+        v-if="store.name"
+      >
         {{ store.name }}
       </div>
       <button
         v-if="store.isAuth"
         class="v-header__navigateButton"
-        @click="onExitAccount">
+        @click="onExitAccount"
+      >
         Выход
       </button>
     </div>
   </div>
   <transition
     name="fade"
-    mode="out-in">
+    mode="out-in"
+  >
     <div
       class="v-header__modalWindow"
-      v-if="isOpenModal">
+      v-if="isOpenModal"
+    >
       <div
         class="v-header__modalItem"
-        @click="goTo(`/profile/${store.id}/`), (isOpenModal = false)">
+        @click="goTo(`/profile/${store.id}/`), (isOpenModal = false)"
+      >
         Профиль
       </div>
       <div
         class="v-header__modalItem close"
-        @click="isOpenModal = false">
+        @click="isOpenModal = false"
+      >
         Закрыть
       </div>
     </div>
@@ -91,9 +100,9 @@ const navigateButtons = ref([
     isActive: false,
   },
   {
-    text: 'Войти в игровую комнату',
-    redirect: `/games/${gameStore.gameRoomId}`,
-    show: false,
+    text: 'Игровые комнаты',
+    redirect: `/games/`,
+    show: true,
     isActive: false,
   },
 ]);
@@ -109,8 +118,8 @@ watch(
     navigateButtons.value[1].show = !store.isAuth;
     navigateButtons.value[2].show = store.isAcceptKey === false;
     if (gameStore.gameRoomId) {
-      navigateButtons.value[3].show = gameStore.gameRoomId;
-      navigateButtons.value[3].redirect = `/games/${gameStore.gameRoomId}`;
+      navigateButtons.value[3].show = true;
+      navigateButtons.value[3].redirect = `/games/`;
     }
   },
   { immediate: true }

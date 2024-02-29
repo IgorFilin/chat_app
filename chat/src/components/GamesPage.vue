@@ -1,12 +1,8 @@
 <template>
   <div class="v-games">
-    <!-- <TextTyper
-      class="v-games__title"
-      deleteSpeed="60"
-      :pauseFor="1500"
-      delay="60"
-      :text="title" /> -->
+    <GameRooms />
     <TicTacToe
+      v-if="false"
       @changeBoard="
         (index) =>
           tickTacToeHandler({
@@ -23,13 +19,12 @@
 
 <script setup lang="ts">
 import { nextTick, onBeforeMount, onMounted, onUnmounted, onUpdated, ref, watch } from 'vue';
-import TextTyper from '@/components/assetsComponent/TextTyper.vue';
 import TicTacToe from '@/components/games/TicTacToe.vue';
 import { useAuthStore } from '@/store/auth_store.ts';
 import { useSocketStore } from '@/store/socket_store.ts';
 import { useGameStore } from '@/store/game_store.ts';
-import { webSocketEntity } from '@/composable/socket.ts';
 import { useRoute } from 'vue-router';
+import GameRooms from '@/components/gameRooms.vue';
 import router from '@/router/router';
 
 const route = useRoute();
@@ -45,24 +40,20 @@ function tickTacToeHandler(payload: any) {
     ...payload,
   });
 }
-const title = ref([
-  'Добро пожаловать в игровую комнату',
-  'Тут вы можете подключиться к комнате в которую у вас есть доступ',
-]);
 
-gameStore.setRoomId(route.params.id);
+// gameStore.setCurrentRoomId(route.params.id);
 
-onMounted(() => {
-  watch(
-    [() => socketStore.socketConnected, () => gameStore.gameRoomId, () => authStore.id],
-    () => {
-      if (socketStore.socketConnected && gameStore.gameRoomId && authStore.id) {
-        socketStore.socket.emit('gameRoom', { action: 'enter', userId: authStore.id, roomId: gameStore.gameRoomId });
-      }
-    },
-    { immediate: true }
-  );
-});
+// onMounted(() => {
+//   watch(
+//     [() => socketStore.socketConnected, () => gameStore.gameRoomId, () => authStore.id],
+//     () => {
+//       if (socketStore.socketConnected && gameStore.gameRoomId && authStore.id) {
+//         socketStore.socket.emit('gameRoom', { action: 'enter', userId: authStore.id, roomId: gameStore.gameRoomId });
+//       }
+//     },
+//     { immediate: true }
+//   );
+// });
 
 // onUnmounted(() => {
 //   socketStore.socket.emit('gameRoom', { action: 'leave', userId: authStore.id, roomId: gameStore.gameRoomId });
@@ -73,7 +64,8 @@ onMounted(() => {
 .v-games {
   width: 100%;
   height: 90vh;
-  text-align: center;
+  display: flex;
+  justify-content: center;
 }
 
 .v-games__title {
