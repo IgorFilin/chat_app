@@ -11,6 +11,13 @@
           v-for="(dataGame, game) in room.games"
         >
           {{ game }}
+          <span>{{ dataGame.usersOnline + '/' + dataGame.totalUsers }}</span>
+          <span>
+            <Icon
+              id="exit"
+              color="orange"
+            />
+          </span>
         </div>
       </div>
       <div></div>
@@ -21,6 +28,7 @@
 <script setup lang="ts">
 import { nextTick, onBeforeMount, onMounted, onUnmounted, onUpdated, ref, watch } from 'vue';
 import TicTacToe from '@/components/games/TicTacToe.vue';
+import Icon from '@/components/assetsComponent/Icon.vue';
 import { useAuthStore } from '@/store/auth_store.ts';
 import { useSocketStore } from '@/store/socket_store.ts';
 import { useGameStore } from '@/store/game_store.ts';
@@ -35,27 +43,37 @@ const socketStore = useSocketStore();
 
 <style scoped lang="scss">
 .v-gameRooms {
+  width: 80%;
   display: flex;
-  justify-content: center;
-  max-width: 80%;
-  flex-wrap: wrap;
   gap: 50px;
-  padding-top: 100px;
   align-self: flex-start;
+  flex-direction: column;
+  overflow-y: scroll;
+  height: 100%;
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background-color: rgb(51, 51, 51);
+    min-height: 24px;
+    border: 3px solid rgb(245, 245, 245);
+  }
+
+  &::-webkit-scrollbar {
+    width: 0.9rem;
+  }
 }
 
 .v-gameRoom {
-  width: 200px;
   height: 150px;
   background-color: $darkBlack;
   margin: 10px;
   padding: 20px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   flex-direction: column;
   transition: transform 0.3s ease;
-  box-shadow: #0f0 0px 5px 20px 2px;
+  gap: 10px;
 
   &:hover {
     transform: translateY(-4px);
@@ -63,6 +81,7 @@ const socketStore = useSocketStore();
 }
 
 .v-gameRoom__roomName {
+  align-self: center;
   font-size: 1.5rem;
   border-bottom: 2px solid #0f0;
 }

@@ -53,6 +53,7 @@ export const authApi = {
     return authInstance.get(`user/validateCaptcha?token=${userToken}`);
   },
 };
+
 export const userApi = {
   getAllUsers() {
     return authInstance.get<Array<ResponseGetAllUsersType>>('user/users_list');

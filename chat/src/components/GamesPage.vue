@@ -74,3 +74,4 @@ function tickTacToeHandler(payload: any) {
   margin: 0 auto;
 }
 </style>
+@/components/GameRooms.vue

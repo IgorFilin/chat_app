@@ -24,9 +24,28 @@ export const useGameStore: any = defineStore('game_store', {
           games: {
             ticktac: {
               data: 'test',
+              usersOnline: 1,
+              totalUsers: 2,
             },
             МорскойБой: {
               data: 'test',
+              usersOnline: 0,
+              totalUsers: 2,
+            },
+          },
+        },
+        11231123331235123513123: {
+          roomName: 'c Валерией',
+          games: {
+            ticktac: {
+              data: 'test',
+              usersOnline: 1,
+              totalUsers: 2,
+            },
+            МорскойБой: {
+              data: 'test',
+              usersOnline: 1,
+              totalUsers: 2,
             },
           },
         },
@@ -35,6 +54,8 @@ export const useGameStore: any = defineStore('game_store', {
           games: {
             ticktac: {
               data: 'test',
+              usersOnline: 1,
+              totalUsers: 2,
             },
           },
         },
@@ -43,6 +64,8 @@ export const useGameStore: any = defineStore('game_store', {
           games: {
             ticktac: {
               data: 'test',
+              usersOnline: 1,
+              totalUsers: 2,
             },
           },
         },
@@ -51,6 +74,8 @@ export const useGameStore: any = defineStore('game_store', {
           games: {
             ticktac: {
               data: 'test',
+              usersOnline: 1,
+              totalUsers: 2,
             },
           },
         },
