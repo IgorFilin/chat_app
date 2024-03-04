@@ -10,14 +10,21 @@
           class="v-gameRoom__game"
           v-for="(dataGame, game) in room.games"
         >
-          {{ game }}
-          <span>{{ dataGame.usersOnline + '/' + dataGame.totalUsers }}</span>
-          <span>
-            <Icon
-              id="exit"
-              color="orange"
-            />
-          </span>
+          <div class="v-gameRoom__gameTitle">
+            {{ game }}
+            <span>{{ dataGame.usersOnline + '/' + dataGame.totalUsers }}</span>
+          </div>
+          <div class="v-gameRoom__buttonsGroup">
+            <Button
+                class="v-gameRooms__button"
+                @onClick="onSubmit"
+                text="Войти" />
+            |
+            <Button
+                class="v-gameRooms__button"
+                @onClick="onSubmit"
+                text="Выйти" />
+          </div>
         </div>
       </div>
       <div></div>
@@ -28,12 +35,12 @@
 <script setup lang="ts">
 import { nextTick, onBeforeMount, onMounted, onUnmounted, onUpdated, ref, watch } from 'vue';
 import TicTacToe from '@/components/games/TicTacToe.vue';
-import Icon from '@/components/assetsComponent/Icon.vue';
-import { useAuthStore } from '@/store/auth_store.ts';
-import { useSocketStore } from '@/store/socket_store.ts';
-import { useGameStore } from '@/store/game_store.ts';
+import { useAuthStore } from '@/store/auth_store';
+import { useSocketStore } from '@/store/socket_store';
+import { useGameStore } from '@/store/game_store';
 import { useRoute } from 'vue-router';
 import router from '@/router/router';
+import Button from "@/components/assetsComponent/Button.vue";
 
 const route = useRoute();
 const authStore = useAuthStore();
@@ -43,6 +50,7 @@ const socketStore = useSocketStore();
 
 <style scoped lang="scss">
 .v-gameRooms {
+  max-width: 600px;
   width: 80%;
   display: flex;
   gap: 50px;
@@ -63,6 +71,12 @@ const socketStore = useSocketStore();
   }
 }
 
+.v-gameRoom__gameTitle {
+  display: flex;
+  align-items: center;
+  gap:10px;
+}
+
 .v-gameRoom {
   height: 150px;
   background-color: $darkBlack;
@@ -73,10 +87,11 @@ const socketStore = useSocketStore();
   align-items: flex-start;
   flex-direction: column;
   transition: transform 0.3s ease;
+  box-shadow: #0f0 0px 2px 8px 2px;
   gap: 10px;
 
   &:hover {
-    transform: translateY(-4px);
+    transform: translateY(-2px);
   }
 }
 
@@ -87,6 +102,8 @@ const socketStore = useSocketStore();
 }
 
 .v-gameRoom__games {
+  align-items: center;
+  width: 100%;
   font-size: 1.3rem;
   display: flex;
   flex-direction: column;
@@ -94,11 +111,27 @@ const socketStore = useSocketStore();
 }
 
 .v-gameRoom__game {
+  display: flex;
+  justify-content: space-between;
   transition: transform 0.3s ease;
+  border: 2px solid black;
+  padding: 4px;
   cursor: pointer;
+  width: 100%;
 
   &:hover {
-    transform: scale(1.1);
+    transition: 0.1s;
+    border: 2px solid $orange;
   }
+
+  .v-icon {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.v-gameRoom__buttonsGroup {
+  align-items: center;
+  display: flex;
 }
 </style>
