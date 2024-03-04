@@ -101,7 +101,7 @@ const navigateButtons = ref([
   },
   {
     text: 'Игровые комнаты',
-    redirect: `/games/`,
+    redirect: `/gameRooms/`,
     show: true,
     isActive: false,
   },
@@ -110,20 +110,28 @@ const navigateButtons = ref([
 function goTo(route: string) {
   router.push(route);
 }
-
+console.log(router)
 watch(
-  [() => store.isAcceptKey, () => store.isAuth, () => gameStore.gameRoomId],
+  [() => store.isAcceptKey, () => store.isAuth],
   () => {
     navigateButtons.value[0].show = !store.isAuth;
     navigateButtons.value[1].show = !store.isAuth;
     navigateButtons.value[2].show = store.isAcceptKey === false;
-    if (gameStore.gameRoomId) {
-      navigateButtons.value[3].show = true;
-      navigateButtons.value[3].redirect = `/games/`;
-    }
+    navigateButtons.value[3].show = store.isAuth;
+
   },
   { immediate: true }
 );
+
+watch(() => router.currentRoute.value.fullPath, () => {
+  if(router.currentRoute.value.fullPath === '/gamesPage/'){
+    navigateButtons.value[3].text = 'В чат'
+    navigateButtons.value[3].redirect = '/'
+  } else {
+    navigateButtons.value[3].text = 'Игровые комнаты'
+    navigateButtons.value[3].redirect = '/gamesPage/'
+  }
+},{immediate:true})
 
 watch(
   () => store.currentPath,

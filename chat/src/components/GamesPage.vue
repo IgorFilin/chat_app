@@ -24,7 +24,7 @@ import { useAuthStore } from '@/store/auth_store.ts';
 import { useSocketStore } from '@/store/socket_store.ts';
 import { useGameStore } from '@/store/game_store.ts';
 import { useRoute } from 'vue-router';
-import GameRooms from '@/components/gameRooms.vue';
+import GameRooms from '@/components/GameRooms.vue';
 import router from '@/router/router';
 
 const route = useRoute();
