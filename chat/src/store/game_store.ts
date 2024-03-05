@@ -6,20 +6,37 @@ interface GameStoreType {
   gameRooms: {
     [roomId: string]: {
       games: {
-        [game: string]: any;
+        [game: string]: {
+          data: any
+          usersOnline: number
+          totalUsers: number
+        };
       };
     };
   };
 }
 
+interface RequestGameRoomType {
+  secondPlayer:string
+  roomId: string;
+  game: string;
+  dataGame: {
+    data: Object,
+    usersOnline: number,
+    totalUsers: number,
+  }
+}
+
 const toast = useToast();
+
+
 
 export const useGameStore: any = defineStore('game_store', {
   state: () => {
     return {
       currentGameRoom: '',
       gameRooms: {
-        11231231231235123513123: {
+        '11231231231235123513123': {
           roomName: 'c Алексеем',
           games: {
             ticktac: {
@@ -34,7 +51,7 @@ export const useGameStore: any = defineStore('game_store', {
             },
           },
         },
-        11231123331235123513123: {
+        '11231123331235123513123': {
           roomName: 'c Валерией',
           games: {
             ticktac: {
@@ -49,7 +66,7 @@ export const useGameStore: any = defineStore('game_store', {
             },
           },
         },
-        241242342637456756734523: {
+        '241242342637456756734523': {
           roomName: 'c Алёной',
           games: {
             ticktac: {
@@ -59,7 +76,7 @@ export const useGameStore: any = defineStore('game_store', {
             },
           },
         },
-        323434756823423423467345: {
+        '323434756823423423467345': {
           roomName: 'c Николаем',
           games: {
             ticktac: {
@@ -69,7 +86,7 @@ export const useGameStore: any = defineStore('game_store', {
             },
           },
         },
-        4776234523423263463453453: {
+        '4776234523423263463453453': {
           roomName: 'c Бобом',
           games: {
             ticktac: {
@@ -84,11 +101,21 @@ export const useGameStore: any = defineStore('game_store', {
   },
   getters: {},
   actions: {
-    setCurrentRoomId(id: string) {
+    setCurrentRoomId(id: string):void {
       this.currentGameRoom = id;
     },
-    setGame(data: { roomId: string; game: string; dataGame: Array<any> }) {
-      this.gameRooms[data.roomId].games = data.dataGame;
+    setGameRoom(requestGamePayload: RequestGameRoomType) {
+      // this.gameRooms[data.roomId].games = data.dataGame;
+      if(this.gameRooms[requestGamePayload.roomId]) return
+
+      this.gameRooms[requestGamePayload.roomId] = {
+        roomName: requestGamePayload.secondPlayer,
+        games: {
+          data: requestGamePayload.dataGame.data,
+          usersOnline: requestGamePayload.dataGame.usersOnline,
+          totalUsers: requestGamePayload.dataGame.totalUsers,
+        }
+      }
     },
   },
 });

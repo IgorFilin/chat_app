@@ -29,7 +29,7 @@
       </div>
       <div></div>
     </div>
-  </div>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -50,14 +50,15 @@ const socketStore = useSocketStore();
 
 <style scoped lang="scss">
 .v-gameRooms {
-  max-width: 600px;
-  width: 80%;
   display: flex;
-  gap: 50px;
+  width: 100%;
+  height: 90vh;
+  max-width: 600px;
+  gap: 20px;
   align-self: flex-start;
   flex-direction: column;
   overflow-y: scroll;
-  height: 100%;
+  margin: 20px auto auto auto;
 
   &::-webkit-scrollbar-thumb {
     border-radius: 8px;
@@ -72,6 +73,7 @@ const socketStore = useSocketStore();
 }
 
 .v-gameRoom__gameTitle {
+  font-size: 1.1rem;
   display: flex;
   align-items: center;
   gap:10px;
@@ -97,7 +99,7 @@ const socketStore = useSocketStore();
 
 .v-gameRoom__roomName {
   align-self: center;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   border-bottom: 2px solid #0f0;
 }
 
