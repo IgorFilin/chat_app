@@ -71,7 +71,7 @@
 <script setup lang="ts">
 import router from '@/router/router';
 import { useAuthStore } from '@/store/auth_store';
-import { onMounted, onUpdated, ref, watch } from 'vue';
+import {onMounted, onUpdated, reactive, ref, watch} from 'vue';
 import Button from '@/components/assetsComponent/Button.vue';
 import { useGameStore } from '@/store/game_store.ts';
 
@@ -100,8 +100,8 @@ const navigateButtons = ref([
     isActive: false,
   },
   {
-    text: 'Игровые комнаты',
-    redirect: `/gameRooms/`,
+    text: '',
+    redirect: ``,
     show: true,
     isActive: false,
   },
@@ -110,7 +110,7 @@ const navigateButtons = ref([
 function goTo(route: string) {
   router.push(route);
 }
-console.log(router)
+
 watch(
   [() => store.isAcceptKey, () => store.isAuth],
   () => {
@@ -123,19 +123,18 @@ watch(
   { immediate: true }
 );
 
-watch(() => router.currentRoute.value.fullPath, () => {
-  if(router.currentRoute.value.fullPath === '/gamesPage/'){
-    navigateButtons.value[3].text = 'В чат'
-    navigateButtons.value[3].redirect = '/'
-  } else {
-    navigateButtons.value[3].text = 'Игровые комнаты'
-    navigateButtons.value[3].redirect = '/gamesPage/'
-  }
-},{immediate:true})
-
 watch(
   () => store.currentPath,
-  () => setActivNavigationButton(store.currentPath),
+  () => {
+    if(store.currentPath === '/gamesPage'){
+      navigateButtons.value[3].text = 'В чат'
+      navigateButtons.value[3].redirect = '/main'
+    } else {
+      navigateButtons.value[3].text = 'Игровые комнаты'
+      navigateButtons.value[3].redirect = '/gamesPage'
+    }
+    setActiveNavigationButton(store.currentPath)
+  },
   { immediate: true }
 );
 
@@ -151,10 +150,10 @@ function downloadPhoto(event: any) {
   store.sendAvatarUser(file);
 }
 
-function setActivNavigationButton(path: string) {
-  navigateButtons.value.map((button) => {
-    button.isActive = button.redirect === path;
-  });
+function setActiveNavigationButton(path: string) {
+  navigateButtons.value.forEach((button) => {
+    button.isActive = button.redirect === path
+  })
 }
 </script>
 

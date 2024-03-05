@@ -3,7 +3,6 @@ import { authApi } from '@/api/appApi.ts';
 import router from '@/router/router';
 
 function yandexCaptcha() {
-  console.log('ya_captch');
   const widgetId = ref();
   const isInvisibleCaptcha = ref(true);
 

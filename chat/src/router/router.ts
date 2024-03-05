@@ -27,7 +27,6 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const store = useAuthStore();
   store.setPath(to.fullPath);
-
   if (!store.isAuth && to.path === '/main') {
     next({ path: '/login' });
   } else if ((!store.isAuth && to.path === '/profile') || (!store.isAuth && to.path === '/profile/:id')) {
