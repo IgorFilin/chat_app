@@ -126,12 +126,12 @@ watch(
 watch(
   () => store.currentPath,
   () => {
-    if(store.currentPath === '/gamesPage'){
+    if(store.currentPath === '/gameRooms'){
       navigateButtons.value[3].text = 'В чат'
       navigateButtons.value[3].redirect = '/main'
     } else {
       navigateButtons.value[3].text = 'Игровые комнаты'
-      navigateButtons.value[3].redirect = '/gamesPage'
+      navigateButtons.value[3].redirect = '/gameRooms'
     }
     setActiveNavigationButton(store.currentPath)
   },

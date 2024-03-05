@@ -16,7 +16,7 @@ const routes = [
   { path: '/confirm', component: ConfirmRegistration },
   { path: '/test', component: Test },
   { path: '/profile/:id', component: ProfilePage },
-  { path: '/gamesPage', component: GamesPage },
+  { path: '/gameRooms', component: GameRooms },
 ];
 
 const router = createRouter({
