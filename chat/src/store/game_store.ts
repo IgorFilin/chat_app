@@ -5,14 +5,12 @@ interface GameStoreType {
   currentGameRoom: string;
   gameRooms: {
     [roomId: string]: {
-      games: {
         [game: string]: {
           data: any
           usersOnline: number
           totalUsers: number
         };
-      };
-    };
+     };
   };
 }
 
@@ -38,65 +36,13 @@ export const useGameStore: any = defineStore('game_store', {
       gameRooms: {
         '11231231231235123513123': {
           roomName: 'c Алексеем',
-          games: {
             ticktac: {
               data: 'test',
               usersOnline: 1,
               totalUsers: 2,
             },
-            МорскойБой: {
-              data: 'test',
-              usersOnline: 0,
-              totalUsers: 2,
-            },
-          },
-        },
-        '11231123331235123513123': {
-          roomName: 'c Валерией',
-          games: {
-            ticktac: {
-              data: 'test',
-              usersOnline: 1,
-              totalUsers: 2,
-            },
-            МорскойБой: {
-              data: 'test',
-              usersOnline: 1,
-              totalUsers: 2,
-            },
-          },
-        },
-        '241242342637456756734523': {
-          roomName: 'c Алёной',
-          games: {
-            ticktac: {
-              data: 'test',
-              usersOnline: 1,
-              totalUsers: 2,
-            },
-          },
-        },
-        '323434756823423423467345': {
-          roomName: 'c Николаем',
-          games: {
-            ticktac: {
-              data: 'test',
-              usersOnline: 1,
-              totalUsers: 2,
-            },
-          },
-        },
-        '4776234523423263463453453': {
-          roomName: 'c Бобом',
-          games: {
-            ticktac: {
-              data: 'test',
-              usersOnline: 1,
-              totalUsers: 2,
-            },
-          },
-        },
-      },
+         },
+       },
     } as GameStoreType;
   },
   getters: {},
@@ -111,9 +57,11 @@ export const useGameStore: any = defineStore('game_store', {
       this.gameRooms[requestGamePayload.roomId] = {
         roomName: requestGamePayload.secondPlayer,
         games: {
-          data: requestGamePayload.dataGame.data,
-          usersOnline: requestGamePayload.dataGame.usersOnline,
-          totalUsers: requestGamePayload.dataGame.totalUsers,
+          [requestGamePayload.game]:{
+            data: requestGamePayload.dataGame.data,
+            usersOnline: requestGamePayload.dataGame.usersOnline,
+            totalUsers: requestGamePayload.dataGame.totalUsers,
+          }
         }
       }
     },

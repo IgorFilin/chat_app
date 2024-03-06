@@ -31,7 +31,6 @@ export const useSocketStore: any = defineStore('socket_store', {
     async connectSocket(userId: string) {
       const address = `${import.meta.env.VITE_APP_PROTOCOL}://${import.meta.env.VITE_APP_DOMEN_PORT}?userID=${userId}`;
       this.socket = io(address);
-      // this.socketConnected = true;
       this.socketEmits();
     },
     setConnectionSocket(value: boolean) {
@@ -114,7 +113,8 @@ export const useSocketStore: any = defineStore('socket_store', {
         }
 
         if (data.gameRoom) {
-          gameStore.setRoomId(data.gameRoom.id);
+          gameStore.setCurrentRoomId(data.gameRoom.id);
+          gameStore.setGameRoom({roomId:data.gameRoom.id})
         }
       });
 

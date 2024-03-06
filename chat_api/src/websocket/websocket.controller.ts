@@ -37,7 +37,7 @@ export class WebsocketController implements OnGatewayConnection {
 
   @SubscribeMessage('gameRoom')
   async gameRoom(@MessageBody() body: any) {
-    await this.WebsocketService.gameRoom(body.action, body.userId, body.roomId);
+    await this.WebsocketService.gameRoom(body.action, body.userId, body.roomId, body.game);
   }
 
   @SubscribeMessage('gaming')

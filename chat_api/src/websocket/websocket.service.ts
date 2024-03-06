@@ -17,7 +17,7 @@ interface GameRoomsType {
     users: {
       id: string;
       name: string;
-      isOnline: boolean;
+      isOnlineGame: string
     }[];
   };
 }
@@ -78,7 +78,7 @@ export class WebsocketService {
     for (const roomId in this.gameRooms) {
       const currentRoom = this.gameRooms[roomId];
       const currentUser = currentRoom.users.find((user: any) => user.id === disconnectedClient.handshake.query.userID);
-      if (currentUser) currentUser.isOnline = false;
+      if (currentUser) currentUser.isOnlineGame = '';
     }
     // {
     //   game: 'ticTacToe',
@@ -303,8 +303,6 @@ export class WebsocketService {
   async inviteGameUser(myId: string, userId: string, game: string, isAccept: boolean | undefined) {
     const you = this.clients[myId];
     const user = this.clients[userId];
-    you.isOnline = false;
-    user.isOnline = false;
 
     const sendInvite = {
       game,
@@ -363,7 +361,7 @@ export class WebsocketService {
           const tempPushedUser = {
             id: client.id,
             name: client.name,
-            isOnline: false,
+            isOnlineGame: ''
           };
           this.gameRooms[gameRoomId].users = this.gameRooms[gameRoomId].users || [];
           this.gameRooms[gameRoomId].users.push(tempPushedUser);
@@ -490,7 +488,7 @@ export class WebsocketService {
           }
 
           // Передача пользователям этой комнаты игровых данных
-          for (const { id, isOnline, name } of gameRoom.users) {
+          for (const { id, isOnlineGame, name } of gameRoom.users) {
             // if (!isOnline) continue;
             this.clients[id].client.emit('gaming', {
               game,
@@ -512,9 +510,10 @@ export class WebsocketService {
     }
   }
 
-  async gameRoom(action: 'enter' | 'leave', userId: string, roomId: string) {
+  async gameRoom(action: 'enter' | 'leave', userId: string, roomId: string, game: string) {
     const currentUser = this.gameRooms[roomId].users.find((user: any) => user.id === userId);
-    if (action === 'enter') currentUser.isOnline = true;
-    else currentUser.isOnline = false;
+    if (action === 'enter') currentUser.isOnlineGame = game;
+    else currentUser.isOnlineGame = '';
+    console.log(currentUser)
   }
 }
