@@ -40,14 +40,14 @@ export const useGameStore: any = defineStore('game_store', {
       gameRooms: [],
     } as GameStoreType;
   },
-  getters: {},
-  // interface GameRoom {
-  //   [game: string]: {
-  //     data: any;
-  //     usersOnline: number;
-  //     totalUsers: number;
-  //   };
-  // }
+  getters: {
+    getTicTacToe(state) {
+      const currentRoom = state.gameRooms.find((room) => room.id === state.currentGameRoom);
+      if (currentRoom) {
+        return currentRoom.games.find((game) => game.game === 'ticTacToe');
+      }
+    },
+  },
   actions: {
     setCurrentRoomId(id: string): void {
       this.currentGameRoom = id;
@@ -67,6 +67,13 @@ export const useGameStore: any = defineStore('game_store', {
       };
       this.gameRooms.push(newRoom);
       console.log(this.gameRooms);
+    },
+    setDataGame(data: any) {
+      const currentRoom = this.gameRooms.find((room) => room.id === data.roomId);
+      const currentGame = currentRoom?.games.find((game) => game.game === data.game);
+      if (currentGame) {
+        currentGame.data = data.dataGame;
+      }
     },
   },
 });

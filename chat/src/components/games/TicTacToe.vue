@@ -1,5 +1,8 @@
 <template>
   <div class="v-ticTacToe">
+    <!-- <pre>
+      {{ gameStore.getTicTacToe?.data }}
+    </pre> -->
     <Button
       @onClick="onLeaveGameRoom"
       text="Выйти из комнаты"
@@ -9,11 +12,11 @@
     />
     <div class="v-ticTacToe__board">
       <div
-        v-for="(cell, index) in gameStore.games['ticTacToe']?.board"
+        v-for="(cell, index) in gameStore.getTicTacToe?.data?.board"
         @click.prevent.stop="onClickCell(index)"
         :key="index"
         :class="[
-          { winner: gameStore.games['ticTacToe']?.patternWinner.includes(index) },
+          { winner: gameStore.getTicTacToe?.data?.patternWinner.includes(index) },
           ,
           { cross: cell === 'x' },
           { circle: cell === 'o' },
@@ -22,26 +25,26 @@
       />
     </div>
     <div
-      v-if="!gameStore.games['ticTacToe']?.winner"
+      v-if="!gameStore.getTicTacToe?.data?.winner"
       class="v-ticTacToe__nextMove"
     >
       Следующий ход за
       <span>
-        {{ gameStore.games['ticTacToe']?.nextMove.name + `( ${gameStore.games['ticTacToe']?.nextMove.symbol} )` }}
+        {{ gameStore.getTicTacToe?.data?.nextMove?.name + `( ${gameStore.getTicTacToe?.data?.nextMove?.symbol} )` }}
       </span>
     </div>
     <div class="v-ticTacToe__scored">
       <div>Статистика:</div>
-      <div v-for="stats in gameStore.games['ticTacToe']?.players">
+      <div v-for="stats in gameStore.getTicTacToe?.data?.players">
         <span class="">{{ stats.name }}:</span>
         <span>{{ ' ' + stats.score }}</span>
       </div>
     </div>
     <div
       class="v-ticTacToe__winner"
-      v-if="gameStore.games['ticTacToe']?.winner"
+      v-if="gameStore.getTicTacToe?.data?.winner"
     >
-      <span>Выйграл: {{ gameStore.games['ticTacToe']?.winner }}</span>
+      <span>Выйграл: {{ gameStore.getTicTacToe?.data?.winner }}</span>
       <Button
         @onClick.stop="onClearBoard"
         text="Сбросить доску"
@@ -56,7 +59,7 @@ import Button from '@/components/assetsComponent/Button.vue';
 import router from '@/router/router';
 import { useSocketStore } from '@/store/socket_store.ts';
 import { useAuthStore } from '@/store/auth_store.ts';
-import { nextTick, onMounted, watch } from 'vue';
+import { nextTick, onMounted, onUnmounted, watch } from 'vue';
 
 const emit = defineEmits(['changeBoard', 'clearBoard']);
 
@@ -77,20 +80,25 @@ function onClearBoard() {
 }
 
 onMounted(() => {
+  console.log('MOUNTED');
   watch(
-    [() => socketStore.socketConnected, () => gameStore.gameRoomId, () => authStore.id],
+    [() => socketStore.socketConnected, () => gameStore.currentGameRoom, () => authStore.id],
     () => {
-      if (socketStore.socketConnected && gameStore.gameRoomId && authStore.id) {
-        socketStore.socket.emit('gaming', { game: 'ticTacToe', roomId: gameStore.gameRoomId, userId: authStore.id });
+      if (socketStore.socketConnected && gameStore.currentGameRoom && authStore.id) {
+        socketStore.socket.emit('gaming', {
+          game: 'ticTacToe',
+          roomId: gameStore.currentGameRoom,
+          userId: authStore.id,
+        });
       }
     },
     { immediate: true }
   );
 });
 
-// onUnmounted(() => {
-//   socketStore.socket.emit('gameRoom', { action: 'leave', userId: authStore.id, roomId: gameStore.gameRoomId });
-// });
+onUnmounted(() => {
+  socketStore.socket.emit('gameRoom', { action: 'leave', userId: authStore.id, roomId: gameStore.gameRoomId });
+});
 </script>
 
 <style scoped lang="scss">

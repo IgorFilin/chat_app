@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { useToast } from 'vue-toastification';
 import { io } from 'socket.io-client';
 import { useGameStore } from '@/store/game_store.ts';
+import router from '@/router/router';
 interface SocketStoreType {
   socket: any;
   socketConnected: boolean;
@@ -121,7 +122,11 @@ export const useSocketStore: any = defineStore('socket_store', {
 
       this.socket.on('gaming', (data: any) => {
         console.log(data);
-        // if (data.roomId === gameStore.gameRoomId) gameStore.setGame(data);
+        if (data.roomId === gameStore.currentGameRoom) gameStore.setDataGame(data);
+      });
+
+      this.socket.on('actionGameRoom', (data: any) => {
+        router.push(`/games/${data.roomId}`);
       });
     },
   },

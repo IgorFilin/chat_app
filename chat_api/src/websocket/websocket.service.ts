@@ -517,6 +517,6 @@ export class WebsocketService {
     const currentUser = this.gameRooms[roomId].users.find((user: any) => user.id === userId);
     if (action === 'enter') currentUser.isOnlineGame = game;
     else currentUser.isOnlineGame = '';
-    console.log(currentUser);
+    this.clients[userId].client.emit('actionGameRoom', { game, action, roomId });
   }
 }

@@ -1,14 +1,12 @@
 <template>
   <div class="v-games">
-    <GameRooms />
     <TicTacToe
-      v-if="false"
       @changeBoard="
         (index) =>
           tickTacToeHandler({
             clickCell: {
               index,
-              symbol: gameStore.games['ticTacToe'].players[authStore.id].symbol,
+              symbol: gameStore.getTicTacToe?.data?.nextMove?.symbol,
             },
           })
       "
@@ -36,7 +34,7 @@ function tickTacToeHandler(payload: any) {
   socketStore.socket.emit('gaming', {
     game: 'ticTacToe',
     userId: authStore.id,
-    roomId: gameStore.gameRoomId,
+    roomId: gameStore.currentGameRoom,
     ...payload,
   });
 }
@@ -45,10 +43,15 @@ function tickTacToeHandler(payload: any) {
 
 // onMounted(() => {
 //   watch(
-//     [() => socketStore.socketConnected, () => gameStore.gameRoomId, () => authStore.id],
+//     [() => socketStore.socketConnected, () => gameStore.currentGameRoom, () => authStore.id],
 //     () => {
-//       if (socketStore.socketConnected && gameStore.gameRoomId && authStore.id) {
-//         socketStore.socket.emit('gameRoom', { action: 'enter', userId: authStore.id, roomId: gameStore.gameRoomId });
+//       if (socketStore.socketConnected && gameStore.currentGameRoom && authStore.id) {
+//         socketStore.socket.emit('gameRoom', {
+//           action: 'enter',
+//           userId: authStore.id,
+//           roomId: gameStore.currentGameRoom,
+//           game: 'ticTacToe',
+//         });
 //       }
 //     },
 //     { immediate: true }
@@ -56,7 +59,12 @@ function tickTacToeHandler(payload: any) {
 // });
 
 // onUnmounted(() => {
-//   socketStore.socket.emit('gameRoom', { action: 'leave', userId: authStore.id, roomId: gameStore.gameRoomId });
+//   socketStore.socket.emit('gameRoom', {
+//     action: 'leave',
+//     userId: authStore.id,
+//     roomId: gameStore.currentGameRoom,
+//     game: 'ticTacToe',
+//   });
 // });
 </script>
 
