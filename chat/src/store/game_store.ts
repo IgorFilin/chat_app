@@ -1,69 +1,72 @@
 import { defineStore } from 'pinia';
 import { useToast } from 'vue-toastification';
 
+interface GameRoom {
+  id: string;
+  roomWithPlayer: string;
+  games: {
+    usersOnline: number;
+    totalUsers: number;
+    data: Array<any>;
+    game: string;
+  }[];
+}
+
 interface GameStoreType {
   currentGameRoom: string;
-  gameRooms: {
-    [roomId: string]: {
-        [game: string]: {
-          data: any
-          usersOnline: number
-          totalUsers: number
-        };
-     };
-  };
+  gameRooms: GameRoom[];
 }
 
 interface RequestGameRoomType {
-  secondPlayer:string
-  roomId: string;
   game: string;
-  dataGame: {
-    data: Object,
-    usersOnline: number,
-    totalUsers: number,
-  }
+  gameRoom: {
+    roomWithPlayer: string;
+    game: string;
+    id: string;
+    totalUsers: number;
+    usersOnline: number;
+  };
+  inviteGame: string;
+  sendInviteUserId: string;
+  userSendedInvite: string;
 }
 
 const toast = useToast();
-
-
 
 export const useGameStore: any = defineStore('game_store', {
   state: () => {
     return {
       currentGameRoom: '',
-      gameRooms: {
-        '11231231231235123513123': {
-          roomName: 'c Алексеем',
-            ticktac: {
-              data: 'test',
-              usersOnline: 1,
-              totalUsers: 2,
-            },
-         },
-       },
+      gameRooms: [],
     } as GameStoreType;
   },
   getters: {},
+  // interface GameRoom {
+  //   [game: string]: {
+  //     data: any;
+  //     usersOnline: number;
+  //     totalUsers: number;
+  //   };
+  // }
   actions: {
-    setCurrentRoomId(id: string):void {
+    setCurrentRoomId(id: string): void {
       this.currentGameRoom = id;
     },
-    setGameRoom(requestGamePayload: RequestGameRoomType) {
-      // this.gameRooms[data.roomId].games = data.dataGame;
-      if(this.gameRooms[requestGamePayload.roomId]) return
-
-      this.gameRooms[requestGamePayload.roomId] = {
-        roomName: requestGamePayload.secondPlayer,
-        games: {
-          [requestGamePayload.game]:{
-            data: requestGamePayload.dataGame.data,
-            usersOnline: requestGamePayload.dataGame.usersOnline,
-            totalUsers: requestGamePayload.dataGame.totalUsers,
-          }
-        }
-      }
+    setGameRoom(data: RequestGameRoomType) {
+      const newRoom = {
+        id: data.gameRoom.id,
+        roomWithPlayer: data.gameRoom.roomWithPlayer,
+        games: [
+          {
+            usersOnline: data.gameRoom.usersOnline,
+            totalUsers: data.gameRoom.totalUsers,
+            data: [],
+            game: data.gameRoom.game,
+          },
+        ],
+      };
+      this.gameRooms.push(newRoom);
+      console.log(this.gameRooms);
     },
   },
 });

@@ -94,7 +94,7 @@ export const useSocketStore: any = defineStore('socket_store', {
         }
       });
 
-      this.socket.on('inviteGame', (data) => {
+      this.socket.on('inviteGame', (data: any) => {
         if (data.isInvite) {
           const TypeNameGames = {
             ticTacToe: 'Крестики нолики',
@@ -113,14 +113,15 @@ export const useSocketStore: any = defineStore('socket_store', {
         }
 
         if (data.gameRoom) {
+          console.log('DEBUG', data);
           gameStore.setCurrentRoomId(data.gameRoom.id);
-          gameStore.setGameRoom({roomId:data.gameRoom.id})
+          gameStore.setGameRoom(data);
         }
       });
 
-      this.socket.on('gaming', (data) => {
+      this.socket.on('gaming', (data: any) => {
         console.log(data);
-        if (data.roomId === gameStore.gameRoomId) gameStore.setGame(data);
+        // if (data.roomId === gameStore.gameRoomId) gameStore.setGame(data);
       });
     },
   },

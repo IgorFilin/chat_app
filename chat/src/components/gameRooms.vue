@@ -1,35 +1,38 @@
 <template>
   <div class="v-gameRooms">
+    {{ gameStore.gameRooms }}
     <div
       v-for="(room, index) in gameStore.gameRooms"
       class="v-gameRoom"
     >
-      <div class="v-gameRoom__roomName">{{ room.roomName }}</div>
+      <div class="v-gameRoom__roomName">Комната с {{ room.roomWithPlayer }}</div>
       <div class="v-gameRoom__games">
         <div
           class="v-gameRoom__game"
-          v-for="(dataGame, game) in room.games"
+          v-for="{ game, totalUsers, usersOnline } in room.games"
         >
           <div class="v-gameRoom__gameTitle">
             {{ game }}
-            <span>{{ dataGame.usersOnline + '/' + dataGame.totalUsers }}</span>
+            <span>{{ `${usersOnline}/${totalUsers}` }}</span>
           </div>
           <div class="v-gameRoom__buttonsGroup">
             <Button
-                class="v-gameRooms__button"
-                @onClick="onSubmit"
-                text="Войти" />
+              class="v-gameRooms__button"
+              @onClick="onEnterRoomHandler(game)"
+              text="Войти"
+            />
             |
             <Button
-                class="v-gameRooms__button"
-                @onClick="onSubmit"
-                text="Выйти" />
+              class="v-gameRooms__button"
+              @onClick="onLeaveRoomHandler(game)"
+              text="Выйти"
+            />
           </div>
         </div>
       </div>
       <div></div>
     </div>
-    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -40,12 +43,30 @@ import { useSocketStore } from '@/store/socket_store';
 import { useGameStore } from '@/store/game_store';
 import { useRoute } from 'vue-router';
 import router from '@/router/router';
-import Button from "@/components/assetsComponent/Button.vue";
+import Button from '@/components/assetsComponent/Button.vue';
 
 const route = useRoute();
 const authStore = useAuthStore();
 const gameStore = useGameStore();
 const socketStore = useSocketStore();
+
+function onEnterRoomHandler(game: string) {
+  socketStore.socket.emit('gameRoom', {
+    action: 'enter',
+    userId: authStore.id,
+    roomId: gameStore.currentGameRoom,
+    game,
+  });
+}
+
+function onLeaveRoomHandler(game: string) {
+  socketStore.socket.emit('gameRoom', {
+    action: 'leave',
+    userId: authStore.id,
+    roomId: gameStore.currentGameRoom,
+    game,
+  });
+}
 </script>
 
 <style scoped lang="scss">
@@ -76,7 +97,7 @@ const socketStore = useSocketStore();
   font-size: 1.1rem;
   display: flex;
   align-items: center;
-  gap:10px;
+  gap: 10px;
 }
 
 .v-gameRoom {

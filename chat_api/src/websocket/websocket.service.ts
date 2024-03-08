@@ -17,7 +17,7 @@ interface GameRoomsType {
     users: {
       id: string;
       name: string;
-      isOnlineGame: string
+      isOnlineGame: string;
     }[];
   };
 }
@@ -343,17 +343,20 @@ export class WebsocketService {
         const currentRoom = {
           game,
           id: gameRoomId,
+          roomWithPlayer: '',
+          usersOnline: 0,
+          totalUsers: 2,
         };
 
         you.client.emit('inviteGame', {
-          ...sendInvite,
-          gameRoom: currentRoom,
+          userSendedInvite: sendInvite.userSendedInvite,
+          gameRoom: { ...currentRoom, roomWithPlayer: user.name },
         });
 
         user.client.emit('inviteGame', {
           userSendedInvite: sendInvite.userSendedInvite,
           isAccept,
-          gameRoom: currentRoom,
+          gameRoom: { ...currentRoom, roomWithPlayer: you.name },
         });
 
         // При инвайте добавляет только id и name от пользователей
@@ -361,7 +364,7 @@ export class WebsocketService {
           const tempPushedUser = {
             id: client.id,
             name: client.name,
-            isOnlineGame: ''
+            isOnlineGame: '',
           };
           this.gameRooms[gameRoomId].users = this.gameRooms[gameRoomId].users || [];
           this.gameRooms[gameRoomId].users.push(tempPushedUser);
@@ -514,6 +517,6 @@ export class WebsocketService {
     const currentUser = this.gameRooms[roomId].users.find((user: any) => user.id === userId);
     if (action === 'enter') currentUser.isOnlineGame = game;
     else currentUser.isOnlineGame = '';
-    console.log(currentUser)
+    console.log(currentUser);
   }
 }
