@@ -121,7 +121,6 @@ export const useSocketStore: any = defineStore('socket_store', {
       });
 
       this.socket.on('gaming', (data: any) => {
-        console.log(data);
         if (data.roomId === gameStore.currentGameRoom) gameStore.setDataGame(data);
       });
 

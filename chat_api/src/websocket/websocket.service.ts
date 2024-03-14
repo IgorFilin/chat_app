@@ -14,6 +14,7 @@ interface GameRoomsType {
     dataGames: {
       [game: string]: any;
     };
+    roomWithPlayer: string;
     users: {
       id: string;
       name: string;
@@ -110,6 +111,7 @@ export class WebsocketService {
     const user = await this.UserTable.findOneBy({
       id: userId,
     });
+
     // Если пользака нет в обьекте клиентов веб сокетов, то добавляем его туда
     if (!this.clients[userId]) {
       this.clients[userId] = {
@@ -148,6 +150,23 @@ export class WebsocketService {
         lengthMessages: this.messages.length,
       });
     }
+
+    const rooms = [];
+
+    for (let i = 0; i < Object.values(this.gameRooms).length; i++) {
+      let room = Object.values(this.gameRooms)[i];
+      if (room.users.some((user: any) => (user.id = client.id))) {
+        let pushedRoom = {
+          gameRoom: {
+            id: Object.keys(this.gameRooms)[i],
+            ...room,
+          },
+        };
+        rooms.push(pushedRoom);
+      }
+    }
+    console.log(rooms);
+    // client.emit()
 
     return { sendClients };
   }
@@ -334,10 +353,12 @@ export class WebsocketService {
             games: [],
             dataGames: {},
             users: [],
+            roomWithPlayer: user.name,
           };
-          this.gameRooms[gameRoomId].games.push(game);
-        } else if (!this.gameRooms[gameRoomId].games.includes(game)) {
-          this.gameRooms[gameRoomId].games.push(game);
+        }
+
+        if (!this.gameRooms[gameRoomId].games.some((currentGame: any) => currentGame === game)) {
+          this.gameRooms[gameRoomId].games.push({ game, usersOnline: 0, totalUsers: 2 });
         }
 
         const currentRoom = {
@@ -373,6 +394,7 @@ export class WebsocketService {
       }
     }
   }
+
   async gameFlow(
     game: string,
     roomId: string,

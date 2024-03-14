@@ -66,7 +66,6 @@ export const useGameStore: any = defineStore('game_store', {
         ],
       };
       this.gameRooms.push(newRoom);
-      console.log(this.gameRooms);
     },
     setDataGame(data: any) {
       const currentRoom = this.gameRooms.find((room) => room.id === data.roomId);
