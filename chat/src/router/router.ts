@@ -5,6 +5,7 @@ import MainPage from '@/components/MainPage.vue';
 import ConfirmRegistration from '@/components/ConfirmRegistration.vue';
 import ProfilePage from '@/components/ProfilePage/ProfilePage.vue';
 import GamesPage from '@/components/GamesPage.vue';
+import MusicPage from '@/components/MusicPage.vue';
 import Test from '@/components/Test.vue';
 import GameRooms from '@/components/GameRooms.vue';
 import { useAuthStore } from '@/store/auth_store';
@@ -18,6 +19,7 @@ const routes = [
   { path: '/profile/:id', component: ProfilePage },
   { path: '/gameRooms', component: GameRooms },
   { path: '/games/:id', component: GamesPage },
+  { path: '/music', component: MusicPage },
 ];
 
 const router = createRouter({

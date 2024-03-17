@@ -71,7 +71,7 @@
 <script setup lang="ts">
 import router from '@/router/router';
 import { useAuthStore } from '@/store/auth_store';
-import {onMounted, onUpdated, reactive, ref, watch} from 'vue';
+import { onMounted, onUpdated, reactive, ref, watch } from 'vue';
 import Button from '@/components/assetsComponent/Button.vue';
 import { useGameStore } from '@/store/game_store.ts';
 
@@ -105,6 +105,12 @@ const navigateButtons = ref([
     show: true,
     isActive: false,
   },
+  {
+    text: 'Музыка',
+    redirect: '/music',
+    show: true,
+    isActive: false,
+  },
 ]);
 
 function goTo(route: string) {
@@ -118,7 +124,7 @@ watch(
     navigateButtons.value[1].show = !store.isAuth;
     navigateButtons.value[2].show = store.isAcceptKey === false;
     navigateButtons.value[3].show = store.isAuth;
-
+    navigateButtons.value[4].show = store.isAuth;
   },
   { immediate: true }
 );
@@ -126,14 +132,14 @@ watch(
 watch(
   () => store.currentPath,
   () => {
-    if(store.currentPath === '/gameRooms'){
-      navigateButtons.value[3].text = 'В чат'
-      navigateButtons.value[3].redirect = '/main'
+    if (store.currentPath === '/gameRooms') {
+      navigateButtons.value[3].text = 'В чат';
+      navigateButtons.value[3].redirect = '/main';
     } else {
-      navigateButtons.value[3].text = 'Игровые комнаты'
-      navigateButtons.value[3].redirect = '/gameRooms'
+      navigateButtons.value[3].text = 'Игровые комнаты';
+      navigateButtons.value[3].redirect = '/gameRooms';
     }
-    setActiveNavigationButton(store.currentPath)
+    setActiveNavigationButton(store.currentPath);
   },
   { immediate: true }
 );
@@ -152,8 +158,8 @@ function downloadPhoto(event: any) {
 
 function setActiveNavigationButton(path: string) {
   navigateButtons.value.forEach((button) => {
-    button.isActive = button.redirect === path
-  })
+    button.isActive = button.redirect === path;
+  });
 }
 </script>
 
