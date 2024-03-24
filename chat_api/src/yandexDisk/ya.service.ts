@@ -1,9 +1,8 @@
 import { HttpService } from '@nestjs/axios';
 import { catchError, firstValueFrom } from 'rxjs';
-import { AxiosError } from 'axios';
+import axios, { AxiosError } from 'axios';
 import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
-
 @Injectable()
 export class YandexDiskConnectorService {
   constructor(private readonly httpService: HttpService, private readonly configService: ConfigService) {}
@@ -37,6 +36,6 @@ export class YandexDiskConnectorService {
           })
         )
     );
-    return data;
+    return data.items.map((el: any) => ({ name: el.name, file: el.file }));
   }
 }

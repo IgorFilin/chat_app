@@ -19,8 +19,8 @@ export const useYandexStore: any = defineStore('music_store', {
   actions: {
     async getMusicYaDisk() {
       try {
-        const response = yandexDiskApi.getRecource('test');
-        console.log(response);
+        const result = await yandexDiskApi.getRecource('test');
+        this.music = result.data;
       } catch (error) {
       } finally {
       }

@@ -3,3 +3,9 @@
     @content;
   }
 }
+
+@mixin tablets {
+  @media screen and (max-width: 1124px) {
+    @content;
+  }
+}
