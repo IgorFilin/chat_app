@@ -22,15 +22,27 @@
         </audio>
       </div>
     </div>
+    <div class="v-music__paginations">
+      <div
+        class="v-music__pagination"
+        :class="{ active: isActive }"
+        v-for="(isActive, index) in pagination"
+        @click="onClickPaginationHandler(index + 1)"
+      >
+        {{ index + 1 }}
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { compile, computed, onMounted, ref, watch } from 'vue';
 import { useYandexStore } from '@/store/yandex_store.ts';
 
 const yaStore = useYandexStore();
 const audioContainer = ref();
+const currentPage = ref();
+const pagination = ref([]) as any;
 
 function onChangeHandler(idTrack: number) {
   const tracks = audioContainer.value.querySelectorAll('audio');
@@ -40,6 +52,31 @@ function onChangeHandler(idTrack: number) {
       audio.currentTime = 0;
     }
   });
+}
+
+watch(
+  () => yaStore.music,
+  () => {
+    pagination.value = new Array(Math.ceil(yaStore.music.length / 5)).fill(false);
+    if (!currentPage.value) currentPage.value = 1;
+  }
+);
+
+const currentPagination = computed(() => {});
+
+watch(
+  () => currentPage.value,
+  () => {
+    console.log('1', pagination.value);
+    pagination.value = pagination.value.map((el: any, index: any) => {
+      if (index + 1 === currentPage.value) return true;
+      else return false;
+    });
+  }
+);
+
+function onClickPaginationHandler(index: number) {
+  console.log(index);
 }
 
 onMounted(() => {
@@ -73,6 +110,19 @@ onMounted(() => {
 
   &::-webkit-scrollbar {
     width: 0.9rem;
+  }
+}
+
+.v-music__paginations {
+  display: flex;
+  gap: 10px;
+}
+
+.v-music__pagination {
+  cursor: pointer;
+
+  &.active {
+    color: white;
   }
 }
 
