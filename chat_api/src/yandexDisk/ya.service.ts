@@ -3,6 +3,13 @@ import { catchError, firstValueFrom } from 'rxjs';
 import axios, { AxiosError } from 'axios';
 import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
+
+interface QueryGetFilesType {
+  media_type?: string;
+  fields?: string;
+  limit?: string;
+  offset?: string;
+}
 @Injectable()
 export class YandexDiskConnectorService {
   constructor(private readonly httpService: HttpService, private readonly configService: ConfigService) {}
@@ -13,18 +20,11 @@ export class YandexDiskConnectorService {
     Authorization: `OAuth ${this.yaKey}`,
   };
 
-  async connectionYaDisk(media_type: string = 'audio', fields: string, limit: string, offset: string) {
-    const queryObj = {
-      media_type,
-      fields,
-      limit,
-      offset,
-    };
+  async connectionYaDisk(queryObj: QueryGetFilesType | any) {
     for (const key in queryObj) {
       if (!queryObj[key]) delete queryObj[key];
     }
     const queryParams = new URLSearchParams(queryObj);
-    console.log(queryParams.toString());
     const { data } = await firstValueFrom(
       this.httpService
         .get(`https://cloud-api.yandex.net/v1/disk/resources/files?${queryParams.toString()}`, {

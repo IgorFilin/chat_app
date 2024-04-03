@@ -67,7 +67,8 @@ export const geolocationDataUser = {
 };
 
 export const yandexDiskApi = {
-  getRecource(resource: string) {
-    return mainInstance.get(`ya_disk/get_resourse/`);
+  getRecource(queryObj: any) {
+    console.log(queryObj);
+    return mainInstance.get(`ya_disk/get_resourse/`, { params: queryObj });
   },
 };

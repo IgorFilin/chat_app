@@ -25,11 +25,12 @@
     <div class="v-music__paginations">
       <div
         class="v-music__pagination"
-        :class="{ active: isActive }"
-        v-for="(isActive, index) in pagination"
-        @click="onClickPaginationHandler(index + 1)"
+        :class="{ active: currentPage === num }"
+        v-for="(num, index) in pagination"
+        key="index"
+        @click="onClickPaginationHandler(num)"
       >
-        {{ index + 1 }}
+        {{ num }}
       </div>
     </div>
   </div>
@@ -57,7 +58,8 @@ function onChangeHandler(idTrack: number) {
 watch(
   () => yaStore.music,
   () => {
-    pagination.value = new Array(Math.ceil(yaStore.music.length / 5)).fill(false);
+    const allPages = Math.ceil(yaStore.music.length / 5);
+    pagination.value = Array.from({ length: allPages }, (el, i) => i + 1);
     if (!currentPage.value) currentPage.value = 1;
   }
 );
@@ -67,20 +69,16 @@ const currentPagination = computed(() => {});
 watch(
   () => currentPage.value,
   () => {
-    console.log('1', pagination.value);
-    pagination.value = pagination.value.map((el: any, index: any) => {
-      if (index + 1 === currentPage.value) return true;
-      else return false;
-    });
+    console.log('check');
   }
 );
 
 function onClickPaginationHandler(index: number) {
-  console.log(index);
+  currentPage.value = index;
 }
 
 onMounted(() => {
-  yaStore.getMusicYaDisk();
+  yaStore.getMusicYaDisk({ limit: 3 });
 });
 </script>
 
