@@ -66,17 +66,36 @@
       </div>
     </div>
   </transition>
+  <div
+    class="v-header__musicPlayer"
+    :key="yaStore.isPlayedTrack"
+    v-if="yaStore.isPlayedTrack !== null"
+  >
+    <audio
+      class="v-header__audio"
+      controls
+      @play="onChangePlayedHandler(true)"
+      @pause="onChangePlayedHandler(false)"
+      autoplay
+    >
+      <source
+        :src="yaStore.isPlayedTrack"
+        type="audio/mpeg"
+      />
+      Ваш браузер не поддерживает аудиоэлемент.
+    </audio>
+  </div>
 </template>
 
 <script setup lang="ts">
 import router from '@/router/router';
 import { useAuthStore } from '@/store/auth_store';
-import { onMounted, onUpdated, reactive, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import Button from '@/components/assetsComponent/Button.vue';
-import { useGameStore } from '@/store/game_store.ts';
+import { useYandexStore } from '@/store/yandex_store.ts';
 
 const store = useAuthStore();
-const gameStore = useGameStore();
+const yaStore = useYandexStore();
 
 const isOpenModal = ref(false);
 
@@ -161,6 +180,10 @@ function setActiveNavigationButton(path: string) {
     button.isActive = button.redirect === path;
   });
 }
+
+function onChangePlayedHandler(isPlayed: boolean) {
+  yaStore.setIsPlay(isPlayed);
+}
 </script>
 
 <style scoped lang="scss">
@@ -211,6 +234,41 @@ function setActiveNavigationButton(path: string) {
     opacity: 0.8;
   }
 }
+
+.v-header__audio {
+  &::-webkit-media-controls-panel {
+    background-color: $skyBlue;
+    border-radius: 0;
+    outline: none;
+  }
+
+  &::-webkit-media-controls-play-button {
+    color: $darkBlue;
+  }
+
+  &::-webkit-media-controls-enclosure {
+    border-radius: 0;
+  }
+
+  &::-webkit-media-controls-current-time-display {
+    color: $darkBlue;
+  }
+
+  &::-webkit-media-controls-time-remaining-display {
+    color: $darkBlue;
+  }
+
+  &::-webkit-media-controls-volume-slider {
+    color: $darkBlue;
+  }
+}
+
+.v-header__musicPlayer {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+
 .v-header__userName {
   align-self: center;
   cursor: pointer;

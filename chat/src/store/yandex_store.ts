@@ -2,28 +2,39 @@ import { yandexDiskApi } from '@/api/appApi';
 import { defineStore } from 'pinia';
 
 interface MusicType {
-  music: Array<any>;
+  tracks: Array<any>;
+  isPlayedTrack: any;
+  isPlayed: boolean;
 }
 
 export const useYandexStore: any = defineStore('music_store', {
   state: () => {
     return {
-      music: [],
+      isPlayedTrack: null,
+      tracks: [],
+      isPlayed: false,
     } as MusicType;
   },
   getters: {
     getPath(state) {
-      return state.music;
+      return state.tracks;
     },
   },
   actions: {
     async getMusicYaDisk(queryObj: any = {}) {
       try {
         const result = await yandexDiskApi.getRecource(queryObj);
-        this.music = result.data;
+        this.tracks = result.data;
       } catch (error) {
       } finally {
       }
+    },
+    setPlayedTrack(pathFile: number) {
+      this.isPlayedTrack = this.tracks.find((el) => el.file === pathFile).file;
+      this.isPlayed = true;
+    },
+    setIsPlay(value: boolean) {
+      this.isPlayed = value;
     },
   },
 });

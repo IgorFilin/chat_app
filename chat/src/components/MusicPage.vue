@@ -1,26 +1,17 @@
 <template>
-  <div
-    class="v-music"
-    ref="audioContainer"
-  >
+  <div class="v-music">
     <div
       class="v-music__track"
-      v-for="(audio, index) in tracks.slice(start, end)"
-      :key="audio.name + index"
+      v-for="audio in tracks.slice(slicedCoord.start, slicedCoord.end)"
+      :key="audio.file"
     >
+      <Icon
+        :id="yaStore.isPlayed && audio.file === yaStore.isPlayedTrack ? 'pause' : 'play'"
+        class="v-music__icon"
+        color="orange"
+        @click="playTrackHandler(audio.file)"
+      />
       <div class="v-music__name">{{ audio.name }}</div>
-      <div>
-        <audio
-          controls
-          @play="onChangeHandler(index)"
-        >
-          <source
-            :src="audio.file"
-            type="audio/mpeg"
-          />
-          Ваш браузер не поддерживает аудиоэлемент.
-        </audio>
-      </div>
     </div>
     <div class="v-music__paginations">
       <div
@@ -39,33 +30,24 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue';
 import { useYandexStore } from '@/store/yandex_store.ts';
+import Icon from '@/components/assetsComponent/Icon.vue';
 
 const yaStore = useYandexStore();
-const audioContainer = ref();
-const currentPage = ref();
+
+const currentPage = ref(1);
 const pagination = ref([]) as any;
 const stepTracks = 3;
-const start = ref(0);
-const end = ref(3);
+const slicedCoord = ref({ start: 0, end: 3 });
+
 const tracks = ref([]) as any;
 
-function onChangeHandler(idTrack: number) {
-  const tracks = audioContainer.value.querySelectorAll('audio');
-  tracks.forEach((audio: any, index: number) => {
-    if (idTrack !== index) {
-      audio.pause();
-      audio.currentTime = 0;
-    }
-  });
-}
-
 watch(
-  () => yaStore.music,
+  () => yaStore.tracks,
   () => {
-    const allPages = Math.ceil(yaStore.music.length / 3);
+    const allPages = Math.ceil(yaStore.tracks.length / 3);
     pagination.value = Array.from({ length: allPages }, (el, i) => i + 1);
     if (!currentPage.value) currentPage.value = 1;
-    tracks.value = yaStore.music;
+    tracks.value = yaStore.tracks;
   }
 );
 
@@ -73,18 +55,22 @@ watch(
   () => currentPage.value,
   (newValue, oldValue) => {
     if (newValue > oldValue) {
-      start.value += stepTracks;
-      end.value += stepTracks;
+      slicedCoord.value.start += stepTracks;
+      slicedCoord.value.end += stepTracks;
     }
     if (newValue < oldValue) {
-      start.value -= stepTracks;
-      end.value -= stepTracks;
+      slicedCoord.value.start -= stepTracks;
+      slicedCoord.value.end -= stepTracks;
     }
   }
 );
 
 function onClickPaginationHandler(index: number) {
   currentPage.value = index;
+}
+
+function playTrackHandler(pathFile: string) {
+  yaStore.setPlayedTrack(pathFile);
 }
 
 onMounted(() => {
@@ -138,35 +124,20 @@ onMounted(() => {
   width: 300px;
   margin-bottom: 0;
   margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding-left: 100px;
 }
 
-.v-music__name {
-  margin-bottom: 10px;
-}
+// .v-music__name {
+//   margin-bottom: 10px;
+// }
 
-audio::-webkit-media-controls-panel {
-  background-color: $skyBlue;
-  border-radius: 0;
-  outline: none;
-}
-
-audio::-webkit-media-controls-play-button {
-  color: $darkBlue;
-}
-
-audio::-webkit-media-controls-enclosure {
-  border-radius: 0;
-}
-
-audio::-webkit-media-controls-current-time-display {
-  color: $darkBlue;
-}
-
-audio::-webkit-media-controls-time-remaining-display {
-  color: $darkBlue;
-}
-
-audio::-webkit-media-controls-volume-slider {
-  color: $darkBlue;
+.v-music__icon {
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  flex-shrink: 0;
 }
 </style>
