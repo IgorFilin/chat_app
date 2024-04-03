@@ -36,6 +36,7 @@ export class YandexDiskConnectorService {
           })
         )
     );
+    console.log(data.items.length);
     return data.items.map((el: any) => ({ name: el.name, file: el.file }));
   }
 }

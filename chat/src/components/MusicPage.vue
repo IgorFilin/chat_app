@@ -5,8 +5,8 @@
   >
     <div
       class="v-music__track"
-      v-for="(audio, index) in yaStore.music"
-      :key="index"
+      v-for="(audio, index) in tracks.slice(start, end)"
+      :key="audio.name + index"
     >
       <div class="v-music__name">{{ audio.name }}</div>
       <div>
@@ -37,13 +37,17 @@
 </template>
 
 <script setup lang="ts">
-import { compile, computed, onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useYandexStore } from '@/store/yandex_store.ts';
 
 const yaStore = useYandexStore();
 const audioContainer = ref();
 const currentPage = ref();
 const pagination = ref([]) as any;
+const stepTracks = 3;
+const start = ref(0);
+const end = ref(3);
+const tracks = ref([]) as any;
 
 function onChangeHandler(idTrack: number) {
   const tracks = audioContainer.value.querySelectorAll('audio');
@@ -58,18 +62,24 @@ function onChangeHandler(idTrack: number) {
 watch(
   () => yaStore.music,
   () => {
-    const allPages = Math.ceil(yaStore.music.length / 5);
+    const allPages = Math.ceil(yaStore.music.length / 3);
     pagination.value = Array.from({ length: allPages }, (el, i) => i + 1);
     if (!currentPage.value) currentPage.value = 1;
+    tracks.value = yaStore.music;
   }
 );
 
-const currentPagination = computed(() => {});
-
 watch(
   () => currentPage.value,
-  () => {
-    console.log('check');
+  (newValue, oldValue) => {
+    if (newValue > oldValue) {
+      start.value += stepTracks;
+      end.value += stepTracks;
+    }
+    if (newValue < oldValue) {
+      start.value -= stepTracks;
+      end.value -= stepTracks;
+    }
   }
 );
 
@@ -78,7 +88,7 @@ function onClickPaginationHandler(index: number) {
 }
 
 onMounted(() => {
-  yaStore.getMusicYaDisk({ limit: 3 });
+  yaStore.getMusicYaDisk({ media_type: 'audio' });
 });
 </script>
 
@@ -92,7 +102,7 @@ onMounted(() => {
   margin: 40px auto;
   justify-items: center;
   overflow-y: scroll;
-  height: 90vh;
+  max-height: 500px;
 
   @include tablets {
     grid-template-columns: 1fr;
