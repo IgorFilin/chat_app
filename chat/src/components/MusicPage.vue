@@ -6,10 +6,10 @@
       :key="audio.file"
     >
       <Icon
-        :id="yaStore.isPlayed && audio.file === yaStore.isPlayedTrack ? 'pause' : 'play'"
+        :id="isPlayed(audio.file) ? 'pause' : 'play'"
         class="v-music__icon"
         color="orange"
-        @click="playTrackHandler(audio.file)"
+        @click="playOrPauseTrackHandler(audio.file, isPlayed(audio.file))"
       />
       <div class="v-music__name">{{ audio.name }}</div>
     </div>
@@ -41,6 +41,8 @@ const slicedCoord = ref({ start: 0, end: 3 });
 
 const tracks = ref([]) as any;
 
+const isPlayed = (file: string) => yaStore.isPlayed && file === yaStore.playedTrack;
+
 watch(
   () => yaStore.tracks,
   () => {
@@ -69,8 +71,8 @@ function onClickPaginationHandler(index: number) {
   currentPage.value = index;
 }
 
-function playTrackHandler(pathFile: string) {
-  yaStore.setPlayedTrack(pathFile);
+function playOrPauseTrackHandler(pathFile: string, isPlayed: any) {
+  yaStore.setPlayedTrackPausedOrPlayed(pathFile, isPlayed ? yaStore.isPlayed : !yaStore.isPlayed);
 }
 
 onMounted(() => {

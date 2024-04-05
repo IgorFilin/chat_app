@@ -68,18 +68,20 @@
   </transition>
   <div
     class="v-header__musicPlayer"
-    :key="yaStore.isPlayedTrack"
-    v-if="yaStore.isPlayedTrack !== null"
+    v-if="yaStore.playedTrack !== null"
+    :key="yaStore.playedTrack"
   >
+    {{ yaStore.isPlayed }}
     <audio
       class="v-header__audio"
+      ref="track"
       controls
       @play="onChangePlayedHandler(true)"
       @pause="onChangePlayedHandler(false)"
       autoplay
     >
       <source
-        :src="yaStore.isPlayedTrack"
+        :src="yaStore.playedTrack"
         type="audio/mpeg"
       />
       Ваш браузер не поддерживает аудиоэлемент.
@@ -96,6 +98,8 @@ import { useYandexStore } from '@/store/yandex_store.ts';
 
 const store = useAuthStore();
 const yaStore = useYandexStore();
+
+const track = ref();
 
 const isOpenModal = ref(false);
 
@@ -163,6 +167,24 @@ watch(
   { immediate: true }
 );
 
+watch(
+  () => yaStore.isPlayed,
+  (newValue, oldValue) => {
+    if (newValue !== oldValue) {
+      if (track.value) {
+        console.log('tet', newValue);
+        if (newValue) {
+          console.log('ВНУТРИ ДА');
+          track.value.play();
+        } else {
+          console.log('ВНУТРИ НЕТ');
+          track.value.pause();
+        }
+      }
+    }
+  }
+);
+
 async function onExitAccount() {
   if (store.isAuth) {
     await store.logout();
@@ -182,7 +204,8 @@ function setActiveNavigationButton(path: string) {
 }
 
 function onChangePlayedHandler(isPlayed: boolean) {
-  yaStore.setIsPlay(isPlayed);
+  console.log('change', isPlayed);
+  // yaStore.setIsPlay(isPlayed);
 }
 </script>
 
