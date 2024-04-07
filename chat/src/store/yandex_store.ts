@@ -29,9 +29,8 @@ export const useYandexStore: any = defineStore('music_store', {
       } finally {
       }
     },
-    setPlayedTrackPausedOrPlayed(pathFile: number, playedStatus: boolean) {
+    setPlayedTrackPausedOrPlayed(pathFile: number) {
       this.playedTrack = this.tracks.find((el) => el.file === pathFile).file;
-      this.setIsPlay(playedStatus);
     },
     setIsPlay(value: boolean) {
       if (value !== this.isPlayed) this.isPlayed = value;

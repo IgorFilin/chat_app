@@ -76,8 +76,8 @@
       class="v-header__audio"
       ref="track"
       controls
-      @play="onChangePlayedHandler(true)"
-      @pause="onChangePlayedHandler(false)"
+      @play="(e) => onChangePlayedHandler(e, true)"
+      @pause="(e) => onChangePlayedHandler(e, false)"
       autoplay
     >
       <source
@@ -170,16 +170,9 @@ watch(
 watch(
   () => yaStore.isPlayed,
   (newValue, oldValue) => {
-    if (newValue !== oldValue) {
-      if (track.value) {
-        console.log('tet', newValue);
-        if (newValue) {
-          console.log('ВНУТРИ ДА');
-          track.value.play();
-        } else {
-          console.log('ВНУТРИ НЕТ');
-          track.value.pause();
-        }
+    if (track.value) {
+      if (!newValue) {
+        track.value.pause();
       }
     }
   }
@@ -203,9 +196,9 @@ function setActiveNavigationButton(path: string) {
   });
 }
 
-function onChangePlayedHandler(isPlayed: boolean) {
-  console.log('change', isPlayed);
-  // yaStore.setIsPlay(isPlayed);
+function onChangePlayedHandler(e: any, isPlayed: boolean) {
+  console.log('change', e);
+  yaStore.setIsPlay(isPlayed);
 }
 </script>
 
