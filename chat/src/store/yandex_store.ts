@@ -3,14 +3,20 @@ import { defineStore } from 'pinia';
 
 interface MusicType {
   tracks: Array<any>;
-  playedTrack: any;
+  playedTrack: {
+    file: string;
+    name: string;
+  };
   isPlayed: boolean;
 }
 
 export const useYandexStore: any = defineStore('music_store', {
   state: () => {
     return {
-      playedTrack: null,
+      playedTrack: {
+        file: '',
+        name: '',
+      },
       tracks: [],
       isPlayed: false,
     } as MusicType;
@@ -30,7 +36,8 @@ export const useYandexStore: any = defineStore('music_store', {
       }
     },
     setPlayedTrackPausedOrPlayed(pathFile: number) {
-      this.playedTrack = this.tracks.find((el) => el.file === pathFile).file;
+      console.log(this.tracks);
+      this.playedTrack = this.tracks.find((el) => el.file === pathFile);
     },
     setIsPlay(value: boolean) {
       if (value !== this.isPlayed) this.isPlayed = value;

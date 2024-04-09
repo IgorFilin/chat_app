@@ -67,9 +67,18 @@
   </transition>
   <div
     class="v-header__musicPlayer"
-    v-if="yaStore.playedTrack !== null"
-    :key="yaStore.playedTrack"
+    :class="{ hidden: isOpenAudioTrack }"
+    v-if="yaStore.playedTrack.file"
+    :key="yaStore.playedTrack.file"
   >
+    <div></div>
+
+    <div
+      class="v-header__clickOpenAudio"
+      :class="{ notActive: isOpenAudioTrack }"
+      @click="isOpenAudioTrack = !isOpenAudioTrack"
+    ></div>
+    <div class="v-header__audioName">{{ yaStore.playedTrack.name }}</div>
     <audio
       class="v-header__audio"
       ref="track"
@@ -79,7 +88,7 @@
       autoplay
     >
       <source
-        :src="yaStore.playedTrack"
+        :src="yaStore.playedTrack.file"
         type="audio/mpeg"
       />
       Ваш браузер не поддерживает аудиоэлемент.
@@ -100,6 +109,7 @@ const yaStore = useYandexStore();
 const track = ref();
 
 const isOpenModal = ref(false);
+const isOpenAudioTrack = ref(true);
 
 const navigateButtons = ref([
   {
@@ -259,6 +269,10 @@ onMounted(() => {
   }
 }
 
+.v-header__audioName {
+  margin-bottom: 5px;
+}
+
 .v-header__nameLogoutContainer {
   display: flex;
   gap: 25px;
@@ -309,14 +323,42 @@ onMounted(() => {
 
 .v-header__musicPlayer {
   position: absolute;
-  bottom: 20px;
   right: 20px;
+  transition: 0.5s;
+
+  &.hidden {
+    transition: 0.5s;
+    right: -300px;
+  }
 }
 
 .v-header__userName {
   align-self: center;
   cursor: pointer;
   font-size: 20px;
+}
+
+.v-header__clickOpenAudio {
+  content: '';
+  display: block;
+  height: 39px;
+  width: 39px;
+  border: inherit;
+  position: absolute;
+  clip-path: polygon(0% 0%, 100% 100%, 0% 100%);
+  transform: rotate(45deg);
+  z-index: 99;
+  background: $blue;
+  right: 280px;
+  top: 38.5%;
+  border-radius: 0 0 0 0.25em;
+  transition: 0.5s;
+  cursor: pointer;
+  background: $skyBlue;
+
+  &.notActive {
+    background: $orange;
+  }
 }
 
 .v-header__modalWindow {
@@ -327,15 +369,6 @@ onMounted(() => {
   max-width: 150px;
   width: 100%;
   background: $blue;
-
-  // &::after {
-  //   top: -39px;
-  //   transform: translateX(-50%);
-  //   position: absolute;
-  //   content: '';
-  //   border: 20px solid transparent;
-  //   border-bottom: 20px solid $orange;
-  // }
 }
 
 .v-header__modalItem {

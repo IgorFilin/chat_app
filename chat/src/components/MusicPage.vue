@@ -52,7 +52,7 @@ const slicedCoord = ref({ start: 0, end: 8 });
 const tracks = ref([]) as any;
 
 const isPlayedCurrentTrack = (file: string): boolean => {
-  return yaStore.isPlayed && file === yaStore.playedTrack;
+  return yaStore.isPlayed && file === yaStore.playedTrack.file;
 };
 
 watch(
@@ -175,10 +175,6 @@ onMounted(() => {
     box-shadow: #0f0 0px 2px 8px 2px;
   }
 }
-
-// .v-music__name {
-//   margin-bottom: 10px;
-// }
 
 .v-music__icon {
   width: 25px;
