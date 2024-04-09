@@ -91,7 +91,7 @@
 <script setup lang="ts">
 import router from '@/router/router';
 import { useAuthStore } from '@/store/auth_store';
-import { ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import Button from '@/components/assetsComponent/Button.vue';
 import { useYandexStore } from '@/store/yandex_store.ts';
 
@@ -139,6 +139,7 @@ function goTo(route: string) {
   router.push(route);
 }
 
+// Какие кнопки в шапке показывать при прохождении авторизации, а как без
 watch(
   [() => store.isAcceptKey, () => store.isAuth],
   () => {
@@ -151,16 +152,31 @@ watch(
   { immediate: true }
 );
 
+// Изменение редиректа и текста кнопки в зависимости от урла
 watch(
   () => store.currentPath,
   () => {
-    if (store.currentPath === '/gameRooms') {
-      navigateButtons.value[3].text = 'В чат';
-      navigateButtons.value[3].redirect = '/main';
-    } else {
-      navigateButtons.value[3].text = 'Игровые комнаты';
-      navigateButtons.value[3].redirect = '/gameRooms';
+    switch (store.currentPath) {
+      case '/gameRooms': {
+        navigateButtons.value[3].text = 'В чат';
+        navigateButtons.value[3].redirect = '/main';
+        break;
+      }
+      case '/music': {
+        navigateButtons.value[4].text = 'В чат';
+        navigateButtons.value[4].redirect = '/main';
+        break;
+      }
+      default: {
+        navigateButtons.value[3].text = 'Игровые комнаты';
+        navigateButtons.value[3].redirect = '/gameRooms';
+
+        navigateButtons.value[4].text = 'Музыка';
+        navigateButtons.value[4].redirect = '/music';
+        break;
+      }
     }
+
     setActiveNavigationButton(store.currentPath);
   },
   { immediate: true }
@@ -173,6 +189,15 @@ watch(
       if (!newValue) {
         track.value.pause();
       }
+    }
+  }
+);
+
+watch(
+  () => track.value,
+  () => {
+    if (track.value) {
+      track.value.volume = 0.5;
     }
   }
 );
@@ -199,6 +224,10 @@ function onChangePlayedHandler(e: any, isPlayed: boolean) {
   console.log('change', e);
   yaStore.setIsPlay(isPlayed);
 }
+
+onMounted(() => {
+  //
+});
 </script>
 
 <style scoped lang="scss">
