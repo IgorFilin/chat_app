@@ -35,13 +35,6 @@
       >
         {{ store.name }}
       </div>
-      <button
-        v-if="store.isAuth"
-        class="v-header__navigateButton"
-        @click="onExitAccount"
-      >
-        Выход
-      </button>
     </div>
   </div>
   <transition
@@ -57,6 +50,12 @@
         @click="goTo(`/profile/${store.id}/`), (isOpenModal = false)"
       >
         Профиль
+      </div>
+      <div
+        class="v-header__modalItem"
+        @click="onExitAccount"
+      >
+        Выход
       </div>
       <div
         class="v-header__modalItem close"
@@ -197,7 +196,7 @@ watch(
   () => track.value,
   () => {
     if (track.value) {
-      track.value.volume = 0.5;
+      track.value.volume = 0.1;
     }
   }
 );
@@ -205,6 +204,7 @@ watch(
 async function onExitAccount() {
   if (store.isAuth) {
     await store.logout();
+    isOpenModal.value = false;
     router.push('/login');
   }
 }
@@ -328,14 +328,14 @@ onMounted(() => {
   width: 100%;
   background: $blue;
 
-  &::after {
-    top: -39px;
-    transform: translateX(-50%);
-    position: absolute;
-    content: '';
-    border: 20px solid transparent;
-    border-bottom: 20px solid $orange;
-  }
+  // &::after {
+  //   top: -39px;
+  //   transform: translateX(-50%);
+  //   position: absolute;
+  //   content: '';
+  //   border: 20px solid transparent;
+  //   border-bottom: 20px solid $orange;
+  // }
 }
 
 .v-header__modalItem {

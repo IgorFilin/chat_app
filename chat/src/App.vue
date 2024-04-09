@@ -88,7 +88,12 @@ onMounted(() => {
 </script>
 <style lang="scss">
 div,
+h1,
+h2,
+h3,
+p,
 span,
+input,
 button {
   font-family: monospace, sans-serif;
   color: $orange;
