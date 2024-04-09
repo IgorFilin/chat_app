@@ -71,7 +71,6 @@
     v-if="yaStore.playedTrack !== null"
     :key="yaStore.playedTrack"
   >
-    {{ yaStore.isPlayed }}
     <audio
       class="v-header__audio"
       ref="track"

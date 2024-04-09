@@ -2,27 +2,37 @@
   <div class="v-music">
     <div
       class="v-music__track"
+      :class="{ pulse: isPlayedCurrentTrack(audio.file) }"
       v-for="audio in tracks.slice(slicedCoord.start, slicedCoord.end)"
       :key="audio.file"
+      @click.stop="playOrPauseTrackHandler(audio.file)"
     >
       <Icon
         :id="isPlayedCurrentTrack(audio.file) ? 'pause' : 'play'"
         class="v-music__icon"
         color="orange"
-        @click.stop="playOrPauseTrackHandler(audio.file)"
       />
       <div class="v-music__name">{{ audio.name }}</div>
     </div>
-    <div class="v-music__paginations">
-      <div
-        class="v-music__pagination"
-        :class="{ active: currentPage === num }"
-        v-for="(num, index) in pagination"
-        key="index"
-        @click="onClickPaginationHandler(num)"
-      >
-        {{ num }}
-      </div>
+  </div>
+  <div class="v-music__paginations">
+    <div
+      class="v-music__pagination"
+      v-for="(num, index) in pagination"
+      key="index"
+      :class="{ active: currentPage === num }"
+      @click="onClickPaginationHandler(num)"
+    >
+      <Icon
+        id="round"
+        class="v-music__icon"
+        color="orange"
+      />
+    </div>
+  </div>
+  <div class="a">
+    <div class="b">
+      <div class="c"></div>
     </div>
   </div>
 </template>
@@ -37,7 +47,7 @@ const yaStore = useYandexStore();
 const currentPage = ref(1);
 const pagination = ref([]) as any;
 const stepTracks = 3;
-const slicedCoord = ref({ start: 0, end: 3 });
+const slicedCoord = ref({ start: 0, end: 8 });
 
 const tracks = ref([]) as any;
 
@@ -48,7 +58,7 @@ const isPlayedCurrentTrack = (file: string): boolean => {
 watch(
   () => yaStore.tracks,
   () => {
-    const allPages = Math.ceil(yaStore.tracks.length / 3);
+    const allPages = Math.ceil(yaStore.tracks.length / 8);
     pagination.value = Array.from({ length: allPages }, (el, i) => i + 1);
     if (!currentPage.value) currentPage.value = 1;
     tracks.value = yaStore.tracks;
@@ -92,12 +102,13 @@ onMounted(() => {
   row-gap: 20px;
   margin: 40px auto;
   justify-items: center;
-  overflow-y: scroll;
-  max-height: 500px;
+  max-height: 70vh;
+  padding: 15px;
 
   @include tablets {
     grid-template-columns: 1fr;
     row-gap: 30px;
+    overflow-y: scroll;
   }
 
   &::-webkit-scrollbar-thumb {
@@ -115,13 +126,18 @@ onMounted(() => {
 .v-music__paginations {
   display: flex;
   gap: 10px;
+  margin: 0 auto;
+  width: fit-content;
+  color: unset;
 }
 
 .v-music__pagination {
   cursor: pointer;
 
   &.active {
-    color: white;
+    .v-icon {
+      color: white;
+    }
   }
 }
 
@@ -132,7 +148,32 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 15px;
-  padding-left: 100px;
+  padding-left: 15px;
+  border: 2px solid;
+  height: 100%;
+  cursor: pointer;
+  transition: 0.4s;
+
+  &.pulse {
+    position: relative;
+    animation: pulse 0.7s alternate infinite ease-in-out;
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      background-color: $darkBlack;
+    }
+    100% {
+      transform: scale(1.05);
+      background-color: $darkBlue;
+    }
+  }
+
+  &:hover {
+    transition: 0.4s;
+    box-shadow: #0f0 0px 2px 8px 2px;
+  }
 }
 
 // .v-music__name {

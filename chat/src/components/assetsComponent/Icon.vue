@@ -1,10 +1,12 @@
 <template>
   <svg
     class="v-icon"
-    :class="[color]">
+    :class="[color]"
+  >
     <use
       :xlink:href="`/sprite.svg#${id}`"
-      overflow="visible" />
+      overflow="visible"
+    />
   </svg>
 </template>
 
