@@ -20,7 +20,7 @@ const props = defineProps({
     type: String,
     desc: 'цвет иконки',
     validator(value) {
-      return ['white', 'orange'].includes(value);
+      return ['white', 'orange', 'cacao'].includes(value);
     },
   },
 });
@@ -37,6 +37,10 @@ const props = defineProps({
 
   &.orange {
     color: #0f0;
+  }
+
+  &.cacao {
+    color: $cacaoBlack;
   }
 }
 </style>

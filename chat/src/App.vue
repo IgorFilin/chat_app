@@ -94,6 +94,7 @@ h3,
 p,
 span,
 input,
+textarea,
 button {
   font-family: monospace, sans-serif;
   color: $orange;

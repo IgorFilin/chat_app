@@ -71,14 +71,17 @@
     v-if="yaStore.playedTrack.file"
     :key="yaStore.playedTrack.file"
   >
-    <div></div>
-
     <div
       class="v-header__clickOpenAudio"
       :class="{ notActive: isOpenAudioTrack }"
       @click="isOpenAudioTrack = !isOpenAudioTrack"
     ></div>
-    <div class="v-header__audioName">{{ yaStore.playedTrack.name }}</div>
+    <div
+      :title="yaStore.playedTrack.name"
+      class="v-header__audioName"
+    >
+      {{ yaStore.playedTrack.name }}
+    </div>
     <audio
       class="v-header__audio"
       ref="track"
@@ -93,6 +96,14 @@
       />
       Ваш браузер не поддерживает аудиоэлемент.
     </audio>
+    <div class="v-header__iconsContainer">
+      <Icon
+        v-for="_ in 2"
+        id="arrow"
+        class="v-header__iconNextPrev"
+        color="cacao"
+      />
+    </div>
   </div>
 </template>
 
@@ -102,6 +113,7 @@ import { useAuthStore } from '@/store/auth_store';
 import { onMounted, ref, watch } from 'vue';
 import Button from '@/components/assetsComponent/Button.vue';
 import { useYandexStore } from '@/store/yandex_store.ts';
+import Icon from '@/components/assetsComponent/Icon.vue';
 
 const store = useAuthStore();
 const yaStore = useYandexStore();
@@ -271,6 +283,40 @@ onMounted(() => {
 
 .v-header__audioName {
   margin-bottom: 5px;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  max-width: 300px;
+  overflow: hidden;
+}
+
+.v-header__iconsContainer {
+  display: flex;
+  background: $skyBlue;
+  justify-content: space-between;
+  top: -4px;
+
+  .v-header__iconNextPrev {
+    box-sizing: border-box;
+    width: 150px;
+    height: 20px;
+    transition: 0.5s;
+
+    &:first-child {
+      border-left: 2px solid $cacaoBlack;
+      transform: rotate(180deg);
+    }
+
+    &:hover {
+      cursor: pointer;
+      background: $darkBlue;
+      transition: 0.5s;
+
+      &.v-icon {
+        color: white;
+      }
+    }
+  }
 }
 
 .v-header__nameLogoutContainer {
@@ -294,6 +340,9 @@ onMounted(() => {
 }
 
 .v-header__audio {
+  position: relative;
+  z-index: 999999;
+
   &::-webkit-media-controls-panel {
     background-color: $skyBlue;
     border-radius: 0;
@@ -350,7 +399,7 @@ onMounted(() => {
   z-index: 99;
   background: $blue;
   right: 280px;
-  top: 38.5%;
+  top: 30.5%;
   border-radius: 0 0 0 0.25em;
   transition: 0.5s;
   cursor: pointer;
