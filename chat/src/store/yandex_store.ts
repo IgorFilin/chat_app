@@ -6,6 +6,7 @@ interface MusicType {
   playedTrack: {
     file: string;
     name: string;
+    index: number;
   };
   isPlayed: boolean;
 }
@@ -16,6 +17,7 @@ export const useYandexStore: any = defineStore('music_store', {
       playedTrack: {
         file: '',
         name: '',
+        index: 0,
       },
       tracks: [],
       isPlayed: false,
@@ -36,11 +38,21 @@ export const useYandexStore: any = defineStore('music_store', {
       }
     },
     setPlayedTrackPausedOrPlayed(pathFile: number) {
-      console.log(this.tracks);
-      this.playedTrack = this.tracks.find((el) => el.file === pathFile);
+      this.playedTrack.index = this.tracks.findIndex((el) => el.file === pathFile);
+      this.playedTrack.name = this.tracks[this.playedTrack.index].name;
+      this.playedTrack.file = this.tracks[this.playedTrack.index].file;
     },
     setIsPlay(value: boolean) {
       if (value !== this.isPlayed) this.isPlayed = value;
+    },
+    setNextPrevTrack(value: 'prev' | 'next') {
+      if (!this.playedTrack) return;
+      const currentIndex = value === 'next' ? ++this.playedTrack.index : --this.playedTrack.index;
+      this.playedTrack = {
+        name: this.tracks[currentIndex].name,
+        file: this.tracks[currentIndex].file,
+        index: currentIndex,
+      };
     },
   },
 });

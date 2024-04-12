@@ -86,9 +86,9 @@
       class="v-header__audio"
       ref="track"
       controls
+      autoplay
       @play="(e) => onChangePlayedHandler(e, true)"
       @pause="(e) => onChangePlayedHandler(e, false)"
-      autoplay
     >
       <source
         :src="yaStore.playedTrack.file"
@@ -98,8 +98,9 @@
     </audio>
     <div class="v-header__iconsContainer">
       <Icon
-        v-for="_ in 2"
+        v-for="key in 2"
         id="arrow"
+        @click="onClickPrevNextTrackHandler(key === 1 ? 'prev' : 'next')"
         class="v-header__iconNextPrev"
         color="cacao"
       />
@@ -110,16 +111,15 @@
 <script setup lang="ts">
 import router from '@/router/router';
 import { useAuthStore } from '@/store/auth_store';
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, onUnmounted, onUpdated, ref, watch } from 'vue';
 import Button from '@/components/assetsComponent/Button.vue';
 import { useYandexStore } from '@/store/yandex_store.ts';
 import Icon from '@/components/assetsComponent/Icon.vue';
 
 const store = useAuthStore();
 const yaStore = useYandexStore();
-
+let test = false;
 const track = ref();
-
 const isOpenModal = ref(false);
 const isOpenAudioTrack = ref(true);
 
@@ -207,9 +207,9 @@ watch(
   () => yaStore.isPlayed,
   (newValue, oldValue) => {
     if (track.value) {
-      if (!newValue) {
-        track.value.pause();
-      }
+      console.log('tet', yaStore.isPlayed);
+      test = true;
+      if (!newValue) track.value.pause();
     }
   }
 );
@@ -243,12 +243,16 @@ function setActiveNavigationButton(path: string) {
 }
 
 function onChangePlayedHandler(e: any, isPlayed: boolean) {
-  console.log('change', e);
+  console.log('+=+', test);
   yaStore.setIsPlay(isPlayed);
 }
 
-onMounted(() => {
-  //
+function onClickPrevNextTrackHandler(value: string) {
+  yaStore.setNextPrevTrack(value);
+}
+
+onUpdated(() => {
+  console.log('unmount');
 });
 </script>
 
@@ -374,6 +378,7 @@ onMounted(() => {
   position: absolute;
   right: 20px;
   transition: 0.5s;
+  z-index: 9;
 
   &.hidden {
     transition: 0.5s;

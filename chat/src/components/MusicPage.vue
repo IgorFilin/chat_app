@@ -18,7 +18,7 @@
   <div class="v-music__paginations">
     <div
       class="v-music__pagination"
-      v-for="(num, index) in pagination"
+      v-for="num in pagination"
       key="index"
       :class="{ active: currentPage === num }"
       @click="onClickPaginationHandler(num)"
@@ -28,11 +28,6 @@
         class="v-music__icon"
         color="orange"
       />
-    </div>
-  </div>
-  <div class="a">
-    <div class="b">
-      <div class="c"></div>
     </div>
   </div>
 </template>
