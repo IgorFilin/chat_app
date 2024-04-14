@@ -118,7 +118,6 @@ import Icon from '@/components/assetsComponent/Icon.vue';
 
 const store = useAuthStore();
 const yaStore = useYandexStore();
-let test = false;
 const track = ref();
 const isOpenModal = ref(false);
 const isOpenAudioTrack = ref(true);
@@ -207,9 +206,8 @@ watch(
   () => yaStore.isPlayed,
   (newValue, oldValue) => {
     if (track.value) {
-      console.log('tet', yaStore.isPlayed);
-      test = true;
       if (!newValue) track.value.pause();
+      else track.value.play();
     }
   }
 );
@@ -243,7 +241,6 @@ function setActiveNavigationButton(path: string) {
 }
 
 function onChangePlayedHandler(e: any, isPlayed: boolean) {
-  console.log('+=+', test);
   yaStore.setIsPlay(isPlayed);
 }
 
@@ -252,7 +249,11 @@ function onClickPrevNextTrackHandler(value: string) {
 }
 
 onUpdated(() => {
-  console.log('unmount');
+  if (yaStore.isPlayed) {
+    setTimeout(function () {
+      track.value.play();
+    }, 150);
+  }
 });
 </script>
 
