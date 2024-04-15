@@ -73,7 +73,7 @@
   >
     <div
       class="v-header__clickOpenAudio"
-      :class="{ notActive: isOpenAudioTrack }"
+      :class="[{ notActive: isOpenAudioTrack }, { played: yaStore.isPlayed && isOpenAudioTrack }]"
       @click="isOpenAudioTrack = !isOpenAudioTrack"
     ></div>
     <div
@@ -247,7 +247,6 @@ function onChangePlayedHandler(e: any, isPlayed: boolean) {
 function onClickPrevNextTrackHandler(value: string) {
   yaStore.setNextPrevTrack(value);
 }
-
 onUpdated(() => {
   if (yaStore.isPlayed) {
     setTimeout(function () {
@@ -413,6 +412,22 @@ onUpdated(() => {
 
   &.notActive {
     background: $orange;
+  }
+
+  &.played {
+    position: absolute;
+    animation: pulse 0.6s alternate infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: rotate(45deg) scale(1);
+      background-color: $orange;
+    }
+    100% {
+      transform: rotate(45deg) scale(1.05);
+      background-color: $skyBlue;
+    }
   }
 }
 

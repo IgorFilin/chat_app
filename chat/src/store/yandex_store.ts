@@ -33,9 +33,7 @@ export const useYandexStore: any = defineStore('music_store', {
       try {
         const result = await yandexDiskApi.getRecource(queryObj);
         this.tracks = result.data;
-      } catch (error) {
-      } finally {
-      }
+      } catch (error) {}
     },
     setPlayedTrackPausedOrPlayed(pathFile: number) {
       this.playedTrack.index = this.tracks.findIndex((el) => el.file === pathFile);

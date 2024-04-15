@@ -12,7 +12,12 @@
         class="v-music__icon"
         color="orange"
       />
-      <div class="v-music__name">{{ audio.name }}</div>
+      <div
+        :title="audio.name"
+        class="v-music__name"
+      >
+        {{ audio.name }}
+      </div>
     </div>
   </div>
   <div class="v-music__paginations">
@@ -41,7 +46,7 @@ const yaStore = useYandexStore();
 
 const currentPage = ref(1);
 const pagination = ref([]) as any;
-const stepTracks = 3;
+const stepTracks = 8;
 const slicedCoord = ref({ start: 0, end: 8 });
 
 const tracks = ref([]) as any;
@@ -66,8 +71,7 @@ watch(
     if (newValue > oldValue) {
       slicedCoord.value.start += stepTracks;
       slicedCoord.value.end += stepTracks;
-    }
-    if (newValue < oldValue) {
+    } else {
       slicedCoord.value.start -= stepTracks;
       slicedCoord.value.end -= stepTracks;
     }
@@ -134,6 +138,14 @@ onMounted(() => {
       color: white;
     }
   }
+}
+
+.v-music__name {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  max-width: 300px;
+  overflow: hidden;
 }
 
 .v-music__track {
