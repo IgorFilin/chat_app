@@ -52,6 +52,7 @@ const slicedCoord = ref({ start: 0, end: 8 });
 const tracks = ref([]) as any;
 
 const isPlayedCurrentTrack = (file: string): boolean => {
+  console.log('test', file);
   return yaStore.isPlayed && file === yaStore.playedTrack.file;
 };
 
@@ -62,7 +63,8 @@ watch(
     pagination.value = Array.from({ length: allPages }, (el, i) => i + 1);
     if (!currentPage.value) currentPage.value = 1;
     tracks.value = yaStore.tracks;
-  }
+  },
+  { immediate: true }
 );
 
 watch(
@@ -88,7 +90,9 @@ function playOrPauseTrackHandler(pathFile: string) {
 }
 
 onMounted(() => {
-  yaStore.getMusicYaDisk({ media_type: 'audio' });
+  if (!yaStore.tracks.length) {
+    yaStore.getMusicYaDisk({ media_type: 'audio' });
+  }
 });
 </script>
 
