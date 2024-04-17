@@ -165,9 +165,10 @@ export class WebsocketService {
         rooms.push(pushedRoom);
       }
     }
-    console.log(rooms);
-    // client.emit()
 
+    // Отправляем пользователю который подключился его игровые комнаты если они есть
+    this.clients[user.id].client.emit('setGameRooms', { rooms });
+    console.log(this.gameRooms);
     return { sendClients };
   }
 

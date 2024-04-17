@@ -55,11 +55,11 @@ export const useSocketStore: any = defineStore('socket_store', {
         // }
       });
 
-      this.socket.on('clients', (data) => {
+      this.socket.on('clients', (data: any) => {
         this.onlineClients = data.clients;
       });
 
-      this.socket.on('message', (responseData) => {
+      this.socket.on('message', (responseData: any) => {
         const data = responseData;
 
         if (data.openRoom) {
@@ -114,9 +114,14 @@ export const useSocketStore: any = defineStore('socket_store', {
         }
 
         if (data.gameRoom) {
-          console.log('DEBUG', data);
           gameStore.setCurrentRoomId(data.gameRoom.id);
           gameStore.setGameRoom(data);
+        }
+      });
+
+      this.socket.on('setGameRooms', (data: any) => {
+        for (const roomData of data.rooms) {
+          gameStore.setGameRoom(roomData);
         }
       });
 

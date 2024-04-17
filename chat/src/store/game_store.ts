@@ -4,10 +4,10 @@ import { useToast } from 'vue-toastification';
 interface GameRoom {
   id: string;
   roomWithPlayer: string;
+  dataGames: Object;
   games: {
     usersOnline: number;
     totalUsers: number;
-    data: Array<any>;
     game: string;
   }[];
 }
@@ -20,6 +20,7 @@ interface GameStoreType {
 interface RequestGameRoomType {
   game: string;
   gameRoom: {
+    dataGames: Object;
     roomWithPlayer: string;
     game: string;
     id: string;
@@ -42,9 +43,17 @@ export const useGameStore: any = defineStore('game_store', {
   },
   getters: {
     getTicTacToe(state) {
+      const currentGame = 'ticTacToe' as string;
       const currentRoom = state.gameRooms.find((room) => room.id === state.currentGameRoom);
       if (currentRoom) {
-        return currentRoom.games.find((game) => game.game === 'ticTacToe');
+        return currentRoom?.games.reduce((acc: any, curr: any) => {
+          if (curr.game === currentGame) {
+            return (acc = {
+              ...curr,
+              data: currentRoom.dataGames[currentGame as keyof typeof currentRoom.dataGames],
+            });
+          }
+        }, {});
       }
     },
   },
@@ -53,14 +62,15 @@ export const useGameStore: any = defineStore('game_store', {
       this.currentGameRoom = id;
     },
     setGameRoom(data: RequestGameRoomType) {
+      console.log(data);
       const newRoom = {
         id: data.gameRoom.id,
         roomWithPlayer: data.gameRoom.roomWithPlayer,
+        dataGames: data.gameRoom.dataGames ?? [],
         games: [
           {
             usersOnline: data.gameRoom.usersOnline,
             totalUsers: data.gameRoom.totalUsers,
-            data: [],
             game: data.gameRoom.game,
           },
         ],
@@ -69,9 +79,8 @@ export const useGameStore: any = defineStore('game_store', {
     },
     setDataGame(data: any) {
       const currentRoom = this.gameRooms.find((room) => room.id === data.roomId);
-      const currentGame = currentRoom?.games.find((game) => game.game === data.game);
-      if (currentGame) {
-        currentGame.data = data.dataGame;
+      if (currentRoom) {
+        currentRoom.dataGames[data.game as keyof typeof currentRoom.dataGames] = data.dataGame;
       }
     },
   },
