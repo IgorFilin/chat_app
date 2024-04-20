@@ -18,13 +18,13 @@
           <div class="v-gameRoom__buttonsGroup">
             <Button
               class="v-gameRooms__button"
-              @onClick="onEnterRoomHandler(game)"
+              @onClick="onEnterRoomHandler(room.id, game)"
               text="Войти"
             />
             |
             <Button
               class="v-gameRooms__button"
-              @onClick="onLeaveRoomHandler(game)"
+              @onClick="onLeaveRoomHandler(room.id, game)"
               text="Выйти"
             />
           </div>
@@ -50,20 +50,20 @@ const authStore = useAuthStore();
 const gameStore = useGameStore();
 const socketStore = useSocketStore();
 
-function onEnterRoomHandler(game: string) {
+function onEnterRoomHandler(roomId: string, game: string) {
   socketStore.socket.emit('gameRoom', {
     action: 'enter',
     userId: authStore.id,
-    roomId: gameStore.currentGameRoom,
+    roomId: roomId,
     game,
   });
 }
 
-function onLeaveRoomHandler(game: string) {
+function onLeaveRoomHandler(roomId: string, game: string) {
   socketStore.socket.emit('gameRoom', {
     action: 'leave',
     userId: authStore.id,
-    roomId: gameStore.currentGameRoom,
+    roomId: roomId,
     game,
   });
 }

@@ -364,11 +364,15 @@ export class WebsocketService {
         }
 
         const currentRoom = {
-          game,
           id: gameRoomId,
           roomWithPlayer: '',
-          usersOnline: 0,
-          totalUsers: 2,
+          games: [
+            {
+              game,
+              usersOnline: 0,
+              totalUsers: 2,
+            },
+          ],
         };
 
         you.client.emit('inviteGame', {
@@ -538,6 +542,10 @@ export class WebsocketService {
   }
 
   async gameRoom(action: 'enter' | 'leave', userId: string, roomId: string, game: string) {
+    console.log(userId);
+    console.log(roomId);
+    console.log(game);
+
     const currentUser = this.gameRooms[roomId].users.find((user: any) => user.id === userId);
     if (action === 'enter') currentUser.isOnlineGame = game;
     else currentUser.isOnlineGame = '';

@@ -22,10 +22,8 @@ interface RequestGameRoomType {
   gameRoom: {
     dataGames: Object;
     roomWithPlayer: string;
-    game: string;
     id: string;
-    totalUsers: number;
-    usersOnline: number;
+    games: { totalUsers: number; game: string; usersOnline: number }[];
   };
   inviteGame: string;
   sendInviteUserId: string;
@@ -67,13 +65,7 @@ export const useGameStore: any = defineStore('game_store', {
         id: data.gameRoom.id,
         roomWithPlayer: data.gameRoom.roomWithPlayer,
         dataGames: data.gameRoom.dataGames ?? [],
-        games: [
-          {
-            usersOnline: data.gameRoom.usersOnline,
-            totalUsers: data.gameRoom.totalUsers,
-            game: data.gameRoom.game,
-          },
-        ],
+        games: data.gameRoom.games,
       };
       this.gameRooms.push(newRoom);
     },
