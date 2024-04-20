@@ -155,7 +155,8 @@ export class WebsocketService {
 
     for (let i = 0; i < Object.values(this.gameRooms).length; i++) {
       let room = Object.values(this.gameRooms)[i];
-      if (room.users.some((user: any) => (user.id = client.id))) {
+
+      if (room.users.some((user: any) => user.id === userId)) {
         let pushedRoom = {
           gameRoom: {
             id: Object.keys(this.gameRooms)[i],
@@ -167,8 +168,8 @@ export class WebsocketService {
     }
 
     // Отправляем пользователю который подключился его игровые комнаты если они есть
-    this.clients[user.id].client.emit('setGameRooms', { rooms });
-    console.log(this.gameRooms);
+    this.clients[userId].client.emit('setGameRooms', { rooms });
+
     return { sendClients };
   }
 

@@ -120,6 +120,7 @@ export const useSocketStore: any = defineStore('socket_store', {
       });
 
       this.socket.on('setGameRooms', (data: any) => {
+        console.log('-_-', data);
         for (const roomData of data.rooms) {
           gameStore.setGameRoom(roomData);
         }
