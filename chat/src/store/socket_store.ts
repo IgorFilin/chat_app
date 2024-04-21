@@ -115,7 +115,6 @@ export const useSocketStore: any = defineStore('socket_store', {
         }
 
         if (data.gameRoom) {
-          // gameStore.setCurrentRoomId(data.gameRoom.id);
           gameStore.setGameRoom(data);
         }
       });

@@ -155,7 +155,6 @@ export class WebsocketService {
 
     for (let i = 0; i < Object.values(this.gameRooms).length; i++) {
       let room = Object.values(this.gameRooms)[i];
-      console.log('!-!', room.users.find((user) => user.id !== userId).name);
       if (room.users.some((user: any) => user.id === userId)) {
         let pushedRoom = {
           gameRoom: {
@@ -350,21 +349,6 @@ export class WebsocketService {
       case true: {
         const gameRoomId = myId + '-' + userId;
 
-        // Если нет комнаты то создаём её и добавляем игру
-        // Если нет комнаты и нет данной игры, то добавим её
-        if (!this.gameRooms[gameRoomId]) {
-          this.gameRooms[gameRoomId] = {
-            games: [],
-            dataGames: {},
-            users: [],
-            roomWithPlayer: user.name,
-          };
-        }
-
-        if (!this.gameRooms[gameRoomId].games.some((currentGame: any) => currentGame === game)) {
-          this.gameRooms[gameRoomId].games.push({ game, usersOnline: 0, totalUsers: 2 });
-        }
-
         const currentRoom = {
           id: gameRoomId,
           roomWithPlayer: '',
@@ -377,16 +361,31 @@ export class WebsocketService {
           ],
         };
 
-        you.client.emit('inviteGame', {
+        const responseInvite = {
           userSendedInvite: sendInvite.userSendedInvite,
-          gameRoom: { ...currentRoom, roomWithPlayer: user.name },
-        });
+          gameRoom: null,
+        };
 
-        user.client.emit('inviteGame', {
-          userSendedInvite: sendInvite.userSendedInvite,
-          isAccept,
-          gameRoom: { ...currentRoom, roomWithPlayer: you.name },
-        });
+        // Если нет комнаты то создаём её и добавляем игру
+        // Если нет комнаты и нет данной игры, то добавим её
+        if (!this.gameRooms[gameRoomId]) {
+          this.gameRooms[gameRoomId] = {
+            games: [],
+            dataGames: {},
+            users: [],
+            roomWithPlayer: user.name,
+          };
+
+          if (!this.gameRooms[gameRoomId].games.some((currentGame: any) => currentGame === game)) {
+            this.gameRooms[gameRoomId].games.push({ game, usersOnline: 0, totalUsers: 2 });
+          }
+
+          responseInvite.gameRoom = { ...currentRoom, roomWithPlayer: user.name };
+        }
+
+        you.client.emit('inviteGame', responseInvite);
+
+        user.client.emit('inviteGame', { ...responseInvite, isAccept });
 
         // При инвайте добавляет только id и name от пользователей
         for (const client of [you, user]) {

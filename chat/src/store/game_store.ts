@@ -60,7 +60,6 @@ export const useGameStore: any = defineStore('game_store', {
       this.currentGameRoom = id;
     },
     setGameRoom(data: RequestGameRoomType) {
-      console.log(data);
       const newRoom = {
         id: data.gameRoom.id,
         roomWithPlayer: data.gameRoom.roomWithPlayer,
