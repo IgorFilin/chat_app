@@ -1,15 +1,11 @@
 <template>
-  <div class="v-ticTacToe">
+  <div
+    class="v-ticTacToe"
+    v-if="gameData"
+  >
     <!-- <pre>
       {{ gameStore.getTicTacToe?.data?.patternWinner }}
     </pre> -->
-    <Button
-      @onClick="onLeaveGameRoom"
-      text="Выйти из комнаты"
-      isIcon
-      iconId="arrow_back"
-      iconColor="white"
-    />
     <div class="v-ticTacToe__board">
       <div
         v-for="(cell, index) in gameData.board"
@@ -70,10 +66,6 @@ const gameData = computed(() => gameStore.getTicTacToe.data);
 
 function onClickCell(index: number) {
   emit('changeBoard', index);
-}
-
-function onLeaveGameRoom() {
-  router.push('/main');
 }
 
 function onClearBoard() {
