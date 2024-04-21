@@ -100,6 +100,7 @@ export const useSocketStore: any = defineStore('socket_store', {
           const TypeNameGames = {
             ticTacToe: 'Крестики нолики',
           } as any;
+
           this.popupInviteGameData = {
             title: `Вас пригласил ${data.userSendedInvite} в&nbsp;игру&nbsp;${TypeNameGames[data.game]}`,
             game: data.inviteGame,
@@ -108,19 +109,18 @@ export const useSocketStore: any = defineStore('socket_store', {
           this.isOpenPopupInviteGame = true;
         }
 
-        if (data.isAccept !== undefined) {
+        if (typeof data.isAccept == 'boolean') {
           const answer = data.isAccept ? 'принял' : 'отклонил';
           toast(`Пользователь ${data.userSendedInvite} ${answer} предложение`);
         }
 
         if (data.gameRoom) {
-          gameStore.setCurrentRoomId(data.gameRoom.id);
+          // gameStore.setCurrentRoomId(data.gameRoom.id);
           gameStore.setGameRoom(data);
         }
       });
 
       this.socket.on('setGameRooms', (data: any) => {
-        console.log('-_-', data);
         for (const roomData of data.rooms) {
           gameStore.setGameRoom(roomData);
         }
@@ -131,7 +131,11 @@ export const useSocketStore: any = defineStore('socket_store', {
       });
 
       this.socket.on('actionGameRoom', (data: any) => {
-        router.push(`/games/${data.roomId}`);
+        if (data.roomId) {
+          console.log(data.roomId);
+          gameStore.setCurrentRoomId(data.roomId);
+          router.push(`/games/${data.roomId}`);
+        }
       });
     },
   },

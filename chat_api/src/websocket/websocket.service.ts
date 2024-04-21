@@ -168,6 +168,7 @@ export class WebsocketService {
     }
 
     // Отправляем пользователю который подключился его игровые комнаты если они есть
+    console.log('-_-', rooms);
     this.clients[userId].client.emit('setGameRooms', { rooms });
 
     return { sendClients };
@@ -542,9 +543,9 @@ export class WebsocketService {
   }
 
   async gameRoom(action: 'enter' | 'leave', userId: string, roomId: string, game: string) {
-    console.log(userId);
-    console.log(roomId);
-    console.log(game);
+    // console.log(userId);
+    // console.log(roomId);
+    // console.log(game);
 
     const currentUser = this.gameRooms[roomId].users.find((user: any) => user.id === userId);
     if (action === 'enter') currentUser.isOnlineGame = game;

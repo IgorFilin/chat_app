@@ -64,9 +64,11 @@ export const useGameStore: any = defineStore('game_store', {
       const newRoom = {
         id: data.gameRoom.id,
         roomWithPlayer: data.gameRoom.roomWithPlayer,
-        dataGames: data.gameRoom.dataGames ?? [],
+        dataGames: data.gameRoom.dataGames || {},
         games: data.gameRoom.games,
       };
+
+      console.log('newRoom', newRoom);
       this.gameRooms.push(newRoom);
     },
     setDataGame(data: any) {

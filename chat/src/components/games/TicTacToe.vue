@@ -1,7 +1,7 @@
 <template>
   <div class="v-ticTacToe">
     <!-- <pre>
-      {{ gameStore.getTicTacToe?.data }}
+      {{ gameStore.getTicTacToe?.data?.patternWinner }}
     </pre> -->
     <Button
       @onClick="onLeaveGameRoom"
@@ -12,12 +12,11 @@
     />
     <div class="v-ticTacToe__board">
       <div
-        v-for="(cell, index) in gameStore.getTicTacToe?.data?.board"
+        v-for="(cell, index) in gameData.board"
         @click.prevent.stop="onClickCell(index)"
         :key="index"
         :class="[
-          { winner: gameStore.getTicTacToe?.data?.patternWinner.includes(index) },
-          ,
+          { winner: gameData.patternWinner?.includes(index) },
           { cross: cell === 'x' },
           { circle: cell === 'o' },
         ]"
@@ -25,26 +24,26 @@
       />
     </div>
     <div
-      v-if="!gameStore.getTicTacToe?.data?.winner"
+      v-if="!gameData.winner"
       class="v-ticTacToe__nextMove"
     >
       Следующий ход за
       <span>
-        {{ gameStore.getTicTacToe?.data?.nextMove?.name + `( ${gameStore.getTicTacToe?.data?.nextMove?.symbol} )` }}
+        {{ gameData.nextMove?.name + `( ${gameData.nextMove?.symbol} )` }}
       </span>
     </div>
     <div class="v-ticTacToe__scored">
       <div>Статистика:</div>
-      <div v-for="stats in gameStore.getTicTacToe?.data?.players">
+      <div v-for="stats in gameData.players">
         <span class="">{{ stats.name }}:</span>
         <span>{{ ' ' + stats.score }}</span>
       </div>
     </div>
     <div
       class="v-ticTacToe__winner"
-      v-if="gameStore.getTicTacToe?.data?.winner"
+      v-if="gameData.winner"
     >
-      <span>Выйграл: {{ gameStore.getTicTacToe?.data?.winner }}</span>
+      <span>Выйграл: {{ gameData.winner }}</span>
       <Button
         @onClick.stop="onClearBoard"
         text="Сбросить доску"
@@ -59,13 +58,15 @@ import Button from '@/components/assetsComponent/Button.vue';
 import router from '@/router/router';
 import { useSocketStore } from '@/store/socket_store.ts';
 import { useAuthStore } from '@/store/auth_store.ts';
-import { nextTick, onMounted, onUnmounted, watch } from 'vue';
+import { computed, nextTick, onMounted, onUnmounted, watch } from 'vue';
 
 const emit = defineEmits(['changeBoard', 'clearBoard']);
 
 const gameStore = useGameStore();
 const socketStore = useSocketStore();
 const authStore = useAuthStore();
+
+const gameData = computed(() => gameStore.getTicTacToe.data);
 
 function onClickCell(index: number) {
   emit('changeBoard', index);
@@ -97,7 +98,8 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  socketStore.socket.emit('gameRoom', { action: 'leave', userId: authStore.id, roomId: gameStore.gameRoomId });
+  // socketStore.socket.emit('gameRoom', { action: 'leave', userId: authStore.id, roomId: gameStore.gameRoomId });
+  console.log('Unmount');
 });
 </script>
 
