@@ -96,6 +96,8 @@ export const useSocketStore: any = defineStore('socket_store', {
       });
 
       this.socket.on('inviteGame', (data: any) => {
+        if (data.message) toast(data.message);
+
         if (data.isInvite) {
           const TypeNameGames = {
             ticTacToe: 'Крестики нолики',

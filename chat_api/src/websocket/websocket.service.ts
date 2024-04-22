@@ -14,7 +14,6 @@ interface GameRoomsType {
     dataGames: {
       [game: string]: any;
     };
-    roomWithPlayer: string;
     users: {
       id: string;
       name: string;
@@ -326,11 +325,14 @@ export class WebsocketService {
     const you = this.clients[myId];
     const user = this.clients[userId];
 
+    const gameRoomId = `${myId}-${userId}`;
+    const gameRoomIdSecond = `${userId}-${myId}`;
+
     const sendInvite = {
       game,
       userSendedInvite: you.name,
-      inviteGame: game,
       sendInviteUserId: myId,
+      inviteGame: game,
     } as any;
 
     // Если "Подтверждёный статус" не приходит то отправить пользаку c userId приглашение,
@@ -338,6 +340,10 @@ export class WebsocketService {
     // Приглашение в эту комнату двум игрокам
     switch (isAccept) {
       case undefined: {
+        if (this.gameRooms[gameRoomId] || this.gameRooms[gameRoomIdSecond]) {
+          you.client.emit('inviteGame', { message: 'Комната с игрой уже создана, приятной игры :)' });
+          break;
+        }
         sendInvite.isInvite = true;
         user.client.emit('inviteGame', sendInvite);
         break;
@@ -347,8 +353,6 @@ export class WebsocketService {
         break;
       }
       case true: {
-        const gameRoomId = myId + '-' + userId;
-
         const currentRoom = {
           id: gameRoomId,
           roomWithPlayer: '',
@@ -365,7 +369,7 @@ export class WebsocketService {
           userSendedInvite: sendInvite.userSendedInvite,
           gameRoom: null,
         };
-
+        console.log('до', this.gameRooms[gameRoomId]);
         // Если нет комнаты то создаём её и добавляем игру
         // Если нет комнаты и нет данной игры, то добавим её
         if (!this.gameRooms[gameRoomId]) {
@@ -373,8 +377,8 @@ export class WebsocketService {
             games: [],
             dataGames: {},
             users: [],
-            roomWithPlayer: user.name,
           };
+          console.log('после', this.gameRooms[gameRoomId]);
 
           if (!this.gameRooms[gameRoomId].games.some((currentGame: any) => currentGame === game)) {
             this.gameRooms[gameRoomId].games.push({ game, usersOnline: 0, totalUsers: 2 });
