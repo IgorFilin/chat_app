@@ -384,12 +384,19 @@ export class WebsocketService {
             this.gameRooms[gameRoomId].games.push({ game, usersOnline: 0, totalUsers: 2 });
           }
 
-          responseInvite.gameRoom = { ...currentRoom, roomWithPlayer: user.name };
+          responseInvite.gameRoom = currentRoom;
         }
 
-        you.client.emit('inviteGame', responseInvite);
+        you.client.emit('inviteGame', {
+          ...responseInvite,
+          gameRoom: { ...responseInvite.gameRoom, roomWithPlayer: user.name },
+        });
 
-        user.client.emit('inviteGame', { ...responseInvite, isAccept });
+        user.client.emit('inviteGame', {
+          ...responseInvite,
+          isAccept,
+          gameRoom: { ...responseInvite.gameRoom, roomWithPlayer: you.name },
+        });
 
         // При инвайте добавляет только id и name от пользователей
         for (const client of [you, user]) {
