@@ -11,10 +11,12 @@ import { WebsocketModule } from './websocket/websocket.module';
 import { Room } from './websocket/entities/room.entity';
 import { Message } from './websocket/entities/message.entity';
 import { YaModule } from './yandexDisk/ya.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 const configEnv = process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development';
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: configEnv,
