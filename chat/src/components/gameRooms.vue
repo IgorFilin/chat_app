@@ -1,7 +1,7 @@
 <template>
   <div class="v-gameRooms">
-    {{ gameStore.gameRooms }}
     <div
+      v-if="gameStore.gameRooms.length"
       v-for="(room, index) in gameStore.gameRooms"
       class="v-gameRoom"
     >
@@ -32,6 +32,12 @@
       </div>
       <div></div>
     </div>
+    <div
+      class="v-gameRooms__text"
+      v-else
+    >
+      <TextTyper :text="['Нет активных игровых сессий']" />
+    </div>
   </div>
 </template>
 
@@ -44,6 +50,7 @@ import { useGameStore } from '@/store/game_store';
 import { useRoute } from 'vue-router';
 import router from '@/router/router';
 import Button from '@/components/assetsComponent/Button.vue';
+import TextTyper from '@/components/assetsComponent/TextTyper.vue';
 
 const route = useRoute();
 const authStore = useAuthStore();
@@ -156,5 +163,15 @@ function onLeaveRoomHandler(roomId: string, game: string) {
 .v-gameRoom__buttonsGroup {
   align-items: center;
   display: flex;
+}
+
+.v-gameRooms__text {
+  display: flex;
+  justify-content: center;
+
+  .v-typewriter {
+    position: relative;
+    font-size: 20px;
+  }
 }
 </style>
