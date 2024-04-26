@@ -66,8 +66,6 @@ export const useGameStore: any = defineStore('game_store', {
         dataGames: data.gameRoom.dataGames || {},
         games: data.gameRoom.games,
       };
-
-      console.log('newRoom', newRoom);
       this.gameRooms.push(newRoom);
     },
     setDataGame(data: any) {
@@ -75,6 +73,9 @@ export const useGameStore: any = defineStore('game_store', {
       if (currentRoom) {
         currentRoom.dataGames[data.game as keyof typeof currentRoom.dataGames] = data.dataGame;
       }
+    },
+    removeLeavedRoom(roomId: string) {
+      this.gameRooms = this.gameRooms.filter((room) => room.id !== roomId);
     },
   },
 });

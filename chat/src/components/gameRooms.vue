@@ -8,7 +8,7 @@
     >
       <Icon
         class="v-gameRooms__iconClose"
-        @click="onCloseGameRoom"
+        @click="onCloseGameRoom(room.id)"
         id="close-cross"
         color="orange"
       />
@@ -62,19 +62,18 @@ const socketStore = useSocketStore();
 
 function onEnterRoomHandler(roomId: string, game: string) {
   socketStore.socket.emit('gameRoom', {
-    action: 'enter',
+    action: 'enterGame',
     userId: authStore.id,
     roomId: roomId,
     game,
   });
 }
 
-function onCloseGameRoom(roomId: string, game: string) {
+function onCloseGameRoom(roomId: string) {
   socketStore.socket.emit('gameRoom', {
-    action: 'leave',
+    action: 'leaveRoom',
     userId: authStore.id,
     roomId: roomId,
-    game,
   });
 }
 </script>

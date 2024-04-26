@@ -105,5 +105,9 @@ export function webSocketEntity() {
     gameStore.setGame(data);
   });
 
+  socketStore.socket.on('actionGameRoom', (data) => {
+    console.log(data);
+  });
+
   return { state };
 }

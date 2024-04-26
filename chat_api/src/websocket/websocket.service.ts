@@ -553,14 +553,20 @@ export class WebsocketService {
     }
   }
 
-  async gameRoom(action: 'enter' | 'leave', userId: string, roomId: string, game: string) {
+  async gameRoom(action: 'enterGame' | 'leaveRoom', userId: string, roomId: string, game: string) {
     // console.log(userId);
     // console.log(roomId);
     // console.log(game);
 
     const currentUser = this.gameRooms[roomId].users.find((user: any) => user.id === userId);
-    if (action === 'enter') currentUser.isOnlineGame = game;
-    else currentUser.isOnlineGame = '';
-    this.clients[userId].client.emit('actionGameRoom', { game, action, roomId });
+    if (action === 'enterGame') {
+      this.clients[userId].client.emit('actionGameRoom', { game, action, roomId });
+    } else {
+      const users = this.gameRooms[roomId].users;
+      delete this.gameRooms[roomId];
+      for (const user of users) {
+        this.clients[user.id].client.emit('actionGameRoom', { action, roomId });
+      }
+    }
   }
 }

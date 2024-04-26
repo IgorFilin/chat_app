@@ -132,10 +132,13 @@ export const useSocketStore: any = defineStore('socket_store', {
       });
 
       this.socket.on('actionGameRoom', (data: any) => {
-        if (data.roomId) {
-          console.log(data.roomId);
+        if (data.action === 'enterGame') {
           gameStore.setCurrentRoomId(data.roomId);
           router.push(`/games/${data.roomId}`);
+        }
+
+        if (data.action === 'leaveRoom') {
+          gameStore.removeLeavedRoom(data.roomId);
         }
       });
     },
