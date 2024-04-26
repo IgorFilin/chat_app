@@ -3,8 +3,15 @@
     <div
       v-if="gameStore.gameRooms.length"
       v-for="(room, index) in gameStore.gameRooms"
+      :key="index"
       class="v-gameRoom"
     >
+      <Icon
+        class="v-gameRooms__iconClose"
+        @click="onCloseGameRoom"
+        id="close-cross"
+        color="orange"
+      />
       <div class="v-gameRoom__roomName">Комната с {{ room.roomWithPlayer }}</div>
       <div class="v-gameRoom__games">
         <div
@@ -24,7 +31,7 @@
             |
             <Button
               class="v-gameRooms__button"
-              @onClick="onLeaveRoomHandler(room.id, game)"
+              isDisabled
               text="Выйти"
             />
           </div>
@@ -42,17 +49,13 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, onBeforeMount, onMounted, onUnmounted, onUpdated, ref, watch } from 'vue';
-import TicTacToe from '@/components/games/TicTacToe.vue';
 import { useAuthStore } from '@/store/auth_store';
 import { useSocketStore } from '@/store/socket_store';
 import { useGameStore } from '@/store/game_store';
-import { useRoute } from 'vue-router';
-import router from '@/router/router';
 import Button from '@/components/assetsComponent/Button.vue';
 import TextTyper from '@/components/assetsComponent/TextTyper.vue';
+import Icon from '@/components/assetsComponent/Icon.vue';
 
-const route = useRoute();
 const authStore = useAuthStore();
 const gameStore = useGameStore();
 const socketStore = useSocketStore();
@@ -66,7 +69,7 @@ function onEnterRoomHandler(roomId: string, game: string) {
   });
 }
 
-function onLeaveRoomHandler(roomId: string, game: string) {
+function onCloseGameRoom(roomId: string, game: string) {
   socketStore.socket.emit('gameRoom', {
     action: 'leave',
     userId: authStore.id,
@@ -78,6 +81,7 @@ function onLeaveRoomHandler(roomId: string, game: string) {
 
 <style scoped lang="scss">
 .v-gameRooms {
+  position: relative;
   display: flex;
   width: 100%;
   height: 90vh;
@@ -119,10 +123,6 @@ function onLeaveRoomHandler(roomId: string, game: string) {
   transition: transform 0.3s ease;
   box-shadow: #0f0 0px 2px 8px 2px;
   gap: 10px;
-
-  &:hover {
-    transform: translateY(-2px);
-  }
 }
 
 .v-gameRoom__roomName {
@@ -172,6 +172,19 @@ function onLeaveRoomHandler(roomId: string, game: string) {
   .v-typewriter {
     position: relative;
     font-size: 20px;
+  }
+}
+
+.v-gameRooms__iconClose {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 20px;
+  height: 20px;
+
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.1);
   }
 }
 </style>
