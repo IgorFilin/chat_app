@@ -2,7 +2,7 @@
   <div @click="audio.play()">
     <Header />
     <transition
-      name="fade"
+      :name="!store.isAuth ? 'fade' : 'main'"
       mode="out-in"
     >
       <router-view></router-view>
@@ -108,14 +108,12 @@ body {
 }
 
 #app {
-  .fade-enter-active,
-  .fade-leave-active {
-    transition: opacity 0.1s ease;
+  .fade-enter-active {
+    @include animation(open-popup);
   }
 
-  .fade-enter-from,
-  .fade-leave-to {
-    opacity: 0;
+  .fade-leave-active {
+    @include animation(accept-popup-close);
   }
 }
 

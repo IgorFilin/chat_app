@@ -4,7 +4,17 @@
     title="Вход"
     buttonText="Войти"
     @submit="onLogin"
-  />
+  >
+    <template #additional>
+      Ещё нет аккаунта?
+      <span
+        class="v-popup__Link"
+        @click="onRegistrationLinkHandler"
+      >
+        Начните здесь
+      </span>
+    </template>
+  </Popup>
 </template>
 
 <script setup lang="ts">
@@ -31,6 +41,10 @@ const store = useAuthStore();
 
 function onLogin(data: LoginUserType) {
   store.loginAction(data);
+}
+
+function onRegistrationLinkHandler() {
+  router.push('/registration');
 }
 
 watchEffect(() => {

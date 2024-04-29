@@ -22,7 +22,6 @@ function yandexCaptcha() {
   });
 
   function render() {
-    console.log('ya_render');
     const id = window.smartCaptcha.render('captcha-container', {
       sitekey: import.meta.env.VITE_APP_YA_CAPTCHA_KEY,
       invisible: isInvisibleCaptcha.value,

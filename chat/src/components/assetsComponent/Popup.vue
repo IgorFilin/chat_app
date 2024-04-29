@@ -25,7 +25,6 @@
         <slot name="additional"></slot>
       </div>
       <div id="captcha-container"></div>
-
       <Button
         v-if="buttonText"
         class="v-popup__button"
@@ -151,6 +150,7 @@ function onInputUpdated(dataInput: { value: string; error: boolean }, changeValu
 }
 
 .v-popup__slotAdditional {
+  margin-top: 15px;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -197,5 +197,10 @@ function onInputUpdated(dataInput: { value: string; error: boolean }, changeValu
     cursor: pointer;
     transform: scale(1.1);
   }
+}
+
+.v-popup__Link {
+  color: $skyBlue;
+  cursor: pointer;
 }
 </style>

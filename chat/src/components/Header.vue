@@ -1,5 +1,8 @@
 <template>
-  <div class="v-header__container">
+  <div
+    v-if="store.isAuth"
+    class="v-header__container"
+  >
     <div
       class="v-header__burger"
       :class="{ active: appStore.isOpenBurger }"
@@ -53,6 +56,7 @@
   <transition
     name="fade"
     mode="out-in"
+    v-if="store.isAuth"
   >
     <div
       class="v-header__modalWindow"
@@ -60,7 +64,7 @@
     >
       <div
         class="v-header__modalItem"
-        @click="goTo(`/profile/${store.id}/`), (isOpenModal = false)"
+        @click="(isOpenModal = false), goTo(`/profile/${store.id}/`)"
       >
         Профиль
       </div>
@@ -81,7 +85,7 @@
   <div
     class="v-header__musicPlayer"
     :class="{ hidden: isOpenAudioTrack }"
-    v-if="yaStore.playedTrack.file"
+    v-if="yaStore.playedTrack.file && store.isAuth"
     :key="yaStore.playedTrack.file"
   >
     <div
@@ -206,7 +210,6 @@ watch(
   () => store.currentPath,
   () => {
     navigateButtons.value.forEach((btn, index) => {
-      console.log('for');
       btn.isChat = false;
     });
     switch (store.currentPath) {

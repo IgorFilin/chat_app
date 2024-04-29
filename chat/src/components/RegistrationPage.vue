@@ -3,7 +3,18 @@
     :inputs="inputsRegistration"
     title="Регистрация"
     buttonText="Зарегистрироваться"
-    @submit="onRegistration" />
+    @submit="onRegistration"
+  >
+    <template #additional>
+      Уже есть аккаунт?
+      <span
+        class="v-popup__Link"
+        @click="onLoginLinkHandler"
+      >
+        Войдите здесь
+      </span>
+    </template>
+  </Popup>
 </template>
 
 <script setup lang="ts">
@@ -35,6 +46,10 @@ const store = useAuthStore();
 
 function onRegistration(data: RegisterUserType) {
   store.registration(data);
+}
+
+function onLoginLinkHandler() {
+  router.push('/login');
 }
 
 watchEffect(() => {
