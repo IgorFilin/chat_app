@@ -134,6 +134,7 @@ function onInputUpdated(dataInput: { value: string; error: boolean }, changeValu
 .v-popup__title {
   font-size: 24px;
   margin-bottom: 20px;
+  text-align: center;
 }
 
 .v-popup__form {

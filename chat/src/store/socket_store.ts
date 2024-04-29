@@ -104,7 +104,7 @@ export const useSocketStore: any = defineStore('socket_store', {
           } as any;
 
           this.popupInviteGameData = {
-            title: `Вас пригласил ${data.userSendedInvite} в&nbsp;игру&nbsp;${TypeNameGames[data.game]}`,
+            title: `Вас\nпригласил ${data.userSendedInvite} в игру\n${TypeNameGames[data.game]}`,
             game: data.inviteGame,
             sendInviteUserId: data.sendInviteUserId,
           };

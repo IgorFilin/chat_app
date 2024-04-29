@@ -48,18 +48,20 @@
         @onClose="socketStore.isOpenPopupInviteGame = false"
       >
         <template #additional>
-          <Button
-            v-for="({ text, isAccept }, index) in inviteGameButtons"
-            :key="index"
-            :text="text"
-            @click.prevent="
-              sendInviteGameHandler(
-                socketStore.popupInviteGameData.sendInviteUserId,
-                socketStore.popupInviteGameData.game,
-                isAccept
-              )
-            "
-          />
+          <div class="v-mainPage__inviteGamePopupBtns">
+            <Button
+              v-for="({ text, isAccept }, index) in inviteGameButtons"
+              :key="index"
+              :text="text"
+              @click.prevent="
+                sendInviteGameHandler(
+                  socketStore.popupInviteGameData.sendInviteUserId,
+                  socketStore.popupInviteGameData.game,
+                  isAccept
+                )
+              "
+            />
+          </div>
         </template>
       </Popup>
     </Transition>
@@ -261,6 +263,21 @@ onUnmounted(() => {
   }
 }
 
+.v-mainPage__inviteGamePopupBtns {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+
+  .v-button {
+    min-width: 180px;
+
+    &:nth-child(2) {
+      background: $redPepper;
+      color: $darkBlack;
+    }
+  }
+}
+
 .v-mainPage__backAllChatContainer {
   display: flex;
   align-items: center;
@@ -273,11 +290,6 @@ onUnmounted(() => {
   position: absolute;
   min-width: 350px;
   transform: translate3d(0, 0, 0);
-
-  .v-popup__title {
-    font-size: 20px;
-    text-align: center;
-  }
 
   &.popup-enter-active {
     @include animation(open-popup);
