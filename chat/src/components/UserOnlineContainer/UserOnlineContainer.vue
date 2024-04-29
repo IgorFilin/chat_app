@@ -3,29 +3,34 @@ div
   <div
     class="v-usersOnline"
     :class="{ active: isActiveUserContainer }"
-    @click="showPopup = false">
+    @click="showPopup = false"
+  >
     <div
       class="v-usersOnline__clickElem"
       :class="{ notActive: !isActiveUserContainer }"
-      @click="onActiveUserContainer" />
+      @click="onActiveUserContainer"
+    />
     <input
       class="v-usersOnline__search"
       type="search"
-      v-model="searchedUser" />
+      v-model="searchedUser"
+    />
     <div class="v-usersOnline__usersContainer">
       <div
         class="v-usersOnline__user"
         :class="{ online: user.online, isOpenPopup: clikedUser.id === user.id }"
         @click="(event) => clickedUserHandler(event, user)"
         v-for="user in filteredActiveOrNotUsers"
-        :key="user.id">
+        :key="user.id"
+      >
         {{ user.name }}
         <UserOnlineContainerSelect
           :isOpen="showPopup && clikedUser.id === user.id && clikedUser.id !== auth_store.id"
           :selectData="selectData"
           @onPrivateRoomHandler="(e) => onPrivateRoomHandler(e, user.id)"
           @goTo="goTo(`/profile/${user.id}/`)"
-          @sendInviteGame="(game) => sendInviteGameHandler(user.id, game)" />
+          @sendInviteGame="(game) => sendInviteGameHandler(user.id, game)"
+        />
       </div>
     </div>
   </div>
@@ -37,11 +42,13 @@ import UserOnlineContainerSelect from '@/components/UserOnlineContainer/UserOnli
 import { useUserStore } from '@/store/user_store.ts';
 import { useAuthStore } from '@/store/auth_store.ts';
 import router from '@/router/router';
+import { useAppStore } from '@/store/app_store.ts';
 
 const emit = defineEmits(['sendInviteGame', 'openRoom']);
 
 const user_store = useUserStore();
 const auth_store = useAuthStore();
+const appStore = useAppStore();
 
 const searchedUser = ref('') as Ref<string>;
 const isActiveUserContainer = ref(false) as Ref<boolean>;
@@ -108,6 +115,15 @@ function sendInviteGameHandler(userId: string, game: string) {
     auth_store.toast('К сожалению пользователя нет онлайн');
   }
 }
+
+watch(
+  () => appStore.isOpenBurger,
+  () => {
+    if (appStore.isOpenBurger) {
+      isActiveUserContainer.value = false;
+    }
+  }
+);
 
 onMounted(() => {
   user_store.getAllUsers();

@@ -52,7 +52,6 @@ const slicedCoord = ref({ start: 0, end: 8 });
 const tracks = ref([]) as any;
 
 const isPlayedCurrentTrack = (file: string): boolean => {
-  console.log('test', file);
   return yaStore.isPlayed && file === yaStore.playedTrack.file;
 };
 
@@ -159,7 +158,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 15px;
-  padding-left: 15px;
+  padding: 0 15px;
   border: 2px solid;
   height: 100%;
   cursor: pointer;

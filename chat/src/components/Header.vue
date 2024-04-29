@@ -1,14 +1,27 @@
 <template>
   <div class="v-header__container">
-    <div class="v-header__buttonsContainer">
-      <Button
-        v-for="({ text, redirect, show, isActive }, index) in navigateButtons"
-        :class="{ active: isActive }"
-        :text="text"
-        v-show="show"
-        class="v-header__navigateButton"
-        @onClick="goTo(redirect)"
-      />
+    <div
+      class="v-header__burger"
+      :class="{ active: appStore.isOpenBurger }"
+      @click="appStore.toggleBurger"
+    >
+      <span
+        class="v-header__itemBurger"
+        v-for="_ in 3"
+      ></span>
+      <div
+        v-if="appStore.isOpenBurger"
+        class="v-header__buttonsBurger"
+      >
+        <Button
+          v-for="({ variant, show, isChat }, index) in navigateButtons"
+          :key="index"
+          :text="getVariantButton(isChat, index).text"
+          v-show="show"
+          class="v-header__navigateButton"
+          @onClick="goTo(getVariantButton(isChat, index).redirect)"
+        />
+      </div>
     </div>
     <div class="v-header__nameLogoutContainer">
       <label for="download">
@@ -111,47 +124,66 @@
 <script setup lang="ts">
 import router from '@/router/router';
 import { useAuthStore } from '@/store/auth_store';
-import { onMounted, onUnmounted, onUpdated, ref, watch } from 'vue';
+import { useAppStore } from '@/store/app_store.ts';
+import { computed, onMounted, onUnmounted, onUpdated, ref, watch } from 'vue';
 import Button from '@/components/assetsComponent/Button.vue';
 import { useYandexStore } from '@/store/yandex_store.ts';
 import Icon from '@/components/assetsComponent/Icon.vue';
 
 const store = useAuthStore();
 const yaStore = useYandexStore();
+const appStore = useAppStore();
 const track = ref();
 const isOpenModal = ref(false);
 const isOpenAudioTrack = ref(true);
+const isOpenBurger = ref(false);
 
 const navigateButtons = ref([
+  // {
+  //   text: 'Регистрация',
+  //   redirect: '/registration',
+  //   show: true,
+  //   isActive: false,
+  // },
+  // {
+  //   text: 'Вход',
+  //   redirect: '/login',
+  //   show: true,
+  //   isActive: false,
+  // },
+  // {
+  //   variantText: ['Подтвердить почту','В чат'],
+  //   redirect: '/confirm',
+  //   show: false,
+  //   isActive: false,
+  // },
   {
-    text: 'Регистрация',
-    redirect: '/registration',
+    variant: {
+      chat: {
+        text: 'В чат',
+        redirect: '/main',
+      },
+      current: {
+        text: 'Плеер',
+        redirect: '/music',
+      },
+    },
     show: true,
-    isActive: false,
+    isChat: false,
   },
   {
-    text: 'Вход',
-    redirect: '/login',
+    variant: {
+      chat: {
+        text: 'В чат',
+        redirect: '/main',
+      },
+      current: {
+        text: 'Игровые комнаты',
+        redirect: '/gameRooms',
+      },
+    },
     show: true,
-    isActive: false,
-  },
-  {
-    text: 'Подтвердить почту',
-    redirect: '/confirm',
-    show: false,
-    isActive: false,
-  },
-  {
-    text: '',
-    redirect: ``,
-    show: true,
-    isActive: false,
-  },
-  {
-    text: 'Музыка',
-    redirect: '/music',
-    show: true,
-    isActive: false,
+    isChat: false,
   },
 ]);
 
@@ -163,11 +195,8 @@ function goTo(route: string) {
 watch(
   [() => store.isAcceptKey, () => store.isAuth],
   () => {
-    navigateButtons.value[0].show = !store.isAuth;
-    navigateButtons.value[1].show = !store.isAuth;
-    navigateButtons.value[2].show = store.isAcceptKey === false;
-    navigateButtons.value[3].show = store.isAuth;
-    navigateButtons.value[4].show = store.isAuth;
+    navigateButtons.value[0].show = store.isAuth;
+    navigateButtons.value[1].show = store.isAuth;
   },
   { immediate: true }
 );
@@ -176,28 +205,28 @@ watch(
 watch(
   () => store.currentPath,
   () => {
+    navigateButtons.value.forEach((btn, index) => {
+      console.log('for');
+      btn.isChat = false;
+    });
     switch (store.currentPath) {
-      case '/gameRooms': {
-        navigateButtons.value[3].text = 'В чат';
-        navigateButtons.value[3].redirect = '/main';
+      case '/music': {
+        navigateButtons.value[0].isChat = true;
         break;
       }
-      case '/music': {
-        navigateButtons.value[4].text = 'В чат';
-        navigateButtons.value[4].redirect = '/main';
+      case '/gameRooms': {
+        navigateButtons.value[1].isChat = true;
         break;
       }
       default: {
-        navigateButtons.value[3].text = 'Игровые комнаты';
-        navigateButtons.value[3].redirect = '/gameRooms';
-
-        navigateButtons.value[4].text = 'Музыка';
-        navigateButtons.value[4].redirect = '/music';
+        navigateButtons.value.forEach((btn) => {
+          btn.isChat = false;
+        });
         break;
       }
     }
 
-    setActiveNavigationButton(store.currentPath);
+    // setActiveNavigationButton(store.currentPath);
   },
   { immediate: true }
 );
@@ -234,10 +263,15 @@ function downloadPhoto(event: any) {
   store.sendAvatarUser(file);
 }
 
-function setActiveNavigationButton(path: string) {
-  navigateButtons.value.forEach((button) => {
-    button.isActive = button.redirect === path;
-  });
+// function setActiveNavigationButton(path: string) {
+//   navigateButtons.value.forEach((button) => {
+//     button.isActive = button.redirect === path;
+//   });
+// }
+
+function getVariantButton(isChat: boolean, index: number) {
+  const variantKey = isChat ? 'chat' : 'current';
+  return navigateButtons.value[index].variant[variantKey];
 }
 
 function onChangePlayedHandler(e: any, isPlayed: boolean) {
@@ -267,11 +301,6 @@ onUpdated(() => {
   position: relative;
 }
 
-.v-header__buttonsContainer {
-  display: flex;
-  gap: 15px;
-}
-
 .v-header__navigateButton {
   font-size: 15px;
   background-color: initial;
@@ -279,10 +308,6 @@ onUpdated(() => {
   cursor: pointer;
   align-self: center;
   padding: 0;
-
-  &.active {
-    color: #e2e5e8;
-  }
 }
 
 .v-header__audioName {
@@ -319,6 +344,62 @@ onUpdated(() => {
       &.v-icon {
         color: white;
       }
+    }
+  }
+}
+
+.v-header__burger {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  position: relative;
+  height: 17px;
+  cursor: pointer;
+
+  .v-header__itemBurger {
+    width: 100%;
+    height: 3px;
+    background-color: $orange;
+    border-radius: 3px;
+    transition: transform 0.3s ease;
+  }
+
+  .v-header__buttonsBurger {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 5px;
+    top: 40px;
+    width: 150px;
+    background-color: $cacaoBlack;
+    left: -20px;
+    transition: 0.4s;
+    z-index: 9;
+
+    .v-button {
+      border: 2px solid $orange;
+      width: 100%;
+      padding: 5px;
+
+      &:hover {
+        transition: 0.4s;
+        background: $darkBlack;
+        color: white;
+      }
+    }
+  }
+
+  &.active {
+    .v-header__itemBurger:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+    .v-header__itemBurger:nth-child(2) {
+      opacity: 0;
+    }
+    .v-header__itemBurger:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
     }
   }
 }
