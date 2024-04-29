@@ -129,6 +129,7 @@ function onInputUpdated(dataInput: { value: string; error: boolean }, changeValu
   max-height: 600px;
   margin: 20vh auto;
   z-index: 999999;
+  transition: opacity 0.5s ease;
 }
 
 .v-popup__title {

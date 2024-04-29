@@ -39,28 +39,30 @@
       />
     </div>
     <InputSendButton @sendMessage="sendMessage" />
-    <Popup
-      v-if="socketStore.isOpenPopupInviteGame"
-      class="v-mainPage__inviteGamePopup"
-      :title="socketStore.popupInviteGameData.title"
-      isCloseBtn
-      @onClose="socketStore.isOpenPopupInviteGame = false"
-    >
-      <template #additional>
-        <Button
-          v-for="({ text, isAccept }, index) in inviteGameButtons"
-          :key="index"
-          :text="text"
-          @click.prevent="
-            sendInviteGameHandler(
-              socketStore.popupInviteGameData.sendInviteUserId,
-              socketStore.popupInviteGameData.game,
-              isAccept
-            )
-          "
-        />
-      </template>
-    </Popup>
+    <Transition name="popup">
+      <Popup
+        v-if="socketStore.isOpenPopupInviteGame"
+        class="v-mainPage__inviteGamePopup"
+        :title="socketStore.popupInviteGameData.title"
+        isCloseBtn
+        @onClose="socketStore.isOpenPopupInviteGame = false"
+      >
+        <template #additional>
+          <Button
+            v-for="({ text, isAccept }, index) in inviteGameButtons"
+            :key="index"
+            :text="text"
+            @click.prevent="
+              sendInviteGameHandler(
+                socketStore.popupInviteGameData.sendInviteUserId,
+                socketStore.popupInviteGameData.game,
+                isAccept
+              )
+            "
+          />
+        </template>
+      </Popup>
+    </Transition>
   </div>
 </template>
 
@@ -270,10 +272,19 @@ onUnmounted(() => {
 .v-mainPage__inviteGamePopup {
   position: absolute;
   min-width: 350px;
+  transform: translate3d(0, 0, 0);
 
   .v-popup__title {
     font-size: 20px;
     text-align: center;
+  }
+
+  &.popup-enter-active {
+    @include animation(open-popup);
+  }
+
+  &.popup-leave-active {
+    @include animation(accept-popup-close);
   }
 }
 </style>

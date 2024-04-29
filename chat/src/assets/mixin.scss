@@ -1,3 +1,5 @@
+// Брейкпоинты
+
 @mixin phones {
   @media screen and (max-width: 640px) {
     @content;
@@ -7,5 +9,52 @@
 @mixin tablets {
   @media screen and (max-width: 1124px) {
     @content;
+  }
+}
+
+// Анимации
+
+$animations: (
+  open-popup: (
+    duration: 0.5s,
+    ease: ease,
+    iterations: forwards,
+  ),
+  accept-popup-close: (
+    duration: 0.5s,
+    ease: ease-in-out,
+    iterations: forwards,
+  ),
+);
+
+@mixin animation($name) {
+  @each $animation-key, $animation-value in $animations {
+    @if $animation-key == $name {
+      $duration: map-get($animation-value, duration);
+      $ease: map-get($animation-value, ease);
+      $iterations: map-get($animation-value, iterations);
+      animation: #{$animation-key} #{$duration} #{$ease} #{$iterations};
+    }
+  }
+}
+
+@keyframes open-popup {
+  0% {
+    transform: scale(0);
+  }
+  80% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes accept-popup-close {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  100% {
+    transform: rotate(360deg) scale(0);
   }
 }
