@@ -7,7 +7,8 @@
       :pauseFor="pauseFor"
       :onCreateTextNode="$emit('typeTextCreate')"
       :onRemoveNode="$emit('typeTextEnd')"
-      :deleteSpeed="deleteSpeed" />
+      :deleteSpeed="deleteSpeed"
+    />
   </div>
 </template>
 
@@ -45,7 +46,7 @@ const props = defineProps({
 .v-typewriter {
   position: absolute;
   left: 0;
-  top: 40px;
+  top: 10px;
   z-index: -1;
   font-size: 15px;
 }

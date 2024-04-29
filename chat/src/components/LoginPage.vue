@@ -6,13 +6,28 @@
     @submit="onLogin"
   >
     <template #additional>
-      Ещё нет аккаунта?
-      <span
-        class="v-popup__Link"
-        @click="onRegistrationLinkHandler"
+      <div class="v-popup__LinkContainer">
+        Ещё нет аккаунта?
+        <span
+          class="v-popup__Link"
+          @click="onRegistrationLinkHandler"
+        >
+          Начните здесь
+        </span>
+      </div>
+      <div
+        class="v-popup__LinkContainer"
+        v-if="appStore.isAcceptKey"
       >
-        Начните здесь
-      </span>
+        Так же вы можете
+        <span
+          v-if="appStore.isAcceptKey"
+          class="v-popup__Link"
+          @click="onConfirmLinkHandler"
+        >
+          Подтвердить почту
+        </span>
+      </div>
     </template>
   </Popup>
 </template>
@@ -23,6 +38,9 @@ import { useAuthStore } from '@/store/auth_store.ts';
 import Popup from '@/components/assetsComponent/Popup.vue';
 import router from '@/router/router';
 import { LoginUserType } from '@/types/typesApi';
+import { useAppStore } from '@/store/app_store.ts';
+
+const appStore = useAppStore();
 
 const inputsLogin = [
   {
@@ -41,6 +59,10 @@ const store = useAuthStore();
 
 function onLogin(data: LoginUserType) {
   store.loginAction(data);
+}
+
+function onConfirmLinkHandler() {
+  router.push('/confirm');
 }
 
 function onRegistrationLinkHandler() {

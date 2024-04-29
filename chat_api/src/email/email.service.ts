@@ -10,18 +10,20 @@ export class EmailService {
     this.email = configService.get('EMAIL_USERNAME');
     this.password = configService.get('EMAIL_PASSWORD');
   }
-  async sendConfirmationEmail(email: string, confirmationCode: string) {
-    const transporter = nodemailer.createTransport({
-      host: 'smtp.mail.ru', // сервер SMTP для Mail.ru
-      port: 465, // порт для SSL
-      secure: true,
-      auth: {
-        user: this.email,
-        pass: this.password,
-      },
-    });
 
-    const htmlTemplate = `
+  async sendConfirmationEmail(email: string, confirmationCode: string) {
+    try {
+      const transporter = nodemailer.createTransport({
+        host: 'smtp.mail.ru', // сервер SMTP для Mail.ru
+        port: 465, // порт для SSL
+        secure: true,
+        auth: {
+          user: this.email,
+          pass: this.password,
+        },
+      });
+
+      const htmlTemplate = `
     <meta name="unsub" content="mailto:chat.info@inbox.ru">
     <meta name="unsub-post" content="Подтверждения почты">
     <meta name="X-Mailer" content="My Mailer">
@@ -35,14 +37,17 @@ export class EmailService {
     </div>
   `;
 
-    const mailOptions = {
-      from: 'Your App <chat.info@inbox.ru>',
-      to: email,
-      subject: 'Confirm your email',
-      html: htmlTemplate,
-    };
+      const mailOptions = {
+        from: 'Your App <chat.info@inbox.ru>',
+        to: email,
+        subject: 'Confirm your email',
+        html: htmlTemplate,
+      };
 
-    const result = await transporter.sendMail(mailOptions);
-    return result;
+      const result = await transporter.sendMail(mailOptions);
+      return result;
+    } catch (e) {
+      console.warn(e);
+    }
   }
 }

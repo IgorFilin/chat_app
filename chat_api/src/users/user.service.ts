@@ -43,7 +43,6 @@ export class UsersService {
         });
 
         const ip = userIP.slice(7);
-
         // Создаем пользователя по сущности
         const user = new User();
         user.name = createUserDto.name;
@@ -55,6 +54,7 @@ export class UsersService {
         user.authToken = token;
         user.userPhoto = imagePath;
         user.ip = ip ? ip : 'Скрыт';
+        console.log('-_-', user);
 
         // Сохраняем в БД пользователя с регистрационным key
         this.UserTable.save(user);

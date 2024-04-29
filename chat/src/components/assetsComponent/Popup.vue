@@ -131,6 +131,13 @@ function onInputUpdated(dataInput: { value: string; error: boolean }, changeValu
   transition: opacity 0.5s ease;
 }
 
+.v-popup__LinkContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+}
+
 .v-popup__title {
   font-size: 24px;
   margin-bottom: 20px;
