@@ -6,26 +6,17 @@
     @submit="onLogin"
   >
     <template #additional>
-      <div class="v-popup__LinkContainer">
-        Ещё нет аккаунта?
-        <span
-          class="v-popup__Link"
-          @click="onRegistrationLinkHandler"
-        >
-          Начните здесь
-        </span>
-      </div>
       <div
+        v-show="show"
+        v-for="{ text, show, linkText, fn } in dataAdditional"
         class="v-popup__LinkContainer"
-        v-if="appStore.isAcceptKey"
       >
-        Так же вы можете
+        {{ text }}
         <span
-          v-if="appStore.isAcceptKey"
           class="v-popup__Link"
-          @click="onConfirmLinkHandler"
+          @click="fn"
         >
-          Подтвердить почту
+          {{ linkText }}
         </span>
       </div>
     </template>
@@ -33,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, watchEffect } from 'vue';
+import { computed, ref, watch, watchEffect } from 'vue';
 import { useAuthStore } from '@/store/auth_store.ts';
 import Popup from '@/components/assetsComponent/Popup.vue';
 import router from '@/router/router';
@@ -55,6 +46,29 @@ const inputsLogin = [
   },
 ];
 
+const dataAdditional = computed(() => {
+  return [
+    {
+      text: 'Ещё нет аккаунта?',
+      linkText: 'Начните здесь',
+      fn: onRegistrationLinkHandler,
+      show: true,
+    },
+    {
+      text: 'Так же вы можете',
+      linkText: 'Подтвердить почту',
+      fn: onConfirmLinkHandler,
+      show: appStore.isAcceptKey,
+    },
+    {
+      text: 'Забыли пароль?',
+      linkText: 'Восстановить',
+      fn: onRestorePassword,
+      show: true,
+    },
+  ];
+});
+
 const store = useAuthStore();
 
 function onLogin(data: LoginUserType) {
@@ -64,6 +78,8 @@ function onLogin(data: LoginUserType) {
 function onConfirmLinkHandler() {
   router.push('/confirm');
 }
+
+function onRestorePassword() {}
 
 function onRegistrationLinkHandler() {
   router.push('/registration');

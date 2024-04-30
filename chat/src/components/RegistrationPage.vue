@@ -6,25 +6,17 @@
     @submit="onRegistration"
   >
     <template #additional>
-      <div class="v-popup__LinkContainer">
-        Уже есть аккаунт?
-        <span
-          class="v-popup__Link"
-          @click="onLoginLinkHandler"
-        >
-          Войдите здесь
-        </span>
-      </div>
       <div
+        v-show="show"
+        v-for="{ text, show, linkText, fn } in dataAdditional"
         class="v-popup__LinkContainer"
-        v-if="appStore.isAcceptKey"
       >
-        Так же вы можете
+        {{ text }}
         <span
           class="v-popup__Link"
-          @click="onConfirmLinkHandler"
+          @click="fn"
         >
-          Подтвердить почту
+          {{ linkText }}
         </span>
       </div>
     </template>
@@ -36,7 +28,7 @@ import { useAuthStore } from '@/store/auth_store.ts';
 import { useAppStore } from '@/store/app_store.ts';
 import Popup from '@/components/assetsComponent/Popup.vue';
 import { RegisterUserType } from '@/types/typesApi';
-import { watchEffect } from 'vue';
+import { computed, watchEffect } from 'vue';
 import router from '@/router/router';
 
 const appStore = useAppStore();
@@ -58,6 +50,23 @@ const inputsRegistration = [
     id: 'password',
   },
 ];
+
+const dataAdditional = computed(() => {
+  return [
+    {
+      text: 'Уже есть аккаунт?',
+      linkText: 'Войдите здесь',
+      fn: onLoginLinkHandler,
+      show: true,
+    },
+    {
+      text: 'Так же вы можете',
+      linkText: 'Подтвердить почту',
+      fn: onConfirmLinkHandler,
+      show: appStore.isAcceptKey,
+    },
+  ];
+});
 
 const store = useAuthStore();
 

@@ -162,7 +162,7 @@ function onInputUpdated(dataInput: { value: string; error: boolean }, changeValu
   display: flex;
   align-items: center;
   flex-direction: column;
-  gap: 5px;
+  gap: 10px;
 
   .sendButton {
     &:hover {
