@@ -167,17 +167,20 @@ export class WebsocketService {
     }
 
     // Отправляем пользователю который подключился его игровые комнаты если они есть
-    console.log('-_-', rooms);
     this.clients[userId].client.emit('setGameRooms', { rooms });
 
     return { sendClients };
   }
 
   async broadcastMessage(userId: any, message: string | Array<[]>, roomId: string, isAllChat: boolean) {
+    console.log('userId', userId);
     const user = this.clients[userId];
     const maxMessageSize = 300 * 1024; // Максимальный размер сообщения для изобращения
-
-    if (Array.isArray(message) && message.length >= maxMessageSize) {
+    console.log();
+    if (
+      (Array.isArray(message) && message.length >= maxMessageSize) ||
+      (!Array.isArray(message) && message.length > 600)
+    ) {
       return; // Отклоните слишком большое сообщение
     }
 
@@ -554,10 +557,6 @@ export class WebsocketService {
   }
 
   async gameRoom(action: 'enterGame' | 'leaveRoom', userId: string, roomId: string, game: string) {
-    // console.log(userId);
-    // console.log(roomId);
-    // console.log(game);
-
     const currentUser = this.gameRooms[roomId].users.find((user: any) => user.id === userId);
     if (action === 'enterGame') {
       this.clients[userId].client.emit('actionGameRoom', { game, action, roomId });

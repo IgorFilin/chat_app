@@ -5,6 +5,7 @@
       v-model="message"
       class="v-inputSendButton__Input"
       type="text"
+      maxlength="600"
     />
     <label
       class="v-inputSendButton__iconCloseContainer"
