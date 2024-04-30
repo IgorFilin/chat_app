@@ -55,5 +55,6 @@ export default defineComponent({
 <style lang="scss">
 .v-component_messageImage {
   max-width: 400px;
+  width: 100%;
 }
 </style>

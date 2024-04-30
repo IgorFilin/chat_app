@@ -91,6 +91,7 @@ function goTo(route: string) {
 }
 
 function onActiveUserContainer() {
+  appStore.isOpenBurger = false;
   isActiveUserContainer.value = !isActiveUserContainer.value;
 }
 
@@ -173,9 +174,10 @@ const filteredActiveOrNotUsers = computed(() => {
   transition: 0.5s;
   left: -270px;
   z-index: 100;
+  top: 40px;
 
   &.active {
-    left: 2px;
+    left: 0px;
   }
 
   .v-usersOnline__search {
