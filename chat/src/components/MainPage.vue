@@ -38,7 +38,10 @@
         loaderFor="message"
       />
     </div>
-    <InputSendButton @sendMessage="sendMessage" />
+    <InputSendButton
+      @sendFile="OnDropChatContainer"
+      @sendMessage="sendMessage"
+    />
     <Transition name="popup">
       <Popup
         v-if="socketStore.isOpenPopupInviteGame"
@@ -116,10 +119,11 @@ function sendMessage(message: string) {
 }
 
 function OnDropChatContainer(e: any) {
+  console.log(e);
   e.preventDefault();
 
   socketStore.onDragClass = false;
-  const file = e.dataTransfer.files[0];
+  const file = e.dataTransfer?.files[0] || e.target?.files[0];
   const reader = new FileReader();
   if (
     file.type === 'text/plain' ||
@@ -131,7 +135,9 @@ function OnDropChatContainer(e: any) {
   } // Добавить возможность сохранения текстовых файлов для клиентов
 
   if (file.type !== 'image/webp' && file.type !== 'image/png' && file.type !== 'image/jpeg') {
-    store.toast('К сожалению пока не поддерживаемый формат файлов (Доступны только изображения форматов png и webp)');
+    store.toast(
+      'К сожалению пока не поддерживаемый формат файлов (Доступны только изображения форматов png, webp, jpeg)'
+    );
     return;
   }
 
