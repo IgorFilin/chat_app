@@ -28,7 +28,7 @@
       <Button
         v-if="buttonText"
         class="v-popup__button"
-        :isDisabled="isError"
+        :isDisabled="isError || disabledSubmit"
         @onClick="onSubmit"
         :text="buttonText"
       />
@@ -69,6 +69,11 @@ const props = defineProps({
   isCloseBtn: {
     type: Boolean,
     desc: 'Флажок для включения иконки закрытия и возвращения события закрытия',
+    default: false,
+  },
+  disabledSubmit: {
+    type: Boolean,
+    desc: 'Флажок для задизейбливания кнопки сабмита из родительского компонента',
     default: false,
   },
 });

@@ -8,6 +8,7 @@ import GamesPage from '@/components/GamesPage.vue';
 import MusicPage from '@/components/MusicPage.vue';
 import Test from '@/components/Test.vue';
 import GameRooms from '@/components/GameRooms.vue';
+import RestorePassPage from '@/components/RestorePassPage.vue';
 import { useAuthStore } from '@/store/auth_store';
 
 const routes = [
@@ -20,6 +21,7 @@ const routes = [
   { path: '/gameRooms', component: GameRooms },
   { path: '/games/:id', component: GamesPage },
   { path: '/music', component: MusicPage },
+  { path: '/restore', component: RestorePassPage },
 ];
 
 const router = createRouter({

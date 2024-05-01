@@ -79,7 +79,9 @@ function onConfirmLinkHandler() {
   router.push('/confirm');
 }
 
-function onRestorePassword() {}
+function onRestorePassword() {
+  router.push('/restore');
+}
 
 function onRegistrationLinkHandler() {
   router.push('/registration');
