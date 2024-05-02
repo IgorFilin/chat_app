@@ -71,12 +71,12 @@ export class UsersService {
     } catch (e) {}
   }
 
-  async sendMainConfirm(email: string) {
+  async sendMainConfirm(email: string, type: 'reg' | 'pass' = 'reg') {
     const user = await this.UserTable.findOneBy({ email });
     try {
       if (user && !this.blockedKeysSendingMails.hasOwnProperty(email)) {
         this.blockedKeysSendingMails[email] = true;
-        await this.emailService.sendConfirmationEmail(user.email, user.acceptKey);
+        await this.emailService.sendConfirmationEmail(user.email, user.acceptKey, type);
         setTimeout(() => {
           delete this.blockedKeysSendingMails[email];
         }, 7000);

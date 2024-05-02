@@ -173,7 +173,6 @@ export class WebsocketService {
   }
 
   async broadcastMessage(userId: any, message: string | Array<[]>, roomId: string, isAllChat: boolean) {
-    console.log('userId', userId);
     const user = this.clients[userId];
     const maxMessageSize = 300 * 1024; // Максимальный размер сообщения для изобращения
     console.log();
