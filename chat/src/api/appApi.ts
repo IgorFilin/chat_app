@@ -46,8 +46,8 @@ export const authApi = {
       responseType: 'blob',
     });
   },
-  repeatedConfirmReg(email: string) {
-    return mainInstance.get<ResponseConfirmRegType>('user/send_mail_confirm', { params: { email, type: 'reg' } });
+  mailConfirm(email: string, type: 'reg' | 'pass') {
+    return mainInstance.get<ResponseConfirmRegType>('user/send_mail_confirm', { params: { email, type } });
   },
   executeYaCaptcha(userToken: string) {
     return mainInstance.get(`user/validateCaptcha?token=${userToken}`);

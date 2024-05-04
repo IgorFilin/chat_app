@@ -4,6 +4,7 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { randomBytes } from 'crypto';
 import { User } from './entities/user.entity';
+import { UserKeyReset } from './entities/userKeyResetPass.entity';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
@@ -16,6 +17,8 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private UserTable: Repository<User>,
+    @InjectRepository(UserKeyReset)
+    private UserKeyResetPass: Repository<UserKeyReset>,
     private JwtService: JwtService,
     private readonly emailService: EmailService
   ) {}
@@ -54,12 +57,11 @@ export class UsersService {
         user.authToken = token;
         user.userPhoto = imagePath;
         user.ip = ip ? ip : 'Скрыт';
-        console.log('-_-', user);
 
         // Сохраняем в БД пользователя с регистрационным key
         this.UserTable.save(user);
         // Отсылаем на почту ключ подтверждения
-        await this.emailService.sendConfirmationEmail(user.email, confirmRegKey);
+        await this.emailService.sendMailTemplate(user.email, confirmRegKey);
 
         // Возвращаем значение что ключ на почту отправлен, но не подтвержден
         return {
@@ -76,7 +78,24 @@ export class UsersService {
     try {
       if (user && !this.blockedKeysSendingMails.hasOwnProperty(email)) {
         this.blockedKeysSendingMails[email] = true;
-        await this.emailService.sendConfirmationEmail(user.email, user.acceptKey, type);
+        let acceptKey;
+        switch (type) {
+          case 'reg': {
+            // Если тип регистрации присваиваем ключу подтверждения, ключ подтвержедния из БД.
+            acceptKey = user.acceptKey;
+          }
+          case 'pass': {
+            // Если тип восстановления пароля, присваиваем ключу сгенерированное значение, и сохраняем его в таблицу [пользователь - временный ключ сброса пароля]
+            acceptKey = randomBytes(5).toString('hex');
+            const savedEntity = {
+              id: user.id,
+              key: acceptKey,
+            };
+            this.UserKeyResetPass.save(savedEntity);
+          }
+        }
+        // await this.emailService.sendMailTemplate(user.email, acceptKey);
+
         setTimeout(() => {
           delete this.blockedKeysSendingMails[email];
         }, 7000);

@@ -3,9 +3,11 @@ import { UsersService } from './user.service';
 import { UsersController } from './user.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
+import { UserKeyReset } from './entities/userKeyResetPass.entity';
 import { JwtModule } from '@nestjs/jwt';
 // import { cookieMiddleware } from 'src/middleware/cookie.middleware';
 import { EmailService } from 'src/email/email.service';
+import { CronService } from 'src/cron/cron.service';
 import { StateService } from 'src/state/state.service';
 import { MemoryStoredFile, NestjsFormDataModule } from 'nestjs-form-data';
 import { UserSubscriber } from 'src/dataBaseChangeObserver/database-change.service';
@@ -16,7 +18,7 @@ import { Message } from 'src/websocket/entities/message.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Room, Message]),
+    TypeOrmModule.forFeature([User, Room, Message, User, UserKeyReset]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -35,13 +37,7 @@ import { Message } from 'src/websocket/entities/message.entity';
     }),
   ],
   controllers: [UsersController],
-  providers: [
-    UsersService,
-    EmailService,
-    StateService,
-    UserSubscriber,
-    WebsocketService,
-  ],
+  providers: [UsersService, EmailService, StateService, UserSubscriber, WebsocketService, CronService],
 })
 // export class UsersModule implements NestModule {
 //   configure(consumer: MiddlewareConsumer) {

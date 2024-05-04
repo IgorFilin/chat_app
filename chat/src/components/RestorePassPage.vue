@@ -38,7 +38,7 @@ const store = useAuthStore();
 
 function onSubmitHandler(submitData: any) {
   isDisabledSecondSend.value = true;
-  console.log(submitData.email);
+  store.confirmSendMailMessage(submitData.email, 'pass');
 }
 
 function onCloseHandler() {

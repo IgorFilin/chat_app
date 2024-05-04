@@ -3,7 +3,8 @@
     :inputs="inputConfirm"
     title="Подтверждение почты"
     buttonText="Подтвердить"
-    @submit="sendKey">
+    @submit="sendKey"
+  >
     <template #additional>
       <div v-if="isDisabledSecondSend">Следующая отправка через: {{ counter }}</div>
       <Button
@@ -11,7 +12,8 @@
         @onClick="repeatedSendMail"
         :isDisabled="isDisabledSecondSend"
         :class="['v-confirmRegistration__repeatSendBtn']"
-        class="empty" />
+        class="empty"
+      />
     </template>
   </Popup>
 </template>
@@ -42,7 +44,7 @@ function sendKey(keyData: { code: string }) {
 }
 
 async function repeatedSendMail() {
-  store.repeatSendMailMessage(acceptKeyRepeatSend.value);
+  store.confirmSendMailMessage(acceptKeyRepeatSend.value);
   isDisabledSecondSend.value = true;
 }
 
