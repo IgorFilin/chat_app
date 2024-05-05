@@ -15,6 +15,34 @@ export class EmailService {
     subject: string;
     html: string;
   };
+  private htmlTemplates = (email: string, confirmationCode: string, type: 'reg' | 'pass') => {
+    const templates = {
+      reg: `
+      <meta name="unsub" content="mailto:chat.info@inbox.ru">
+      <meta name="unsub-post" content="Подтверждения почты">
+      <meta name="X-Mailer" content="My Mailer">
+      <div style="width: 100%; background-color: #1a1a1a; color: #ffa500; padding: 20px; text-align: center;">
+      <h2 style="color: #ffa500;">Доброго времени суток!</h2>
+      <p style="color: #ffa500;">Уважаемый(ая) ${email}</p>
+      <p style="color: #ffa500;">Ваш код подтверждения: <b>${confirmationCode}</b></p>
+      <p style="color: #ffa500;">Вы также можете подтвердить почту вручную или кликнув во ссылке:</p>
+      <a href="http://filin-hub.online:3000/user/confirm?mail=true&key=${confirmationCode}" style="display: inline-block; padding: 10px 20px; background-color: #ffa500; color: #1a1a1a; text-decoration: none; font-weight: bold; border-radius: 5px;">Клик для подтверждения</a>
+      <p style="color: #ffa500;">Спасибо за регистрацию!</p>
+      </div>
+    `,
+      pass: `
+    <meta name="unsub" content="mailto:chat.info@inbox.ru">
+    <meta name="unsub-post" content="Подтверждения почты">
+    <meta name="X-Mailer" content="My Mailer">
+    <div style="width: 100%; background-color: #1a1a1a; color: #ffa500; padding: 20px; text-align: center;">
+    <h2 style="color: #ffa500;">Доброго времени суток!</h2>
+    <p style="color: #ffa500;">Уважаемый(ая) ${email}</p>
+    <p style="color: #ffa500;">Ваш код сброса пароля: <b>${confirmationCode}</b></p>
+    </div>
+  `,
+    };
+    return templates[type];
+  };
 
   constructor(private configService: ConfigService, private schedulerRegistry: SchedulerRegistry) {
     this.email = configService.get('EMAIL_USERNAME');
@@ -28,29 +56,19 @@ export class EmailService {
         pass: this.password,
       },
     });
+
     this.mailOptions = {
       from: 'Your App <chat.info@inbox.ru>',
-      to: this.email,
+      to: '',
       subject: 'Confirm your email',
       html: '',
     };
   }
 
-  async sendMailTemplate(email: string, confirmationCode: string) {
+  async sendMailTemplate(email: string, confirmationCode: string, typeHtmlTemplate: 'reg' | 'pass' = 'reg') {
     try {
-      this.mailOptions.html = `
-    <meta name="unsub" content="mailto:chat.info@inbox.ru">
-    <meta name="unsub-post" content="Подтверждения почты">
-    <meta name="X-Mailer" content="My Mailer">
-    <div style="width: 100%; background-color: #1a1a1a; color: #ffa500; padding: 20px; text-align: center;">
-    <h2 style="color: #ffa500;">Доброго времени суток!</h2>
-    <p style="color: #ffa500;">Уважаемый(ая) ${email}</p>
-    <p style="color: #ffa500;">Ваш код подтверждения: <b>${confirmationCode}</b></p>
-    <p style="color: #ffa500;">Вы также можете подтвердить почту вручную или кликнув во ссылке:</p>
-    <a href="http://filin-hub.online:3000/user/confirm?mail=true&key=${confirmationCode}" style="display: inline-block; padding: 10px 20px; background-color: #ffa500; color: #1a1a1a; text-decoration: none; font-weight: bold; border-radius: 5px;">Клик для подтверждения</a>
-    <p style="color: #ffa500;">Спасибо за регистрацию!</p>
-    </div>
-  `;
+      this.mailOptions.html = this.htmlTemplates(email, confirmationCode, typeHtmlTemplate);
+      this.mailOptions.to = email;
 
       const result = await this.transporter.sendMail(this.mailOptions);
       return result;
