@@ -181,6 +181,18 @@ export const useAuthStore: any = defineStore('auth_store', {
         this.messages = '';
       }
     },
+    async confirmKeyRestorePass(key: string) {
+      try {
+        const result = await authApi.confirmKeyRestorePass(key);
+        this.messages = result.data.message;
+      } catch (error) {
+        this.messages = errorStore(error);
+      } finally {
+        this.isLoading = false;
+        toast(this.messages);
+        this.messages = '';
+      }
+    },
     toast(message: string) {
       toast(message);
     },

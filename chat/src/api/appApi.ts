@@ -37,6 +37,12 @@ export const authApi = {
       params: { key },
     });
   },
+  confirmKeyRestorePass(key: string) {
+    return mainInstance.get('user/confirmKeyRestorePass', {
+      params: { key },
+    });
+  },
+
   getPhoto() {
     return mainInstance.get('user/avatar', { responseType: 'blob' });
   },

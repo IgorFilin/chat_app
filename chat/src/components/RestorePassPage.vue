@@ -50,7 +50,7 @@ const popups = [
     input: [
       {
         labelText: 'Введите ключ:',
-        changeValue: 'text',
+        changeValue: 'key',
         id: 'text',
       },
     ],
@@ -74,6 +74,7 @@ function onSubmitHandler(submitData: any, mode: string) {
       break;
     }
     case 'confirm': {
+      store.confirmKeyRestorePass(submitData.key);
       break;
     }
   }

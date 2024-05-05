@@ -123,6 +123,16 @@ export class UsersService {
     }
   }
 
+  async confirmKeyRestorePass(key: string) {
+    const resetPassKeyEntity = await this.UserKeyResetPassTable.findOneBy({ key });
+    if (resetPassKeyEntity) {
+      const user = await this.UserTable.findOneBy({ resetPasswordKey: { id: resetPassKeyEntity.id } });
+      if (user) {
+        return {};
+      }
+    }
+  }
+
   async confirmRegistration(key: string) {
     try {
       const acceptUser = await this.UserTable.findOneBy({ acceptKey: key });

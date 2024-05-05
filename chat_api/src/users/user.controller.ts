@@ -115,6 +115,11 @@ export class UsersController {
       res.status(statusCode).send(result);
     }
   }
+  @Get('confirmKeyRestorePass')
+  async confirmKeyRestorePass(@Req() req: Request, @Res() res: Response) {
+    const key: any = req.query.key;
+    const result = await this.usersService.confirmKeyRestorePass(key);
+  }
 
   @Get('users_list')
   async users_list(@Req() req: Request, @Res() res: Response) {
