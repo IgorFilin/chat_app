@@ -76,44 +76,48 @@ export class UsersService {
   async sendMainConfirm(email: string, type: 'reg' | 'pass' = 'reg') {
     const user = await this.UserTable.findOne({ where: { email }, relations: ['resetPasswordKey'] });
     try {
-      if (user && !this.blockedKeysSendingMails.hasOwnProperty(email)) {
-        this.blockedKeysSendingMails[email] = true;
-        let acceptKey: string;
-        switch (type) {
-          case 'reg': {
-            // Если тип регистрации присваиваем ключу подтверждения, ключ подтвержедния из БД.
-            acceptKey = user.acceptKey;
-          }
-          case 'pass': {
-            if (!user.resetPasswordKey) {
-              // Если тип восстановления пароля, присваиваем ключу сгенерированное значение, и сохраняем его в таблицу [пользователь - временный ключ сброса пароля]
-              acceptKey = randomBytes(5).toString('hex');
-              // Создаем сущность в таблице временных ключей сброса
-              const savedEntity = new UserKeyResetPass();
-              savedEntity.key = acceptKey;
-              await this.UserKeyResetPassTable.save(savedEntity);
-              // Обновляем пользователя тем самым сохраняем связь с таблицей ключей для нужного пользователя
-              user.resetPasswordKey = savedEntity;
-              await this.UserTable.save(user);
-            } else {
-              acceptKey = user.resetPasswordKey.key;
-            }
-          }
-        }
-        // await this.emailService.sendMailTemplate(user.email, acceptKey, type);
-
-        setTimeout(() => {
-          delete this.blockedKeysSendingMails[email];
-        }, 7000);
+      if (!user) {
         return {
-          message: 'Повторное сообщение с кодом отправлено вам на почту',
+          message: 'Такой почты не существует, попробуйте ещё раз',
         };
-      } else {
+      }
+      if (this.blockedKeysSendingMails.hasOwnProperty(email)) {
         return {
           message: 'Пожалуйста отправьте повторное письмо чуть позже',
           isBlocked: true,
         };
       }
+      this.blockedKeysSendingMails[email] = true;
+      let acceptKey: string;
+      switch (type) {
+        case 'reg': {
+          // Если тип регистрации присваиваем ключу подтверждения, ключ подтвержедния из БД.
+          acceptKey = user.acceptKey;
+          break;
+        }
+        case 'pass': {
+          if (!user.resetPasswordKey) {
+            // Если тип восстановления пароля, присваиваем ключу сгенерированное значение, и сохраняем его в таблицу [пользователь - временный ключ сброса пароля]
+            acceptKey = randomBytes(5).toString('hex');
+            // Создаем сущность в таблице временных ключей сброса
+            const savedEntity = new UserKeyResetPass();
+            savedEntity.key = acceptKey;
+            await this.UserKeyResetPassTable.save(savedEntity);
+            // Обновляем пользователя тем самым сохраняем связь с таблицей ключей для нужного пользователя
+            user.resetPasswordKey = savedEntity;
+            await this.UserTable.save(user);
+          } else {
+            acceptKey = user.resetPasswordKey.key;
+          }
+          break;
+        }
+      }
+      setTimeout(() => {
+        delete this.blockedKeysSendingMails[email];
+      }, 7000);
+      const result = await this.emailService.sendMailTemplate(user.email, acceptKey, type);
+      console.log(result);
+      return result;
     } catch (e) {
       console.log(e);
     }

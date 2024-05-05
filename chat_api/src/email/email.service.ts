@@ -69,9 +69,15 @@ export class EmailService {
     try {
       this.mailOptions.html = this.htmlTemplates(email, confirmationCode, typeHtmlTemplate);
       this.mailOptions.to = email;
-
+      let resultMessage: string;
       const result = await this.transporter.sendMail(this.mailOptions);
-      return result;
+      if (result.response.includes('OK')) resultMessage = 'Письмо успешно отправлено Вам на почту';
+      else resultMessage = 'Произошла ошибка, попробуйте ещё раз';
+      return {
+        message: resultMessage,
+        type: typeHtmlTemplate,
+        isBlocked: false,
+      };
     } catch (e) {
       console.warn(e);
     }

@@ -26,6 +26,7 @@ export interface ResponseRepeatSendMailConfirmType {
 
 export interface ResponseConfirmRegType extends ResponseRepeatSendMailConfirmType {
   isAcceptKey: boolean;
+  type: 'pass' | 'reg';
 }
 
 export interface ResponseRegisterUserType {

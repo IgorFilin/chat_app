@@ -1,17 +1,26 @@
 <template>
   <Popup
+    v-for="popup in popups"
+    v-show="popup.mode === mode"
+    :key="popup.mode"
     class="v-restorePassPage"
-    :inputs="inputRestore"
+    :inputs="popup.input"
     isCloseBtn
     :disabledSubmit="isDisabledSecondSend"
-    title="Восстановление пароля"
+    title="Сброс пароля"
     buttonText="Отправить"
     @onClose="onCloseHandler"
-    @submit="onSubmitHandler"
+    @submit="(submitData) => onSubmitHandler(submitData, mode)"
   >
     <template #additional>
       <div v-if="isDisabledSecondSend">Следующая отправка через: {{ counter }}</div>
-      <div class="v-restorePassPage__additional">Вам на почту придёт ключ, который далее потребуется ввести</div>
+      <div class="v-restorePassPage__additional">{{ popup.textAdditional }}</div>
+      <Button
+        :text="popup.textAdditionalButton"
+        @onClick.prevent.stop="mode === 'send' ? (mode = 'confirm') : (mode = 'send')"
+        :isDisabled="isDisabledSecondSend"
+        class="empty v-restorePassPage__repeatSendBtn"
+      />
     </template>
   </Popup>
 </template>
@@ -23,22 +32,51 @@ import Popup from '@/components/assetsComponent/Popup.vue';
 import Button from './assetsComponent/Button.vue';
 import { Ref, ref, watch } from 'vue';
 
-const inputRestore = [
+const popups = [
   {
-    labelText: 'Введите вашу почту:',
-    changeValue: 'email',
-    id: 'email',
+    mode: 'send',
+    input: [
+      {
+        labelText: 'Введите вашу почту:',
+        changeValue: 'email',
+        id: 'email',
+      },
+    ],
+    textAdditional: 'Вам на почту придёт ключ, который далее потребуется ввести',
+    textAdditionalButton: 'Ввести ключ',
+  },
+  {
+    mode: 'confirm',
+    input: [
+      {
+        labelText: 'Введите ключ:',
+        changeValue: 'text',
+        id: 'text',
+      },
+    ],
+    textAdditional: 'Ключ получен на Вашу почту',
+    textAdditionalButton: 'Повторно ввести почту',
   },
 ];
-const isDisabledSecondSend = ref(false);
-const counter = ref(0) as Ref<number>;
-let intervalId: any;
 
+const isDisabledSecondSend = ref(false);
+const mode = ref('send');
+const counter = ref(0) as Ref<number>;
+
+let intervalId: any;
 const store = useAuthStore();
 
-function onSubmitHandler(submitData: any) {
+function onSubmitHandler(submitData: any, mode: string) {
   isDisabledSecondSend.value = true;
-  store.confirmSendMailMessage(submitData.email, 'pass');
+  switch (mode) {
+    case 'send': {
+      store.confirmSendMailMessage(submitData.email, 'pass');
+      break;
+    }
+    case 'confirm': {
+      break;
+    }
+  }
 }
 
 function onCloseHandler() {
@@ -73,5 +111,9 @@ watch(
 .v-restorePassPage__additional {
   text-align: center;
   width: 80%;
+}
+
+.v-restorePassPage__repeatSendBtn {
+  color: $skyBlue;
 }
 </style>
