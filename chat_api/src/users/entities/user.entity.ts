@@ -1,10 +1,5 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-
+import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { UserKeyResetPass } from './userKeyResetPass.entity';
 @Entity('Users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
@@ -36,4 +31,8 @@ export class User {
 
   @CreateDateColumn()
   date: Date;
+
+  @OneToOne(() => UserKeyResetPass)
+  @JoinColumn()
+  resetPasswordKey: UserKeyResetPass;
 }

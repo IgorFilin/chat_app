@@ -1,9 +1,9 @@
-import { BeforeInsert, Column, Entity } from 'typeorm';
+import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('UserKeyResetPass')
-export class UserKeyReset {
-  @Column()
-  id: string;
+@Entity('UsersKeyResetPass')
+export class UserKeyResetPass {
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column()
   key: string;

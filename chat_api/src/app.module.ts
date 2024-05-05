@@ -5,6 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/user.module';
 import { User } from './users/entities/user.entity';
+import { UserKeyResetPass } from './users/entities/userKeyResetPass.entity';
 import { EmailService } from './email/email.service';
 import { StateService } from './state/state.service';
 import { WebsocketModule } from './websocket/websocket.module';
@@ -30,7 +31,7 @@ const configEnv = process.env.NODE_ENV === 'production' ? '.env.production' : '.
         username: configService.get('BD_USERNAME'),
         password: configService.get('BD_PASSWORD'),
         database: configService.get('BD_DATABASE'),
-        entities: [User, Room, Message],
+        entities: [User, Room, Message, UserKeyResetPass],
         synchronize: true,
       }),
       inject: [ConfigService],

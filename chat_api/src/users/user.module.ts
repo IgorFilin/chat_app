@@ -3,7 +3,7 @@ import { UsersService } from './user.service';
 import { UsersController } from './user.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { UserKeyReset } from './entities/userKeyResetPass.entity';
+import { UserKeyResetPass } from './entities/userKeyResetPass.entity';
 import { JwtModule } from '@nestjs/jwt';
 // import { cookieMiddleware } from 'src/middleware/cookie.middleware';
 import { EmailService } from 'src/email/email.service';
@@ -18,7 +18,7 @@ import { Message } from 'src/websocket/entities/message.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Room, Message, User, UserKeyReset]),
+    TypeOrmModule.forFeature([User, Room, Message, User, UserKeyResetPass]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({

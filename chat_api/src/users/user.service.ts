@@ -4,7 +4,7 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { randomBytes } from 'crypto';
 import { User } from './entities/user.entity';
-import { UserKeyReset } from './entities/userKeyResetPass.entity';
+import { UserKeyResetPass } from './entities/userKeyResetPass.entity';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
@@ -17,8 +17,8 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private UserTable: Repository<User>,
-    @InjectRepository(UserKeyReset)
-    private UserKeyResetPass: Repository<UserKeyReset>,
+    @InjectRepository(UserKeyResetPass)
+    private UserKeyResetPassTable: Repository<UserKeyResetPass>,
     private JwtService: JwtService,
     private readonly emailService: EmailService
   ) {}
@@ -59,7 +59,7 @@ export class UsersService {
         user.ip = ip ? ip : 'Скрыт';
 
         // Сохраняем в БД пользователя с регистрационным key
-        this.UserTable.save(user);
+        await this.UserTable.save(user);
         // Отсылаем на почту ключ подтверждения
         await this.emailService.sendMailTemplate(user.email, confirmRegKey);
 
@@ -87,11 +87,15 @@ export class UsersService {
           case 'pass': {
             // Если тип восстановления пароля, присваиваем ключу сгенерированное значение, и сохраняем его в таблицу [пользователь - временный ключ сброса пароля]
             acceptKey = randomBytes(5).toString('hex');
-            const savedEntity = {
-              id: user.id,
-              key: acceptKey,
-            };
-            this.UserKeyResetPass.save(savedEntity);
+
+            // Создаем сущность в таблице временных ключей сброса
+            const savedEntity = new UserKeyResetPass();
+            savedEntity.key = acceptKey;
+            await this.UserKeyResetPassTable.save(savedEntity);
+
+            // Обновляем пользоваля тем самым сохраняем связь с таблицей ключей для нужного пользователя
+            user.resetPasswordKey = savedEntity;
+            await this.UserTable.save(user);
           }
         }
         // await this.emailService.sendMailTemplate(user.email, acceptKey);
@@ -193,7 +197,7 @@ export class UsersService {
         // Если id пользователя равен id найденного пользователя, проверка на всякий случай
         if (user.authToken === authToken) {
           user.userPhoto = imagePath;
-          this.UserTable.save(user);
+          await this.UserTable.save(user);
           return imagePath;
         }
       }
@@ -216,7 +220,7 @@ export class UsersService {
       // Если id пользователя равен id найденного пользоваетля, проверка на всякий случай
       if (user.id === userId) {
         user.userPhoto = savePath;
-        this.UserTable.save(user);
+        await this.UserTable.save(user);
 
         return savePath;
       }
