@@ -5,6 +5,7 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { ValidationPipe } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { FormDataRequest, MemoryStoredFile } from 'nestjs-form-data';
+import { FormDataUserRestorePass } from './dto/user-restore-pass.dto';
 import { FormDataTestDto } from './dto/request-file';
 import * as https from 'https';
 
@@ -115,10 +116,14 @@ export class UsersController {
       res.status(statusCode).send(result);
     }
   }
-  @Get('confirmKeyRestorePass')
-  async confirmKeyRestorePass(@Req() req: Request, @Res() res: Response) {
-    const key: any = req.query.key;
-    const result = await this.usersService.confirmKeyRestorePass(key);
+  @Post('confirmKeyRestorePass')
+  async confirmKeyRestorePass(@Body() restorePassData: FormDataUserRestorePass, @Res() res: Response) {
+    const result = await this.usersService.confirmKeyRestorePass(restorePassData);
+    if (result.isAccept) {
+      return res.status(200).send({ message: result.message });
+    } else {
+      return res.status(403).send({ message: result.message });
+    }
   }
 
   @Get('users_list')

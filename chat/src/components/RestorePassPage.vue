@@ -53,6 +53,11 @@ const popups = [
         changeValue: 'key',
         id: 'text',
       },
+      {
+        labelText: 'Введите новый пароль:',
+        changeValue: 'password',
+        id: 'text',
+      },
     ],
     textAdditional: 'Ключ получен на Вашу почту',
     textAdditionalButton: 'Повторно ввести почту',
@@ -74,7 +79,7 @@ function onSubmitHandler(submitData: any, mode: string) {
       break;
     }
     case 'confirm': {
-      store.confirmKeyRestorePass(submitData.key);
+      store.confirmKeyRestorePass(submitData);
       break;
     }
   }

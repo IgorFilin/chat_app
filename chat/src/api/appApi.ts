@@ -37,10 +37,8 @@ export const authApi = {
       params: { key },
     });
   },
-  confirmKeyRestorePass(key: string) {
-    return mainInstance.get('user/confirmKeyRestorePass', {
-      params: { key },
-    });
+  confirmKeyRestorePass(restoreData: { key: string; password: string }) {
+    return mainInstance.post('user/confirmKeyRestorePass', restoreData);
   },
 
   getPhoto() {

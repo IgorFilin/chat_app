@@ -12,6 +12,11 @@ import { EmailService } from 'src/email/email.service';
 import * as fs from 'node:fs';
 import * as path from 'path';
 
+interface RestorePassType {
+  key: string;
+  password: string;
+}
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -123,14 +128,25 @@ export class UsersService {
     }
   }
 
-  async confirmKeyRestorePass(key: string) {
-    const resetPassKeyEntity = await this.UserKeyResetPassTable.findOneBy({ key });
+  async confirmKeyRestorePass(restoreData: RestorePassType) {
+    const resetPassKeyEntity = await this.UserKeyResetPassTable.findOneBy({ key: restoreData.key });
     if (resetPassKeyEntity) {
       const user = await this.UserTable.findOneBy({ resetPasswordKey: { id: resetPassKeyEntity.id } });
       if (user) {
-        return {};
+        const salt = await bcrypt.genSalt();
+        const hashedPassword = await bcrypt.hash(restoreData.password, salt);
+        user.password = hashedPassword;
+        await this.UserTable.save(user);
+        return {
+          message: 'Пароль успешно изменён',
+          isAccept: true,
+        };
       }
-    }
+    } else
+      return {
+        message: 'Не верный секретный ключ, проверье правильность ввода',
+        isAccept: false,
+      };
   }
 
   async confirmRegistration(key: string) {
