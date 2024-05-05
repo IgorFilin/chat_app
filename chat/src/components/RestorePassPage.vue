@@ -1,28 +1,29 @@
 <template>
-  <Popup
-    v-for="popup in popups"
-    v-show="popup.mode === mode"
-    :key="popup.mode"
-    class="v-restorePassPage"
-    :inputs="popup.input"
-    isCloseBtn
-    :disabledSubmit="isDisabledSecondSend"
-    title="Сброс пароля"
-    buttonText="Отправить"
-    @onClose="onCloseHandler"
-    @submit="(submitData) => onSubmitHandler(submitData, mode)"
-  >
-    <template #additional>
-      <div v-if="isDisabledSecondSend">Следующая отправка через: {{ counter }}</div>
-      <div class="v-restorePassPage__additional">{{ popup.textAdditional }}</div>
-      <Button
-        :text="popup.textAdditionalButton"
-        @onClick.prevent.stop="mode === 'send' ? (mode = 'confirm') : (mode = 'send')"
-        :isDisabled="isDisabledSecondSend"
-        class="empty v-restorePassPage__repeatSendBtn"
-      />
-    </template>
-  </Popup>
+  <div class="v-restorePassPage">
+    <Popup
+      v-for="popup in popups"
+      v-show="popup.mode === mode"
+      :key="popup.mode"
+      :inputs="popup.input"
+      isCloseBtn
+      :disabledSubmit="isDisabledSecondSend"
+      title="Сброс пароля"
+      buttonText="Отправить"
+      @onClose="onCloseHandler"
+      @submit="(submitData) => onSubmitHandler(submitData, mode)"
+    >
+      <template #additional>
+        <div v-if="isDisabledSecondSend">Следующая отправка через: {{ counter }}</div>
+        <div class="v-restorePassPage__additional">{{ popup.textAdditional }}</div>
+        <Button
+          :text="popup.textAdditionalButton"
+          @onClick.prevent.stop="mode === 'send' ? (mode = 'confirm') : (mode = 'send')"
+          :isDisabled="isDisabledSecondSend"
+          class="empty v-restorePassPage__repeatSendBtn"
+        />
+      </template>
+    </Popup>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -30,7 +31,7 @@ import router from '@/router/router';
 import { useAuthStore } from '@/store/auth_store';
 import Popup from '@/components/assetsComponent/Popup.vue';
 import Button from './assetsComponent/Button.vue';
-import { Ref, ref, watch } from 'vue';
+import { Ref, onMounted, ref, watch } from 'vue';
 
 const popups = [
   {
@@ -67,6 +68,7 @@ const popups = [
 const isDisabledSecondSend = ref(false);
 const mode = ref('send');
 const counter = ref(0) as Ref<number>;
+const popupRestore = ref();
 
 let intervalId: any;
 const store = useAuthStore();
