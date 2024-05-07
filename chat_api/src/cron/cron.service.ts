@@ -8,8 +8,9 @@ interface CronParamsType {
 
 @Injectable()
 export class CronService {
-  @Cron('0 */1 * * * *')
-  deleteKeyResetPass() {
-    console.log('delete');
-  }
+  // @Cron('0 */1 * * * *')
+  // deleteKeyResetPass() {
+  //   console.log('delete');
+  // }
+  // Закомментировано до применения
 }

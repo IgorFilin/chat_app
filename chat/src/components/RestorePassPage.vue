@@ -18,7 +18,6 @@
         <Button
           :text="popup.textAdditionalButton"
           @onClick.prevent.stop="mode === 'send' ? (mode = 'confirm') : (mode = 'send')"
-          :isDisabled="isDisabledSecondSend"
           class="empty v-restorePassPage__repeatSendBtn"
         />
       </template>
@@ -57,7 +56,7 @@ const popups = [
       {
         labelText: 'Введите новый пароль:',
         changeValue: 'password',
-        id: 'text',
+        id: 'password',
       },
     ],
     textAdditional: 'Ключ получен на Вашу почту',

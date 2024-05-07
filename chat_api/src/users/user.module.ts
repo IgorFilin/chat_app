@@ -7,7 +7,6 @@ import { UserKeyResetPass } from './entities/userKeyResetPass.entity';
 import { JwtModule } from '@nestjs/jwt';
 // import { cookieMiddleware } from 'src/middleware/cookie.middleware';
 import { EmailService } from 'src/email/email.service';
-import { CronService } from 'src/cron/cron.service';
 import { StateService } from 'src/state/state.service';
 import { MemoryStoredFile, NestjsFormDataModule } from 'nestjs-form-data';
 import { UserSubscriber } from 'src/dataBaseChangeObserver/database-change.service';
@@ -37,7 +36,7 @@ import { Message } from 'src/websocket/entities/message.entity';
     }),
   ],
   controllers: [UsersController],
-  providers: [UsersService, EmailService, StateService, UserSubscriber, WebsocketService, CronService],
+  providers: [UsersService, EmailService, StateService, UserSubscriber, WebsocketService],
 })
 // export class UsersModule implements NestModule {
 //   configure(consumer: MiddlewareConsumer) {

@@ -111,6 +111,11 @@ export class UsersService {
             // Обновляем пользователя тем самым сохраняем связь с таблицей ключей для нужного пользователя
             user.resetPasswordKey = savedEntity;
             await this.UserTable.save(user);
+            setTimeout(async () => {
+              user.resetPasswordKey = null;
+              await this.UserTable.save(user);
+              await this.UserKeyResetPassTable.delete(savedEntity.id);
+            }, 3600000);
           } else {
             acceptKey = user.resetPasswordKey.key;
           }
@@ -121,7 +126,6 @@ export class UsersService {
         delete this.blockedKeysSendingMails[email];
       }, 7000);
       const result = await this.emailService.sendMailTemplate(user.email, acceptKey, type);
-      console.log(result);
       return result;
     } catch (e) {
       console.log(e);
@@ -129,24 +133,41 @@ export class UsersService {
   }
 
   async confirmKeyRestorePass(restoreData: RestorePassType) {
-    const resetPassKeyEntity = await this.UserKeyResetPassTable.findOneBy({ key: restoreData.key });
-    if (resetPassKeyEntity) {
-      const user = await this.UserTable.findOneBy({ resetPasswordKey: { id: resetPassKeyEntity.id } });
-      if (user) {
-        const salt = await bcrypt.genSalt();
-        const hashedPassword = await bcrypt.hash(restoreData.password, salt);
-        user.password = hashedPassword;
-        await this.UserTable.save(user);
+    try {
+      if (restoreData.password.length < 7) {
+        console.log(restoreData.password);
         return {
-          message: 'Пароль успешно изменён',
-          isAccept: true,
+          message: 'Пожалуйста введите пароль, не менее 7 символов',
+          isAccept: false,
         };
       }
-    } else
+      const resetPassKeyEntity = await this.UserKeyResetPassTable.findOneBy({ key: restoreData.key });
+      if (resetPassKeyEntity) {
+        const user = await this.UserTable.findOneBy({ resetPasswordKey: { id: resetPassKeyEntity.id } });
+        if (user) {
+          const salt = await bcrypt.genSalt();
+          const hashedPassword = await bcrypt.hash(restoreData.password, salt);
+          user.password = hashedPassword;
+          // Удаляем секретный ключ, если пользователь поменял пароль
+          user.resetPasswordKey = null;
+          await this.UserTable.save(user);
+          await this.UserKeyResetPassTable.delete(resetPassKeyEntity.id);
+          return {
+            message: 'Пароль успешно изменён',
+            isAccept: true,
+          };
+        }
+      } else
+        return {
+          message: 'Не верный секретный ключ, проверье правильность ввода',
+          isAccept: false,
+        };
+    } catch (e) {
       return {
-        message: 'Не верный секретный ключ, проверье правильность ввода',
+        message: 'Произошла какая то ошибка, обратитесь к администратору',
         isAccept: false,
       };
+    }
   }
 
   async confirmRegistration(key: string) {
