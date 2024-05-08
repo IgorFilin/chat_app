@@ -185,6 +185,7 @@ export const useAuthStore: any = defineStore('auth_store', {
       try {
         const result = await authApi.confirmKeyRestorePass(resoteData);
         this.messages = result.data.message;
+        router.push('/login');
       } catch (error) {
         this.messages = errorStore(error);
       } finally {
