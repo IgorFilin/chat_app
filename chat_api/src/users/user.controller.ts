@@ -57,7 +57,7 @@ export class UsersController {
     const token = req.cookies.authToken;
     const result = await this.usersService.getPhoto(token);
     if (result) {
-      res.sendFile(result);
+      res.send(result);
     } else {
       res.sendStatus(403);
     }

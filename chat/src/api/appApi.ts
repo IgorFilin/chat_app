@@ -42,7 +42,7 @@ export const authApi = {
   },
 
   getPhoto() {
-    return mainInstance.get('user/avatar', { responseType: 'blob' });
+    return mainInstance.get('user/avatar');
   },
   setPhoto(id: string, formdata: any) {
     return mainInstance.post(`user/avatar?id=${id}`, formdata, {

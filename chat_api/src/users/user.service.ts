@@ -238,22 +238,18 @@ export class UsersService {
     if (authToken) {
       const user = await this.UserTable.findOneBy({ authToken });
       if (user?.authToken) {
-        const image = path.basename(user.userPhoto);
+        const oldAvatarPathArray = user.userPhoto.split('/');
+        const oldAvatarName = oldAvatarPathArray[oldAvatarPathArray.length - 1];
         const dirname = process.cwd();
-        const isPicturePresent = fs.existsSync(path.join(dirname, 'dist', 'static', 'image', image));
-        const imagePath = path.join(
-          dirname,
-          'dist',
-          'static',
-          'image',
-          isPicturePresent ? image : 'default_photo_user.webp'
-        );
-
+        const searchPath = path.join(dirname, 'dist', 'static', 'image', oldAvatarName);
+        if (!fs.existsSync(searchPath)) {
+          oldAvatarPathArray.reverse()[0] = 'default_photo_user.webp';
+          user.userPhoto = oldAvatarPathArray.reverse().join('/');
+          this.UserTable.save(user);
+        }
         // Если id пользователя равен id найденного пользователя, проверка на всякий случай
         if (user.authToken === authToken) {
-          user.userPhoto = imagePath;
-          await this.UserTable.save(user);
-          return imagePath;
+          return user.userPhoto;
         }
       }
     }
@@ -262,7 +258,6 @@ export class UsersService {
   async setPhoto(userId: string, newAvatar: any) {
     try {
       if (newAvatar.avatar.size > 400 * 1024) {
-        console.log(newAvatar.avatar);
         return {
           message: 'Слишком большой размер (до 300кб)',
         };
@@ -272,20 +267,31 @@ export class UsersService {
           message: 'Неверный формат изображения (webp, png)',
         };
       }
-      const serverHost = this.configService.get('SERVER_HOST');
-      // Сохраняем файл по дефолтному пути, в папку dist сборки проекта.
-
-      const dirname = process.cwd();
-      const savePath = path.join(dirname, 'dist', 'static', 'image', newAvatar.avatar.originalName);
-      const saveServerPath = `${serverHost}/static/image/${newAvatar.avatar.originalName}`;
-      fs.copyFile(newAvatar.avatar.path, savePath, () => {});
-
-      // Заменяем у пользователя путь к аварке в БД на новый
       // Ищем пользователя
       const user = await this.UserTable.findOneBy({
         id: userId,
       });
 
+      const serverHost = this.configService.get('SERVER_HOST');
+      const dirname = process.cwd();
+
+      //Проверяем осталась ли неиспользумая аватарка, если да, то удаляем её
+      if (user.userPhoto) {
+        const oldAvatarPathArray = user.userPhoto.split('/');
+        const oldAvatarName = oldAvatarPathArray[oldAvatarPathArray.length - 1];
+        const searchPath = path.join(dirname, 'dist', 'static', 'image', oldAvatarName);
+        if (fs.existsSync(searchPath) && oldAvatarName !== 'default_photo_user.webp') {
+          fs.unlink(searchPath, () => {});
+        }
+      }
+
+      // Сохраняем файл по дефолтному пути, в папку dist сборки проекта.
+      const savePath = path.join(dirname, 'dist', 'static', 'image', newAvatar.avatar.originalName);
+      const saveServerPath = `${serverHost}/static/image/${newAvatar.avatar.originalName}`;
+
+      fs.copyFile(newAvatar.avatar.path, savePath, () => {});
+
+      // Заменяем у пользователя путь к аварке в БД на новый
       // Если id пользователя равен id найденного пользоваетля, проверка на всякий случай
       if (user.id === userId) {
         user.userPhoto = saveServerPath;

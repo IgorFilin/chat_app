@@ -115,9 +115,8 @@ export const useAuthStore: any = defineStore('auth_store', {
     async getAvatar() {
       try {
         const resultImage = await authApi.getPhoto();
-        const blob = new Blob([resultImage.data]);
-        const imageSrc = URL.createObjectURL(blob);
-        this.userPhoto = imageSrc;
+        console.log(resultImage);
+        this.userPhoto = resultImage.data;
       } catch (error) {
         this.messages = errorStore(error);
       }
