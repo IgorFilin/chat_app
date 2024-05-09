@@ -1,12 +1,12 @@
-import { Controller, Get, Post, Body, UsePipes, Res, Req, Ip } from '@nestjs/common';
+import { Controller, Get, Post, Body, UsePipes, Res, Req, Ip, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { UsersService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { ValidationPipe } from '@nestjs/common';
-import { Response, Request } from 'express';
-import { FormDataRequest, MemoryStoredFile } from 'nestjs-form-data';
+import { Response, Request, Express } from 'express';
+import { FileSystemStoredFile, FormDataRequest } from 'nestjs-form-data';
 import { FormDataUserRestorePass } from './dto/user-restore-pass.dto';
-import { FormDataTestDto } from './dto/request-file';
+import { RequestFileDto } from './dto/request-file.dto';
 import * as https from 'https';
 
 @Controller('user')
@@ -64,16 +64,16 @@ export class UsersController {
   }
 
   @Post('avatar')
-  @FormDataRequest({ storage: MemoryStoredFile })
-  async setAvatar(@Body() newAvatar: FormDataTestDto, @Req() req: Request, @Res() res: Response) {
+  @FormDataRequest({ storage: FileSystemStoredFile })
+  async setAvatar(@Body() avatar: any, @Req() req: Request, @Res() res: Response) {
     const userId = req.query.id as string;
-    const result: any = await this.usersService.setPhoto(userId, newAvatar);
+    const result: any = await this.usersService.setPhoto(userId, avatar);
     if (result.message) {
-      res.status(415).type('application/json').send({
+      res.status(400).type('application/json').send({
         message: result.message,
       });
     } else {
-      res.sendFile(result);
+      res.send(result);
     }
   }
 

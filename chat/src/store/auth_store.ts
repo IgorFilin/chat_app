@@ -158,12 +158,7 @@ export const useAuthStore: any = defineStore('auth_store', {
         const formDataFile = new FormData();
         formDataFile.append('avatar', file);
         const result = await authApi.setPhoto(this.id, formDataFile);
-        if (this.userPhoto) {
-          URL.revokeObjectURL(this.userPhoto);
-        }
-        const blob = new Blob([result.data]);
-        const imageSrc = URL.createObjectURL(blob);
-        this.userPhoto = imageSrc;
+        this.userPhoto = result.data;
       } catch (error) {
         this.messages = errorStore(error);
         toast(this.messages);

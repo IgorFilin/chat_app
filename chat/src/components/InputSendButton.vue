@@ -49,8 +49,10 @@ function sendMessage() {
 
 <style lang="scss">
 .v-inputSendButton {
+  grid-area: buttons;
+  justify-self: center;
   display: flex;
-  width: 80%;
+  width: 100%;
   margin-top: 5px;
 }
 

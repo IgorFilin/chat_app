@@ -11,6 +11,7 @@ import * as bcrypt from 'bcryptjs';
 import { EmailService } from 'src/email/email.service';
 import * as fs from 'node:fs';
 import * as path from 'path';
+import { ConfigService } from '@nestjs/config';
 
 interface RestorePassType {
   key: string;
@@ -25,7 +26,8 @@ export class UsersService {
     @InjectRepository(UserKeyResetPass)
     private UserKeyResetPassTable: Repository<UserKeyResetPass>,
     private JwtService: JwtService,
-    private readonly emailService: EmailService
+    private readonly emailService: EmailService,
+    private readonly configService: ConfigService
   ) {}
 
   blockedKeysSendingMails = {};
@@ -259,10 +261,24 @@ export class UsersService {
 
   async setPhoto(userId: string, newAvatar: any) {
     try {
+      if (newAvatar.avatar.size > 400 * 1024) {
+        console.log(newAvatar.avatar);
+        return {
+          message: 'Слишком большой размер (до 300кб)',
+        };
+      }
+      if (!['image/png', 'image/webp'].includes(newAvatar.avatar.busBoyMimeType)) {
+        return {
+          message: 'Неверный формат изображения (webp, png)',
+        };
+      }
+      const serverHost = this.configService.get('SERVER_HOST');
       // Сохраняем файл по дефолтному пути, в папку dist сборки проекта.
+
       const dirname = process.cwd();
       const savePath = path.join(dirname, 'dist', 'static', 'image', newAvatar.avatar.originalName);
-      fs.writeFile(savePath, newAvatar.avatar.buffer, () => {});
+      const saveServerPath = `${serverHost}/static/image/${newAvatar.avatar.originalName}`;
+      fs.copyFile(newAvatar.avatar.path, savePath, () => {});
 
       // Заменяем у пользователя путь к аварке в БД на новый
       // Ищем пользователя
@@ -272,17 +288,17 @@ export class UsersService {
 
       // Если id пользователя равен id найденного пользоваетля, проверка на всякий случай
       if (user.id === userId) {
-        user.userPhoto = savePath;
+        user.userPhoto = saveServerPath;
         await this.UserTable.save(user);
 
-        return savePath;
+        return saveServerPath;
       }
     } catch (e) {}
   }
 
   async findAll() {
     try {
-      return await this.UserTable.find({ select: ['id', 'name', 'ip'] });
+      return await this.UserTable.find({ select: ['id', 'name', 'ip', 'userPhoto'] });
     } catch (e) {}
   }
 }

@@ -14,10 +14,16 @@ import { Room } from './websocket/entities/room.entity';
 import { Message } from './websocket/entities/message.entity';
 import { YaModule } from './yandexDisk/ya.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 const configEnv = process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development';
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, 'static/image'),
+      serveRoot: '/static/image',
+    }),
     ScheduleModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,

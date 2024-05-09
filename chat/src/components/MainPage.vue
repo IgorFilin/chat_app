@@ -1,8 +1,12 @@
 <template>
-  <div class="container">
+  <div
+    class="v-mainPage"
+    :class="{ activeContainer: isActiveContainer }"
+  >
     <UserOnlineContainer
       @openRoom="openRoomHandler"
       @sendInviteGame="sendInviteGameHandler"
+      @isActiveContainer="(value) => (isActiveContainer = value)"
       :usersOnline="socketStore.onlineClients"
     />
     <div
@@ -96,6 +100,8 @@ const inviteGameButtons = [
     isAccept: false,
   },
 ];
+
+const isActiveContainer = ref(false);
 
 if (!store.isAuth) {
   router.push('/login');
@@ -218,11 +224,25 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss">
+.v-mainPage {
+  display: grid;
+  grid-template-areas:
+    'users chat'
+    'users buttons';
+  grid-template-columns: 250px 1fr;
+
+  // &.activeContainer {
+  //   grid-template-columns: 0 1fr;
+  // }
+}
+
 .v-mainPage__chatContainer {
+  justify-self: center;
+  grid-area: chat;
   display: flex;
   flex-direction: column-reverse;
   padding: 20px;
-  width: 74%;
+  width: 90%;
   height: 650px;
   overflow-y: auto;
   gap: 10px;

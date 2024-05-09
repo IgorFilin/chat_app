@@ -7,12 +7,14 @@ div
   >
     <div
       class="v-usersOnline__clickElem"
+      v-if="false"
       :class="{ notActive: !isActiveUserContainer }"
       @click="onActiveUserContainer"
     />
     <input
       class="v-usersOnline__search"
       type="search"
+      placeholder="Поиск"
       v-model="searchedUser"
     />
     <div class="v-usersOnline__usersContainer">
@@ -23,6 +25,8 @@ div
         v-for="user in filteredActiveOrNotUsers"
         :key="user.id"
       >
+        {{ console.log(user) }}
+
         {{ user.name }}
         <UserOnlineContainerSelect
           :isOpen="showPopup && clikedUser.id === user.id && clikedUser.id !== auth_store.id"
@@ -44,7 +48,7 @@ import { useAuthStore } from '@/store/auth_store.ts';
 import router from '@/router/router';
 import { useAppStore } from '@/store/app_store.ts';
 
-const emit = defineEmits(['sendInviteGame', 'openRoom']);
+const emit = defineEmits(['sendInviteGame', 'openRoom', 'isActiveContainer']);
 
 const user_store = useUserStore();
 const auth_store = useAuthStore();
@@ -93,6 +97,7 @@ function goTo(route: string) {
 function onActiveUserContainer() {
   appStore.isOpenBurger = false;
   isActiveUserContainer.value = !isActiveUserContainer.value;
+  emit('isActiveContainer', isActiveUserContainer.value);
 }
 
 function clickedUserHandler(event: MouseEvent, user: UserType) {
@@ -163,33 +168,34 @@ const filteredActiveOrNotUsers = computed(() => {
 
 <style lang="scss">
 .v-usersOnline {
+  grid-area: users;
   display: flex;
   flex-direction: column;
-  position: absolute;
+  position: relative;
   padding: 20px 0 20px 20px;
-  width: 250px;
-  height: 70%;
-  max-height: 700px;
+  // max-width: 250px;
+  height: 100%;
+  max-height: 707px;
   background-color: #1e1c1c;
   transition: 0.5s;
-  left: -270px;
   z-index: 100;
-  top: 40px;
+  // grid-row: span 2;
+  // top: 40px;
 
   &.active {
-    left: 0px;
+    left: -20px;
   }
 
   .v-usersOnline__search {
     background-color: #053972;
     border: 1px solid #141416;
-    display: inline-block;
-    vertical-align: middle;
     resize: none;
-    padding: 5px;
+    border-radius: 15px;
+    padding: 8px;
     margin-bottom: 10px;
-    width: 90%;
-    height: 25px;
+    max-width: 200px;
+    width: 100%;
+    // height: 25px;
 
     &:focus-visible {
       outline: none;

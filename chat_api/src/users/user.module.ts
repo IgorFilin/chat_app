@@ -8,7 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 // import { cookieMiddleware } from 'src/middleware/cookie.middleware';
 import { EmailService } from 'src/email/email.service';
 import { StateService } from 'src/state/state.service';
-import { MemoryStoredFile, NestjsFormDataModule } from 'nestjs-form-data';
+import { FileSystemStoredFile, NestjsFormDataModule } from 'nestjs-form-data';
 import { UserSubscriber } from 'src/dataBaseChangeObserver/database-change.service';
 import { WebsocketService } from 'src/websocket/websocket.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -31,7 +31,10 @@ import { Message } from 'src/websocket/entities/message.entity';
     // Модуль парсит входящую форм дату в читаемый обьект
     NestjsFormDataModule.configAsync({
       useFactory: () => ({
-        storage: MemoryStoredFile,
+        storage: FileSystemStoredFile,
+        fileSystemStoragePath: '../static/temp/',
+        cleanupAfterSuccessHandle: true,
+        cleanupAfterFailedHandle: true,
       }),
     }),
   ],

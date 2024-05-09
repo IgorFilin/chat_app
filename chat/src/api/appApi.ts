@@ -47,7 +47,6 @@ export const authApi = {
   setPhoto(id: string, formdata: any) {
     return mainInstance.post(`user/avatar?id=${id}`, formdata, {
       headers: { 'Content-Type': 'multipart/form-data' },
-      responseType: 'blob',
     });
   },
   mailConfirm(email: string, type: 'reg' | 'pass') {
