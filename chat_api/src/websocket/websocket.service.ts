@@ -189,17 +189,17 @@ export class WebsocketService {
       message: message,
       userId: user.id,
       name: user.name.trim(),
-      userPhoto: '',
+      userPhoto: user.userPhoto,
       roomId: roomId,
       isAllChat: isAllChat,
     };
 
-    try {
-      const result = await fs.promises.readFile(user.userPhoto, 'base64');
-      sendData.userPhoto = result;
-    } catch (e) {
-      sendData.userPhoto = '';
-    }
+    // try {
+    //   const result = await fs.promises.readFile(user.userPhoto, 'base64');
+    //   sendData.userPhoto = result;
+    // } catch (e) {
+    //   sendData.userPhoto = '';
+    // }
 
     const messages = { messages: sendData };
 
