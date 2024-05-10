@@ -54,6 +54,7 @@ function sendMessage() {
   display: flex;
   width: 100%;
   margin-top: 5px;
+  max-width: 1400px;
 }
 
 .v-inputSendButton__Input {

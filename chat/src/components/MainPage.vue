@@ -230,7 +230,7 @@ onUnmounted(() => {
     'users chat'
     'users buttons';
   grid-template-columns: 250px 1fr;
-
+  grid-template-rows: calc(90vh - 30%) 55px;
   // &.activeContainer {
   //   grid-template-columns: 0 1fr;
   // }
@@ -242,8 +242,9 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column-reverse;
   padding: 20px;
-  width: 90%;
-  height: 650px;
+  width: 95%;
+  max-height: 100%;
+  max-width: 1400px;
   overflow-y: auto;
   gap: 10px;
 

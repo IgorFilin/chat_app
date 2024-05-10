@@ -174,8 +174,7 @@ const filteredActiveOrNotUsers = computed(() => {
   position: relative;
   padding: 20px 0 20px 20px;
   // max-width: 250px;
-  height: 100%;
-  max-height: 707px;
+  // height: 100%;
   background-color: #1e1c1c;
   transition: 0.5s;
   z-index: 100;
