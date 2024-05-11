@@ -199,6 +199,10 @@ const filteredActiveOrNotUsers = computed(() => {
     &:focus-visible {
       outline: none;
     }
+
+    &:focus {
+      border: 1px solid $orange;
+    }
   }
 
   .v-usersOnline__user {

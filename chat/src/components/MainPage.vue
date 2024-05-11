@@ -230,10 +230,7 @@ onUnmounted(() => {
     'users chat'
     'users buttons';
   grid-template-columns: 250px 1fr;
-  grid-template-rows: calc(90vh - 30%) 55px;
-  // &.activeContainer {
-  //   grid-template-columns: 0 1fr;
-  // }
+  grid-template-rows: 85vh 55px;
 }
 
 .v-mainPage__chatContainer {
