@@ -177,7 +177,7 @@ const filteredActiveOrNotUsers = computed(() => {
   // height: 100%;
   background-color: #1e1c1c;
   transition: 0.5s;
-  z-index: 100;
+  z-index: 1;
   // grid-row: span 2;
   // top: 40px;
 

@@ -359,6 +359,7 @@ onUpdated(() => {
   position: relative;
   height: 17px;
   cursor: pointer;
+  z-index: 2;
 
   .v-header__itemBurger {
     width: 100%;
@@ -372,10 +373,10 @@ onUpdated(() => {
     position: absolute;
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 10px;
     padding: 5px;
-    top: 40px;
-    width: 150px;
+    top: 28px;
+    width: 240px;
     background-color: $cacaoBlack;
     left: -20px;
     transition: 0.4s;
