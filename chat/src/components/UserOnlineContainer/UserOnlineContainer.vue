@@ -20,16 +20,20 @@ div
     <div class="v-usersOnline__usersContainer">
       <div
         class="v-usersOnline__user"
-        :class="{ online: user.online, isOpenPopup: clikedUser.id === user.id }"
+        :class="{ online: user.online, isOpenPopup: clikedUser.id === user.id, hover: user.online && !showPopup }"
         @click="(event) => clickedUserHandler(event, user)"
         v-for="user in filteredActiveOrNotUsers"
         :key="user.id"
       >
-        {{ console.log(user) }}
-
-        {{ user.name }}
+        <img
+          class="v-usersOnline__photoUser"
+          :src="user.userPhoto"
+          :key="`user.userPhoto${user.id}`"
+          alt="Аватар"
+        />
+        <div>{{ user.name }}</div>
         <UserOnlineContainerSelect
-          :isOpen="showPopup && clikedUser.id === user.id && clikedUser.id !== auth_store.id"
+          :isOpen="showPopup && clikedUser.id === user.id"
           :selectData="selectData"
           @onPrivateRoomHandler="(e) => onPrivateRoomHandler(e, user.id)"
           @goTo="goTo(`/profile/${user.id}/`)"
@@ -146,6 +150,7 @@ watch(
               online: true,
               name: user.name,
               id: user.id,
+              userPhoto: user.userPhoto,
             };
           } else {
             return user;
@@ -205,17 +210,36 @@ const filteredActiveOrNotUsers = computed(() => {
     }
   }
 
+  .v-usersOnline__photoUser {
+    width: 35px;
+    height: 35px;
+    transition: 0.5s;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
   .v-usersOnline__user {
+    display: flex;
+    align-items: center;
+    gap: 5px;
     font-size: 17px;
     line-height: 20px;
     color: rgb(222, 212, 212);
-    opacity: 0.6;
+    opacity: 0.3;
     cursor: pointer;
     width: 60%;
 
     &.online {
       color: rgb(25, 139, 25);
       opacity: 1;
+    }
+
+    &.hover {
+      &:hover {
+        transition: 0.5s;
+        cursor: pointer;
+        opacity: 0.8;
+      }
     }
   }
 

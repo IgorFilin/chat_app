@@ -130,7 +130,7 @@ export class UsersController {
   async users_list(@Req() req: Request, @Res() res: Response) {
     const result = await this.usersService.confirmToken(req.cookies.authToken);
     if (result.isAuth) {
-      const users = await this.usersService.findAll();
+      const users = await this.usersService.findAll(req.cookies.authToken);
       res.status(201).send(users);
     } else {
       res.status(404);

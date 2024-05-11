@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { randomBytes } from 'crypto';
 import { User } from './entities/user.entity';
 import { UserKeyResetPass } from './entities/userKeyResetPass.entity';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { EmailService } from 'src/email/email.service';
@@ -302,9 +302,12 @@ export class UsersService {
     } catch (e) {}
   }
 
-  async findAll() {
+  async findAll(authToken: string) {
     try {
-      return await this.UserTable.find({ select: ['id', 'name', 'ip', 'userPhoto'] });
+      return await this.UserTable.find({
+        select: ['id', 'name', 'ip', 'userPhoto'],
+        where: { authToken: Not(authToken) },
+      });
     } catch (e) {}
   }
 }

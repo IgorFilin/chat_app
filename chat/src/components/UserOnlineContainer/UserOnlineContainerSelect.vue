@@ -1,21 +1,25 @@
 <template>
   <div
     v-if="isOpen"
-    class="v-usersOnline__popup">
+    class="v-usersOnline__popup"
+  >
     <div
       class="v-usersOnline__popupText"
       v-for="({ text, emitName, action, additionalList }, index) in selectData"
       :key="index"
-      @click="(event) => onClickContentHandler(event, emitName, action)">
+      @click="(event) => onClickContentHandler(event, emitName, action)"
+    >
       <span>{{ text }}</span>
       <div
         v-if="additionalList && isOpenAdditionalList"
-        class="v-usersOnline__additionalList">
+        class="v-usersOnline__additionalList"
+      >
         <div
           v-for="({ text, type }, additionalIndex) in additionalList"
           :key="additionalIndex"
           class="v-usersOnline__popupText"
-          @click="(event) => onClickAdditionalTextHandler(event, type)">
+          @click="(event) => onClickAdditionalTextHandler(event, type)"
+        >
           {{ text }}
         </div>
       </div>
