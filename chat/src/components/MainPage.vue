@@ -32,7 +32,7 @@
       @drop.prevent="OnDropChatContainer"
     >
       <Message
-        v-if="socketStore.isLoadingMessages"
+        v-if="!socketStore.isLoadingMessages"
         :key="message.message.toString()"
         v-for="message in memoMessages"
         v-bind="message"
@@ -169,7 +169,13 @@ function OnDropChatContainer(e: any) {
 
 watch(
   [() => socketStore.isAllChat, () => socketStore.roomId],
-  () => (socketStore.isLoadingMessages = socketStore.messagesLength === socketStore.messages.length)
+  () => {
+    if (!socketStore.messages.length) {
+      socketStore.messagesLength = 0;
+    }
+    socketStore.isLoadingMessages = socketStore.messagesLength !== socketStore.messages.length;
+  },
+  { immediate: true }
 );
 
 const memoMessages = computed(() => socketStore.messages);

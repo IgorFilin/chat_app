@@ -60,6 +60,8 @@ export const useSocketStore: any = defineStore('socket_store', {
       });
 
       this.socket.on('message', (responseData: any) => {
+        console.log('message');
+
         const data = responseData;
 
         if (data.openRoom) {
@@ -91,7 +93,7 @@ export const useSocketStore: any = defineStore('socket_store', {
         }
 
         if (this.messagesLength === this.messages.length) {
-          this.isLoadingMessages = true;
+          this.isLoadingMessages = false;
         }
       });
 
