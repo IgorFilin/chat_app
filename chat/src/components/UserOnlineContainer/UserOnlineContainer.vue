@@ -17,6 +17,17 @@ div
       placeholder="Поиск"
       v-model="searchedUser"
     />
+    <div class="v-usersOnline__allChatButtonContainer">
+      <Button
+        v-if="!socketStore.isAllChat"
+        @onClick="goToPublicChat"
+        text="В общий чат"
+        class="v-usersOnline__goToAllChatButton"
+        isIcon
+        iconId="arrow_back"
+        iconColor="white"
+      />
+    </div>
     <div class="v-usersOnline__usersContainer">
       <div
         class="v-usersOnline__user"
@@ -49,8 +60,12 @@ import { ref, computed, onMounted, watch, Ref, onUpdated } from 'vue';
 import UserOnlineContainerSelect from '@/components/UserOnlineContainer/UserOnlineContainerSelect.vue';
 import { useUserStore } from '@/store/user_store.ts';
 import { useAuthStore } from '@/store/auth_store.ts';
+import Button from '@/components/assetsComponent/Button.vue';
 import router from '@/router/router';
 import { useAppStore } from '@/store/app_store.ts';
+import { useSocketStore } from '@/store/socket_store.ts';
+
+const socketStore = useSocketStore();
 
 const emit = defineEmits(['sendInviteGame', 'openRoom', 'isActiveContainer']);
 
@@ -124,6 +139,16 @@ function sendInviteGameHandler(userId: string, game: string) {
   } else {
     auth_store.toast('К сожалению пользователя нет онлайн');
   }
+}
+
+function goToPublicChat() {
+  socketStore.isAllChat = true;
+  socketStore.roomId = null;
+  socketStore.messages = [];
+  socketStore.socket.emit('getAllMessages', {
+    event: 'all_messages_public',
+    data: { id: auth_store.id },
+  });
 }
 
 watch(
@@ -241,6 +266,15 @@ const filteredActiveOrNotUsers = computed(() => {
         opacity: 0.8;
       }
     }
+  }
+
+  .v-usersOnline__allChatButtonContainer {
+    height: 35px;
+  }
+
+  .v-usersOnline__goToAllChatButton {
+    width: 200px;
+    height: 35px;
   }
 
   .v-usersOnline__usersContainer {

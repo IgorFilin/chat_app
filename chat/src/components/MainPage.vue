@@ -10,19 +10,6 @@
       :usersOnline="socketStore.onlineClients"
     />
     <div
-      v-if="!socketStore.isAllChat"
-      class="v-mainPage__backAllChatContainer"
-    >
-      <Button
-        @onClick="goToPublicChat"
-        text="В общий чат"
-        isIcon
-        iconId="arrow_back"
-        iconColor="white"
-      />
-      <div>В диалоге {{ socketStore.userToAddPrivate }}</div>
-    </div>
-    <div
       class="v-mainPage__chatContainer"
       :class="{ drag: socketStore.onDragClass }"
       @scroll="onScroll"
@@ -185,16 +172,6 @@ function OnDragChatContainer(event: any) {
   if (!socketStore.onDragClass) {
     socketStore.onDragClass = true;
   }
-}
-
-function goToPublicChat() {
-  socketStore.isAllChat = true;
-  socketStore.roomId = null;
-  socketStore.messages = [];
-  socketStore.socket.emit('getAllMessages', {
-    event: 'all_messages_public',
-    data: { id: store.id },
-  });
 }
 
 function onScroll(event: any) {
