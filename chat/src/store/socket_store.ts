@@ -85,7 +85,6 @@ export const useSocketStore: any = defineStore('socket_store', {
             // const base64Image = data.messages.userPhoto;
             // const binaryData = Uint8Array.from(atob(base64Image), (c) => c.charCodeAt(0));
             // const blobImage = new Blob([binaryData]);
-            console.log(data.messages);
             data.messages.userPhoto = data.messages.userPhoto;
             this.messages.unshift(data.messages);
           }

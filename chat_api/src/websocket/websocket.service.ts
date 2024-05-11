@@ -175,7 +175,6 @@ export class WebsocketService {
   async broadcastMessage(userId: any, message: string | Array<[]>, roomId: string, isAllChat: boolean) {
     const user = this.clients[userId];
     const maxMessageSize = 300 * 1024; // Максимальный размер сообщения для изобращения
-    console.log();
     if (
       (Array.isArray(message) && message.length >= maxMessageSize) ||
       (!Array.isArray(message) && message.length > 600)
@@ -296,11 +295,6 @@ export class WebsocketService {
         const currentUserPhotoPath =
           roomMessages.messages[i].userId === creator.id ? creator.userPhoto : userToAdd.userPhoto;
 
-        const userPhoto = await fs.promises.readFile(
-          fs.existsSync(currentUserPhotoPath) ? currentUserPhotoPath : defaultImagePath,
-          'base64'
-        );
-
         if (isJSON(roomMessages.messages[i].message)) {
           roomMessages.messages[i].message = JSON.parse(roomMessages.messages[i].message);
         }
@@ -313,7 +307,7 @@ export class WebsocketService {
             event: this.privateChatEvent,
             roomId: room.id,
             roomName: room.name,
-            userPhoto,
+            userPhoto: currentUserPhotoPath,
             ...roomMessages.messages[i],
           },
         });
@@ -371,7 +365,6 @@ export class WebsocketService {
           userSendedInvite: sendInvite.userSendedInvite,
           gameRoom: null,
         };
-        console.log('до', this.gameRooms[gameRoomId]);
         // Если нет комнаты то создаём её и добавляем игру
         // Если нет комнаты и нет данной игры, то добавим её
         if (!this.gameRooms[gameRoomId]) {
@@ -380,7 +373,6 @@ export class WebsocketService {
             dataGames: {},
             users: [],
           };
-          console.log('после', this.gameRooms[gameRoomId]);
 
           if (!this.gameRooms[gameRoomId].games.some((currentGame: any) => currentGame === game)) {
             this.gameRooms[gameRoomId].games.push({ game, usersOnline: 0, totalUsers: 2 });
