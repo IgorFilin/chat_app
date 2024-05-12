@@ -7,7 +7,7 @@
       class="v-usersOnline__popupText"
       v-for="({ text, emitName, action, additionalList }, index) in selectData"
       :key="index"
-      @click="(event) => onClickContentHandler(event, emitName, action)"
+      @click.stop="(event) => onClickContentHandler(event, emitName, action)"
     >
       <span>{{ text }}</span>
       <div
@@ -18,7 +18,7 @@
           v-for="({ text, type }, additionalIndex) in additionalList"
           :key="additionalIndex"
           class="v-usersOnline__popupText"
-          @click="(event) => onClickAdditionalTextHandler(event, type)"
+          @click.stop="(event) => onClickAdditionalTextHandler(event, type)"
         >
           {{ text }}
         </div>

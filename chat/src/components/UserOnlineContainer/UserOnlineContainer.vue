@@ -32,7 +32,8 @@ div
       <div
         class="v-usersOnline__user"
         :class="{ online: user.online, isOpenPopup: clikedUser.id === user.id, hover: user.online && !showPopup }"
-        @click="(event) => clickedUserHandler(event, user)"
+        @click.right="(event) => clickedUserHandler(event, user)"
+        @click.left="(event) => onPrivateRoomHandler(event, user.id)"
         v-for="user in filteredActiveOrNotUsers"
         :key="user.id"
       >
@@ -46,7 +47,6 @@ div
         <UserOnlineContainerSelect
           :isOpen="showPopup && clikedUser.id === user.id"
           :selectData="selectData"
-          @onPrivateRoomHandler="(e) => onPrivateRoomHandler(e, user.id)"
           @goTo="goTo(`/profile/${user.id}/`)"
           @sendInviteGame="(game) => sendInviteGameHandler(user.id, game)"
         />
@@ -84,17 +84,12 @@ const clikedUser = ref({
 
 const selectData = [
   {
-    text: 'В личку',
-    emitName: 'onPrivateRoomHandler',
-  },
-  {
     text: 'Профиль',
     emitName: 'goTo',
   },
   {
     text: 'Играть',
     additionalList: [{ text: 'Кр.Нолики', type: 'ticTacToe' }],
-
     action: 'isOpenAdditionalList',
   },
 ];
@@ -120,6 +115,7 @@ function onActiveUserContainer() {
 }
 
 function clickedUserHandler(event: MouseEvent, user: UserType) {
+  event.preventDefault();
   event.stopPropagation();
   clikedUser.value = user;
   showPopup.value = true;
