@@ -2,6 +2,7 @@
   <div class="v-inputSendButton">
     <textarea
       @keyup.enter="sendMessage"
+      @input="onChangeTextarea"
       v-model="message"
       class="v-inputSendButton__Input"
       type="text"
@@ -33,18 +34,53 @@
 </template>
 
 <script setup lang="ts">
-import { Ref, ref } from 'vue';
+import { Ref, ref, watch } from 'vue';
 import Button from './assetsComponent/Button.vue';
 import Icon from '@/components/assetsComponent/Icon.vue';
 
 const emit = defineEmits();
 
-let message = ref('') as Ref<string>;
+const message = ref('') as Ref<string>;
+const idTimeout = ref(null) as Ref<string | null>;
+const isTyping = ref(false);
 
 function sendMessage() {
   emit('sendMessage', message.value);
   message.value = '';
 }
+
+// причины флажка "Я печатаю":
+// -- человек печатает текст, срабатывает метод input
+// причины остановки:
+// -- человек остановился, перестал печатать, тоесть не меняется message.length или не срабатывает
+// метод change. Желательно сделать с таймаутов в секунду остановку.
+// -- человек отправил сообщения, или очистил поле опять же длинна message.length
+
+watch(
+  () => message.value,
+  (newValue, oldValue) => {
+    if (!newValue) {
+      isTyping.value = false;
+      return;
+    }
+    if (oldValue !== newValue) {
+      clearTimeout(idTimeout.value);
+      isTyping.value = true;
+    }
+    idTimeout.value = setTimeout(() => {
+      isTyping.value = false;
+    }, 2000);
+  }
+);
+
+watch(
+  () => isTyping.value,
+  (newValue, oldValue) => {
+    if (newValue !== oldValue) {
+      emit('isTyping', isTyping.value);
+    }
+  }
+);
 </script>
 
 <style lang="scss">

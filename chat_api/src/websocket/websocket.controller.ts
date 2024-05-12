@@ -25,6 +25,11 @@ export class WebsocketController implements OnGatewayConnection {
     await this.WebsocketService.getAllMessagesPublicChat(body.data.id);
   }
 
+  @SubscribeMessage('isTypingUser')
+  async handleisTypingMessage(@MessageBody() body: { roomId: string; userId: string; isTyping: boolean }) {
+    await this.WebsocketService.setIsTypingMessageUser(body.roomId, body.userId, body.isTyping);
+  }
+
   @SubscribeMessage('openRoom')
   async handleOpenPrivateRoom(@MessageBody() body: any) {
     await this.WebsocketService.openPrivateRoom(body.data.myId, body.data.userId);

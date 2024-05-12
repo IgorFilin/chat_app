@@ -36,6 +36,7 @@ export class WebsocketService {
 
   clients = {};
   messages = [];
+  usersIsTypingMessage = new Set() as Set<string>;
   gameRooms = {} as GameRoomsType;
   stateGames = {};
   publicChatEvent = 'message' as 'message';
@@ -59,6 +60,35 @@ export class WebsocketService {
         messages: this.messages[i],
         lengthMessages: this.messages.length,
       });
+    }
+  }
+
+  async setIsTypingMessageUser(roomId: string | null, userId: string, isTyping: boolean) {
+    const currentUser = await this.UserTable.findOneBy({ id: userId });
+
+    if (isTyping) this.usersIsTypingMessage.add(currentUser.name);
+    else this.usersIsTypingMessage.delete(currentUser.name);
+
+    if (!roomId) {
+      for (let clientId of Object.keys(this.clients)) {
+        const clientName = this.clients[clientId].name;
+        this.clients[clientId].client.emit('message', {
+          isTypingUsers: Array.from(this.usersIsTypingMessage).filter((el) => el !== clientName),
+        });
+      }
+    } else {
+      const room = await this.RoomTable.findOne({
+        where: { id: roomId },
+        relations: ['users'],
+      });
+
+      for (let user of room.users) {
+        console.log();
+        const clientName = this.clients[user.id].name;
+        this.clients[user.id].client.emit('message', {
+          isTypingUsers: Array.from(this.usersIsTypingMessage).filter((el) => el !== clientName),
+        });
+      }
     }
   }
 

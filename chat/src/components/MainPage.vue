@@ -18,6 +18,9 @@
       @dragleave.prevent="socketStore.onDragClass = false"
       @drop.prevent="OnDropChatContainer"
     >
+      <div class="v-mainPage__typingArrayContainer">
+        <div v-for="userIsTyped in socketStore.isTypingUsers">{{ userIsTyped }} печатает...</div>
+      </div>
       <Message
         v-if="!socketStore.isLoadingMessages"
         :key="message.message.toString()"
@@ -30,6 +33,7 @@
       />
     </div>
     <InputSendButton
+      @isTyping="onTypingUserHandler"
       @sendFile="OnDropChatContainer"
       @sendMessage="sendMessage"
     />
@@ -193,6 +197,10 @@ function sendInviteGameHandler(userId: string, game: string, isAccept: boolean |
   socketStore.socket.emit('inviteGame', { myId: store.id, userId, game, isAccept });
 }
 
+function onTypingUserHandler(isTyping: boolean) {
+  socketStore.socket.emit('isTypingUser', { roomId: socketStore.roomId, userId: store.id, isTyping });
+}
+
 onMounted(() => {
   socketStore.socket.connect();
 });
@@ -242,6 +250,12 @@ onUnmounted(() => {
   &.drag {
     opacity: 0.4;
   }
+}
+
+.v-mainPage__typingArrayContainer {
+  display: flex;
+  gap: 5px;
+  height: 10px;
 }
 
 .v-mainPage__buttonBackAllChat {

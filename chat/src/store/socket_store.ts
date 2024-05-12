@@ -25,6 +25,7 @@ export const useSocketStore: any = defineStore('socket_store', {
       popupInviteGameData: {} as any,
       isOpenPopupInviteGame: false as boolean,
       messagesLength: 0,
+      isTypingUsers: [] as string[],
     } as any;
   },
   getters: {},
@@ -60,9 +61,12 @@ export const useSocketStore: any = defineStore('socket_store', {
       });
 
       this.socket.on('message', (responseData: any) => {
-        console.log('message');
-
         const data = responseData;
+        console.log(data.isTypingUsers?.length);
+        if (data.isTypingUsers) {
+          console.log('isTypingUsers');
+          this.isTypingUsers = data.isTypingUsers;
+        }
 
         if (data.openRoom) {
           this.roomId = data.messages.roomId;
