@@ -16,5 +16,5 @@ COPY conf/default.conf /etc/nginx/conf.d/default.conf
 COPY sound /var/chat/sound
 COPY --from=build-stage /app/dist /var/chat/html
 
-EXPOSE 80
+EXPOSE 8080
 CMD ["nginx", "-g", "daemon off;"]
