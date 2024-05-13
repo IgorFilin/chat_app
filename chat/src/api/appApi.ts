@@ -10,7 +10,7 @@ import {
 } from '../types/typesApi';
 
 const authInstance = axios.create({
-  baseURL: `http://${import.meta.env.VITE_APP_DOMEN_PORT}`,
+  baseURL: `https://${import.meta.env.VITE_APP_DOMEN_PORT}`,
   withCredentials: true,
   credentials: 'include',
 } as any);
@@ -27,35 +27,35 @@ export const authApi = {
     return authInstance.post<ResponseLoginType>('/user/login', userData);
   },
   auth() {
-    return authInstance.get('user/auth');
+    return authInstance.get('/user/auth');
   },
   logout() {
-    return authInstance.get<ResponseLogoutType>('user/logout');
+    return authInstance.get<ResponseLogoutType>('/user/logout');
   },
   confirmReg(key: string) {
-    return authInstance.get<ResponseConfirmRegType>('user/confirm', {
+    return authInstance.get<ResponseConfirmRegType>('/user/confirm', {
       params: { key },
     });
   },
   getPhoto() {
-    return authInstance.get('user/avatar', { responseType: 'blob' });
+    return authInstance.get('/user/avatar', { responseType: 'blob' });
   },
   setPhoto(id: string, formdata: any) {
-    return authInstance.post(`user/avatar?id=${id}`, formdata, {
+    return authInstance.post(`/user/avatar?id=${id}`, formdata, {
       headers: { 'Content-Type': 'multipart/form-data' },
       responseType: 'blob',
     });
   },
   repeatedConfirmReg(email: string) {
-    return authInstance.get<ResponseConfirmRegType>('user/send_mail_confirm', { params: { email } });
+    return authInstance.get<ResponseConfirmRegType>('/user/send_mail_confirm', { params: { email } });
   },
   executeYaCaptcha(userToken: string) {
-    return authInstance.get(`user/validateCaptcha?token=${userToken}`);
+    return authInstance.get(`/user/validateCaptcha?token=${userToken}`);
   },
 };
 export const userApi = {
   getAllUsers() {
-    return authInstance.get<Array<ResponseGetAllUsersType>>('user/users_list');
+    return authInstance.get<Array<ResponseGetAllUsersType>>('/user/users_list');
   },
 };
 
