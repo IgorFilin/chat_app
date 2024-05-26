@@ -18,7 +18,7 @@ services:
       context: ./chat_api
       dockerfile: Dockerfile
     ports:
-      - '3000'
+      - '3000:3000'
     depends_on:
       - database
 
@@ -29,4 +29,4 @@ services:
     volumes:
       - /var/postgress_data:/var/lib/postgresql/data
     ports:
-      - '5432'
+      - '5432:5432'
