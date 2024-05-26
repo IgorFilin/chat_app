@@ -129,7 +129,7 @@ export class UsersController {
   @Get('validateCaptcha')
   async captcha(@Req() req: Request, @Res() res: Response) {
     const token = req.query.token;
-    console.log('=+=', token);
+    console.log('=+=', req);
 
     function check_captcha(token, callback) {
       const options = {
