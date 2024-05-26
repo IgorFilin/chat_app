@@ -5,10 +5,6 @@ services:
     build:
       context: ./chat
       dockerfile: Dockerfile
-      args:
-        - VITE_APP_HOST=https://filin-hub.online/api
-        - VITE_APP_HOST_WEB_SOCKET=ws://filin-hub.online/api
-        - VITE_APP_PROTOCOL=ws
     ports:
       - '8080:80'
     depends_on:
