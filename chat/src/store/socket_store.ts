@@ -31,7 +31,6 @@ export const useSocketStore: any = defineStore('socket_store', {
     async connectSocket(userId: string) {
       const address = import.meta.env.VITE_APP_HOST_WEB_SOCKET;
       const options: any = {
-        path: '/socket.io/',
         query: {
           userID: userId,
         },
@@ -50,7 +49,8 @@ export const useSocketStore: any = defineStore('socket_store', {
         this.socketConnected = true;
       });
 
-      this.socket.on('disconnect', () => {
+      this.socket.on('disconnect', (e: any) => {
+        console.log(e);
         // socketStore.setConnectionSocket(socket, false);
         // if (
         //   router.currentRoute.value.matched[0].path !== '/games/:id' &&
