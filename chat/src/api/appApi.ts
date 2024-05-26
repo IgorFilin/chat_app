@@ -10,7 +10,7 @@ import {
 } from '../types/typesApi';
 
 const authInstance = axios.create({
-  baseURL: `https://${import.meta.env.VITE_APP_DOMEN_PORT}`,
+  baseURL: import.meta.env.VITE_APP_HOST,
   withCredentials: true,
   credentials: 'include',
 } as any);
