@@ -29,7 +29,7 @@ export const useSocketStore: any = defineStore('socket_store', {
   getters: {},
   actions: {
     async connectSocket(userId: string) {
-      const address = `${import.meta.env.VITE_APP_PROTOCOL}://${import.meta.env.VITE_APP_DOMEN_PORT}?userID=${userId}`;
+      const address = `${import.meta.env.VITE_APP_HOST_WEB_SOCKET}?userID=${userId}`;
       this.socket = io(address);
       // this.socketConnected = true;
       this.socketEmits();
