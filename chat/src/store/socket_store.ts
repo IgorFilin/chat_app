@@ -31,7 +31,7 @@ export const useSocketStore: any = defineStore('socket_store', {
     async connectSocket(userId: string) {
       const address = import.meta.env.VITE_APP_HOST_WEB_SOCKET;
       const options: any = {
-        path: '/api/',
+        path: '/socket.io/',
         query: {
           userID: userId,
         },
