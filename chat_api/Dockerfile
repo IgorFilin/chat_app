@@ -1,8 +1,6 @@
 FROM node:18
 
-WORKDIR /usr/src/app
-
-COPY . . 
+WORKDIR /backend
 
 COPY package*.json ./
 
@@ -13,10 +11,6 @@ ENV NODE_ENV=${NODE_ENV}
 
 COPY .env.${NODE_ENV} .env
 
-RUN ls -al dist
-
 RUN npm run build
 
-COPY dist . 
-
-CMD [ "node", "main.js" ]
+CMD [ "node", "dist/main.js" ]
