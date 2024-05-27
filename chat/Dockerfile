@@ -1,7 +1,7 @@
 # этап сборки (build stage)
 FROM node:18 as build-stage
 
-WORKDIR /front
+WORKDIR /app
 
 COPY .env.production .env
 
@@ -11,8 +11,9 @@ RUN npm run build
 # этап production (production stage)
 FROM nginx:stable-alpine as production-stage
 COPY conf/default.conf /etc/nginx/conf.d/default.conf
+COPY dist .
 COPY sound /var/chat/sound
-COPY --from=build-stage /front/dist /var/chat/html
+COPY --from=build-stage /app/dist /var/chat/html
 
 EXPOSE 8080
 CMD ["nginx", "-g", "daemon off;"]
