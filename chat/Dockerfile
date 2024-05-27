@@ -5,6 +5,8 @@ WORKDIR /app
 
 COPY .env.production .env
 
+COPY package*.json ./
+
 RUN npm install
 RUN npm run build
 
