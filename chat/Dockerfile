@@ -11,7 +11,7 @@ RUN npm run build
 # этап production (production stage)
 FROM nginx:stable-alpine as production-stage
 COPY conf/default.conf /etc/nginx/conf.d/default.conf
-COPY dist .
+COPY . .
 COPY sound /var/chat/sound
 COPY --from=build-stage /app/dist /var/chat/html
 
