@@ -5,11 +5,8 @@ services:
     build:
       context: ./chat
       dockerfile: Dockerfile
-      args:
-        - VITE_APP_DOMEN_PORT=filin-hub.online:3000
-        - VITE_APP_PROTOCOL=ws
     ports:
-      - '81:80'
+      - '8080:80'
     depends_on:
       - backend
 
