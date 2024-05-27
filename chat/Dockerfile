@@ -13,9 +13,9 @@ RUN npm run build
 # этап production (production stage)
 FROM nginx:stable-alpine as production-stage
 COPY conf/default.conf /etc/nginx/conf.d/default.conf
-COPY . .
+COPY dist .
 COPY sound /var/chat/sound
-COPY --from=build-stage /app/dist /var/chat/html
+COPY --from=build-stage /app /var/chat/html
 
 EXPOSE 8080
 CMD ["nginx", "-g", "daemon off;"]
