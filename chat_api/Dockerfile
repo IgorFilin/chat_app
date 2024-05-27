@@ -13,6 +13,6 @@ COPY .env.${NODE_ENV} .env
 
 RUN npm run build
 
-COPY ./dist .
+COPY ./dist ./dist
 
 CMD [ "node", "dist/main.js" ]
