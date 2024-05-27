@@ -13,6 +13,6 @@ RUN npm install
 
 RUN npm run build
 
-COPY . .
+COPY . /backend
 
 CMD [ "node", "dist/main.js" ]
