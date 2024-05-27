@@ -27,13 +27,13 @@ export const authApi = {
     return mainInstance.post<ResponseLoginType>('/user/login', userData);
   },
   auth() {
-    return authInstance.get('/user/auth');
+    return mainInstance.get('/user/auth');
   },
   logout() {
-    return authInstance.get<ResponseLogoutType>('/user/logout');
+    return mainInstance.get<ResponseLogoutType>('/user/logout');
   },
   confirmReg(key: string) {
-    return authInstance.get<ResponseConfirmRegType>('/user/confirm', {
+    return mainInstance.get<ResponseConfirmRegType>('/user/confirm', {
       params: { key },
     });
   },
@@ -42,24 +42,24 @@ export const authApi = {
   },
 
   getPhoto() {
-    return authInstance.get('/user/avatar', { responseType: 'blob' });
+    return mainInstance.get('/user/avatar');
   },
   setPhoto(id: string, formdata: any) {
-    return authInstance.post(`/user/avatar?id=${id}`, formdata, {
+    return mainInstance.post(`/user/avatar?id=${id}`, formdata, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
   },
   repeatedConfirmReg(email: string) {
-    return authInstance.get<ResponseConfirmRegType>('/user/send_mail_confirm', { params: { email } });
+    return mainInstance.get<ResponseConfirmRegType>('/user/send_mail_confirm', { params: { email } });
   },
   executeYaCaptcha(userToken: string) {
-    return authInstance.get(`/user/validateCaptcha?token=${userToken}`);
+    return mainInstance.get(`/user/validateCaptcha?token=${userToken}`);
   },
 };
 
 export const userApi = {
   getAllUsers() {
-    return authInstance.get<Array<ResponseGetAllUsersType>>('/user/users_list');
+    return mainInstance.get<Array<ResponseGetAllUsersType>>('/user/users_list');
   },
 };
 
