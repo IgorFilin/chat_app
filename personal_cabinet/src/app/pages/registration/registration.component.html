@@ -1,0 +1,15 @@
+<form [formGroup]="registrationForm">
+  <div>
+    <label for="name">Name:</label>
+    <input formControlName="name" type="text" id="name" required />
+    <app-form-error-handler [errorFormObject]="name"></app-form-error-handler>
+  </div>
+  <div>
+    <label for="email">Email:</label>
+    <input formControlName="email" type="email" id="email" />
+  </div>
+  <div>
+    <label for="password">Password:</label>
+    <input formControlName="password" type="password" id="password" />
+  </div>
+</form>
