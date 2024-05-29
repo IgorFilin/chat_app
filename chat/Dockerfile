@@ -3,7 +3,11 @@ FROM node:18 as build-stage
 
 WORKDIR /app
 
+COPY . .
+
 COPY .env.production .env
+
+COPY package*.json ./
 
 RUN npm install
 RUN npm run build
@@ -11,7 +15,6 @@ RUN npm run build
 # этап production (production stage)
 FROM nginx:stable-alpine as production-stage
 COPY conf/default.conf /etc/nginx/conf.d/default.conf
-COPY dist .
 COPY sound /var/chat/sound
 COPY --from=build-stage /app/dist /var/chat/html
 
