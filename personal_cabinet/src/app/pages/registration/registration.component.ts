@@ -21,8 +21,16 @@ export class RegistrationComponent implements OnInit {
       Validators.minLength(6),
       Validators.maxLength(15),
     ]),
-    email: new FormControl(''),
-    password: new FormControl(''),
+    email: new FormControl('', [
+      Validators.required,
+      Validators.pattern(
+        /^((([0-9A-Za-z]{1}[-0-9A-z\.]{1,}[0-9A-Za-z]{1})|([0-9А-Яа-я]{1}[-0-9А-я\.]{1,}[0-9А-Яа-я]{1}))@([-A-Za-z]{1,}\.){1,2}[-A-Za-z]{2,})$/u
+      ),
+    ]),
+    password: new FormControl('', [
+      Validators.required,
+      Validators.minLength(6),
+    ]),
   });
 
   get name() {

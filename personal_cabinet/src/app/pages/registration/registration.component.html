@@ -7,9 +7,16 @@
   <div>
     <label for="email">Email:</label>
     <input formControlName="email" type="email" id="email" />
+    <app-form-error-handler
+      [patternName]="'email'"
+      [errorFormObject]="email"
+    ></app-form-error-handler>
   </div>
   <div>
     <label for="password">Password:</label>
     <input formControlName="password" type="password" id="password" />
+    <app-form-error-handler
+      [errorFormObject]="password"
+    ></app-form-error-handler>
   </div>
 </form>
