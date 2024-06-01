@@ -78,5 +78,6 @@ export class RegistrationComponent {
 
   onSubmit() {
     this.store.dispatch(startRegistrationAction(this.registrationForm.value));
+    this.registrationForm.reset();
   }
 }
