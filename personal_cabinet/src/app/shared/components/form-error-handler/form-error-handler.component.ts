@@ -11,13 +11,13 @@ import { AbstractControl, ValidationErrors } from '@angular/forms';
 })
 export class FormErrorHandlerComponent implements OnInit {
   @Input() errorFormObject?: any;
-  @Input() patternName?: 'email';
+  @Input() patternName?: string;
 
   errors: string[] = [];
 
   errorDescriptions: Record<string, string> = {
-    maxlength: 'Пароль слишком длинный',
-    minlength: 'Пароль слишком короткий',
+    maxlength: 'Поле должно быть меньше',
+    minlength: 'Введите больше символов',
     required: 'Обязательное поле',
     email: 'Некорректный почтовый адрес',
   };

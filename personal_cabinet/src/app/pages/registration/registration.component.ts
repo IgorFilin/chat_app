@@ -7,18 +7,23 @@ import {
   Validators,
 } from '@angular/forms';
 import { FormErrorHandlerComponent } from '../../shared/components/form-error-handler/form-error-handler.component';
+import { Store } from '@ngrx/store';
+import { startRegistrationAction } from '../../../store/auth/auth.actions';
 
 @Component({
-  selector: 'app-registration',
+  selector: 'cabinet-registration',
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule, FormErrorHandlerComponent],
   templateUrl: './registration.component.html',
   styleUrl: './registration.component.scss',
 })
-export class RegistrationComponent implements OnInit {
+export class RegistrationComponent {
+  constructor(private store: Store) {}
+
   registrationForm: FormGroup = new FormGroup({
     name: new FormControl('', [
-      Validators.minLength(6),
+      Validators.required,
+      Validators.minLength(3),
       Validators.maxLength(15),
     ]),
     email: new FormControl('', [
@@ -33,6 +38,30 @@ export class RegistrationComponent implements OnInit {
     ]),
   });
 
+  dataRegisterPage: Array<{
+    inputType: string;
+    input: any;
+    controlName: string;
+    patternName?: string;
+  }> = [
+    {
+      inputType: 'text',
+      input: this.name,
+      controlName: 'name',
+    },
+    {
+      inputType: 'email',
+      input: this.email,
+      patternName: 'email',
+      controlName: 'email',
+    },
+    {
+      inputType: 'password',
+      input: this.password,
+      controlName: 'password',
+    },
+  ];
+
   get name() {
     return this.registrationForm.get('name');
   }
@@ -43,14 +72,11 @@ export class RegistrationComponent implements OnInit {
     return this.registrationForm.get('password');
   }
 
-  ngOnInit(): void {
-    this.registrationForm.valueChanges.subscribe((data) => {
-      // const validationsObj = {
-      //   name: this.registrationForm.get('name')?.errors,
-      //   email: this.registrationForm.get('email')?.errors,
-      //   password: this.registrationForm.get('password')?.errors,
-      // };
-      // console.log(validationsObj);
-    });
+  trackByIndex(index: number): number {
+    return index;
+  }
+
+  onSubmit() {
+    this.store.dispatch(startRegistrationAction(this.registrationForm.value));
   }
 }
