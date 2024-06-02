@@ -16,10 +16,10 @@ export class FormErrorHandlerComponent implements OnInit {
   errors: string[] = [];
 
   errorDescriptions: Record<string, string> = {
-    maxlength: 'Поле должно быть меньше',
-    minlength: 'Введите больше символов',
-    required: 'Обязательное поле',
-    email: 'Некорректный почтовый адрес',
+    maxlength: 'The field must be shorter',
+    minlength: 'Please enter more characters',
+    required: 'This field is required',
+    email: 'Invalid email address',
   };
 
   ngOnInit(): void {

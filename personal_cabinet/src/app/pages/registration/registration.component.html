@@ -27,7 +27,12 @@
     </div>
     <div class="ng-registrationForm__loginRouteContainer">
       <div>Already have an account?</div>
-      <div class="ng-registrationForm__loginRouteLogin">Login</div>
+      <div
+        (click)="onRedirectForLogin()"
+        class="ng-registrationForm__loginRouteLogin"
+      >
+        Login
+      </div>
     </div>
     <button type="submit" [disabled]="registrationForm.invalid">
       Registration

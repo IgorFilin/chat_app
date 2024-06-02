@@ -1,32 +1,26 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { FormErrorHandlerComponent } from '../../shared/components/form-error-handler/form-error-handler.component';
-import { Store } from '@ngrx/store';
-import { startRegistrationAction } from '../../../store/auth/auth.actions';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { FormErrorHandlerComponent } from '../../shared/components/form-error-handler/form-error-handler.component';
+import { startLogin } from '../../../store/auth/auth.actions';
 
 @Component({
-  selector: 'cabinet-registration',
+  selector: 'cabinet-login',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, FormErrorHandlerComponent],
-  templateUrl: './registration.component.html',
-  styleUrl: './registration.component.scss',
+  imports: [CommonModule, ReactiveFormsModule, FormErrorHandlerComponent],
+  templateUrl: './login.component.html',
+  styleUrl: './login.component.scss',
 })
-export class RegistrationComponent {
+export class LoginComponent {
   constructor(private store: Store, private router: Router) {}
-
-  registrationForm: FormGroup = new FormGroup({
-    name: new FormControl('', [
-      Validators.required,
-      Validators.minLength(3),
-      Validators.maxLength(15),
-    ]),
+  loginForm: FormGroup = new FormGroup({
     email: new FormControl('', [
       Validators.required,
       Validators.pattern(
@@ -39,17 +33,12 @@ export class RegistrationComponent {
     ]),
   });
 
-  dataRegisterPage: Array<{
+  dataLoginPage: Array<{
     inputType: string;
     input: any;
     controlName: string;
     patternName?: string;
   }> = [
-    {
-      inputType: 'text',
-      input: this.name,
-      controlName: 'name',
-    },
     {
       inputType: 'email',
       input: this.email,
@@ -63,14 +52,11 @@ export class RegistrationComponent {
     },
   ];
 
-  get name() {
-    return this.registrationForm.get('name');
-  }
   get email() {
-    return this.registrationForm.get('email');
+    return this.loginForm.get('email');
   }
   get password() {
-    return this.registrationForm.get('password');
+    return this.loginForm.get('password');
   }
 
   trackByIndex(index: number): number {
@@ -78,11 +64,11 @@ export class RegistrationComponent {
   }
 
   onRedirectForLogin() {
-    this.router.navigateByUrl('/login');
+    this.router.navigateByUrl('/registration');
   }
 
   onSubmit() {
-    this.store.dispatch(startRegistrationAction(this.registrationForm.value));
-    this.registrationForm.reset();
+    this.store.dispatch(startLogin(this.loginForm.value));
+    this.loginForm.reset();
   }
 }
