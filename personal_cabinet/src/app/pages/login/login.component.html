@@ -27,6 +27,12 @@
         Registration
       </div>
     </div>
-    <button type="submit" [disabled]="loginForm.invalid">Registration</button>
+    <div class="ng-loginForm__regRouteContainer">
+      <div>Need to verify your account?</div>
+      <div (click)="onRedirectForConfirm()" class="ng-loginForm__regRoute">
+        Confirm
+      </div>
+    </div>
+    <button type="submit" [disabled]="loginForm.invalid">Login</button>
   </form>
 </div>

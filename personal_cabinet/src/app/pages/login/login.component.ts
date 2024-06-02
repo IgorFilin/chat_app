@@ -64,7 +64,11 @@ export class LoginComponent {
   }
 
   onRedirectForLogin() {
-    this.router.navigateByUrl('/registration');
+    this.router.navigateByUrl('registration');
+  }
+
+  onRedirectForConfirm() {
+    this.router.navigateByUrl('confirm');
   }
 
   onSubmit() {

@@ -49,7 +49,7 @@ export class AuthEffect {
             map((data) => {
               this.store.dispatch(stopLoading());
               this.toast.success('Вы успешно зарегистрировались');
-              this.router.navigate(['/confirm']);
+              this.router.navigateByUrl('/');
               return completedRegistrationAction(
                 data as ResponseDataRegistrationType
               );
@@ -108,8 +108,8 @@ export class AuthEffect {
           .pipe(
             map((data) => {
               this.store.dispatch(stopLoading());
-              // this.toastr.success('Вы успешно авторизованы');
-              this.router.navigate(['/']);
+              this.toast.success('Вы успешно авторизованы');
+              this.router.navigateByUrl('/');
               return completedRegistrationAction(
                 data as ResponseDataRegistrationType
               );
@@ -166,10 +166,10 @@ export class AuthEffect {
             { withCredentials: true }
           )
           .pipe(
-            map((data) => {
+            map((data: any) => {
               this.store.dispatch(stopLoading());
-              // this.toastr.success('Вы успешно вошли');
-              this.router.navigate(['/']);
+              this.toast.success(data.message);
+              this.router.navigateByUrl('/');
               return completedLogin(data);
             }),
             catchError((error) => {
