@@ -79,15 +79,15 @@ export class AuthEffect {
           .pipe(
             map((data) => {
               this.store.dispatch(stopLoading());
-              // this.toastr.success('Добро пожаловать');
-              this.router.navigate(['/']);
+              this.toast.success('Добро пожаловать');
+              this.router.navigateByUrl('/');
               return completedRegistrationAction(
                 data as ResponseDataRegistrationType
               );
             }),
             catchError((error) => {
               const errorMessage = error.error.message;
-              // this.toastr.error(errorMessage);
+              this.toast.error(errorMessage);
               this.store.dispatch(stopLoading());
               return of(registrationFailure({ error }));
             })
@@ -135,13 +135,13 @@ export class AuthEffect {
           .pipe(
             map((data) => {
               this.store.dispatch(stopLoading());
-              // this.toastr.success('Вы успешно вышли, возращайтесь!');
-              this.router.navigate(['/registration']);
+              this.toast.success('Вы успешно вышли, возращайтесь!');
+              this.router.navigateByUrl('registration');
               return completedExit(data);
             }),
             catchError((error) => {
               const errorMessage = error.error.message;
-              // this.toastr.error(errorMessage);
+              this.toast.error(errorMessage);
               this.store.dispatch(stopLoading());
               return of(registrationFailure({ error }));
             })
@@ -174,7 +174,7 @@ export class AuthEffect {
             }),
             catchError((error) => {
               const errorMessage = error.error.message;
-              // this.toastr.error(errorMessage);
+              this.toast.error(errorMessage);
               this.store.dispatch(stopLoading());
               return of(registrationFailure({ error }));
             })
