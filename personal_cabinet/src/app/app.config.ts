@@ -11,6 +11,7 @@ import { UtilsService } from './core/services/utils.servise';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideToastr } from 'ngx-toastr';
 import { ToasterService } from './core/services/toaster.service';
+import { AppReducer } from '../store/app/app.reducer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -18,7 +19,7 @@ export const appConfig: ApplicationConfig = {
     ToasterService,
     provideRouter(routes),
     provideHttpClient(),
-    provideStore({ auth: AuthReducer }),
+    provideStore({ auth: AuthReducer, app: AppReducer }),
     provideEffects([AuthEffect]),
     provideToastr(),
     provideAnimations(),

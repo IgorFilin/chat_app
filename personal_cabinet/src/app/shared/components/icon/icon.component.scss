@@ -1,0 +1,11 @@
+@import "colors.scss";
+
+.ng-icon {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+
+  &.white {
+    color: $color-white;
+  }
+}
