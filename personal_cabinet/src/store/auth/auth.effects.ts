@@ -48,8 +48,8 @@ export class AuthEffect {
           .pipe(
             map((data) => {
               this.store.dispatch(stopLoading());
-              this.toast.success('Вы успешно зарегистрировались');
-              this.router.navigateByUrl('/');
+              this.toast.success('Пожалуйста подтвердите вашу почту');
+              this.router.navigateByUrl('confirm');
               return completedRegistrationAction(
                 data as ResponseDataRegistrationType
               );

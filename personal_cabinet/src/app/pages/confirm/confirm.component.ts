@@ -9,6 +9,7 @@ import {
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { FormErrorHandlerComponent } from '../../shared/components/form-error-handler/form-error-handler.component';
+import { registrationConfirm } from '../../../store/auth/auth.actions';
 
 @Component({
   selector: 'cabinet-confirm',
@@ -50,7 +51,7 @@ export class ConfirmComponent {
   }
 
   onSubmit() {
-    // this.store.dispatch(startLogin(this.loginForm.value));
-    // this.loginForm.reset();
+    this.store.dispatch(registrationConfirm(this.confirmForm.value));
+    this.confirmForm.reset();
   }
 }
