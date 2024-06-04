@@ -3,11 +3,13 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { GetIsStatusMenu } from '../../../store/app/app.selector';
 import { CommonModule } from '@angular/common';
+import { SectionListComponent } from '../../components/section-list/section-list.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'cabinet-main',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SectionListComponent, RouterModule],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss',
 })
@@ -17,6 +19,7 @@ export class MainComponent implements OnInit {
   constructor(private store: Store) {}
 
   ngOnInit() {
+    console.log('tet');
     this.isOpenMenu = this.store.select(GetIsStatusMenu);
   }
 }

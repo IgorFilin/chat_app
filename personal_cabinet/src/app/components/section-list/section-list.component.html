@@ -1,0 +1,5 @@
+<div>
+  <div *ngFor="let list of sectionLists">
+    <div (click)="onClickListHandler(list.routeLink)">{{ list.title }}</div>
+  </div>
+</div>
