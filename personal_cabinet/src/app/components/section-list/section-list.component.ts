@@ -1,25 +1,32 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { IconComponent } from '../../shared/components/icon/icon.component';
 
+interface ListType {
+  title: string;
+  routeLink: string;
+  icon: string;
+}
 @Component({
   selector: 'cabinet-section-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, IconComponent],
   templateUrl: './section-list.component.html',
   styleUrl: './section-list.component.scss',
 })
 export class SectionListComponent {
   constructor(private route: Router) {}
 
-  sectionLists: Array<{ title: string; routeLink: string }> = [
+  sectionLists: Array<ListType> = [
     {
+      icon: 'main',
       title: 'main',
       routeLink: '/',
     },
     {
-      title: 'bot-questions',
+      icon: 'bot',
+      title: 'bot',
       routeLink: 'bot-questions',
     },
   ];
