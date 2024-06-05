@@ -1,2 +1,4 @@
-<cabinet-section-list *ngIf="isOpenMenu | async" />
-<router-outlet />
+<div class="ng-main">
+  <cabinet-section-list *ngIf="isOpenMenu | async" @slideInOut />
+  <router-outlet />
+</div>
