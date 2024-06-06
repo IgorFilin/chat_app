@@ -1,6 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 
 @Component({
   selector: 'cabinet-questions-bot',
@@ -12,8 +17,8 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 })
 export class QuestionsBotComponent {
   createQuestionForm: FormGroup = new FormGroup({
-    question: new FormControl(''),
-    answer_0: new FormControl(''),
+    question: new FormControl('', [Validators.required]),
+    answer_0: new FormControl('', [Validators.required]),
   });
 
   variantAnswers: Array<string> = ['answer_0'];
@@ -21,7 +26,10 @@ export class QuestionsBotComponent {
   onHandlerClickAddQuestions() {
     const newAnswer = `answer_${this.variantAnswers.length - 1}`;
     this.variantAnswers.push(newAnswer);
-    this.createQuestionForm.addControl(newAnswer, new FormControl(''));
+    this.createQuestionForm.addControl(
+      newAnswer,
+      new FormControl('', [Validators.required])
+    );
   }
 
   onSubmit() {

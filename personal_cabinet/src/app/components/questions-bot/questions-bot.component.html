@@ -6,7 +6,7 @@
     class="ng-bot__textarea"
   ></textarea>
   <div class="ng-bot__variantsContainer">
-    <div class="ng-bot__textareaLabel">Добавьте вариант(ы) ответа:</div>
+    <div class="ng-bot__textareaLabel">Вариант(ы) ответа:</div>
     <div class="ng-bot__variantAnswersContainer">
       <div
         class="ng-bot__variants"
@@ -22,5 +22,7 @@
     </div>
   </div>
   <button (click)="onHandlerClickAddQuestions()">Добавить ещё ответ</button>
-  <button type="submit">Получить данные</button>
+  <button [disabled]="createQuestionForm.invalid" type="submit">
+    Получить данные
+  </button>
 </form>
