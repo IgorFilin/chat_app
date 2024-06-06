@@ -1,8 +1,26 @@
-<div class="ng-bot">
+<form (ngSubmit)="onSubmit()" class="ng-bot" [formGroup]="createQuestionForm">
   <label class="ng-bot__textareaLabel" for="question">Ваш вопрос: </label>
   <textarea
     id="question"
     formControlName="question"
     class="ng-bot__textarea"
   ></textarea>
-</div>
+  <div class="ng-bot__variantsContainer">
+    <div class="ng-bot__textareaLabel">Добавьте вариант(ы) ответа:</div>
+    <div class="ng-bot__variantAnswersContainer">
+      <div
+        class="ng-bot__variants"
+        *ngFor="let answer of variantAnswers; index as i"
+      >
+        <label class="ng-bot__textareaLabel" for="question">{{ i + 1 }}:</label>
+        <textarea
+          id="question"
+          [formControlName]="answer"
+          class="ng-bot__textarea variantAnswer"
+        ></textarea>
+      </div>
+    </div>
+  </div>
+  <button (click)="onHandlerClickAddQuestions()">Добавить ещё ответ</button>
+  <button type="submit">Получить данные</button>
+</form>
