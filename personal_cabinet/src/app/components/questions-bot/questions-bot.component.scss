@@ -55,3 +55,43 @@
   flex-wrap: wrap;
   gap: 10px;
 }
+
+.ng-bot__buttonContainer {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+
+.ng-bot__button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 0;
+  padding: 10px;
+  background: $color-dark-gray;
+  color: $color-light-gray;
+  transition: 0.5s;
+  cursor: pointer;
+
+  &:hover {
+    background: $color-black;
+    color: $color-white;
+  }
+
+  &:disabled {
+    background: $color-disabled;
+  }
+
+  &.addOuestion {
+    grid-area: addOuestion;
+  }
+
+  &.removeQuestion {
+    grid-area: removeQuestion;
+  }
+
+  &.submit {
+    grid-area: submit;
+  }
+}

@@ -21,8 +21,28 @@
       </div>
     </div>
   </div>
-  <button (click)="onHandlerClickAddQuestions()">Добавить ещё ответ</button>
-  <button [disabled]="createQuestionForm.invalid" type="submit">
-    Получить данные
-  </button>
+  <div class="ng-bot__buttonContainer">
+    <button
+      type="button"
+      class="ng-bot__button addOuestion"
+      (click)="onHandlerClickAddQuestions(); $event.stopPropagation()"
+    >
+      Добавить ещё ответ
+    </button>
+    <button
+      type="button"
+      *ngIf="variantAnswers.length > 1"
+      class="ng-bot__button removeQuestion"
+      (click)="onHandlerClickRemoveQuestions()"
+    >
+      Удалить ответ
+    </button>
+    <button
+      class="ng-bot__button submit"
+      [disabled]="createQuestionForm.invalid"
+      type="submit"
+    >
+      Получить данные
+    </button>
+  </div>
 </form>
