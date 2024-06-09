@@ -1,5 +1,6 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UserKeyResetPass } from './userKeyResetPass.entity';
+import { Question } from 'src/q&a/entities/question.entity';
 @Entity('Users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
@@ -35,4 +36,7 @@ export class User {
   @OneToOne(() => UserKeyResetPass)
   @JoinColumn()
   resetPasswordKey: UserKeyResetPass;
+
+  @OneToMany(() => Question, (question) => question.user)
+  question: Question[];
 }
