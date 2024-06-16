@@ -20,8 +20,8 @@ import {
 } from './auth.actions';
 import { ResponseDataRegistrationType } from './types';
 import { Router } from '@angular/router';
-import { UtilsService } from '../../app/core/services/utils.servise';
-import { ToasterService } from '../../app/core/services/toaster.service';
+import { UtilsService } from '../../app/services/utils.servise';
+import { ToasterService } from '../../app/services/toaster.service';
 
 @Injectable()
 export class AuthEffect {

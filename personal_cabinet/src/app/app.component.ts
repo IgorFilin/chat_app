@@ -3,8 +3,9 @@ import { RouterOutlet } from '@angular/router';
 import { RegistrationComponent } from './pages/registration/registration.component';
 import { LoginComponent } from './pages/login/login.component';
 import { Store } from '@ngrx/store';
-import { authAction } from '../store/auth/auth.actions';
 import { HeaderComponent } from './components/header/header.component';
+import { AuthService } from './services/auth.service';
+import { LoadingService } from './services/loading.service';
 
 @Component({
   selector: 'app-root',
@@ -19,11 +20,14 @@ import { HeaderComponent } from './components/header/header.component';
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
-  constructor(private store: Store) {}
+  constructor(
+    private authService: AuthService,
+    public loadingService: LoadingService
+  ) {}
 
   title = 'personal_cabinet';
 
   ngOnInit() {
-    this.store.dispatch(authAction());
+    this.authService.getAuth();
   }
 }
