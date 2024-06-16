@@ -28,6 +28,6 @@ export class AppComponent implements OnInit {
   title = 'personal_cabinet';
 
   ngOnInit() {
-    this.authService.getAuth();
+    this.authService.authRequest();
   }
 }

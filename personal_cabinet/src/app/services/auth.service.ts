@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { RequestService } from './request.service';
-import { catchError, map, of } from 'rxjs';
+import { BehaviorSubject, catchError, map, of } from 'rxjs';
 import { UtilsService } from './utils.servise';
 import { ToasterService } from './toaster.service';
 import { LoadingService } from './loading.service';
@@ -19,7 +19,7 @@ interface GetAuthPesponseType {
   providedIn: 'root',
 })
 export class AuthService {
-  isAuth: boolean = false;
+  isAuth$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   constructor(
     private requestService: RequestService,
@@ -29,7 +29,7 @@ export class AuthService {
     private router: Router
   ) {}
 
-  getAuth() {
+  authRequest() {
     this.loadingService.startLoading();
     this.requestService
       .get('user/auth')
@@ -37,7 +37,7 @@ export class AuthService {
         map((data: GetAuthPesponseType) => {
           this.toastService.success('Вы успешно авторизованы');
           this.router.navigateByUrl('/');
-          this.isAuth = data.isAuth;
+          this.isAuth$.next(data.isAuth);
           this.loadingService.stopLoading();
         }),
         catchError((error) => {
