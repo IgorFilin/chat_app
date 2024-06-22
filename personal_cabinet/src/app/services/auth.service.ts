@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
+import { DestroyRef, Injectable, inject } from '@angular/core';
 import { RequestService } from './request.service';
-import { BehaviorSubject, catchError, map, of } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, map, of, tap } from 'rxjs';
 import { UtilsService } from './utils.servise';
 import { ToasterService } from './toaster.service';
 import { LoadingService } from './loading.service';
 import { Router } from '@angular/router';
-
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export interface AuthType {
   isAuth: boolean;
   isLoading: boolean;
@@ -20,6 +20,7 @@ interface GetAuthPesponseType {
 })
 export class AuthService {
   isAuth$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  destroyRef = inject(DestroyRef);
 
   constructor(
     private requestService: RequestService,
@@ -29,24 +30,43 @@ export class AuthService {
     private router: Router
   ) {}
 
-  authRequest() {
+  authRequest(): Observable<any> {
+    this.loadingService.startLoading();
+    return this.requestService.get('user/auth').pipe(
+      takeUntilDestroyed(this.destroyRef),
+      map((data: GetAuthPesponseType) => {
+        this.toastService.success('Вы успешно авторизованы');
+        this.isAuth$.next(data.isAuth);
+        this.router.navigateByUrl('/');
+        this.loadingService.stopLoading();
+      }),
+      catchError((error) => {
+        // const errorMessage = error.error.message;
+        this.loadingService.stopLoading();
+        // this.toastService.error('errorMessage');
+        return error;
+      })
+    );
+  }
+
+  login(body: Record<string, string>): void {
     this.loadingService.startLoading();
     this.requestService
-      .get('user/auth')
+      .post('user/login', body)
       .pipe(
-        map((data: GetAuthPesponseType) => {
-          this.toastService.success('Вы успешно авторизованы');
-          this.router.navigateByUrl('/');
-          this.isAuth$.next(data.isAuth);
-          this.loadingService.stopLoading();
-        }),
+        takeUntilDestroyed(this.destroyRef),
         catchError((error) => {
           // const errorMessage = error.error.message;
           this.loadingService.stopLoading();
           // this.toastService.error('errorMessage');
-          return of();
+          return error;
         })
       )
-      .subscribe();
+      .subscribe((data) => {
+        this.toastService.success(data.message);
+        console.log(data);
+        this.isAuth$.next(data.isAuth);
+        this.router.navigateByUrl('/');
+      });
   }
 }

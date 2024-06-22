@@ -21,4 +21,14 @@ export class RequestService {
       withCredentials: true,
     });
   }
+
+  post(
+    path: string,
+    body: Record<string, string>,
+    api: string = this.apiUrl
+  ): Observable<any> {
+    return this.http.post(`${api}/${path}`, body, {
+      withCredentials: true,
+    });
+  }
 }

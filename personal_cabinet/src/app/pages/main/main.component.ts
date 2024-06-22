@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { SectionListComponent } from '../../components/section-list/section-list.component';
 import { RouterModule } from '@angular/router';
 import { slideInOutAnimation } from '../../animations/slide-in-out-animations';
+import { IsOpenCloseService } from '../../services/is-open-close.service';
 
 @Component({
   selector: 'cabinet-main',
@@ -18,10 +19,11 @@ import { slideInOutAnimation } from '../../animations/slide-in-out-animations';
 export class MainComponent implements OnInit {
   isOpenMenu: Observable<boolean> | null = null;
 
-  constructor(private store: Store) {}
+  constructor(private isOpenCloseService: IsOpenCloseService) {}
 
   ngOnInit() {
-    console.log('tet');
-    this.isOpenMenu = this.store.select(GetIsStatusMenu);
+    this.isOpenCloseService.dataToggle.subscribe((data) => {
+      this.isOpenMenu = data['menu'];
+    });
   }
 }

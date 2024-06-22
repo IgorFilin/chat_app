@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { FormErrorHandlerComponent } from '../../shared/components/form-error-handler/form-error-handler.component';
 import { startLogin } from '../../../store/auth/auth.actions';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'cabinet-login',
@@ -19,7 +20,7 @@ import { startLogin } from '../../../store/auth/auth.actions';
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
-  constructor(private store: Store, private router: Router) {}
+  constructor(private router: Router, private authServise: AuthService) {}
   loginForm: FormGroup = new FormGroup({
     email: new FormControl('', [
       Validators.required,
@@ -72,7 +73,7 @@ export class LoginComponent {
   }
 
   onSubmit() {
-    this.store.dispatch(startLogin(this.loginForm.value));
+    this.authServise.login(this.loginForm.getRawValue());
     this.loginForm.reset();
   }
 }
