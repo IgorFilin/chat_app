@@ -8,7 +8,11 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
+import { QuestionAnswerService } from '../../services/question-answer.service';
 
+export type CreateQuestionFormType = {
+  question: string;
+} & Record<string, string>;
 @Component({
   selector: 'cabinet-questions-bot',
   standalone: true,
@@ -27,6 +31,8 @@ export class QuestionsBotComponent {
   );
 
   variantAnswers: Array<string> = ['answer_0'];
+
+  constructor(private questionAnswerServise: QuestionAnswerService) {}
 
   onHandlerClickAddQuestions() {
     const newAnswer = `answer_${this.variantAnswers.length}`;
@@ -51,6 +57,6 @@ export class QuestionsBotComponent {
       this.createQuestionForm.value[formValueKey] =
         this.createQuestionForm.value[formValueKey].trim();
     }
-    console.log(this.createQuestionForm.value);
+    this.questionAnswerServise.addQuestion$(this.createQuestionForm.value);
   }
 }

@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Question } from './entities/question.entity';
+import { Answer } from './entities/answer.entity';
 
 @Injectable()
 export class QuestionAnswerService {
@@ -10,8 +11,44 @@ export class QuestionAnswerService {
     @InjectRepository(User)
     private UserTable: Repository<User>,
     @InjectRepository(Question)
-    private QuestionTable: Repository<Question>
+    private QuestionTable: Repository<Question>,
+    @InjectRepository(Answer)
+    private AnswerTable: Repository<Answer>
   ) {}
+
+  async createQuestion(body: any, token: string) {
+    try {
+      const user = await this.UserTable.findOneBy({ authToken: token });
+      if (!user) {
+        return {
+          error: 'User not found',
+          message: 'Invalid authentication token',
+        };
+      }
+      const question = new Question();
+      question.title = body.question;
+      question.user = user;
+      const savedQuestion = await this.QuestionTable.save(question);
+
+      for (const key in body) {
+        if (key !== 'question') {
+          const answer = new Answer();
+          answer.title = body[key];
+          answer.question = savedQuestion;
+          await this.AnswerTable.save(answer);
+        }
+      }
+      return {
+        message: 'Вопрос успешно создан',
+      };
+    } catch (e) {
+      console.error('Error creating note:', e);
+      return {
+        error: 'Error creating note',
+        message: e.message,
+      };
+    }
+  }
 
   async getNotes(token: string) {
     // const { notes } = await this.UserTable.findOne({
@@ -59,36 +96,5 @@ export class QuestionAnswerService {
     //     message: 'Произошла ошибка, запись не удалена',
     //   };
     // }
-  }
-
-  async createNote(body: any, token: string) {
-    //   try {
-    //     const user = await this.UserTable.findOneBy({ authToken: token });
-    //     if (!user) {
-    //       return {
-    //         error: 'User not found',
-    //         message: 'Invalid authentication token',
-    //       };
-    //     }
-    //     const note = new Note();
-    //     note.title = body.title;
-    //     note.description = body.description;
-    //     note.user = user;
-    //     const savedNote = await this.NoteTable.save(note);
-    //     return {
-    //       note: {
-    //         id: savedNote.id,
-    //         title: savedNote.title,
-    //         description: savedNote.description,
-    //         date: savedNote.date,
-    //       },
-    //     };
-    //   } catch (e) {
-    //     console.error('Error creating note:', e);
-    //     return {
-    //       error: 'Error creating note',
-    //       message: e.message,
-    //     };
-    //   }
   }
 }

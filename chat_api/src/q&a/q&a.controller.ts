@@ -8,16 +8,15 @@ export class QuestionAnswerController {
 
   @Post('create')
   async create(@Body() body: any, @Res() res: Response, @Req() req: Request) {
-    console.log(body);
-    // const result: any = await this.noteService.createNote(createNoteDto, req.cookies.authToken);
-    // if (result.note) {
-    //   return res.send(result);
-    // } else {
-    //   return res.status(403).send(result);
-    // }
+    const result: any = await this.questionAnswerService.createQuestion(body, req.cookies.authToken);
+    if (result) {
+      return res.send(result);
+    } else {
+      return res.status(403).send(result);
+    }
   }
 
-  @Get('test')
+  @Get('question')
   async getNoteList(@Req() req: Request, @Res() res: Response) {
     console.log('test');
     // const result = await this.noteService.getNotes(req.cookies.authToken);
