@@ -1,14 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
-  AbstractControl,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
-  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { QuestionAnswerService } from '../../services/question-answer.service';
+import {RadioButtonCustomComponent} from "../../shared/components/radio-button-custom/radio-button-custom.component";
 
 export type CreateQuestionFormType = {
   question: string;
@@ -16,7 +15,7 @@ export type CreateQuestionFormType = {
 @Component({
   selector: 'cabinet-questions-bot',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RadioButtonCustomComponent],
   templateUrl: './questions-bot.component.html',
   styleUrl: './questions-bot.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,11 +25,13 @@ export class QuestionsBotComponent {
     {
       question: new FormControl('', [Validators.required]),
       answer_0: new FormControl('', [Validators.required]),
+      radio_0: new FormControl(false,[Validators.requiredTrue])
     },
     Validators.required
   );
 
   variantAnswers: Array<string> = ['answer_0'];
+  variantRadioButtons: Array<string> = ['radio_0']
 
   constructor(private questionAnswerServise: QuestionAnswerService) {}
 
@@ -57,6 +58,7 @@ export class QuestionsBotComponent {
       this.createQuestionForm.value[formValueKey] =
         this.createQuestionForm.value[formValueKey].trim();
     }
-    this.questionAnswerServise.addQuestion$(this.createQuestionForm.value);
+    console.log(this.createQuestionForm.value)
+    // this.questionAnswerServise.addQuestion$(this.createQuestionForm.value);
   }
 }
