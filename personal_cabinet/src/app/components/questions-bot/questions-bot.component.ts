@@ -52,10 +52,16 @@ export class QuestionsBotComponent {
 
   onHandlerClickRemoveQuestions() {
     const removeControl = this.variantAnswers.pop();
+    const removeRadio = this.variantRadioButtons.pop();
+    if (removeRadio) {
+      this.createQuestionForm.patchValue({
+        acceptAnswer: String(removeRadio.value - 1),
+      });
+    }
     if (removeControl) {
       this.createQuestionForm.removeControl(removeControl);
-      this.createQuestionForm.updateValueAndValidity();
     }
+    this.createQuestionForm.updateValueAndValidity();
   }
 
   onSubmit() {
@@ -63,6 +69,7 @@ export class QuestionsBotComponent {
       this.createQuestionForm.value[formValueKey] =
         this.createQuestionForm.value[formValueKey].trim();
     }
-    this.questionAnswerServise.addQuestion$(this.createQuestionForm.value);
+    console.log(this.createQuestionForm.value);
+    // this.questionAnswerServise.addQuestion$(this.createQuestionForm.value);
   }
 }
