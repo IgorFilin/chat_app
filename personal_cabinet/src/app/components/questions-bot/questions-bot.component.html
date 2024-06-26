@@ -13,7 +13,11 @@
         *ngFor="let answer of variantAnswers; index as i"
       >
         <label class="ng-bot__textareaLabel" for="question">{{ i + 1 }}:</label>
-        <app-radio-button-custom [formControlName]="variantRadioButtons[i]" [options]="[{ value: i }]"></app-radio-button-custom>
+        <app-radio-button-custom
+          name="acceptAnswer"
+          [formControlName]="'acceptAnswer'"
+          [options]="[variantRadioButtons[i]]"
+        ></app-radio-button-custom>
         <textarea
           id="question"
           [formControlName]="answer"

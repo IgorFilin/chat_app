@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -7,7 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { QuestionAnswerService } from '../../services/question-answer.service';
-import {RadioButtonCustomComponent} from "../../shared/components/radio-button-custom/radio-button-custom.component";
+import { RadioButtonCustomComponent } from '../../shared/components/radio-button-custom/radio-button-custom.component';
 
 export type CreateQuestionFormType = {
   question: string;
@@ -25,18 +25,23 @@ export class QuestionsBotComponent {
     {
       question: new FormControl('', [Validators.required]),
       answer_0: new FormControl('', [Validators.required]),
-      radio_0: new FormControl(false,[Validators.requiredTrue])
+      acceptAnswer: new FormControl('1', [Validators.required]),
     },
     Validators.required
   );
 
   variantAnswers: Array<string> = ['answer_0'];
-  variantRadioButtons: Array<string> = ['radio_0']
+  variantRadioButtons: Array<any> = [{ id: 'radio_0', value: '1' }];
 
   constructor(private questionAnswerServise: QuestionAnswerService) {}
 
   onHandlerClickAddQuestions() {
     const newAnswer = `answer_${this.variantAnswers.length}`;
+    const newRadioButton = `radio_${this.variantAnswers.length}`;
+    this.variantRadioButtons.push({
+      id: newRadioButton,
+      value: String(this.variantAnswers.length + 1),
+    });
     this.variantAnswers.push(newAnswer);
     this.createQuestionForm.addControl(
       newAnswer,
@@ -58,7 +63,6 @@ export class QuestionsBotComponent {
       this.createQuestionForm.value[formValueKey] =
         this.createQuestionForm.value[formValueKey].trim();
     }
-    console.log(this.createQuestionForm.value)
-    // this.questionAnswerServise.addQuestion$(this.createQuestionForm.value);
+    this.questionAnswerServise.addQuestion$(this.createQuestionForm.value);
   }
 }
