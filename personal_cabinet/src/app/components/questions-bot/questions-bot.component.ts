@@ -1,5 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -33,7 +38,7 @@ export class QuestionsBotComponent {
   variantAnswers: Array<string> = ['answer_0'];
   variantRadioButtons: Array<any> = [{ id: 'radio_0', value: '1' }];
 
-  constructor(private questionAnswerServise: QuestionAnswerService) {}
+  constructor() {}
 
   onHandlerClickAddQuestions() {
     const newAnswer = `answer_${this.variantAnswers.length}`;
@@ -53,14 +58,17 @@ export class QuestionsBotComponent {
   onHandlerClickRemoveQuestions() {
     const removeControl = this.variantAnswers.pop();
     const removeRadio = this.variantRadioButtons.pop();
+    if (removeControl) {
+      this.createQuestionForm.removeControl(removeControl);
+    }
+
     if (removeRadio) {
+      console.log('REMOVE');
       this.createQuestionForm.patchValue({
         acceptAnswer: String(removeRadio.value - 1),
       });
     }
-    if (removeControl) {
-      this.createQuestionForm.removeControl(removeControl);
-    }
+
     this.createQuestionForm.updateValueAndValidity();
   }
 
