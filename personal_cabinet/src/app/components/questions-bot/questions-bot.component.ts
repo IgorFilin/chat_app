@@ -25,27 +25,34 @@ export type CreateQuestionFormType = {
   styleUrl: './questions-bot.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class QuestionsBotComponent {
-  createQuestionForm: FormGroup = new FormGroup(
-    {
+export class QuestionsBotComponent implements OnInit {
+  createQuestionForm!: FormGroup;
+
+  variantAnswers: Array<string> = ['answer_1'];
+  variantRadioButtons: Array<any> = [{ id: 'radio_1', value: 'answer_1' }];
+
+  constructor(
+    private questionAnswerService: QuestionAnswerService,
+    private ref: ChangeDetectorRef
+  ) {}
+
+  ngOnInit() {
+    this.initializeForm();
+  }
+
+  initializeForm() {
+    this.createQuestionForm = new FormGroup({
       question: new FormControl('', [Validators.required]),
-      answer_0: new FormControl('', [Validators.required]),
-      acceptAnswer: new FormControl('1', [Validators.required]),
-    },
-    Validators.required
-  );
-
-  variantAnswers: Array<string> = ['answer_0'];
-  variantRadioButtons: Array<any> = [{ id: 'radio_0', value: '1' }];
-
-  constructor() {}
-
+      answer_1: new FormControl('', [Validators.required]),
+      acceptAnswer: new FormControl('', [Validators.required]),
+    });
+  }
   onHandlerClickAddQuestions() {
-    const newAnswer = `answer_${this.variantAnswers.length}`;
+    const newAnswer = `answer_${this.variantAnswers.length + 1}`;
     const newRadioButton = `radio_${this.variantAnswers.length}`;
     this.variantRadioButtons.push({
       id: newRadioButton,
-      value: String(this.variantAnswers.length + 1),
+      value: `answer_${this.variantAnswers.length + 1}`,
     });
     this.variantAnswers.push(newAnswer);
     this.createQuestionForm.addControl(
@@ -53,6 +60,7 @@ export class QuestionsBotComponent {
       new FormControl('', [Validators.required])
     );
     this.createQuestionForm.updateValueAndValidity();
+    console.log(this.createQuestionForm.getRawValue());
   }
 
   onHandlerClickRemoveQuestions() {
@@ -63,9 +71,8 @@ export class QuestionsBotComponent {
     }
 
     if (removeRadio) {
-      console.log('REMOVE');
       this.createQuestionForm.patchValue({
-        acceptAnswer: String(removeRadio.value - 1),
+        acceptAnswer: `answer_${this.variantAnswers.length}`,
       });
     }
 
@@ -78,6 +85,14 @@ export class QuestionsBotComponent {
         this.createQuestionForm.value[formValueKey].trim();
     }
     console.log(this.createQuestionForm.value);
-    // this.questionAnswerServise.addQuestion$(this.createQuestionForm.value);
+    this.questionAnswerService
+      .addQuestion$(this.createQuestionForm.value)
+      .subscribe(() => {
+        this.variantAnswers = ['answer_1'];
+        this.variantRadioButtons = [{ id: 'radio_1', value: 'answer_1' }];
+        this.initializeForm();
+        this.createQuestionForm.updateValueAndValidity();
+        this.ref.markForCheck();
+      });
   }
 }

@@ -16,7 +16,7 @@ export class QuestionAnswerService {
     private AnswerTable: Repository<Answer>
   ) {}
 
-  async createQuestion(body: any, token: string) {
+  async createQuestion(body: Record<string, string>, token: string) {
     try {
       const user = await this.UserTable.findOneBy({ authToken: token });
       if (!user) {
@@ -31,10 +31,11 @@ export class QuestionAnswerService {
       const savedQuestion = await this.QuestionTable.save(question);
 
       for (const key in body) {
-        if (key !== 'question') {
+        if (key.includes('answer')) {
           const answer = new Answer();
           answer.title = body[key];
           answer.question = savedQuestion;
+          answer.isCorrect = body.acceptAnswer === key;
           await this.AnswerTable.save(answer);
         }
       }
@@ -42,9 +43,8 @@ export class QuestionAnswerService {
         message: 'Вопрос успешно создан',
       };
     } catch (e) {
-      console.error('Error creating note:', e);
       return {
-        error: 'Error creating note',
+        error: 'Ошибка создания вопроса',
         message: e.message,
       };
     }

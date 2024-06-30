@@ -9,6 +9,9 @@ export class Answer {
   @Column()
   title: string;
 
+  @Column()
+  isCorrect: boolean;
+
   @CreateDateColumn()
   date: Date;
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { RequestService } from './request.service';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { CreateQuestionFormType } from '../components/questions-bot/questions-bot.component';
 import { ToasterService } from './toaster.service';
 
@@ -13,13 +13,13 @@ export class QuestionAnswerService {
     private toastService: ToasterService
   ) {}
 
-  addQuestion$(payload: CreateQuestionFormType) {
-    this.requestServise
-      .post('question-answer/create', payload)
-      .subscribe((data) => {
+  addQuestion$(payload: CreateQuestionFormType): Observable<any> {
+    return this.requestServise.post('question-answer/create', payload).pipe(
+      tap((data) => {
         if (data.message) {
           this.toastService.info(data.message);
         }
-      });
+      })
+    );
   }
 }
