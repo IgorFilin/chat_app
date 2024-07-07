@@ -12,9 +12,15 @@ jobs:
     steps:
       - name: Качаю репозиторий
         uses: actions/checkout@v2
+
+      - name: Проверяю структуру директории перед копированием
+        run: |
+          ls -R
+
       - name: 'Create env file'
         run: |
           echo "${{ secrets.VPS_POSTGRES }}" > .env
+
       - name: Копирую папку на VPS сервер
         uses: garygrossgarten/github-action-scp@release
         with:
@@ -24,7 +30,7 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           password: ${{ secrets.VPS_PASSWORD }}
           rmRemote: true
-          dotfiles: true
+
       - name: Захожу на VPS и запускаю сборку образа
         uses: appleboy/ssh-action@master
         with:
