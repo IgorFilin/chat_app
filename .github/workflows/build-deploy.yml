@@ -50,6 +50,8 @@ jobs:
             echo "${{ secrets.ENV_BACKEND }}" > .env.production
             cd /var/www/chat_app/chat
             echo "${{ secrets.ENV_FRONTEND }}" > .env.production
+            cd /var/www/chat_app/cabinet
+            echo "${{ secrets.ENV_CABINET }}" > .env.production
             cd /var/www/chat_app/question_bot
             echo "${{ secrets.ENV_BOT }}" > .env
             cd /var/www/chat_app

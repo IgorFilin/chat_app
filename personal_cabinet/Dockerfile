@@ -1,14 +1,20 @@
-# Используем официальный образ Nginx
-FROM nginx:alpine
+FROM node:18 as build-stage
 
-# Копируем собранное приложение Angular в директорию Nginx
-COPY ./dist/your-angular-app /usr/share/nginx/html
+WORKDIR /app
 
-# Копируем пользовательскую конфигурацию Nginx, если она есть
-COPY ./nginx.conf /etc/nginx/nginx.conf
+COPY . .
 
-# Экспонируем порт 80 для Nginx
-EXPOSE 80
+COPY .env.production .env
 
-# Команда для запуска Nginx
+COPY package*.json ./
+
+RUN npm install
+RUN npm run build
+
+# этап production (production stage)
+FROM nginx:stable-alpine as production-stage
+COPY conf/default.conf /etc/nginx/conf.d/default.conf
+COPY --from=build-stage /app/dist/browser /var/cabinet/html
+
+EXPOSE 8081
 CMD ["nginx", "-g", "daemon off;"]
