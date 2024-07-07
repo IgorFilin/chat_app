@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY . .
 
-COPY .env.production .env
+# COPY .env.production .env
 
 COPY package*.json ./
 
