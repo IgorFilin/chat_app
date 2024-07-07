@@ -6,9 +6,9 @@ COPY package*.json ./
 
 RUN npm i
 
-COPY .env .env
-
 COPY . .
+
+COPY .env.production .env
 
 CMD [ "npm", "start" ]
 
