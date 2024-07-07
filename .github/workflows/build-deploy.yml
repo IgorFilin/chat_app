@@ -30,6 +30,7 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           password: ${{ secrets.VPS_PASSWORD }}
           rmRemote: true
+          atomicPut: true
 
       - name: Захожу на VPS и запускаю сборку образа
         uses: appleboy/ssh-action@master
