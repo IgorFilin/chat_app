@@ -19,6 +19,15 @@ services:
     depends_on:
       - database
 
+  bot:
+    build:
+      context: ./question_bot
+      dockerfile: Dockerfile
+    ports:
+      - '4000:4000'
+    depends_on:
+      - backend
+
   database:
     image: postgres:15
     env_file: .env
