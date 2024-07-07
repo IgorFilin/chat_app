@@ -50,8 +50,6 @@ jobs:
             echo "${{ secrets.ENV_BACKEND }}" > .env.production
             cd /var/www/chat_app/chat
             echo "${{ secrets.ENV_FRONTEND }}" > .env.production
-            cd /var/www/chat_app/cabinet
-            echo "${{ secrets.ENV_CABINET }}" > .env.production
             cd /var/www/chat_app/question_bot
             echo "${{ secrets.ENV_BOT }}" > .env
             cd /var/www/chat_app
@@ -59,7 +57,6 @@ jobs:
             docker builder prune -af
             docker image prune -af
             docker-compose -f docker-compose.yml up -d
-            rm -rf /var/www/chat_app/
 
       - name: Удаление временной папки
         uses: appleboy/ssh-action@master
