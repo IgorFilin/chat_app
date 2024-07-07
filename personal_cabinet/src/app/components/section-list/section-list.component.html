@@ -1,0 +1,11 @@
+<div class="ng-sectionList">
+  <ng-container *ngFor="let list of sectionLists">
+    <div
+      class="ng-sectionList__list"
+      (click)="onClickListHandler(list.routeLink)"
+    >
+      <cabinet-icon [id]="list.icon" />
+      {{ list.title }}
+    </div>
+  </ng-container>
+</div>

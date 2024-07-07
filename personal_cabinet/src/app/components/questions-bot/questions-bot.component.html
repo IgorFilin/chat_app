@@ -1,0 +1,56 @@
+<form (ngSubmit)="onSubmit()" class="ng-bot" [formGroup]="createQuestionForm">
+  <label class="ng-bot__textareaLabel" for="question">Ваш вопрос: </label>
+  <textarea
+    id="question"
+    formControlName="question"
+    class="ng-bot__textarea"
+  ></textarea>
+  <div class="ng-bot__infoText">
+    Выберите правильный вариант ответа на Ваш вопрос, и заполните поля ответа
+  </div>
+  <div class="ng-bot__variantsContainer">
+    <div class="ng-bot__textareaLabel">Вариант(ы) ответа:</div>
+    <div class="ng-bot__variantAnswersContainer">
+      <div
+        class="ng-bot__variants"
+        *ngFor="let answer of variantAnswers; index as i"
+      >
+        <label class="ng-bot__textareaLabel" for="question">{{ i + 1 }}:</label>
+        <app-radio-button-custom
+          name="acceptAnswer"
+          [formControlName]="'acceptAnswer'"
+          [options]="[variantRadioButtons[i]]"
+        ></app-radio-button-custom>
+        <textarea
+          id="question"
+          [formControlName]="answer"
+          class="ng-bot__textarea variantAnswer"
+        ></textarea>
+      </div>
+    </div>
+  </div>
+  <div class="ng-bot__buttonContainer">
+    <button
+      type="button"
+      class="ng-bot__button addOuestion"
+      (click)="onHandlerClickAddQuestions(); $event.stopPropagation()"
+    >
+      Добавить ещё ответ
+    </button>
+    <button
+      type="button"
+      *ngIf="variantAnswers.length > 1"
+      class="ng-bot__button removeQuestion"
+      (click)="onHandlerClickRemoveQuestions()"
+    >
+      Удалить ответ
+    </button>
+    <button
+      class="ng-bot__button submit"
+      [disabled]="createQuestionForm.invalid"
+      type="submit"
+    >
+      Создать
+    </button>
+  </div>
+</form>

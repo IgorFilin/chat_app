@@ -1,0 +1,17 @@
+* {
+  font-family: "Oswald", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+}
+body {
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+}
+
+.container {
+  width: auto;
+  max-width: 1200px;
+  margin: 15px auto;
+  padding: 0 10px;
+}

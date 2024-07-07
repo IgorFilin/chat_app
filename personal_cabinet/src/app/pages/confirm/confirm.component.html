@@ -1,0 +1,39 @@
+<div class="ng-confirm">
+  <form
+    (ngSubmit)="onSubmit()"
+    class="ng-confirmForm"
+    [formGroup]="confirmForm"
+  >
+    <div
+      class="ng-confirmForm__itemInput"
+      *ngFor="
+        let dataInput of dataConfirmPage;
+        index as index;
+        trackBy: trackByIndex
+      "
+    >
+      <input
+        class="ng-confirmForm__input"
+        [formControlName]="dataInput.controlName"
+        [placeholder]="dataInput.controlName"
+        [type]="dataInput.inputType"
+        [id]="dataInput.inputType"
+      />
+      <app-form-error-handler
+        [patternName]="dataInput.patternName"
+        class="ng-confirmForm__inputError"
+        [errorFormObject]="dataInput.input"
+      ></app-form-error-handler>
+    </div>
+    <div class="ng-confirmForm__loginRouteContainer">
+      <div>Already have an account?</div>
+      <div
+        (click)="onRedirectForLogin()"
+        class="ng-confirmForm__loginRouteLogin"
+      >
+        Login
+      </div>
+    </div>
+    <button type="submit" [disabled]="confirmForm.invalid">Confirm</button>
+  </form>
+</div>

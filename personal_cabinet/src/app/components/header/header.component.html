@@ -1,0 +1,14 @@
+<div class="ng-header" *ngIf="isAuth">
+  <div class="ng-headerContainer">
+    <div>
+      <cabinet-icon
+        (click)="onIconHomeClickHandler()"
+        [id]="'home'"
+        [color]="'white'"
+      />
+    </div>
+    <button (click)="onClickLeaveHandler()" class="ng-header__button">
+      Выход
+    </button>
+  </div>
+</div>
