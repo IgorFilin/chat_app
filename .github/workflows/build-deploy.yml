@@ -51,7 +51,7 @@ jobs:
             cd /var/www/chat_app/chat
             echo "${{ secrets.ENV_FRONTEND }}" > .env.production
             cd /var/www/chat_app/question_bot
-            echo "${{ secrets.ENV_BOT }}" > .env
+            echo "${{ secrets.ENV_BOT }}" > .env.production
             cd /var/www/chat_app
             docker-compose down -v
             docker builder prune -af
