@@ -21,17 +21,35 @@ jobs:
         run: |
           echo "${{ secrets.VPS_POSTGRES }}" > .env
 
-      - name: Копирую папку на VPS сервер
+      - name: Копирую первую часть файлов на VPS сервер
         uses: garygrossgarten/github-action-scp@release
         with:
-          local: ./
-          remote: /var/www/chat_app
+          local: ./chat_api/
+          remote: /var/www/chat_app/chat_api
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
           password: ${{ secrets.VPS_PASSWORD }}
           rmRemote: true
-          atomicPut: true
 
+      - name: Копирую вторую часть файлов на VPS сервер
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          local: ./chat/
+          remote: /var/www/chat_app/chat
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          rmRemote: false
+
+      - name: Копирую оставшиеся файлы на VPS сервер
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          local: ./question_bot/
+          remote: /var/www/chat_app/question_bot
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          rmRemote: false
       - name: Захожу на VPS и запускаю сборку образа
         uses: appleboy/ssh-action@master
         with:
