@@ -63,9 +63,9 @@ jobs:
 
       - name: Удаление временной папки
         uses: appleboy/ssh-action@master
-          with:
-            host: ${{ secrets.VPS_HOST }}
-            username: ${{ secrets.VPS_USERNAME }}
-            password: ${{ secrets.VPS_PASSWORD }}
-            script: |
-              rm -rf /var/www/chat_app/
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          script: |
+            rm -rf /var/www/chat_app/
