@@ -36,8 +36,8 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_PASSWORD }}
-          source: /var/www/chat_app
-          target: ./
+          source: ./
+          target: /var/www/chat_app
 
       - name: Захожу на VPS и запускаю сборку образа
         uses: appleboy/ssh-action@master
