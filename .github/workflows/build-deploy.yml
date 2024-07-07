@@ -24,6 +24,7 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           password: ${{ secrets.VPS_PASSWORD }}
           rmRemote: true
+          dotfiles: true
       - name: Захожу на VPS и запускаю сборку образа
         uses: appleboy/ssh-action@master
         with:
