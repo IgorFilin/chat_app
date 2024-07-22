@@ -1,4 +1,6 @@
 export const environment = {
+  // production: true,
+  // apiBaseUrl: 'https://filin-hub.online/api/',
   production: false,
-  apiBaseUrl: 'https://filin-hub.online/api/',
+  apiBaseUrl: 'http://localhost:3000',
 };
