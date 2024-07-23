@@ -2,13 +2,15 @@ FROM node:18 as build-stage
 
 WORKDIR /app
 
-COPY . .
 
 # COPY .env.production .env
 
 COPY package*.json ./
 
 RUN npm install
+
+COPY . .
+
 RUN npm run build
 
 # этап production (production stage)
