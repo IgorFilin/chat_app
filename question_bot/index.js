@@ -2,7 +2,7 @@ const { Telegraf } = require('telegraf');
 require('dotenv').config();
 const express = require('express');
 const app = express();
-import { initialize } from './functions/coreFunctions';
+import { initialize } from './functions/coreFunctions.js';
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
@@ -24,12 +24,4 @@ bot.action('callback_query', async (ctx) => {
 
 bot.launch().then(() => {
   initialize(bot);
-});
-
-app.get('/bot', (req, res) => {
-  res.send('Привет');
-});
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
 });
