@@ -2,7 +2,7 @@ import { apiBot } from '../api/api';
 const { Markup } = require('telegraf');
 
 export async function getQuestionsData() {
-  const questionData = await apiBot.getQuestions();
+  return await apiBot.getQuestions();
 }
 
 export function createButtonsAnswer(question) {
