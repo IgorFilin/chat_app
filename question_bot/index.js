@@ -2,6 +2,7 @@ const { Telegraf } = require('telegraf');
 require('dotenv').config();
 const express = require('express');
 const app = express();
+import { initialize } from './functions/coreFunctions';
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
@@ -13,19 +14,14 @@ const URL = process.env.URL || 'https://filin-hub.online';
 bot.telegram.setWebhook(`${URL}/bot/`);
 app.use(bot.webhookCallback('/bot/'));
 
-bot.on('text', async (ctx) => {
-  ctx.session ??= { messages: [] };
-  try {
-    ctx.reply('Сообщение получено');
-  } catch (e) {
-    console.log(e);
-  }
+bot.action('callback_query', async (ctx) => {
+  const regx = /id=([^\s;]+);isAccept=(true|false)/;
+  const data = ctx.data;
+  const id = data.match(regx)[1];
+  const isAccept = data.match(regx)[2];
+  await ctx.reply(`Правильный ли ответ ${isAccept}, его id = ${id}`);
 });
 
-app.get('/bot', (req, res) => {
-  res.send('Привет');
-});
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+bot.launch().then(() => {
+  initialize(bot);
 });
