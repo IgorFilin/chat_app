@@ -32,7 +32,6 @@ export class HeaderComponent {
     this.isOpenCloseService.dataToggle
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((data) => {
-        console.log('header', data);
         this.isOpenMenu = data['menu'];
       });
   }

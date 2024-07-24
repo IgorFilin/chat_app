@@ -44,7 +44,7 @@ export class AuthService {
         // const errorMessage = error.error.message;
         this.loadingService.stopLoading();
         // this.toastService.error('errorMessage');
-        return error;
+        return of(error);
       })
     );
   }

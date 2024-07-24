@@ -40,6 +40,7 @@ export class UsersController {
 
   @Get('auth')
   async auth(@Req() req: Request, @Res() res: Response) {
+    console.log('1');
     const result = await this.usersService.confirmToken(req.cookies.authToken);
     const resultObject: any = { isAuth: result?.isAuth };
     if (result?.isAuth) {
@@ -48,7 +49,7 @@ export class UsersController {
       resultObject.isAcceptKey = true;
       res.status(201).send(resultObject);
     } else {
-      res.status(404).send(resultObject);
+      res.status(202).send(resultObject);
     }
   }
 

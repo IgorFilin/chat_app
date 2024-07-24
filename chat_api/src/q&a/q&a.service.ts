@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Question } from './entities/question.entity';
 import { Answer } from './entities/answer.entity';
+import { ResponseQuestionDataInterface } from './model/questionAnswer.interface';
 
 @Injectable()
 export class QuestionAnswerService {
@@ -50,24 +51,37 @@ export class QuestionAnswerService {
     }
   }
 
-  async getNotes(token: string) {
-    // const { notes } = await this.UserTable.findOne({
-    //   where: { authToken: token },
-    //   relations: ['notes'],
-    // });
-    // if (!notes) {
-    //   return {
-    //     message: 'Пользователь не найден',
-    //   };
-    // }
-    // return {
-    //   notes: notes.map((note) => ({
-    //     id: note.id,
-    //     title: note.title,
-    //     description: note.description,
-    //     date: note.date,
-    //   })),
-    // };
+  async getQuestions() {
+    let responseQuestionData: ResponseQuestionDataInterface[] | [] = [];
+
+    try {
+      const questions = await this.QuestionTable.find({
+        relations: ['answer'],
+      });
+
+      responseQuestionData = questions.map((question) => {
+        return {
+          question: {
+            id: question.id,
+            title: question.title,
+          },
+          answers: question.answer.map((answer) => {
+            return {
+              id: answer.id,
+              isAccept: answer.isCorrect,
+              content: answer.title,
+            };
+          }),
+        };
+      });
+    } catch (e) {
+      return {
+        error: 'Ошибка получения вопросов',
+        message: e.message,
+      };
+    }
+
+    return responseQuestionData;
   }
 
   async deleteNote(id: string, token: string) {
