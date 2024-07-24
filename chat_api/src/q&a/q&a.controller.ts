@@ -16,15 +16,17 @@ export class QuestionAnswerController {
     }
   }
 
-  @Get('question')
+  @Get('dataQuestions')
   async getNoteList(@Req() req: Request, @Res() res: Response) {
-    console.log('test');
-    // const result = await this.noteService.getNotes(req.cookies.authToken);
-    // return res.send(result);
-    return res.send(200);
+    const result = await this.questionAnswerService.getQuestions();
+    if (result) {
+      return res.send(result);
+    } else {
+      return res.status(403).send(result);
+    }
   }
 
-  @Post('deleteNote')
+  @Post('tet')
   async deleteNote(@Body() body: { id: string }, @Req() req: Request, @Res() res: Response) {
     // const result = await this.noteService.deleteNote(body.id, req.cookies.authToken);
     // if (result.id) {
