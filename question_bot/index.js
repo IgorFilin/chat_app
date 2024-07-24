@@ -25,3 +25,11 @@ bot.action('callback_query', async (ctx) => {
 bot.launch().then(() => {
   initialize(bot);
 });
+
+app.get('/bot', (req, res) => {
+  res.send('Привет');
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
