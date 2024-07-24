@@ -1,4 +1,4 @@
-const axios = require('axios');
+import axios from 'axios';
 
 const mainInstance = axios.create({
   baseURL: process.env.URL,
