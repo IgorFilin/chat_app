@@ -1,4 +1,4 @@
-import { Telegraf, session } from 'telegraf';
+import { Telegraf } from 'telegraf';
 require('dotenv').config();
 import express from 'express';
 
@@ -18,8 +18,6 @@ bot.telegram.setWebhook(`${URL}/bot/`);
 
 app.use(bot.webhookCallback('/bot/'));
 
-bot.use(session());
-
 bot.action('callback_query', async (ctx: any) => {
   console.log('callback_query', ctx);
   const regx = /id=([^\s;]+);isAccept=(true|false)/;
@@ -28,9 +26,15 @@ bot.action('callback_query', async (ctx: any) => {
   const isAccept = data.match(regx)[2];
   await ctx.reply(`Правильный ли ответ ${isAccept}, его id = ${id}`);
 });
-initialize(bot);
 
-bot.launch();
+bot
+  .launch()
+  .then(() => {
+    initialize(bot);
+  })
+  .catch((e) => {
+    console.log(e);
+  });
 
 app.listen(PORT, () => {
   console.log(`Ищи меня в телеграмме, и обучайся программированию 0_0`);
