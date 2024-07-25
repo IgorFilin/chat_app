@@ -28,3 +28,7 @@ bot.action('callback_query', async (ctx: any) => {
 bot.launch().then(() => {
   initialize(bot);
 });
+
+app.listen(PORT, () => {
+  console.log(`Ищи меня в телеграмме, и обучайся программированию 0_0`);
+});
