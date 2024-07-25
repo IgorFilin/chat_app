@@ -1,10 +1,13 @@
-const { Telegraf } = require('telegraf');
+import { Telegraf } from 'telegraf';
 require('dotenv').config();
-const express = require('express');
+import express from 'express';
+
 const app = express();
 import { initialize } from './functions/coreFunctions.js';
 
-const bot = new Telegraf(process.env.BOT_TOKEN);
+const botToken: string = process.env.BOT_TOKEN!;
+
+const bot = new Telegraf(botToken);
 
 // Настройка вебхука
 const PORT = 4000;
@@ -14,7 +17,7 @@ const URL = process.env.URL || 'https://filin-hub.online';
 bot.telegram.setWebhook(`${URL}/bot/`);
 app.use(bot.webhookCallback('/bot/'));
 
-bot.action('callback_query', async (ctx) => {
+bot.action('callback_query', async (ctx: any) => {
   const regx = /id=([^\s;]+);isAccept=(true|false)/;
   const data = ctx.data;
   const id = data.match(regx)[1];
