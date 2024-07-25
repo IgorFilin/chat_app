@@ -1,4 +1,4 @@
-import { apiBot } from '../api/api.js';
+import { apiBot } from '../api/api';
 import { Markup } from 'telegraf';
 
 export async function getQuestionsData(): Promise<any> {

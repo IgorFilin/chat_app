@@ -3,7 +3,7 @@ require('dotenv').config();
 import express from 'express';
 
 const app = express();
-import { initialize } from './functions/coreFunctions.js';
+import { initialize } from './functions/coreFunctions';
 
 const botToken: string = process.env.BOT_TOKEN!;
 
