@@ -8,6 +8,8 @@ RUN npm i
 
 COPY . .
 
+RUN npm run build
+
 COPY .env.production .env
 
 CMD [ "npm", "start" ]
