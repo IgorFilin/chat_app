@@ -1,4 +1,4 @@
-import { Telegraf } from 'telegraf';
+import { Telegraf, session } from 'telegraf';
 require('dotenv').config();
 import express from 'express';
 
@@ -15,7 +15,10 @@ const URL = process.env.URL || 'https://filin-hub.online';
 console.log(2, URL);
 // Настройка webhook
 bot.telegram.setWebhook(`${URL}/bot/`);
+
 app.use(bot.webhookCallback('/bot/'));
+
+bot.use(session());
 
 bot.action('callback_query', async (ctx: any) => {
   console.log('callback_query', ctx);
@@ -25,11 +28,9 @@ bot.action('callback_query', async (ctx: any) => {
   const isAccept = data.match(regx)[2];
   await ctx.reply(`Правильный ли ответ ${isAccept}, его id = ${id}`);
 });
+initialize(bot);
 
-bot.launch().then(() => {
-  console.log('initialize');
-  initialize(bot);
-});
+bot.launch();
 
 app.listen(PORT, () => {
   console.log(`Ищи меня в телеграмме, и обучайся программированию 0_0`);
