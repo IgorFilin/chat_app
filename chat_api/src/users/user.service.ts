@@ -63,6 +63,7 @@ export class UsersService {
         user.acceptKey = confirmRegKey;
         user.authToken = token;
         user.userPhoto = imagePath;
+        user.isAdmin = false;
         user.ip = ip ? ip : 'Скрыт';
 
         // Сохраняем в БД пользователя с регистрационным key
