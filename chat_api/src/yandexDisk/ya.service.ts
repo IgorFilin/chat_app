@@ -24,19 +24,22 @@ export class YandexDiskConnectorService {
     for (const key in queryObj) {
       if (!queryObj[key]) delete queryObj[key];
     }
-    const queryParams = new URLSearchParams(queryObj);
-    const { data } = await firstValueFrom(
-      this.httpService
-        .get(`https://cloud-api.yandex.net/v1/disk/resources/files?${queryParams.toString()}`, {
-          headers: this.instanceHeaders,
-        })
-        .pipe(
-          catchError((error: AxiosError) => {
-            throw error;
+    try {
+      const queryParams = new URLSearchParams(queryObj);
+      const { data } = await firstValueFrom(
+        this.httpService
+          .get(`https://cloud-api.yandex.net/v1/disk/resources/files?${queryParams.toString()}`, {
+            headers: this.instanceHeaders,
           })
-        )
-    );
-    console.log(data.items.length);
-    return data.items.map((el: any) => ({ name: el.name, file: el.file }));
+          .pipe(
+            catchError((error: AxiosError) => {
+              throw error;
+            })
+          )
+      );
+      return data?.items.map((el: any) => ({ name: el.name, file: el.file }));
+    } catch (e) {
+      console.error(e);
+    }
   }
 }
