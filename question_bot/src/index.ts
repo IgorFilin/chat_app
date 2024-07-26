@@ -20,19 +20,13 @@ app.use(bot.webhookCallback('/bot/'));
 initialize(bot);
 
 bot.action('callback_query', async (ctx: any) => {
+  console.log(1, ctx);
   const regx = /id=([^\s;]+);isAccept=(true|false)/;
   const data = ctx.data;
   const id = data.match(regx)[1];
   const isAccept = data.match(regx)[2];
+  console.log(2, isAccept);
   await ctx.reply(`Правильный ли ответ ${isAccept}, его id = ${id}`);
 });
 
 bot.launch();
-
-app.listen(PORT, () => {
-  console.log(`Ищи меня в телеграмме, и обучайся программированию 0_0`);
-});
-
-app.get('/', (req, res) => {
-  res.send('Ищи меня в телеграмме, и обучайся программированию 0_0');
-});
