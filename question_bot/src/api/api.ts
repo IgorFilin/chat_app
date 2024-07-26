@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const mainInstance = axios.create({
-  baseURL: process.env.URL,
+  baseURL: process.env.URL || 'https://filin-hub.online',
   withCredentials: true,
 });
 
