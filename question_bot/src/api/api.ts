@@ -8,7 +8,6 @@ const mainInstance = axios.create({
 export const apiBot = {
   getQuestions() {
     const result = mainInstance.get('question-answer/dataQuestions/');
-    console.log('result', result);
     return result;
   },
 };
