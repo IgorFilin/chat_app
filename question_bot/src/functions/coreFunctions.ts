@@ -7,9 +7,8 @@ export function createButtonsAnswer(question: any) {
 
 export async function initialize(bot: any) {
   const data: any = await apiBot.getQuestions();
-  console.log('result', data.data);
 
-  const question = data[0];
+  const question = data.data[0];
 
   const buttons = createButtonsAnswer(question);
 
