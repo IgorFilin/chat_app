@@ -1,9 +1,9 @@
 import { Telegraf } from 'telegraf';
 require('dotenv').config();
 import express from 'express';
+import { initialize } from './functions/coreFunctions';
 
 const app = express();
-import { initialize } from './functions/coreFunctions';
 
 const botToken: string = process.env.BOT_TOKEN!;
 
@@ -18,6 +18,8 @@ bot.telegram.setWebhook(`${URL}/bot/`);
 
 app.use(bot.webhookCallback('/bot/'));
 
+initialize(bot);
+
 bot.action('callback_query', async (ctx: any) => {
   console.log('callback_query', ctx);
   const regx = /id=([^\s;]+);isAccept=(true|false)/;
@@ -27,14 +29,7 @@ bot.action('callback_query', async (ctx: any) => {
   await ctx.reply(`Правильный ли ответ ${isAccept}, его id = ${id}`);
 });
 
-bot
-  .launch()
-  .then(() => {
-    initialize(bot);
-  })
-  .catch((e) => {
-    console.log(e);
-  });
+bot.launch();
 
 app.listen(PORT, () => {
   console.log(`Ищи меня в телеграмме, и обучайся программированию 0_0`);
