@@ -12,7 +12,7 @@ export async function initialize(bot: any) {
 
   const buttons = createButtonsAnswer(question);
 
-  await bot.telegram.sendMessage(question.id, question.title, {
-    reply_markup: buttons,
+  bot.start((ctx: any) => {
+    ctx.reply(question.question.title, buttons);
   });
 }
