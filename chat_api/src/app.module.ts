@@ -21,6 +21,12 @@ import { Question } from './q&a/entities/question.entity';
 import { Answer } from './q&a/entities/answer.entity';
 
 const configEnv = process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development';
+
+console.log(process.env.BD_HOST);
+console.log(process.env.BD_PORT);
+console.log(process.env.BD_USERNAME);
+console.log(process.env.BD_PASSWORD);
+console.log(process.env.BD_DATABASE);
 @Module({
   imports: [
     ServeStaticModule.forRoot({
