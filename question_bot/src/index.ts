@@ -17,9 +17,7 @@ bot.telegram.setWebhook(`${URL}/bot/`);
 
 app.use(bot.webhookCallback('/bot/'));
 
-initialize(bot);
-
-bot.action('callback_query', async (ctx: any) => {
+bot.on('callback_query', async (ctx: any) => {
   console.log(1, ctx);
   const regx = /id=([^\s;]+);isAccept=(true|false)/;
   const data = ctx.data;
@@ -30,3 +28,5 @@ bot.action('callback_query', async (ctx: any) => {
 });
 
 bot.launch();
+
+initialize(bot);
