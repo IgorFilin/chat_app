@@ -1,16 +1,4 @@
-export let environment = {
+export const environment = {
   production: false,
-  apiBaseUrl: '',
+  apiBaseUrl: 'http://localhost:3000',
 };
-
-if (environment.production) {
-  environment = {
-    ...environment,
-    apiBaseUrl: 'https://filin-hub.online/api',
-  };
-} else {
-  environment = {
-    ...environment,
-    apiBaseUrl: 'http://localhost:3000',
-  };
-}
