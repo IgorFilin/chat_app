@@ -1,7 +1,8 @@
 <div class="ng-sectionList">
-  <ng-container *ngFor="let list of sectionLists">
+  <ng-container *ngFor="let list of sectionLists()">
     <div
       class="ng-sectionList__list"
+      [ngClass]="{ disabled: list.disabled }"
       (click)="onClickListHandler(list.routeLink)"
     >
       <cabinet-icon [id]="list.icon" />

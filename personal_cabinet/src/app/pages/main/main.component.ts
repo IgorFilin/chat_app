@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { GetIsStatusMenu } from '../../../store/app/app.selector';
 import { CommonModule } from '@angular/common';
 import { SectionListComponent } from '../../components/section-list/section-list.component';
 import { RouterModule } from '@angular/router';
