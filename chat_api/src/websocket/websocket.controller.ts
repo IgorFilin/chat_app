@@ -1,11 +1,4 @@
-import {
-  SubscribeMessage,
-  WebSocketGateway,
-  WebSocketServer,
-  MessageBody,
-  ConnectedSocket,
-  OnGatewayConnection,
-} from '@nestjs/websockets';
+import { SubscribeMessage, WebSocketGateway, WebSocketServer, MessageBody, ConnectedSocket, OnGatewayConnection } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { WebsocketService } from './websocket.service';
 
@@ -47,18 +40,12 @@ export class WebsocketController implements OnGatewayConnection {
 
   @SubscribeMessage('gaming')
   async gameFlow(@MessageBody() body: any) {
-    console.log(body);
     await this.WebsocketService.gameFlow(body.game, body.roomId, body.clickCell, body.userId, body.isClear);
   }
 
   @SubscribeMessage('message')
   async handleMessage(@MessageBody() body: any) {
-    const messages = await this.WebsocketService.broadcastMessage(
-      body.data.id,
-      body.data.message,
-      body.data.roomId,
-      body.data.isAllChat
-    );
+    const messages = await this.WebsocketService.broadcastMessage(body.data.id, body.data.message, body.data.roomId, body.data.isAllChat);
     if (messages) this.server.emit('message', messages);
   }
 

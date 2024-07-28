@@ -18,7 +18,6 @@ export class QuestionAnswerController {
 
   @Get('dataQuestions')
   async getNoteList(@Req() req: Request, @Res() res: Response) {
-    console.log('dataQuestions');
     const result = await this.questionAnswerService.getQuestions();
     if (result) {
       return res.send(result);

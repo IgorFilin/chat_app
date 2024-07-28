@@ -215,11 +215,11 @@ export class UsersService {
     }
   }
 
-  async confirmToken(requestToken: any) {
-    if (!requestToken) {
-      return { isAuth: false };
-    }
+  async confirmToken(requestToken: string) {
     try {
+      if (!requestToken) {
+        return { isAuth: false };
+      }
       const user = await this.UserTable.findOneByOrFail({
         authToken: requestToken,
       });

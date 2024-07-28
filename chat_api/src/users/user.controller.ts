@@ -40,8 +40,7 @@ export class UsersController {
 
   @Get('auth')
   async auth(@Req() req: Request, @Res() res: Response) {
-    console.log('1');
-    const result = await this.usersService.confirmToken(req.cookies.authToken);
+    const result = await this.usersService.confirmToken(req.cookies?.authToken);
     const resultObject: any = { isAuth: result?.isAuth };
     if (result?.isAuth) {
       resultObject.name = result.name;

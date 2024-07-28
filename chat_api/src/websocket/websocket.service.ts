@@ -83,7 +83,6 @@ export class WebsocketService {
       });
 
       for (let user of room.users) {
-        console.log();
         const clientName = this.clients[user.id].name;
         this.clients[user.id].client.emit('message', {
           isTypingUsers: Array.from(this.usersIsTypingMessage).filter((el) => el !== clientName),
@@ -205,10 +204,7 @@ export class WebsocketService {
   async broadcastMessage(userId: any, message: string | Array<[]>, roomId: string, isAllChat: boolean) {
     const user = this.clients[userId];
     const maxMessageSize = 300 * 1024; // Максимальный размер сообщения для изобращения
-    if (
-      (Array.isArray(message) && message.length >= maxMessageSize) ||
-      (!Array.isArray(message) && message.length > 600)
-    ) {
+    if ((Array.isArray(message) && message.length >= maxMessageSize) || (!Array.isArray(message) && message.length > 600)) {
       return; // Отклоните слишком большое сообщение
     }
 
@@ -300,10 +296,7 @@ export class WebsocketService {
       this.RoomTable.save(room);
     }
 
-    let roomMessages = await this.RoomTable.createQueryBuilder('room')
-      .leftJoinAndSelect('room.messages', 'message1')
-      .where('message1.roomId = :roomId', { roomId: room.id })
-      .getOne(); // получение пака сообщений из подтаблицы Message, если их нет то null
+    let roomMessages = await this.RoomTable.createQueryBuilder('room').leftJoinAndSelect('room.messages', 'message1').where('message1.roomId = :roomId', { roomId: room.id }).getOne(); // получение пака сообщений из подтаблицы Message, если их нет то null
 
     if (!roomMessages) {
       client.client.emit('message', {
@@ -322,8 +315,7 @@ export class WebsocketService {
 
     for (let i = 0; i < roomMessages.messages.length; i++) {
       try {
-        const currentUserPhotoPath =
-          roomMessages.messages[i].userId === creator.id ? creator.userPhoto : userToAdd.userPhoto;
+        const currentUserPhotoPath = roomMessages.messages[i].userId === creator.id ? creator.userPhoto : userToAdd.userPhoto;
 
         if (isJSON(roomMessages.messages[i].message)) {
           roomMessages.messages[i].message = JSON.parse(roomMessages.messages[i].message);
@@ -437,13 +429,7 @@ export class WebsocketService {
     }
   }
 
-  async gameFlow(
-    game: string,
-    roomId: string,
-    clickCell: { index: string; symbol: string },
-    userId: string,
-    isClear: string
-  ) {
+  async gameFlow(game: string, roomId: string, clickCell: { index: string; symbol: string }, userId: string, isClear: string) {
     try {
       // Берем текущую комнату в переменную
       const gameRoom = this.gameRooms[roomId];
