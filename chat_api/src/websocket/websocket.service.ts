@@ -92,113 +92,121 @@ export class WebsocketService {
   }
 
   async disconnectUser(disconnectedClient: any) {
-    // Удаляем клиента который отключился
-    delete this.clients[disconnectedClient.handshake.query.userID];
+    try {
+      if (disconnectedClient) {
+        // Удаляем клиента который отключился
+        delete this.clients[disconnectedClient.handshake?.query?.userID];
 
-    const sendClients = [];
+        const sendClients = [];
 
-    for (const clientId in this.clients) {
-      sendClients.push({
-        id: clientId,
-        name: this.clients[clientId].name,
-      });
-    }
+        for (const clientId in this.clients) {
+          sendClients.push({
+            id: clientId,
+            name: this.clients[clientId].name,
+          });
+        }
 
-    for (const roomId in this.gameRooms) {
-      const currentRoom = this.gameRooms[roomId];
-      const currentUser = currentRoom.users.find((user: any) => user.id === disconnectedClient.handshake.query.userID);
-      if (currentUser) currentUser.isOnlineGame = '';
-    }
-    // {
-    //   game: 'ticTacToe',
-    //   isAllChat: false,
-    //   id: '60b60c2e-e984-429d-8247-a769b01173ed-38505046-f277-48c8-9f55-7f6c351a2e64',
-    //   users: [
-    //     {
-    //       id: '60b60c2e-e984-429d-8247-a769b01173ed',
-    //       name: 'rove',
-    //       userPhoto: 'D:\\Programming\\my-projects\\chat_app\\chat_api\\dist\\static\\image\\default_photo_user.webp',
-    //       client: [Socket]
-    //     },
-    //     {
-    //       id: '38505046-f277-48c8-9f55-7f6c351a2e64',
-    //       name: 'IGOR',
-    //       userPhoto: 'D:\\Programming\\my-projects\\chat_app\\chat_api\\dist\\static\\image\\default_photo_user.webp',
-    //       client: [Socket]
-    //     }
-    //   ]
-    // }
-    console.log('Client disconnect');
-    return { sendClients };
+        for (const roomId in this.gameRooms) {
+          const currentRoom = this.gameRooms[roomId];
+          const currentUser = currentRoom.users.find((user: any) => user.id === disconnectedClient.handshake.query.userID);
+          if (currentUser) currentUser.isOnlineGame = '';
+        }
+        // {
+        //   game: 'ticTacToe',
+        //   isAllChat: false,
+        //   id: '60b60c2e-e984-429d-8247-a769b01173ed-38505046-f277-48c8-9f55-7f6c351a2e64',
+        //   users: [
+        //     {
+        //       id: '60b60c2e-e984-429d-8247-a769b01173ed',
+        //       name: 'rove',
+        //       userPhoto: 'D:\\Programming\\my-projects\\chat_app\\chat_api\\dist\\static\\image\\default_photo_user.webp',
+        //       client: [Socket]
+        //     },
+        //     {
+        //       id: '38505046-f277-48c8-9f55-7f6c351a2e64',
+        //       name: 'IGOR',
+        //       userPhoto: 'D:\\Programming\\my-projects\\chat_app\\chat_api\\dist\\static\\image\\default_photo_user.webp',
+        //       client: [Socket]
+        //     }
+        //   ]
+        // }
+        console.log('Client disconnect');
+        return { sendClients };
+      }
+    } catch (e) {}
   }
 
   async connectedUser(client: any) {
-    // Вытаскием id с квери параметров
-    const userId = client.handshake.query.userID;
-    // Ищем пользака по этому id
-    const user = await this.UserTable.findOneBy({
-      id: userId,
-    });
+    try {
+      // Вытаскием id с квери параметров
+      const userId = client.handshake?.query?.userID;
+      // Ищем пользака по этому id
+      if (userId) {
+        const user = await this.UserTable.findOneBy({
+          id: userId,
+        });
 
-    // Если пользака нет в обьекте клиентов веб сокетов, то добавляем его туда
-    if (!this.clients[userId]) {
-      this.clients[userId] = {
-        id: userId,
-        name: user.name,
-        userPhoto: user.userPhoto,
-        client,
-      };
-    }
+        // Если пользака нет в обьекте клиентов веб сокетов, то добавляем его туда
+        if (!this.clients[userId]) {
+          this.clients[userId] = {
+            id: userId,
+            name: user.name,
+            userPhoto: user.userPhoto,
+            client,
+          };
+        }
 
-    // Добавляет обьекту клиента веб сокета id, для успешной идентификации и удаления при дисконнекте
-    // client['userId'] = userId;
+        // Добавляет обьекту клиента веб сокета id, для успешной идентификации и удаления при дисконнекте
+        // client['userId'] = userId;
 
-    // Создаем новый массив для отправки подключенных пользователей на клиент
-    const sendClients = [];
+        // Создаем новый массив для отправки подключенных пользователей на клиент
+        const sendClients = [];
 
-    for (const clientId in this.clients) {
-      sendClients.push({
-        id: clientId,
-        name: this.clients[clientId].name,
-      });
-    }
+        for (const clientId in this.clients) {
+          sendClients.push({
+            id: clientId,
+            name: this.clients[clientId].name,
+          });
+        }
 
-    // При подключении определенного клиента, отправляем список всех пользователей и себя в частности, на клиент
-    // for (const clientId in this.clients) {
-    //   console.log(this.clients[clientId].client);
-    //   this.clients[clientId].client.emit(
-    //     'test',
-    //     JSON.stringify({ clients: sendClients }),
-    //   );
-    // }
+        // При подключении определенного клиента, отправляем список всех пользователей и себя в частности, на клиент
+        // for (const clientId in this.clients) {
+        //   console.log(this.clients[clientId].client);
+        //   this.clients[clientId].client.emit(
+        //     'test',
+        //     JSON.stringify({ clients: sendClients }),
+        //   );
+        // }
 
-    for (let i = 0; i <= this.messages.length; i++) {
-      client.emit('message', {
-        messages: this.messages[i],
-        lengthMessages: this.messages.length,
-      });
-    }
+        for (let i = 0; i <= this.messages.length; i++) {
+          client.emit('message', {
+            messages: this.messages[i],
+            lengthMessages: this.messages.length,
+          });
+        }
 
-    const rooms = [];
+        const rooms = [];
 
-    for (let i = 0; i < Object.values(this.gameRooms).length; i++) {
-      let room = Object.values(this.gameRooms)[i];
-      if (room.users.some((user: any) => user.id === userId)) {
-        let pushedRoom = {
-          gameRoom: {
-            id: Object.keys(this.gameRooms)[i],
-            ...room,
-            roomWithPlayer: room.users.find((user) => user.id !== userId).name,
-          },
-        };
-        rooms.push(pushedRoom);
+        for (let i = 0; i < Object.values(this.gameRooms).length; i++) {
+          let room = Object.values(this.gameRooms)[i];
+          if (room.users.some((user: any) => user.id === userId)) {
+            let pushedRoom = {
+              gameRoom: {
+                id: Object.keys(this.gameRooms)[i],
+                ...room,
+                roomWithPlayer: room.users.find((user) => user.id !== userId).name,
+              },
+            };
+            rooms.push(pushedRoom);
+          }
+        }
+
+        // Отправляем пользователю который подключился его игровые комнаты если они есть
+        this.clients[userId].client.emit('setGameRooms', { rooms });
+
+        return { sendClients };
       }
-    }
-
-    // Отправляем пользователю который подключился его игровые комнаты если они есть
-    this.clients[userId].client.emit('setGameRooms', { rooms });
-
-    return { sendClients };
+    } catch (e) {}
   }
 
   async broadcastMessage(userId: any, message: string | Array<[]>, roomId: string, isAllChat: boolean) {
