@@ -45,7 +45,7 @@ export class UsersService {
         const confirmRegKey = randomBytes(5).toString('hex');
 
         const dirname = process.cwd();
-        const imagePath = path.join(dirname, 'dist', 'static', 'image', 'default_photo_user.webp');
+        const imagePath = path.join('https://filin-hub.online/', 'dist', 'static', 'image', 'default_photo_user.webp');
 
         const token = this.JwtService.sign({
           name: createUserDto.name,
