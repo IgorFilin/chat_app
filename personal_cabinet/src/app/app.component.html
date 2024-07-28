@@ -1,2 +1,5 @@
 <cabinet-header />
-<router-outlet />
+<div class="app">
+  <cabinet-section-list *ngIf="isOpenMenu" @slideInOut />
+  <router-outlet />
+</div>

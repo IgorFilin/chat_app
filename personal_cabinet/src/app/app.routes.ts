@@ -11,14 +11,13 @@ export const routes: Routes = [
   { component: LoginComponent, path: 'login' },
   { component: ConfirmComponent, path: 'confirm' },
   {
-    component: MainComponent,
+    redirectTo: 'bot-questions',
     path: '',
+    pathMatch: 'full',
+  },
+  {
+    component: QuestionsBotComponent,
+    path: 'bot-questions',
     canActivate: [authGuard],
-    children: [
-      {
-        path: 'bot-questions',
-        component: QuestionsBotComponent,
-      },
-    ],
   },
 ];
