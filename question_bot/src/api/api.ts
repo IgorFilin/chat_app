@@ -10,4 +10,8 @@ export const apiBot = {
     const result = mainInstance.get('question-answer/dataQuestions/');
     return result;
   },
+  login(requestData: { email: string; password: string }) {
+    const result = mainInstance.post('user/login/', { email: requestData.email, password: requestData.password });
+    return result;
+  },
 };
