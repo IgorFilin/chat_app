@@ -50,12 +50,12 @@ export class WebsocketController implements OnGatewayConnection {
   }
 
   async handleDisconnect(@ConnectedSocket() client: Socket) {
-    const { sendClients } = await this.WebsocketService.disconnectUser(client);
-    this.server.emit('clients', { clients: sendClients });
+    const data = await this.WebsocketService.disconnectUser(client);
+    this.server.emit('clients', { clients: data?.sendClients });
   }
 
   async handleConnection(@ConnectedSocket() client: Socket) {
-    const { sendClients } = await this.WebsocketService.connectedUser(client);
-    this.server.emit('clients', { clients: sendClients });
+    const data = await this.WebsocketService.connectedUser(client);
+    this.server.emit('clients', { clients: data?.sendClients });
   }
 }
