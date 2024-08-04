@@ -39,7 +39,7 @@ export class UsersController {
 
   @Get('auth')
   async auth(@Req() req: Request, @Res() res: Response) {
-    const headerToken = req.headers?.authorization.replace('Bearer', '').trim();
+    const headerToken = req.headers?.authorization?.replace('Bearer', '').trim();
     const result = await this.usersService.confirmToken(headerToken || req.cookies?.authToken);
     const resultObject: any = { isAuth: result?.isAuth };
     if (result?.isAuth) {
