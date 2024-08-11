@@ -45,7 +45,7 @@ export class UsersService {
         const confirmRegKey = randomBytes(5).toString('hex');
 
         const dirname = process.cwd();
-        const imagePath = path.join(dirname, 'dist', 'static', 'image', 'default_photo_user.webp');
+        const imagePath = path.join('https://filin-hub.online/api', 'dist', 'static', 'image', 'default_photo_user.webp');
 
         const token = this.JwtService.sign({
           name: createUserDto.name,
@@ -216,11 +216,11 @@ export class UsersService {
     }
   }
 
-  async confirmToken(requestToken: any) {
-    if (!requestToken) {
-      return { isAuth: false };
-    }
+  async confirmToken(requestToken: string) {
     try {
+      if (!requestToken) {
+        return { isAuth: false };
+      }
       const user = await this.UserTable.findOneByOrFail({
         authToken: requestToken,
       });
@@ -242,7 +242,7 @@ export class UsersService {
         const oldAvatarPathArray = user.userPhoto.split('/');
         const oldAvatarName = oldAvatarPathArray[oldAvatarPathArray.length - 1];
         const dirname = process.cwd();
-        const searchPath = path.join(dirname, 'dist', 'static', 'image', oldAvatarName);
+        const searchPath = path.join('https://filin-hub.online/api', 'dist', 'static', 'image', oldAvatarName);
         if (!fs.existsSync(searchPath)) {
           oldAvatarPathArray.reverse()[0] = 'default_photo_user.webp';
           user.userPhoto = oldAvatarPathArray.reverse().join('/');
@@ -280,14 +280,14 @@ export class UsersService {
       if (user.userPhoto) {
         const oldAvatarPathArray = user.userPhoto.split('/');
         const oldAvatarName = oldAvatarPathArray[oldAvatarPathArray.length - 1];
-        const searchPath = path.join(dirname, 'dist', 'static', 'image', oldAvatarName);
+        const searchPath = path.join('https://filin-hub.online/api', 'dist', 'static', 'image', oldAvatarName);
         if (fs.existsSync(searchPath) && oldAvatarName !== 'default_photo_user.webp') {
           fs.unlink(searchPath, () => {});
         }
       }
 
       // Сохраняем файл по дефолтному пути, в папку dist сборки проекта.
-      const savePath = path.join(dirname, 'dist', 'static', 'image', newAvatar.avatar.originalName);
+      const savePath = path.join('https://filin-hub.online/api', 'dist', 'static', 'image', newAvatar.avatar.originalName);
       const saveServerPath = `${serverHost}/static/image/${newAvatar.avatar.originalName}`;
 
       fs.copyFile(newAvatar.avatar.path, savePath, () => {});

@@ -27,21 +27,20 @@ export class UsersController {
   @Post('login')
   async login(@Body() LoginUserDto: LoginUserDto, @Res() res: Response) {
     const result = await this.usersService.login(LoginUserDto);
-
     const expirationDate = new Date();
     expirationDate.setDate(expirationDate.getDate() + 3);
-
     res.cookie('authToken', result.token, {
       httpOnly: true,
       expires: expirationDate,
     });
+    res.setHeader('Authorization', `Bearer ${result.token}`);
     return res.send(result);
   }
 
   @Get('auth')
   async auth(@Req() req: Request, @Res() res: Response) {
-    console.log('1');
-    const result = await this.usersService.confirmToken(req.cookies.authToken);
+    const headerToken = req.headers?.authorization?.replace('Bearer', '').trim();
+    const result = await this.usersService.confirmToken(headerToken || req.cookies?.authToken);
     const resultObject: any = { isAuth: result?.isAuth };
     if (result?.isAuth) {
       resultObject.name = result.name;

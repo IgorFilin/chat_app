@@ -21,11 +21,12 @@ import { Question } from './q&a/entities/question.entity';
 import { Answer } from './q&a/entities/answer.entity';
 
 const configEnv = process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development';
+
 @Module({
   imports: [
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, 'static/image'),
-      serveRoot: '/static/image',
+      serveRoot: '/static/image/api',
     }),
     ScheduleModule.forRoot(),
     ConfigModule.forRoot({

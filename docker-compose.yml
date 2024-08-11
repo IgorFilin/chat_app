@@ -16,8 +16,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - '4000:4000'
-    depends_on:
-      - backend
 
   cabinet:
     build:
@@ -42,6 +40,9 @@ services:
     env_file: .env
     restart: always
     volumes:
-      - /var/postgress_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     ports:
       - '5432:5432'
+
+volumes:
+  postgres_data:
