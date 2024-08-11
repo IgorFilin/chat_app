@@ -10,6 +10,9 @@ export class Question {
   @Column()
   title: string;
 
+  @Column()
+  description: string;
+
   @CreateDateColumn()
   date: Date;
 

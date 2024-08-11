@@ -28,6 +28,7 @@ export class QuestionAnswerService {
       }
       const question = new Question();
       question.title = body.question;
+      question.description = body.questionDescription;
       question.user = user;
       const savedQuestion = await this.QuestionTable.save(question);
 
