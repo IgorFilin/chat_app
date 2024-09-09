@@ -2,8 +2,8 @@
 
 .ng-header {
   padding: 10px;
-  box-shadow: 0 4px 8px $color-medium-gray;
-  background: $darkGrayBlue;
+  box-shadow: 0 4px 8px var(--color-medium-gray);
+  background: var(--darkGrayBlue);
 
   .ng-headerContainer {
     display: flex;
@@ -15,7 +15,7 @@
   }
 
   .ng-header__button {
-    background: $color-white;
+    background: var(--color-white);
     border: unset;
     font-size: 16px;
     padding: 5px 10px;
@@ -25,11 +25,11 @@
 
     &:hover {
       transform: translateY(-1px);
-      color: $color-dark-gray;
+      color: var(--color-dark-gray);
     }
 
     &:active {
-      box-shadow: 0 2px 4px $color-gray;
+      box-shadow: 0 2px 4px var(--color-gray);
       transform: translateY(0);
     }
   }

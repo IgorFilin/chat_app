@@ -11,6 +11,6 @@
   cursor: pointer;
 
   &.white {
-    color: $color-white;
+    color: var(--color-white);
   }
 }

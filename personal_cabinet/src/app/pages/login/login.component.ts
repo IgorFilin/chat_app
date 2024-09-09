@@ -11,11 +11,17 @@ import { Store } from '@ngrx/store';
 import { FormErrorHandlerComponent } from '../../shared/components/form-error-handler/form-error-handler.component';
 import { startLogin } from '../../../store/auth/auth.actions';
 import { AuthService } from '../../services/auth.service';
+import { InputComponent } from '../../shared/components/input/input.component';
 
 @Component({
   selector: 'cabinet-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormErrorHandlerComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormErrorHandlerComponent,
+    InputComponent,
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })

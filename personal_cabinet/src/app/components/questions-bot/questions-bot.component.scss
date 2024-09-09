@@ -18,14 +18,14 @@
 .ng-bot__textareaLabel {
   display: block;
   margin-bottom: 0.5rem;
-  color: $color-black;
+  color: var(--color-black);
   font-weight: bold;
 }
 
 .ng-bot__textarea {
   width: 100%;
   margin-bottom: 10px;
-  border: 1px solid $color-medium-gray;
+  border: 1px solid var(--color-medium-gray);
   border-radius: 4px;
   box-sizing: border-box;
   font-size: 17px;
@@ -33,9 +33,9 @@
   resize: none;
 
   &:focus {
-    border-color: $color-info;
+    border-color: var(--color-info);
     outline: none;
-    box-shadow: 0 0 8px $color-info-light;
+    box-shadow: 0 0 8px var(--color-info)-light;
   }
 
   &.variantAnswer {
@@ -73,18 +73,18 @@
   align-items: center;
   border: 0;
   padding: 10px;
-  background: $color-dark-gray;
-  color: $color-light-gray;
+  background: var(--color-dark-gray);
+  color: var(--color-light-gray);
   transition: 0.5s;
   cursor: pointer;
 
   &:hover {
-    background: $color-black;
-    color: $color-white;
+    background: var(--color-black);
+    color: var(--color-white);
   }
 
   &:disabled {
-    background: $color-disabled;
+    background: var(--color-disabled);
   }
 
   &.addOuestion {

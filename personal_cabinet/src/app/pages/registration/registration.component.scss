@@ -46,10 +46,10 @@
 
     &__loginRouteLogin {
       border-bottom: 2px solid blue;
-      color: $color-info;
+      color: var(--color-info);
 
       &:hover {
-        color: $color-info-dark;
+        color: var(--color-info)-dark;
         cursor: pointer;
       }
     }

@@ -1,6 +1,6 @@
 <div class="ng-login">
   <form (ngSubmit)="onSubmit()" class="ng-loginForm" [formGroup]="loginForm">
-    <div
+    <!-- <div
       class="ng-loginForm__itemInput"
       *ngFor="
         let dataInput of dataLoginPage;
@@ -20,15 +20,16 @@
         class="ng-loginForm__inputError"
         [errorFormObject]="dataInput.input"
       ></app-form-error-handler>
-    </div>
+    </div> -->
+    <app-input></app-input>
     <div class="ng-loginForm__regRouteContainer">
-      <div>Don't have an account?</div>
+      <div>У вас нет учетной записи?</div>
       <div (click)="onRedirectForLogin()" class="ng-loginForm__regRoute">
         Registration
       </div>
     </div>
     <div class="ng-loginForm__regRouteContainer">
-      <div>Need to verify your account?</div>
+      <div>Вам нужно подтвердить свою учетную запись?</div>
       <div (click)="onRedirectForConfirm()" class="ng-loginForm__regRoute">
         Confirm
       </div>
