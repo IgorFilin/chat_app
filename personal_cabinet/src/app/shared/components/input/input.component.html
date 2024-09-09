@@ -1,4 +1,11 @@
 <div class="ng-input">
-  <input type="text" [placeholder]="placeholder" />
-  <div [attr.placeholder]="placeholder"></div>
+  <input
+    [type]="type"
+    [disabled]="isDisabled"
+    [value]="value"
+    (input)="onChangeHandler($event)"
+    type="text"
+    placeholder=" "
+  />
+  <div [attr.placeholder]="placeholder">{{ placeholder }}</div>
 </div>

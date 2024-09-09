@@ -26,7 +26,11 @@ import { InputComponent } from '../../shared/components/input/input.component';
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
-  constructor(private router: Router, private authServise: AuthService) {}
+  constructor(private router: Router, private authServise: AuthService) {
+    this.loginForm.valueChanges.subscribe((data) => {
+      console.log(data);
+    });
+  }
   loginForm: FormGroup = new FormGroup({
     email: new FormControl('', [
       Validators.required,
@@ -34,30 +38,30 @@ export class LoginComponent {
         /^((([0-9A-Za-z]{1}[-0-9A-z\.]{1,}[0-9A-Za-z]{1})|([0-9А-Яа-я]{1}[-0-9А-я\.]{1,}[0-9А-Яа-я]{1}))@([-A-Za-z]{1,}\.){1,2}[-A-Za-z]{2,})$/u
       ),
     ]),
-    password: new FormControl('', [
-      Validators.required,
-      Validators.minLength(6),
-    ]),
+    // password: new FormControl('', [
+    //   Validators.required,
+    //   Validators.minLength(6),
+    // ]),
   });
 
-  dataLoginPage: Array<{
-    inputType: string;
-    input: any;
-    controlName: string;
-    patternName?: string;
-  }> = [
-    {
-      inputType: 'email',
-      input: this.email,
-      patternName: 'email',
-      controlName: 'email',
-    },
-    {
-      inputType: 'password',
-      input: this.password,
-      controlName: 'password',
-    },
-  ];
+  // dataLoginPage: Array<{
+  //   inputType: string;
+  //   input: any;
+  //   controlName: string;
+  //   patternName?: string;
+  // }> = [
+  //   {
+  //     inputType: 'email',
+  //     input: this.email,
+  //     patternName: 'email',
+  //     controlName: 'email',
+  //   },
+  //   {
+  //     inputType: 'password',
+  //     input: this.password,
+  //     controlName: 'password',
+  //   },
+  // ];
 
   get email() {
     return this.loginForm.get('email');

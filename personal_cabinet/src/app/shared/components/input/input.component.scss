@@ -15,24 +15,28 @@
     }
 
     + div {
-      &::before {
-        content: "";
-        transform: scale(0.5);
-      }
+      content: "";
+      transform: scale(1);
+      position: absolute;
+      top: 12px;
+      left: 10px;
+      z-index: 10;
+      font-size: 14px;
+      transition: all 0.2s ease-in-out;
     }
 
+    &:focus + div,
     &:not(:placeholder-shown) + div {
-      &::before {
-        content: attr(placeholder);
-        position: absolute;
-        transform: scale(1);
-        top: -10px;
-        left: 10px;
-        z-index: 10;
-        font-size: 12px;
-        transform: scale(1);
-        transition: all 0.2s ease-in-out;
-      }
+      content: "";
+      transform: scale(0.5);
+      position: absolute;
+      transform: scale(1);
+      top: -10px;
+      left: 10px;
+      z-index: 10;
+      font-size: 12px;
+      transform: scale(1);
+      transition: all 0.2s ease-in-out;
     }
   }
 }
