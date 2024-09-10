@@ -12,6 +12,7 @@ import { FormErrorHandlerComponent } from '../../shared/components/form-error-ha
 import { startLogin } from '../../../store/auth/auth.actions';
 import { AuthService } from '../../services/auth.service';
 import { InputComponent } from '../../shared/components/input/input.component';
+import { slideInOutAnimation } from '../../animations/slide-in-out-animations';
 
 @Component({
   selector: 'cabinet-login',
@@ -39,10 +40,10 @@ export class LoginComponent {
         /^((([0-9A-Za-z]{1}[-0-9A-z\.]{1,}[0-9A-Za-z]{1})|([0-9А-Яа-я]{1}[-0-9А-я\.]{1,}[0-9А-Яа-я]{1}))@([-A-Za-z]{1,}\.){1,2}[-A-Za-z]{2,})$/u
       ),
     ]),
-    // password: new FormControl('', [
-    //   Validators.required,
-    //   Validators.minLength(6),
-    // ]),
+    password: new FormControl('', [
+      Validators.required,
+      Validators.minLength(6),
+    ]),
   });
 
   // dataLoginPage: Array<{

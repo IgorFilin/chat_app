@@ -4,27 +4,21 @@
     class="ng-registrationForm"
     [formGroup]="registrationForm"
   >
-    <!-- <div
-      class="ng-registrationForm__itemInput"
-      *ngFor="
-        let dataInput of dataRegisterPage;
-        index as index;
-        trackBy: trackByIndex
-      "
-    >
-      <input
-        class="ng-registrationForm__input"
-        [formControlName]="dataInput.controlName"
-        [placeholder]="dataInput.controlName"
-        [type]="dataInput.inputType"
-        [id]="dataInput.inputType"
-      />
-      <app-form-error-handler
-        [patternName]="dataInput.patternName"
-        class="ng-registrationForm__inputError"
-        [errorFormObject]="dataInput.input"
-      ></app-form-error-handler>
-    </div> -->
+    <app-input
+      placeholder="имя"
+      errorMessage="Не корректное имя"
+      formControlName="name"
+    />
+    <app-input
+      placeholder="почта"
+      errorMessage="Не корректный email"
+      formControlName="email"
+    />
+    <app-input
+      placeholder="пароль"
+      errorMessage="не корректный пароль"
+      formControlName="password"
+    />
     <div class="ng-registrationForm__loginRouteContainer">
       <div>Already have an account?</div>
       <div

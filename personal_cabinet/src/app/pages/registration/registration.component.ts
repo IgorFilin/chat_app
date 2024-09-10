@@ -10,11 +10,17 @@ import { FormErrorHandlerComponent } from '../../shared/components/form-error-ha
 import { Store } from '@ngrx/store';
 import { startRegistrationAction } from '../../../store/auth/auth.actions';
 import { Router } from '@angular/router';
+import { InputComponent } from '../../shared/components/input/input.component';
 
 @Component({
   selector: 'cabinet-registration',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, FormErrorHandlerComponent],
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    FormErrorHandlerComponent,
+    InputComponent,
+  ],
   templateUrl: './registration.component.html',
   styleUrl: './registration.component.scss',
 })

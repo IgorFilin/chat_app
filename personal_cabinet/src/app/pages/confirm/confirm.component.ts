@@ -10,11 +10,17 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { FormErrorHandlerComponent } from '../../shared/components/form-error-handler/form-error-handler.component';
 import { registrationConfirm } from '../../../store/auth/auth.actions';
+import { InputComponent } from '../../shared/components/input/input.component';
 
 @Component({
   selector: 'cabinet-confirm',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormErrorHandlerComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormErrorHandlerComponent,
+    InputComponent,
+  ],
   templateUrl: './confirm.component.html',
   styleUrl: './confirm.component.scss',
 })
