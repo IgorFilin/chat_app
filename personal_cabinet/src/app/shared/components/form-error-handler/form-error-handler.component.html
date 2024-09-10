@@ -1,13 +1,3 @@
-<div
-  *ngIf="
-    errorFormObject?.invalid &&
-    (errorFormObject?.dirty || errorFormObject?.touched)
-  "
-  class="error"
->
-  <div *ngFor="let error of errors">
-    <div *ngIf="error && errorFormObject?.hasError(error)">
-      {{ errorDescriptions[error] }}
-    </div>
-  </div>
+<div *ngIf="showError" class="error">
+  {{ errorMessage }}
 </div>

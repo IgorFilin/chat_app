@@ -1,45 +1,61 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnInit,
+  Optional,
+  Self,
+  ViewChild,
+} from '@angular/core';
 import {
   AbstractControl,
   ControlValueAccessor,
   FormsModule,
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
+  NgControl,
+  NgModel,
   ValidationErrors,
 } from '@angular/forms';
+import { FormErrorHandlerComponent } from '../form-error-handler/form-error-handler.component';
 
 @Component({
   standalone: true,
   selector: 'app-input',
   templateUrl: './input.component.html',
   styleUrls: ['./input.component.scss'],
-  imports: [FormsModule],
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      multi: true,
-      useExisting: InputComponent,
-    },
-    {
-      provide: NG_VALIDATORS,
-      multi: true,
-      useExisting: InputComponent,
-    },
-  ],
+  imports: [FormsModule, FormErrorHandlerComponent],
+  providers: [],
 })
-export class InputComponent implements OnInit, ControlValueAccessor {
+export class InputComponent implements ControlValueAccessor {
   @Input() placeholder: string = '';
   @Input() type: string = 'email';
+  @Input() errorMessage: string = '';
   value: string = '';
-  isDisabled: boolean = false;
-  isTouched: boolean = false;
-  onTouched(value: boolean) {}
+  onTouch(isTouch: boolean) {}
   onChange(value: string) {}
 
-  constructor() {}
+  constructor(@Self() @Optional() private control: NgControl) {
+    if (this.control) {
+      this.control.valueAccessor = this;
+    }
+  }
+
+  get invalid(): boolean | null {
+    return this.control ? this.control.invalid : false;
+  }
+
+  public get showError(): boolean | null {
+    if (!this.control) {
+      return false;
+    }
+
+    const { dirty, touched } = this.control;
+
+    return this.invalid ? dirty || touched : false;
+  }
 
   writeValue(value: string): void {
-    console.log('writeValue', value);
     this.value = value;
   }
 
@@ -48,28 +64,26 @@ export class InputComponent implements OnInit, ControlValueAccessor {
   }
 
   registerOnTouched(fn: any): void {
-    this.onTouched = fn;
+    this.onTouch = fn;
+  }
+
+  handleBlur(): void {
+    this.onTouch(true);
   }
 
   onChangeHandler(event: Event) {
     const value = (event.currentTarget as HTMLInputElement).value;
-    if (!this.isTouched) this.onTouched(true);
+    this.onTouch(true);
     this.onChange(value);
-  }
-
-  setDisabledState?(isDisabled: boolean): void {
-    this.isDisabled = isDisabled;
   }
 
   validate(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
-    if (!value.valid) return null;
+    if (!control.valid) return null;
     return {
       mustBePositive: {
         value,
       },
     };
   }
-
-  ngOnInit() {}
 }

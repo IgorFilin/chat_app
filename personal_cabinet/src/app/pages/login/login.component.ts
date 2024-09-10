@@ -28,6 +28,7 @@ import { InputComponent } from '../../shared/components/input/input.component';
 export class LoginComponent {
   constructor(private router: Router, private authServise: AuthService) {
     this.loginForm.valueChanges.subscribe((data) => {
+      console.log(this.loginForm.errors);
       console.log(data);
     });
   }
