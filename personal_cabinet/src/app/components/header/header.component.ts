@@ -24,6 +24,7 @@ export class HeaderComponent {
     private isOpenCloseService: IsOpenCloseService,
     private themeService: ThemeService
   ) {
+    this.checked = this.themeService.getCurrentTheme === 'dark';
     this.authService.isAuth$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((isAuth) => (this.isAuth = isAuth));
