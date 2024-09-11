@@ -1,0 +1,25 @@
+.buttonLink {
+  border-bottom: 2px solid var(--primary-color);
+  color: var(--color-info);
+  cursor: pointer;
+  text-decoration: unset;
+
+  &:hover {
+    color: var(--primary-color);
+  }
+}
+
+.primary {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:disabled {
+    opacity: 0.4;
+  }
+}

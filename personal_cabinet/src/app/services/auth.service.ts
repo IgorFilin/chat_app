@@ -6,6 +6,7 @@ import { ToasterService } from './toaster.service';
 import { LoadingService } from './loading.service';
 import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { IConfirm, ILoginBody, IRegistrationBody } from '../models/request';
 export interface AuthType {
   isAuth: boolean;
   isLoading: boolean;
@@ -32,12 +33,14 @@ export class AuthService {
 
   authRequest(): Observable<any> {
     this.loadingService.startLoading();
-    return this.requestService.get('user/auth').pipe(
+    return this.requestService.get<any, GetAuthPesponseType>('user/auth').pipe(
       takeUntilDestroyed(this.destroyRef),
       map((data: GetAuthPesponseType) => {
-        this.toastService.success('Вы успешно авторизованы');
-        this.isAuth$.next(data.isAuth);
-        this.router.navigateByUrl('/');
+        if (data.isAuth) {
+          this.toastService.success('Вы успешно авторизованы');
+          this.isAuth$.next(data.isAuth);
+          this.router.navigateByUrl('/');
+        }
         this.loadingService.stopLoading();
       }),
       catchError((error) => {
@@ -49,10 +52,10 @@ export class AuthService {
     );
   }
 
-  login(body: Record<string, string>): void {
+  login(body: ILoginBody): void {
     this.loadingService.startLoading();
     this.requestService
-      .post('user/login', body)
+      .post<ILoginBody, any>('user/login', body)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError((error) => {
@@ -64,9 +67,67 @@ export class AuthService {
       )
       .subscribe((data) => {
         this.toastService.success(data.message);
-        console.log(data);
         this.isAuth$.next(data.isAuth);
         this.router.navigateByUrl('/');
+      });
+  }
+
+  registration(body: IRegistrationBody): void {
+    this.loadingService.startLoading();
+    this.requestService
+      .post<IRegistrationBody, any>('user/registration', body)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError((error) => {
+          // const errorMessage = error.error.message;
+          this.loadingService.stopLoading();
+          // this.toastService.error('errorMessage');
+          return error;
+        })
+      )
+      .subscribe((data) => {
+        this.toastService.success('Пожалуйста подтвердите вашу почту');
+        this.router.navigateByUrl('confirm');
+      });
+  }
+
+  confirm(body: IConfirm): void {
+    this.loadingService.startLoading();
+    this.requestService
+      .get<IConfirm, any>('user/confirm', body)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError((error) => {
+          // const errorMessage = error.error.message;
+          this.loadingService.stopLoading();
+          // this.toastService.error('errorMessage');
+          return error;
+        })
+      )
+      .subscribe((data) => {
+        this.toastService.success(data.message);
+        this.isAuth$.next(true);
+        this.router.navigateByUrl('/');
+      });
+  }
+
+  exit(): void {
+    this.loadingService.startLoading();
+    this.requestService
+      .get('user/logout')
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError((error) => {
+          // const errorMessage = error.error.message;
+          this.loadingService.stopLoading();
+          // this.toastService.error('errorMessage');
+          return error;
+        })
+      )
+      .subscribe((data: any) => {
+        this.toastService.success('Вы успешно вышли, возращайтесь!');
+        this.isAuth$.next(data.isAuth);
+        this.router.navigateByUrl('registration');
       });
   }
 }

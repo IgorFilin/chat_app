@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -11,23 +11,26 @@ export class RequestService {
 
   constructor(private http: HttpClient) {}
 
-  get(
+  get<T, R>(
     path: string,
-    params: Record<string, string> = {},
+    params?: T,
     api: string = this.apiUrl
-  ): Observable<any> {
-    return this.http.get(`${api}/${path}`, {
-      params,
+  ): Observable<R> {
+    const httpParams = new HttpParams();
+    if (params) {
+      for (const key in params) {
+        httpParams.set(key, params[key] as string);
+      }
+    }
+
+    return this.http.get<R>(`${api}/${path}`, {
+      params: httpParams,
       withCredentials: true,
     });
   }
 
-  post(
-    path: string,
-    body: Record<string, string>,
-    api: string = this.apiUrl
-  ): Observable<any> {
-    return this.http.post(`${api}/${path}`, body, {
+  post<T, R>(path: string, body: T, api: string = this.apiUrl): Observable<R> {
+    return this.http.post<R>(`${api}/${path}`, body, {
       withCredentials: true,
     });
   }

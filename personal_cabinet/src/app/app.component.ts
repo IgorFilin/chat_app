@@ -40,25 +40,13 @@ export class AppComponent implements OnInit {
   constructor(
     private authService: AuthService,
     public loadingService: LoadingService,
-    private isOpenCloseService: IsOpenCloseService,
-    @Inject(DOCUMENT) private document: Document
-  ) {
-    this.htmlRef = this.document.querySelector('html');
-  }
+    private isOpenCloseService: IsOpenCloseService
+  ) {}
 
   ngOnInit() {
     this.authService.authRequest().subscribe();
     this.isOpenCloseService.dataToggle.subscribe((data) => {
       this.isOpenMenu = data['menu'];
     });
-  }
-
-  toggle() {
-    const currentTheme = this.htmlRef.getAttribute('data-theme');
-    if (currentTheme === 'dark') {
-      this.htmlRef.setAttribute('data-theme', 'light');
-    } else {
-      this.htmlRef.setAttribute('data-theme', 'dark');
-    }
   }
 }

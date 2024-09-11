@@ -1,8 +1,8 @@
 html[data-theme="light"] {
   --bg-global: #ffffff;
-  --bg-color: rgb(226, 226, 226);
+  --bg-color: #e2e2e2;
   --text-color: black;
-  --primary-color: darkcyan;
+  --primary-color: rgb(85, 85, 85);
   --secondary-color: red;
   --accent-color: yellow;
   --error-color: tomato;
@@ -14,14 +14,14 @@ html[data-theme="light"] {
 
 html[data-theme="dark"] {
   --bg-global: #170a1f;
-  --bg-color: #2b2b62;
+  --bg-color: #333349;
   --text-color: #8cd9cd;
-  --primary-color: darkcyan;
+  --primary-color: rgb(27, 37, 37);
   --secondary-color: #1f5a5c;
   --accent-color: gold;
   --error-color: crimson;
   --success-color: lime;
-  --info-color: steelblue;
+  --info-color: rgb(77, 78, 79);
   --disabled-color: dimgray;
   --warning-color: brown;
 }

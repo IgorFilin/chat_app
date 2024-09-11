@@ -9,8 +9,9 @@ import {
 import { FormErrorHandlerComponent } from '../../shared/components/form-error-handler/form-error-handler.component';
 import { Store } from '@ngrx/store';
 import { startRegistrationAction } from '../../../store/auth/auth.actions';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { InputComponent } from '../../shared/components/input/input.component';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'cabinet-registration',
@@ -20,12 +21,13 @@ import { InputComponent } from '../../shared/components/input/input.component';
     CommonModule,
     FormErrorHandlerComponent,
     InputComponent,
+    RouterModule,
   ],
   templateUrl: './registration.component.html',
   styleUrl: './registration.component.scss',
 })
 export class RegistrationComponent {
-  constructor(private store: Store, private router: Router) {}
+  constructor(private authService: AuthService) {}
 
   registrationForm: FormGroup = new FormGroup({
     name: new FormControl('', [
@@ -45,30 +47,6 @@ export class RegistrationComponent {
     ]),
   });
 
-  dataRegisterPage: Array<{
-    inputType: string;
-    input: any;
-    controlName: string;
-    patternName?: string;
-  }> = [
-    {
-      inputType: 'text',
-      input: this.name,
-      controlName: 'name',
-    },
-    {
-      inputType: 'email',
-      input: this.email,
-      patternName: 'email',
-      controlName: 'email',
-    },
-    {
-      inputType: 'password',
-      input: this.password,
-      controlName: 'password',
-    },
-  ];
-
   get name() {
     return this.registrationForm.get('name');
   }
@@ -83,12 +61,8 @@ export class RegistrationComponent {
     return index;
   }
 
-  onRedirectForLogin() {
-    this.router.navigateByUrl('/login');
-  }
-
   onSubmit() {
-    this.store.dispatch(startRegistrationAction(this.registrationForm.value));
+    this.authService.registration(this.registrationForm.value);
     this.registrationForm.reset();
   }
 }

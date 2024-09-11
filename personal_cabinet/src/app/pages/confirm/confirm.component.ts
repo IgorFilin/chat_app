@@ -6,11 +6,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { FormErrorHandlerComponent } from '../../shared/components/form-error-handler/form-error-handler.component';
 import { registrationConfirm } from '../../../store/auth/auth.actions';
 import { InputComponent } from '../../shared/components/input/input.component';
+import { AuthService } from '../../services/auth.service';
+import { IConfirm } from '../../models/request';
 
 @Component({
   selector: 'cabinet-confirm',
@@ -20,29 +22,17 @@ import { InputComponent } from '../../shared/components/input/input.component';
     ReactiveFormsModule,
     FormErrorHandlerComponent,
     InputComponent,
+    RouterModule,
   ],
   templateUrl: './confirm.component.html',
   styleUrl: './confirm.component.scss',
 })
 export class ConfirmComponent {
-  constructor(private store: Store, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   confirmForm = new FormGroup({
     key: new FormControl('', Validators.required),
   });
-
-  dataConfirmPage: Array<{
-    inputType: string;
-    input: any;
-    controlName: string;
-    patternName?: string;
-  }> = [
-    {
-      inputType: 'text',
-      input: this.key,
-      controlName: 'key',
-    },
-  ];
 
   get key() {
     return this.confirmForm.get('key');
@@ -52,12 +42,8 @@ export class ConfirmComponent {
     return index;
   }
 
-  onRedirectForLogin() {
-    this.router.navigateByUrl('login');
-  }
-
   onSubmit() {
-    this.store.dispatch(registrationConfirm(this.confirmForm.value));
+    this.authService.confirm(this.confirmForm.value as IConfirm);
     this.confirmForm.reset();
   }
 }

@@ -10,14 +10,11 @@
       formControlName="key"
     />
     <div class="ng-confirmForm__loginRouteContainer">
-      <div>Already have an account?</div>
-      <div
-        (click)="onRedirectForLogin()"
-        class="ng-confirmForm__loginRouteLogin"
-      >
-        Login
-      </div>
+      <div>У вас уже есть аккаунт?</div>
+      <a routerLink="/login" class="buttonLink"> Login </a>
     </div>
-    <button type="submit" [disabled]="confirmForm.invalid">Confirm</button>
+    <button class="primary" type="submit" [disabled]="confirmForm.invalid">
+      Confirm
+    </button>
   </form>
 </div>

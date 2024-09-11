@@ -1,11 +1,10 @@
-import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, inject } from '@angular/core';
+import { CommonModule, DOCUMENT } from '@angular/common';
+import { Component, DestroyRef, Inject, inject } from '@angular/core';
 import { IconComponent } from '../../shared/components/icon/icon.component';
-import { isOpenedClosedMenuAction } from '../../../store/app/app.actions';
 import { AuthService } from '../../services/auth.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IsOpenCloseService } from '../../services/is-open-close.service';
-import { take, takeLast } from 'rxjs';
+import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'cabinet-header',
@@ -18,10 +17,12 @@ export class HeaderComponent {
   isOpenMenu: boolean = false;
   isAuth = false;
   destroyRef = inject(DestroyRef);
+  checked: boolean = false;
 
   constructor(
     private authService: AuthService,
-    private isOpenCloseService: IsOpenCloseService
+    private isOpenCloseService: IsOpenCloseService,
+    private themeService: ThemeService
   ) {
     this.authService.isAuth$
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -37,7 +38,13 @@ export class HeaderComponent {
   }
 
   onClickLeaveHandler() {
-    // this.store.dispatch(exitAction());
+    this.authService.exit();
+  }
+
+  onCheckHandler(event: any) {
+    this.checked = event.target.checked;
+    const theme = this.checked ? 'dark' : 'light';
+    this.themeService.setTheme(theme);
   }
 
   onIconHomeClickHandler() {

@@ -7,21 +7,19 @@
     />
     <app-input
       placeholder="пароль"
-      errorMessage="не корректный пароль"
+      errorMessage="Не корректный пароль"
       formControlName="password"
     />
     <div class="ng-loginForm__regRouteContainer">
       <div>У вас нет учетной записи?</div>
-      <div (click)="onRedirectForLogin()" class="ng-loginForm__regRoute">
-        Registration
-      </div>
+      <a routerLink="/registration" class="buttonLink">Регистрация</a>
     </div>
     <div class="ng-loginForm__regRouteContainer">
       <div>Вам нужно подтвердить свою учетную запись?</div>
-      <div (click)="onRedirectForConfirm()" class="ng-loginForm__regRoute">
-        Confirm
-      </div>
+      <a routerLink="/confirm" class="buttonLink">Подтверждение</a>
     </div>
-    <button type="submit" [disabled]="loginForm.invalid">Login</button>
+    <button class="primary" type="submit" [disabled]="loginForm.invalid">
+      Войти
+    </button>
   </form>
 </div>

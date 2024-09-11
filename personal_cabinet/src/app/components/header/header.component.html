@@ -1,4 +1,5 @@
-<div class="ng-header" *ngIf="isAuth">
+<div class="ng-header">
+  @if(isAuth) {
   <div class="ng-headerContainer">
     <div>
       <cabinet-icon
@@ -11,4 +12,17 @@
       Выход
     </button>
   </div>
+  } @else {
+  <div class="ng-headerContainer">
+    <label class="toggle">
+      <input
+        [checked]="checked"
+        (input)="onCheckHandler($event)"
+        id="toggle"
+        type="checkbox"
+      />
+      <span for="toggle" class="toggle__radius"></span>
+    </label>
+  </div>
+  }
 </div>

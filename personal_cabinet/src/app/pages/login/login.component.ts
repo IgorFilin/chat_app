@@ -6,13 +6,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { Router, RouterModule } from '@angular/router';
 import { FormErrorHandlerComponent } from '../../shared/components/form-error-handler/form-error-handler.component';
-import { startLogin } from '../../../store/auth/auth.actions';
 import { AuthService } from '../../services/auth.service';
 import { InputComponent } from '../../shared/components/input/input.component';
-import { slideInOutAnimation } from '../../animations/slide-in-out-animations';
 
 @Component({
   selector: 'cabinet-login',
@@ -22,17 +19,13 @@ import { slideInOutAnimation } from '../../animations/slide-in-out-animations';
     ReactiveFormsModule,
     FormErrorHandlerComponent,
     InputComponent,
+    RouterModule,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
-  constructor(private router: Router, private authServise: AuthService) {
-    this.loginForm.valueChanges.subscribe((data) => {
-      console.log(this.loginForm.errors);
-      console.log(data);
-    });
-  }
+  constructor(private authServise: AuthService) {}
   loginForm: FormGroup = new FormGroup({
     email: new FormControl('', [
       Validators.required,
@@ -76,13 +69,13 @@ export class LoginComponent {
     return index;
   }
 
-  onRedirectForLogin() {
-    this.router.navigateByUrl('registration');
-  }
+  // onRedirectForLogin() {
+  //   this.router.navigateByUrl('registration');
+  // }
 
-  onRedirectForConfirm() {
-    this.router.navigateByUrl('confirm');
-  }
+  // onRedirectForConfirm() {
+  //   this.router.navigateByUrl('confirm');
+  // }
 
   onSubmit() {
     this.authServise.login(this.loginForm.getRawValue());
