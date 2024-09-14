@@ -1,7 +1,19 @@
-/* You can add global styles to this file, and also import other style files */
+@use "@angular/material" as mat;
+@include mat.core();
 @import "colors.scss";
 @import "mixins.scss";
 @import "globalStyles.scss";
 @import "buttons.scss";
+@import "ng-material.scss";
 // regular style toast
 @import "ngx-toastr/toastr";
+@import "@angular/material/prebuilt-themes/deeppurple-amber.css";
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}

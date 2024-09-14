@@ -20,14 +20,14 @@ export class SectionListComponent {
   sectionLists: WritableSignal<Array<ListType>> = signal([
     {
       icon: 'main',
-      title: 'main (в разработке)',
+      title: 'Главная (в разработке)',
       routeLink: '/',
       disabled: true,
     },
     {
       icon: 'bot',
-      title: 'bot',
-      routeLink: 'bot-questions',
+      title: 'Создать вопрос',
+      routeLink: 'questions',
       disabled: false,
     },
   ]);

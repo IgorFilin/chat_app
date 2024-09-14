@@ -1,19 +1,12 @@
 <div class="ng-header">
-  @if(isAuth) {
   <div class="ng-headerContainer">
-    <div>
-      <cabinet-icon
-        (click)="onIconHomeClickHandler()"
-        [id]="'home'"
-        [color]="'white'"
-      />
-    </div>
-    <button (click)="onClickLeaveHandler()" class="ng-header__button">
-      Выход
-    </button>
-  </div>
-  } @else {
-  <div class="ng-headerContainer">
+    @if(isAuth) {
+    <cabinet-icon
+      (click)="onIconHomeClickHandler()"
+      [id]="'home'"
+      [color]="'white'"
+    />
+    }
     <label class="toggle">
       <input
         [checked]="checked"
@@ -23,6 +16,10 @@
       />
       <span for="toggle" class="toggle__radius"></span>
     </label>
+    @if(isAuth) {
+    <button (click)="onClickLeaveHandler()" class="ng-header__button">
+      Выход
+    </button>
+    }
   </div>
-  }
 </div>

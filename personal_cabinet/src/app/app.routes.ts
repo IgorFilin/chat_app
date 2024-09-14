@@ -4,20 +4,20 @@ import { LoginComponent } from './pages/login/login.component';
 import { ConfirmComponent } from './pages/confirm/confirm.component';
 import { MainComponent } from './pages/main/main.component';
 import { authGuard } from './core/guard/auth-guard';
-import { QuestionsBotComponent } from './components/questions-bot/questions-bot.component';
+import { QuestionsComponent } from './components/questions/questions.component';
 
 export const routes: Routes = [
   { component: RegistrationComponent, path: 'registration' },
   { component: LoginComponent, path: 'login' },
   { component: ConfirmComponent, path: 'confirm' },
   {
-    redirectTo: 'bot-questions',
+    redirectTo: 'questions',
     path: '',
     pathMatch: 'full',
   },
   {
-    component: QuestionsBotComponent,
-    path: 'bot-questions',
+    component: QuestionsComponent,
+    path: 'questions',
     canActivate: [authGuard],
   },
 ];

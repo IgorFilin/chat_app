@@ -56,20 +56,19 @@ export class AuthService {
     this.loadingService.startLoading();
     this.requestService
       .post<ILoginBody, any>('user/login', body)
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        catchError((error) => {
-          // const errorMessage = error.error.message;
-          this.loadingService.stopLoading();
-          // this.toastService.error('errorMessage');
-          return error;
-        })
-      )
-      .subscribe((data) => {
-        this.toastService.success(data.message);
-        this.isAuth$.next(data.isAuth);
-        this.router.navigateByUrl('/');
-      });
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(
+        (data) => {
+          this.toastService.success(data.message);
+          this.isAuth$.next(data.isAuth);
+          this.router.navigateByUrl('/');
+        },
+        (error) => {
+          const errorMessage =
+            error.error.message || 'К сожалению произошла ошибка';
+          this.toastService.error(errorMessage);
+        }
+      );
   }
 
   registration(body: IRegistrationBody): void {

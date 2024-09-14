@@ -1,20 +1,9 @@
-import {
-  Component,
-  ElementRef,
-  Input,
-  OnInit,
-  Optional,
-  Self,
-  ViewChild,
-} from '@angular/core';
+import { Component, Input, Optional, Self } from '@angular/core';
 import {
   AbstractControl,
   ControlValueAccessor,
   FormsModule,
-  NG_VALIDATORS,
-  NG_VALUE_ACCESSOR,
   NgControl,
-  NgModel,
   ValidationErrors,
 } from '@angular/forms';
 import { FormErrorHandlerComponent } from '../form-error-handler/form-error-handler.component';

@@ -12,6 +12,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideToastr } from 'ngx-toastr';
 import { ToasterService } from './services/toaster.service';
 import { AppReducer } from '../store/app/app.reducer';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,6 +23,6 @@ export const appConfig: ApplicationConfig = {
     provideStore({ auth: AuthReducer, app: AppReducer }),
     provideEffects([AuthEffect]),
     provideToastr(),
-    provideAnimations(),
+    provideAnimations(), provideAnimationsAsync(),
   ],
 };

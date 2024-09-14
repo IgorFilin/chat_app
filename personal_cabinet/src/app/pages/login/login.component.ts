@@ -39,25 +39,6 @@ export class LoginComponent {
     ]),
   });
 
-  // dataLoginPage: Array<{
-  //   inputType: string;
-  //   input: any;
-  //   controlName: string;
-  //   patternName?: string;
-  // }> = [
-  //   {
-  //     inputType: 'email',
-  //     input: this.email,
-  //     patternName: 'email',
-  //     controlName: 'email',
-  //   },
-  //   {
-  //     inputType: 'password',
-  //     input: this.password,
-  //     controlName: 'password',
-  //   },
-  // ];
-
   get email() {
     return this.loginForm.get('email');
   }
@@ -68,14 +49,6 @@ export class LoginComponent {
   trackByIndex(index: number): number {
     return index;
   }
-
-  // onRedirectForLogin() {
-  //   this.router.navigateByUrl('registration');
-  // }
-
-  // onRedirectForConfirm() {
-  //   this.router.navigateByUrl('confirm');
-  // }
 
   onSubmit() {
     this.authServise.login(this.loginForm.getRawValue());
