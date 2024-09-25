@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Question } from './entities/question.entity';
 import { Answer } from './entities/answer.entity';
-import { ResponseQuestionDataInterface } from './model/questionAnswer.interface';
+import { CreateQuestionDto } from './dto/createQuestion.dto';
 
 @Injectable()
 export class QuestionAnswerService {
@@ -17,29 +17,26 @@ export class QuestionAnswerService {
     private AnswerTable: Repository<Answer>
   ) {}
 
-  async createQuestion(body: Record<string, string>, token: string) {
+  async createQuestion(body: CreateQuestionDto, token: string) {
     try {
       const user = await this.UserTable.findOneBy({ authToken: token });
       if (!user) {
         return {
-          error: 'User not found',
-          message: 'Invalid authentication token',
+          message: 'Пользователь не найден',
         };
       }
       const question = new Question();
       question.title = body.question;
-      question.description = body.questionDescription;
+      question.description = body.description;
       question.user = user;
       const savedQuestion = await this.QuestionTable.save(question);
 
-      for (const key in body) {
-        if (key.includes('answer')) {
-          const answer = new Answer();
-          answer.title = body[key];
-          answer.question = savedQuestion;
-          answer.isCorrect = body.acceptAnswer === key;
-          await this.AnswerTable.save(answer);
-        }
+      for (const requestAnswer of body.answers) {
+        const newAnswer = new Answer();
+        newAnswer.title = requestAnswer.value;
+        newAnswer.question = savedQuestion;
+        newAnswer.isCorrect = requestAnswer.accept;
+        await this.AnswerTable.save(newAnswer);
       }
       return {
         message: 'Вопрос успешно создан',
@@ -53,7 +50,7 @@ export class QuestionAnswerService {
   }
 
   async getQuestions() {
-    let responseQuestionData: ResponseQuestionDataInterface[] | [] = [];
+    let responseQuestionData = [];
 
     try {
       const questions = await this.QuestionTable.find({

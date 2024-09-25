@@ -1,13 +1,6 @@
-export interface ResponseQuestionDataInterface {
-  question: {
-    id: string;
-    title: string;
-  };
-  answers: AnswerType[];
+export interface IQuestionDto {
+  value: string;
+  accept: boolean;
 }
 
-type AnswerType = {
-  id: string;
-  isAccept: boolean;
-  content: string;
-};
+export type ThemeType = 'JavaScript' | 'Typescript' | 'Angular' | 'Vue' | 'DataScience';

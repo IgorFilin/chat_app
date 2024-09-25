@@ -58,6 +58,7 @@ export class QuestionsComponent implements OnInit {
     this.questionForm = this.formBuilder.group({
       theme: this.formBuilder.control('', [Validators.required]),
       question: this.formBuilder.control('', [Validators.required]),
+      description: this.formBuilder.control(''),
       answers: this.formBuilder.array([
         this.formBuilder.group({
           value: this.formBuilder.control('', [Validators.required]),
@@ -86,19 +87,12 @@ export class QuestionsComponent implements OnInit {
 
   onSubmit() {
     console.log(this.questionForm.getRawValue());
-    // for (const formValueKey in this.createQuestionForm.value) {
-    //   this.createQuestionForm.value[formValueKey] =
-    //     this.createQuestionForm.value[formValueKey].trim();
-    // }
-    // console.log(this.createQuestionForm.value);
-    // this.questionAnswerService
-    //   .addQuestion$(this.createQuestionForm.value)
-    //   .subscribe(() => {
-    //     this.variantAnswers = ['answer_1'];
-    //     this.variantRadioButtons = [{ id: 'radio_1', value: 'answer_1' }];
-    //     this.initializeForm();
-    //     this.createQuestionForm.updateValueAndValidity();
-    //     this.ref.markForCheck();
-    //   });
+    this.questionAnswerService
+      .addQuestion$(this.questionForm.getRawValue())
+      .subscribe(() => {
+        this.questionForm.reset();
+        this.initializeForm();
+        this.ref.markForCheck();
+      });
   }
 }

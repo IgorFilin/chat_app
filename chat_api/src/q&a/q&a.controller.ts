@@ -1,13 +1,14 @@
 import { Controller, Get, Post, Body, Res, Req } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { QuestionAnswerService } from './q&a.service';
+import { CreateQuestionDto } from './dto/createQuestion.dto';
 
 @Controller('question-answer')
 export class QuestionAnswerController {
   constructor(private readonly questionAnswerService: QuestionAnswerService) {}
 
   @Post('create')
-  async create(@Body() body: any, @Res() res: Response, @Req() req: Request) {
+  async create(@Body() body: CreateQuestionDto, @Res() res: Response, @Req() req: Request) {
     const result: any = await this.questionAnswerService.createQuestion(body, req.cookies.authToken);
     if (result) {
       return res.send(result);
