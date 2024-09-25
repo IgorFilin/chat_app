@@ -5,13 +5,12 @@
   flex-direction: column;
   gap: 5px;
   padding: 10px;
-  min-width: 200px;
-  width: 100%;
   height: 400px;
   background: var(--bg-color);
   transition: right 0.5s ease;
   border-radius: 7px;
   box-sizing: content-box;
+  width: 240px;
 }
 
 .ng-sectionList__list {

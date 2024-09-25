@@ -30,6 +30,12 @@ export class SectionListComponent {
       routeLink: 'questions',
       disabled: false,
     },
+    {
+      icon: 'knowledgeBase',
+      title: 'База знаний',
+      routeLink: 'knowledgeBase',
+      disabled: false,
+    },
   ]);
 
   constructor(private route: Router) {}
