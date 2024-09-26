@@ -27,7 +27,8 @@ export class QuestionAnswerService {
       }
       const question = new Question();
       question.title = body.question;
-      question.description = body.description;
+      question.theme = body.theme;
+      question.description = body.description ?? '';
       question.user = user;
       const savedQuestion = await this.QuestionTable.save(question);
 
@@ -56,22 +57,11 @@ export class QuestionAnswerService {
       const questions = await this.QuestionTable.find({
         relations: ['answer'],
       });
-
-      responseQuestionData = questions.map((question) => {
-        return {
-          question: {
-            id: question.id,
-            title: question.title,
-          },
-          answers: question.answer.map((answer) => {
-            return {
-              id: answer.id,
-              isAccept: answer.isCorrect,
-              content: answer.title,
-            };
-          }),
-        };
-      });
+      console.log(questions);
+      return {
+        message: 'Вопросы получены',
+        data: questions,
+      };
     } catch (e) {
       return {
         error: 'Ошибка получения вопросов',

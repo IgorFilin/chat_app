@@ -1,5 +1,9 @@
 @import "colors.scss";
 
+:host {
+  flex: 1;
+}
+
 .ng-confirm {
   display: flex;
   justify-content: center;

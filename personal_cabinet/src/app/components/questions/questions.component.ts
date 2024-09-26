@@ -86,7 +86,6 @@ export class QuestionsComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.questionForm.getRawValue());
     this.questionAnswerService
       .addQuestion$(this.questionForm.getRawValue())
       .subscribe(() => {

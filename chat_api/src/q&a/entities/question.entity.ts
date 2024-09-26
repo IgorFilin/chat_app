@@ -13,6 +13,9 @@ export class Question {
   @Column()
   description: string;
 
+  @Column()
+  theme: string;
+
   @CreateDateColumn()
   date: Date;
 

@@ -22,4 +22,14 @@ export class QuestionAnswerService {
       })
     );
   }
+
+  getQuestion$(): Observable<any> {
+    return this.requestServise.get('question-answer/dataQuestions').pipe(
+      tap((data) => {
+        if (data.message) {
+          this.toastService.info(data.message);
+        }
+      })
+    );
+  }
 }

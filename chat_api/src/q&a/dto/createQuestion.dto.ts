@@ -7,3 +7,4 @@ export class CreateQuestionDto {
   description?: string;
   theme: ThemeType;
 }
+export class AppModule {}
