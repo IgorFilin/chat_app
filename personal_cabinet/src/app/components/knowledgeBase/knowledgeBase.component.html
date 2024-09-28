@@ -1,4 +1,16 @@
 <div class="knowledgeBase">
+  <div class="knowledgeBase__techlogyTags">
+    @for(tech of techologies; track tech) {
+    <div
+      (click)="onClickTechTagHandler(tech)"
+      class="knowledgeBase__techlogy"
+      [class.active]="tech === currentTech()"
+    >
+      {{ tech }}
+    </div>
+    }
+  </div>
+
   @for(question of dataQuestions; track question.id) {
   <div class="knowledgeBase__title">{{ question.title }}</div>
   <div class="knowledgeBase__tags">

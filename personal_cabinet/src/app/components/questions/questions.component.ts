@@ -19,6 +19,7 @@ import {
 import { QuestionAnswerService } from '../../services/question-answer.service';
 import { RadioButtonCustomComponent } from '../../shared/components/radio-button-custom/radio-button-custom.component';
 import { MatInputModule } from '@angular/material/input';
+import { TECHNOLOGY_STACK } from '../../models/constants';
 export type CreateQuestionFormType = {
   question: string;
 } & Record<string, string>;
@@ -43,6 +44,7 @@ export type CreateQuestionFormType = {
 })
 export class QuestionsComponent implements OnInit {
   questionForm!: FormGroup;
+  techologies: string[] = TECHNOLOGY_STACK;
 
   constructor(
     private questionAnswerService: QuestionAnswerService,

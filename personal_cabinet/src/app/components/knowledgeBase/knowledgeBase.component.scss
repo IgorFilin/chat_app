@@ -9,6 +9,19 @@
   font-size: 18px;
 }
 
+.knowledgeBase__techlogyTags {
+  display: flex;
+  gap: 10px;
+}
+
+.knowledgeBase__techlogy {
+  cursor: pointer;
+
+  &.active {
+    border-bottom: 2px solid;
+  }
+}
+
 .knowledgeBase__description {
   background-color: #f5f5f5;
   white-space: pre-wrap;

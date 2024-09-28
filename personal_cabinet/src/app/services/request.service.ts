@@ -16,10 +16,11 @@ export class RequestService {
     params?: T,
     api: string = this.apiUrl
   ): Observable<R> {
-    const httpParams = new HttpParams();
+    console.log(params);
+    let httpParams = new HttpParams();
     if (params) {
       for (const key in params) {
-        httpParams.set(key, params[key] as string);
+        httpParams = httpParams.append(key, params[key] as string);
       }
     }
 

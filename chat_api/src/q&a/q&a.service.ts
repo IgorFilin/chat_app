@@ -5,6 +5,7 @@ import { User } from 'src/users/entities/user.entity';
 import { Question } from './entities/question.entity';
 import { Answer } from './entities/answer.entity';
 import { CreateQuestionDto } from './dto/createQuestion.dto';
+import { QuestionThemeEnum } from './model/questionAnswer.interface';
 
 @Injectable()
 export class QuestionAnswerService {
@@ -50,18 +51,40 @@ export class QuestionAnswerService {
     }
   }
 
-  async getQuestions() {
+  async getQuestions(filter: QuestionThemeEnum) {
     let responseQuestionData = [];
 
     try {
-      const questions = await this.QuestionTable.find({
+      let questions = await this.QuestionTable.find({
         relations: ['answer'],
       });
-      console.log(questions);
-      return {
-        message: 'Вопросы получены',
-        data: questions,
-      };
+
+      if (!filter)
+        ({
+          message: 'Вопросы получены',
+          data: questions,
+        });
+
+      if (Object.values(QuestionThemeEnum).includes(filter)) {
+        questions = questions.filter((question) => question.theme.includes(filter));
+
+        if (questions.length) {
+          return {
+            message: 'Отфильтрованные вопросы получены',
+            data: questions,
+          };
+        } else {
+          return {
+            message: 'Отфильтрованные вопросы не найдены',
+            data: [],
+          };
+        }
+      } else {
+        return {
+          message: 'Неверный фильтр',
+          data: [],
+        };
+      }
     } catch (e) {
       return {
         error: 'Ошибка получения вопросов',

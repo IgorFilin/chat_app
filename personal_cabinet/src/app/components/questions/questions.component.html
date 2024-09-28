@@ -4,11 +4,9 @@
     <mat-form-field>
       <mat-label>Тема</mat-label>
       <mat-select formControlName="theme">
-        <mat-option value="JavaScript">javaScript</mat-option>
-        <mat-option value="Typescript">typescript</mat-option>
-        <mat-option value="Angular">angular</mat-option>
-        <mat-option value="Vue">vue</mat-option>
-        <mat-option value="DataScience">DataScience</mat-option>
+        @for(tech of techologies; track tech) {
+        <mat-option value="{{ tech }}">{{ tech }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
   </div>

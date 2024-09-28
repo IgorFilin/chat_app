@@ -19,7 +19,8 @@ export class QuestionAnswerController {
 
   @Get('dataQuestions')
   async getNoteList(@Req() req: Request, @Res() res: Response) {
-    const result = await this.questionAnswerService.getQuestions();
+    const filter: any = req.query?.filter;
+    const result = await this.questionAnswerService.getQuestions(filter);
     if (result) {
       return res.send(result);
     } else {
