@@ -1,7 +1,35 @@
+@import "../../../styles/colors.scss";
+.knowledgeBase {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.knowledgeBase__title {
+  font-size: 18px;
+}
+
 .knowledgeBase__description {
   background-color: #f5f5f5;
   white-space: pre-wrap;
   word-wrap: break-word;
-  font-family: "Courier New", Courier, monospace;
+  font-family: "monospace";
+  line-height: 25px;
+  font-size: 16px;
+  font-weight: 500;
   color: #333;
+}
+
+.knowledgeBase__tags {
+  display: flex;
+  gap: 10px;
+}
+
+.knowledgeBase__tag {
+  font-size: 16px;
+  color: var(--tags-color);
+  line-height: 1.5;
+  padding: 0 5px;
+  background-color: var(--bg-color);
+  border: 1px solid var(--primary-color);
 }

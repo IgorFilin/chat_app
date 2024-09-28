@@ -10,6 +10,7 @@ html[data-theme="light"] {
   --info-color: lightblue;
   --disabled-color: gray;
   --warning-color: orange;
+  --tags-color: #004080;
 }
 
 html[data-theme="dark"] {
@@ -24,4 +25,5 @@ html[data-theme="dark"] {
   --info-color: rgb(77, 78, 79);
   --disabled-color: dimgray;
   --warning-color: brown;
+  --tags-color: #60a1e1;
 }

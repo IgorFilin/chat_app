@@ -1,8 +1,14 @@
 <div class="knowledgeBase">
   @for(question of dataQuestions; track question.id) {
-  <div>{{ question.title }}</div>
-  <code class="knowledgeBase__description">
-    {{ question.description }}
-  </code>
+  <div class="knowledgeBase__title">{{ question.title }}</div>
+  <div class="knowledgeBase__tags">
+    @for(tag of question.answer; track tag) { @if(tag.isCorrect) {
+    <div class="knowledgeBase__tag">#{{ tag.title }}</div>
+    } }
+  </div>
+  <code
+    class="knowledgeBase__description"
+    [innerHTML]="question.description | transformHtmlInCode"
+  ></code>
   }
 </div>
