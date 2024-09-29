@@ -7,8 +7,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { FormErrorHandlerComponent } from '../../shared/components/form-error-handler/form-error-handler.component';
-import { Store } from '@ngrx/store';
-import { startRegistrationAction } from '../../../store/auth/auth.actions';
 import { Router, RouterModule } from '@angular/router';
 import { InputComponent } from '../../shared/components/input/input.component';
 import { AuthService } from '../../services/auth.service';

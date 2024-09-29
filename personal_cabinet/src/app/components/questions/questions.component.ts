@@ -13,6 +13,7 @@ import {
   FormArray,
   FormBuilder,
   FormGroup,
+  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -20,6 +21,7 @@ import { QuestionAnswerService } from '../../services/question-answer.service';
 import { RadioButtonCustomComponent } from '../../shared/components/radio-button-custom/radio-button-custom.component';
 import { MatInputModule } from '@angular/material/input';
 import { TECHNOLOGY_STACK } from '../../models/constants';
+import { MarkdownModule } from 'ngx-markdown';
 export type CreateQuestionFormType = {
   question: string;
 } & Record<string, string>;
@@ -37,6 +39,8 @@ export type CreateQuestionFormType = {
     MatCheckboxModule,
     MatInputModule,
     CdkTextareaAutosize,
+    MarkdownModule,
+    FormsModule,
   ],
   templateUrl: './questions.component.html',
   styleUrl: './questions.component.scss',
@@ -45,7 +49,9 @@ export type CreateQuestionFormType = {
 export class QuestionsComponent implements OnInit {
   questionForm!: FormGroup;
   techologies: string[] = TECHNOLOGY_STACK;
-
+  markdown: string =
+    "```typescript \n console.log(1) \n typeof null = 'object' \n const a = 10";
+  copyedText: Record<string, any> = {};
   constructor(
     private questionAnswerService: QuestionAnswerService,
     private ref: ChangeDetectorRef,
@@ -85,6 +91,43 @@ export class QuestionsComponent implements OnInit {
 
   onHandlerClickRemoveQuestions() {
     this.answersArray.removeAt(this.answersArray.length - 1);
+  }
+
+  getSelectedText(event: MouseEvent) {
+    const textarea = event.target as HTMLTextAreaElement;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const id = textarea.id;
+    // console.log('copy', textarea.value);
+    // console.log('copy', textarea.value.substring(start, end));
+    if (start - end) {
+      this.copyedText[id] = {
+        start,
+        end,
+        text: textarea.value.substring(start, end),
+      };
+    }
+  }
+
+  onTransformTestInCode(id: string) {
+    const transformedText = `\`\`\`typescript \n ${this.copyedText[id].text} \n \`\`\` \n`;
+    const beforeString = this.questionForm
+      .get('question')
+      ?.value.substring(0, this.copyedText[id]['start']);
+    const afterString = this.questionForm
+      .get('question')
+      ?.value.substring(
+        this.copyedText[id]['end'],
+        this.questionForm.get('question')?.value.length
+      );
+    const result = `${beforeString} ${transformedText} ${afterString}`;
+    this.questionForm.patchValue({ [id]: result });
+    // console.log(1) - это консоль лог
+  }
+
+  onPreWatchHandler(id: string) {
+    if (!this.copyedText[id]) this.copyedText[id] = {};
+    this.copyedText[id].isPreWatch = !this.copyedText[id].isPreWatch;
   }
 
   onSubmit() {

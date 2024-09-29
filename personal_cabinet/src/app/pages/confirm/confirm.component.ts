@@ -7,9 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { Store } from '@ngrx/store';
 import { FormErrorHandlerComponent } from '../../shared/components/form-error-handler/form-error-handler.component';
-import { registrationConfirm } from '../../../store/auth/auth.actions';
 import { InputComponent } from '../../shared/components/input/input.component';
 import { AuthService } from '../../services/auth.service';
 import { IConfirm } from '../../models/request';

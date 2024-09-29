@@ -9,6 +9,7 @@
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  gap: 12px;
 }
 
 .ng-questions__infoText {
@@ -24,8 +25,8 @@
 }
 
 .ng-questions__textarea {
+  z-index: 1;
   width: 100%;
-  margin-bottom: 10px;
   border: 1px solid var(--color-medium-gray);
   border-radius: 4px;
   box-sizing: border-box;
@@ -34,6 +35,7 @@
   resize: none;
   background-color: var(--bg-color);
   color: var(--text-color);
+  padding: 27px 10px 10px 10px;
 
   &:focus {
     border-color: var(--color-info);
@@ -106,4 +108,52 @@
 .ng-questions__answerContainer {
   display: flex;
   gap: 10px;
+}
+
+.ng-questions__textareaBlock {
+}
+
+.ng-questions__textareaContainer {
+  position: relative;
+}
+
+.ng-questions__preWatchTextarea {
+  cursor: pointer;
+  position: absolute;
+  content: "";
+  top: 5px;
+  right: 5px;
+  font-size: 12px;
+  color: var(--text-color);
+  padding: 2px;
+  background-color: var(--color-info);
+  border: 1px solid var(--text-color);
+  border-radius: 2px;
+  z-index: 10;
+}
+
+.ng-questions__transformCodebutton {
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--text-color);
+  padding: 2px;
+  background-color: var(--color-info);
+  border: 1px solid var(--text-color);
+  border-radius: 2px;
+  width: fit-content;
+}
+
+.ng-questions__textareaMarkdownPreWatch {
+  width: 100%;
+  border: 1px solid var(--color-medium-gray);
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 17px;
+  padding: 27px 10px 10px 10px;
+  resize: none;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  min-height: 120px;
+  margin-bottom: 5px;
+  white-space: pre-wrap;
 }
