@@ -3,10 +3,12 @@
     <div
       class="ng-sectionList__list"
       [ngClass]="{ disabled: list.disabled }"
-      (click)="onClickListHandler(list.routeLink)"
+      [routerLink]="list.routeLink"
+      [routerLinkActive]="'active'"
+      [routerLinkActiveOptions]="{ exact: true }"
     >
       <cabinet-icon [id]="list.icon" />
-      {{ list.title }}
+      <div>{{ list.title }}</div>
     </div>
   </ng-container>
 </div>

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, signal, WritableSignal } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterLinkActive, RouterModule } from '@angular/router';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 
 interface ListType {
@@ -12,7 +12,7 @@ interface ListType {
 @Component({
   selector: 'cabinet-section-list',
   standalone: true,
-  imports: [CommonModule, IconComponent, RouterModule],
+  imports: [CommonModule, IconComponent, RouterModule, RouterLinkActive],
   templateUrl: './section-list.component.html',
   styleUrl: './section-list.component.scss',
 })
@@ -27,20 +27,18 @@ export class SectionListComponent {
     {
       icon: 'bot',
       title: 'Создать вопрос',
-      routeLink: 'questions',
+      routeLink: '/questions',
       disabled: false,
     },
     {
       icon: 'knowledgeBase',
       title: 'База знаний',
-      routeLink: 'knowledgeBase',
+      routeLink: '/knowledgeBase',
       disabled: false,
     },
   ]);
 
-  constructor(private route: Router) {}
-
-  onClickListHandler(routeLink: string) {
-    this.route.navigateByUrl(routeLink);
+  constructor(private route: Router) {
+    console.log(this.route);
   }
 }
