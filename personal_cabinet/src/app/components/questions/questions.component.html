@@ -25,27 +25,33 @@
         formControlName="question"
         class="ng-questions__textarea"
       ></textarea>
-      } @else {
+      } @else{
       <div class="ng-questions__textareaMarkdownPreWatch">
         <markdown
           lineHighlight
-          clipboard
           [data]="questionForm.get('question')?.value"
         ></markdown>
       </div>
       }
+      <!-- @else {
+      <div class="ng-questions__textareaMarkdownPreWatch">
+        {{ questionForm.get("question")?.value }}
+      </div>
+      }  -->
       <div
         (click)="onPreWatchHandler('question')"
         class="ng-questions__preWatchTextarea"
       >
-        предв. просмотр
+        Превью
       </div>
     </div>
     <div
       class="ng-questions__transformCodebutton"
-      (click)="onTransformTestInCode('question')"
+      (click)="onChangeModeHandler('question')"
     >
-      code
+      {{
+        this.markdownCodeFormsToggle["question"] ? "Текст" : "Режим разметки"
+      }}
     </div>
   </div>
   <div>

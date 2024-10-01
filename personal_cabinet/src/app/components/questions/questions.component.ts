@@ -52,6 +52,7 @@ export class QuestionsComponent implements OnInit {
   markdown: string =
     "```typescript \n console.log(1) \n typeof null = 'object' \n const a = 10";
   copyedText: Record<string, any> = {};
+  markdownCodeFormsToggle: any = {};
   constructor(
     private questionAnswerService: QuestionAnswerService,
     private ref: ChangeDetectorRef,
@@ -60,6 +61,11 @@ export class QuestionsComponent implements OnInit {
 
   ngOnInit() {
     this.initializeForm();
+
+    this.questionForm.valueChanges.subscribe((form) => {
+      const markdownRegex = /```\s*typescript/;
+      // this.isMarkdownCode = markdownRegex.test(form.question);
+    });
   }
 
   initializeForm() {
@@ -93,13 +99,16 @@ export class QuestionsComponent implements OnInit {
     this.answersArray.removeAt(this.answersArray.length - 1);
   }
 
+  onChangeModeHandler(idForm: string) {
+    this.markdownCodeFormsToggle[idForm] =
+      !this.markdownCodeFormsToggle[idForm];
+  }
+
   getSelectedText(event: MouseEvent) {
     const textarea = event.target as HTMLTextAreaElement;
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
     const id = textarea.id;
-    // console.log('copy', textarea.value);
-    // console.log('copy', textarea.value.substring(start, end));
     if (start - end) {
       this.copyedText[id] = {
         start,
