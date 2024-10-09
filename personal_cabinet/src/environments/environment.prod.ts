@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiBaseUrl: 'https://filin-hub.online/api',
+  apiBaseUrl: 'https://filin.tech/api',
 };
