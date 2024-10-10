@@ -44,8 +44,7 @@ jobs:
             cd /var/www/chat_app/question_bot
             echo "${{ secrets.ENV_BOT }}" > .env.production
             cd /var/www/chat_app
-            docker-compose down -v
-            docker builder prune -af
-            docker image prune -af
-            docker-compose -f docker-compose.yml up -d
+            docker-compose stop frontend cabinet backend
+            docker-compose rm -f frontend cabinet backend
+            docker-compose up -d
             rm -rf /var/www/chat_app/
