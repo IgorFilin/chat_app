@@ -46,5 +46,6 @@ jobs:
             cd /var/www/chat_app
             docker-compose stop frontend cabinet backend
             docker-compose rm -f frontend cabinet backend
-            docker-compose up -d
+            docker-compose build --no-cache frontend cabinet backend
+            docker-compose up -d frontend cabinet backend
             rm -rf /var/www/chat_app/
