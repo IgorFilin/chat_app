@@ -10,12 +10,12 @@ services:
     depends_on:
       - backend
 
-  bot:
-    build:
-      context: ./question_bot
-      dockerfile: Dockerfile
-    ports:
-      - '4000:4000'
+  # bot:
+  #   build:
+  #     context: ./question_bot
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - '4000:4000'
 
   cabinet:
     build:
