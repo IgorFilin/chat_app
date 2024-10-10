@@ -30,7 +30,7 @@ export class User {
   @Column()
   userPhoto: string;
 
-  @Column()
+  @Column({ default: false })
   isAdmin: boolean;
 
   @CreateDateColumn()
