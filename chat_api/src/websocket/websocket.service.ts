@@ -282,7 +282,7 @@ export class WebsocketService {
     const userToAdd = await this.UserTable.findOneBy({ id: userId });
 
     const dirname = process.cwd();
-    const defaultImagePath = path.join('https://filin.tech/api', 'dist', 'static', 'image', 'default_photo_user.webp');
+    const defaultImagePath = path.join('https://filin.tech/api', 'static', 'image', 'default_photo_user.webp');
     const client = this.clients[myId];
 
     // Получаем комнату в которой есть 2 пользователя, вы и пользователь собеседник
