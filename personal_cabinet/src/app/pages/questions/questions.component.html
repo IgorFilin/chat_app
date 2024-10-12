@@ -5,12 +5,12 @@
       <mat-label>Тема</mat-label>
       <mat-select formControlName="theme">
         @for(tech of techologies; track tech) {
-        <mat-option value="{{ tech }}">{{ tech }}</mat-option>
+          <mat-option value="{{ tech }}">{{ tech }}</mat-option>
         }
       </mat-select>
     </mat-form-field>
   </div>
-  <div class="ng-questions__textareaBlock">
+  <!-- <div class="ng-questions__textareaBlock">
     <label class="ng-questions__textareaLabel" for="question"
       >Ваш вопрос:
     </label>
@@ -23,37 +23,34 @@
         cdkAutosizeMaxRows="25"
         id="question"
         formControlName="question"
-        class="ng-questions__textarea"
-      ></textarea>
-      } @else{
+        class="ng-questions__textarea"></textarea>
+      } @else {
       <div class="ng-questions__textareaMarkdownPreWatch">
         <markdown
           lineHighlight
-          [data]="questionForm.get('question')?.value"
-        ></markdown>
+          [data]="questionForm.get('question')?.value"></markdown>
       </div>
       }
-      <!-- @else {
+      @else {
       <div class="ng-questions__textareaMarkdownPreWatch">
         {{ questionForm.get("question")?.value }}
       </div>
-      }  -->
+      } 
       <div
         (click)="onPreWatchHandler('question')"
-        class="ng-questions__preWatchTextarea"
-      >
+        class="ng-questions__preWatchTextarea">
         Превью
       </div>
     </div>
     <div
       class="ng-questions__transformCodebutton"
-      (click)="onChangeModeHandler('question')"
-    >
+      (click)="onChangeModeHandler('question')">
       {{
         this.markdownCodeFormsToggle["question"] ? "Текст" : "Режим разметки"
       }}
     </div>
-  </div>
+  </div> -->
+  <app-markdown-textarea formControlName="question" />
   <div>
     <label class="ng-questions__textareaLabel" for="description"
       >Дополнительное описание правильного ответа (Опционально):
@@ -65,8 +62,7 @@
       cdkAutosizeMaxRows="13"
       id="description"
       formControlName="description"
-      class="ng-questions__textarea"
-    ></textarea>
+      class="ng-questions__textarea"></textarea>
   </div>
   <div class="ng-questions__infoText">
     Выберите правильный вариант ответа на Ваш вопрос, и заполните поля ответа
@@ -80,8 +76,7 @@
         <textarea
           id="question"
           formControlName="value"
-          class="ng-questions__textarea variantAnswer"
-        ></textarea>
+          class="ng-questions__textarea variantAnswer"></textarea>
       </div>
       }
     </div>
@@ -98,8 +93,7 @@
       type="button"
       *ngIf="answersArray.value.length > 1"
       class="primary"
-      (click)="onHandlerClickRemoveQuestions()"
-    >
+      (click)="onHandlerClickRemoveQuestions()">
       Удалить ответ
     </button>
     <button [disabled]="!questionForm.valid" class="primary" type="submit">
@@ -108,6 +102,6 @@
   </div>
 </form>
 
-<markdown lineHighlight clipboard [data]="markdown"></markdown>
+<!-- <markdown lineHighlight clipboard [data]="markdown"></markdown>
 
 <textarea name="" id="" [(ngModel)]="markdown"></textarea> -->

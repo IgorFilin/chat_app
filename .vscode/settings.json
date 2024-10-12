@@ -7,7 +7,7 @@
   },
   "prettier.htmlWhitespaceSensitivity": "ignore",
   "prettier.singleAttributePerLine": true,
-  "prettier.printWidth": 420,
+  "prettier.printWidth": 820,
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },

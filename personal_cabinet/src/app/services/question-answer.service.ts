@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { RequestService } from './request.service';
 import { Observable, tap } from 'rxjs';
-import { CreateQuestionFormType } from '../components/questions/questions.component';
+import { CreateQuestionFormType } from '../pages/questions/questions.component';
 import { ToasterService } from './toaster.service';
 import { TechnologyStackType } from '../models/types';
 

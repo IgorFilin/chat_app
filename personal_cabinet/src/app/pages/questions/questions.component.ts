@@ -22,6 +22,7 @@ import { RadioButtonCustomComponent } from '../../shared/components/radio-button
 import { MatInputModule } from '@angular/material/input';
 import { TECHNOLOGY_STACK } from '../../models/constants';
 import { MarkdownModule } from 'ngx-markdown';
+import { MarkdownTextareaComponent } from '../../components/markdown-textarea/markdown-textarea.component';
 export type CreateQuestionFormType = {
   question: string;
 } & Record<string, string>;
@@ -41,6 +42,7 @@ export type CreateQuestionFormType = {
     CdkTextareaAutosize,
     MarkdownModule,
     FormsModule,
+    MarkdownTextareaComponent
   ],
   templateUrl: './questions.component.html',
   styleUrl: './questions.component.scss',
@@ -100,8 +102,7 @@ export class QuestionsComponent implements OnInit {
   }
 
   onChangeModeHandler(idForm: string) {
-    this.markdownCodeFormsToggle[idForm] =
-      !this.markdownCodeFormsToggle[idForm];
+    this.markdownCodeFormsToggle[idForm] = !this.markdownCodeFormsToggle[idForm];
   }
 
   getSelectedText(event: MouseEvent) {
