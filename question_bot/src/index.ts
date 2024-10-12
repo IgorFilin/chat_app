@@ -23,7 +23,7 @@ function initial(): SessionData {
   };
 }
 bot.use(session({ initial }));
-const URL = process.env.URL || 'https://filin-hub.online';
+const URL = process.env.URL || 'https://filin.tech';
 
 async function authStartBot(ctx: any) {
   const token = ctx.session?.token;
@@ -36,7 +36,7 @@ async function authStartBot(ctx: any) {
 
     🔒 Если у вас нет аккаута, вы можете зарегистрироваться по ссылке: 
 
-    📨 <a href="https://filin-hub.online/registration">ССЫЛКА</a>
+    📨 <a href="https://filin.tech/registration">ССЫЛКА</a>
 
     🔧 Так же вы можете ознакомится как пользоваться ботом по команде:
 
@@ -61,9 +61,9 @@ bot.command('start', (ctx: any) => {
 
 bot.command('help', async (ctx: any) => {
   const questionTextHTML = `
-  🔒 Регистрация доступна по <a href="https://filin-hub.online/registration">Ссылке</a> 
+  🔒 Регистрация доступна по <a href="https://filin.tech/registration">Ссылке</a> 
 
-  🔔 Вы так же можете добавлять свои вопросы с вариантами ответов для коллекции по <a href="https://cabinet.filin-hub.online/login">Ссылке</a>
+  🔔 Вы так же можете добавлять свои вопросы с вариантами ответов для коллекции по <a href="https://cabinet.filin.tech/login">Ссылке</a>
 
   🔼 Данные для входа такие же как и для бота, которые доступны после регистрации по ссылке выше. 🔼
   `;

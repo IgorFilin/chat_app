@@ -96,7 +96,7 @@ export class UsersController {
         expires: expirationDate,
       });
       if (mail) {
-        return res.redirect('http://filin-hub.online/');
+        return res.redirect('https://filin.tech/');
       }
       res.send({ isAcceptKey: result.isAcceptKey, message: result.message });
     } else {
