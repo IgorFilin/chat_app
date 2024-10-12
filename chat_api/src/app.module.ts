@@ -26,7 +26,7 @@ const configEnv = process.env.NODE_ENV === 'production' ? '.env.production' : '.
   imports: [
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, 'static/image'),
-      serveRoot: '/static/image/api',
+      serveRoot: '/static/image/',
     }),
     ScheduleModule.forRoot(),
     ConfigModule.forRoot({
