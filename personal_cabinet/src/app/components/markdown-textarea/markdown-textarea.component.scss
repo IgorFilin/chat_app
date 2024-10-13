@@ -20,7 +20,7 @@
     cursor: pointer;
     position: absolute;
     content: "";
-    top: 5px;
+    top: -12px;
     right: 5px;
     font-size: 12px;
     color: var(--text-color);
@@ -49,15 +49,17 @@
     border-radius: 4px;
     box-sizing: border-box;
     font-size: 17px;
-    padding: 27px 10px 10px 10px;
+    padding: 8px;
+    line-height: 21px;
     resize: none;
     background-color: var(--bg-color);
     color: var(--text-color);
-    min-height: 156px;
+    min-height: 120px;
     margin-bottom: 4px;
+    font-family: 'Roboto';
     white-space: pre-wrap;
     word-break: break-all;
-    max-height: 650px;
+    max-height: 509px;
     overflow-y: scroll;
   
     &::-webkit-scrollbar-thumb {
@@ -87,11 +89,11 @@
     border-radius: 4px;
     box-sizing: border-box;
     font-size: 17px;
-    padding: 10px;
+    line-height: 21px;
+    padding: 8px;
     resize: none;
     background-color: var(--bg-color);
     color: var(--text-color);
-    padding: 27px 10px 10px 10px;
   
     &:focus {
       border-color: var(--color-info);

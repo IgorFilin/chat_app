@@ -1,14 +1,14 @@
 <div class="ng-markdownTextarea__textareaBlock">
-  <label class="ng-markdownTextarea__textareaLabel" [for]="control?.name" >Ваш вопрос:
+  <label class="ng-markdownTextarea__textareaLabel" [for]="control.name" >Ваш вопрос:
   </label>
   <div class="ng-markdownTextarea__textareaContainer">
-    @if(!copyedText?.isPreWatch) {
+    @if(!isPreWatch) {
     <textarea
       (mouseup)="getSelectedText($event)"
       cdkTextareaAutosize
       cdkAutosizeMinRows="6"
       cdkAutosizeMaxRows="25"
-      [id]="value"
+      [id]="control.name"
       [(ngModel)]="value"
       class="ng-markdownTextarea__textarea"></textarea>
     } @else {
@@ -19,7 +19,7 @@
     </div>
     }
     <div
-      (click)="onPreWatchHandler('question')"
+      (click)="onPreWatchHandler()"
       class="ng-markdownTextarea__preWatchTextarea">
       Превью
     </div>

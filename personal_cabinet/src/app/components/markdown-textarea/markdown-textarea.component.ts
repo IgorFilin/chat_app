@@ -20,15 +20,15 @@ import { AbstractControlComponent } from '../../shared/components/abstract-contr
 })
 export class MarkdownTextareaComponent extends AbstractControlComponent  {
   
-  copyedText: {start:number, end: number, text: string, isPreWatch?: boolean} | null = null;
+  copyedText: {start:number, end: number, text: string} | null = null;
   codeFormsToggle: boolean = false;
   fieldName: string = this.control?.name as string;
+  isPreWatch: boolean = false
 
   getSelectedText(event: MouseEvent) {
     const textarea = event.target as HTMLTextAreaElement;
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
-    const id = textarea.id;
     if (start - end) {
       this.copyedText = {
         start,
@@ -38,9 +38,8 @@ export class MarkdownTextareaComponent extends AbstractControlComponent  {
     }
   }
   
-  onPreWatchHandler(id: string) {
-    if(!this.copyedText) return
-    this.copyedText.isPreWatch = !this.copyedText.isPreWatch;
+  onPreWatchHandler() {
+    this.isPreWatch = !this.isPreWatch;
   }
 
   onChangeModeHandler() {
