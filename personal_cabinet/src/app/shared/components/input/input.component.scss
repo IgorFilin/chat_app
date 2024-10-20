@@ -15,9 +15,8 @@
       outline: none;
     }
 
-    + div {
+    + label {
       content: "";
-      transform: scale(1);
       position: absolute;
       top: 12px;
       left: 10px;
@@ -25,20 +24,22 @@
       font-size: 14px;
       transition: all 0.2s ease-in-out;
       pointer-events: none;
+      max-height: 14px;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    &:focus + div,
-    &:not(:placeholder-shown) + div {
-      content: "";
-      transform: scale(0.5);
-      position: absolute;
-      transform: scale(1);
-      top: -10px;
+    &:focus + label,
+    &:not(:placeholder-shown) + label {
+      top: -12px;
       left: 10px;
       z-index: 10;
+      background-color: var(--bg-color);
       font-size: 12px;
-      transform: scale(1);
       transition: all 0.2s ease-in-out;
+      padding: 3px;
     }
   }
 }
