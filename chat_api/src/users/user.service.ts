@@ -34,6 +34,9 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto, userIP: string) {
     try {
+      if (!createUserDto || !createUserDto.email || !createUserDto.name || !createUserDto.password) {
+        return { message: 'Недостаточно данных для регистрации' };
+      }
       const findUser = await this.UserTable.findOneBy({
         email: createUserDto.email,
       });
@@ -191,7 +194,7 @@ export class UsersService {
   }
 
   async login(LoginUserDto: LoginUserDto) {
-    if (LoginUserDto.email === '' || LoginUserDto.password === '') {
+    if (!LoginUserDto.email || !LoginUserDto.password) {
       throw new BadRequestException('К сожалению недостаточно данных для авторизации');
     }
     const user = await this.UserTable.findOneBy({ email: LoginUserDto.email });
