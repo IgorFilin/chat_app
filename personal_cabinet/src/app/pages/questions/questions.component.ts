@@ -23,6 +23,7 @@ import { MatInputModule } from '@angular/material/input';
 import { TECHNOLOGY_STACK } from '../../models/constants';
 import { MarkdownModule } from 'ngx-markdown';
 import { MarkdownTextareaComponent } from '../../components/markdown-textarea/markdown-textarea.component';
+import { CustomSelectComponent } from '../../shared/components/custom-select/custom-select.component';
 export type CreateQuestionFormType = {
   question: string;
 } & Record<string, string>;
@@ -42,7 +43,8 @@ export type CreateQuestionFormType = {
     CdkTextareaAutosize,
     MarkdownModule,
     FormsModule,
-    MarkdownTextareaComponent
+    MarkdownTextareaComponent,
+    CustomSelectComponent
   ],
   templateUrl: './questions.component.html',
   styleUrl: './questions.component.scss',
@@ -51,10 +53,9 @@ export type CreateQuestionFormType = {
 export class QuestionsComponent implements OnInit {
   questionForm!: FormGroup;
   techologies: string[] = TECHNOLOGY_STACK;
-  markdown: string =
-    "```typescript \n console.log(1) \n typeof null = 'object' \n const a = 10";
   copyedText: Record<string, any> = {};
   markdownCodeFormsToggle: any = {};
+  
   constructor(
     private questionAnswerService: QuestionAnswerService,
     private ref: ChangeDetectorRef,
@@ -63,9 +64,8 @@ export class QuestionsComponent implements OnInit {
 
   ngOnInit() {
     this.initializeForm();
-
     this.questionForm.valueChanges.subscribe((form) => {
-      const markdownRegex = /```\s*typescript/;
+      console.log('-_-', form);
       // this.isMarkdownCode = markdownRegex.test(form.question);
     });
   }

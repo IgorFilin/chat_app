@@ -1,14 +1,15 @@
 <form (ngSubmit)="onSubmit()" class="ng-questions" [formGroup]="questionForm">
   <div class="ng-questions__infoText">Выберите тему для вопроса:</div>
   <div>
-    <mat-form-field>
+    <!-- <mat-form-field>
       <mat-label>Тема</mat-label>
       <mat-select formControlName="theme">
         @for(tech of techologies; track tech) {
           <mat-option value="{{ tech }}">{{ tech }}</mat-option>
         }
       </mat-select>
-    </mat-form-field>
+    </mat-form-field> -->
+    <custom-select [values]="techologies" formControlName="theme" />
   </div>
   <!-- <div class="ng-questions__textareaBlock">
     <label class="ng-questions__textareaLabel" for="question"
