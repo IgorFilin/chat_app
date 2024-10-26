@@ -1,7 +1,12 @@
+:host {
+  width: 100%;
+}
+
 .ng-input {
   position: relative;
 
   input {
+    width: -webkit-fill-available;
     padding: 10px;
     border: 1px solid var(--info-color);
     background-color: var(--bg-global);

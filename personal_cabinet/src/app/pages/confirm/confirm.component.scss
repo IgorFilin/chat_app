@@ -19,6 +19,8 @@
     border-radius: 8px;
     background-color: var(--bg-color);
     width: fit-content;
+    max-width: 250px;
+    width: 100%;
   }
 
   .ng-confirmForm__loginRouteContainer {

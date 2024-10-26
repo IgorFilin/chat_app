@@ -11,8 +11,9 @@
 
 .primary {
   padding: 10px 20px;
+  width: 100%;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   background-color: var(--primary-color);
   color: var(--text-color);
   font-size: 16px;
@@ -21,5 +22,9 @@
 
   &:disabled {
     opacity: 0.4;
+  }
+
+  &:hover:not(:disabled) {
+    background-color: var(--secondary-color); 
   }
 }
