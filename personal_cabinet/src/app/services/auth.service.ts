@@ -78,9 +78,9 @@ export class AuthService {
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError((error) => {
-          // const errorMessage = error.error.message;
+          const errorMessage = error.error.message;
           this.loadingService.stopLoading();
-          // this.toastService.error('errorMessage');
+          this.toastService.error(errorMessage);
           return error;
         })
       )

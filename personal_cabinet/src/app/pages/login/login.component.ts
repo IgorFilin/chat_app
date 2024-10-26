@@ -31,10 +31,10 @@ export class LoginComponent {
   constructor(private authServise: AuthService) {}
   loginForm: FormGroup = new FormGroup({
     email: new FormControl('', [
-      // Validators.required,
-      // Validators.pattern(
-      //   /^((([0-9A-Za-z]{1}[-0-9A-z\.]{1,}[0-9A-Za-z]{1})|([0-9А-Яа-я]{1}[-0-9А-я\.]{1,}[0-9А-Яа-я]{1}))@([-A-Za-z]{1,}\.){1,2}[-A-Za-z]{2,})$/u
-      // ),
+      Validators.required,
+      Validators.pattern(
+        /^((([0-9A-Za-z]{1}[-0-9A-z\.]{1,}[0-9A-Za-z]{1})|([0-9А-Яа-я]{1}[-0-9А-я\.]{1,}[0-9А-Яа-я]{1}))@([-A-Za-z]{1,}\.){1,2}[-A-Za-z]{2,})$/u
+      ),
     ]),
     password: new FormControl('', [
       Validators.required,
