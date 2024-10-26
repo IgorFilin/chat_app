@@ -11,6 +11,7 @@ import { FormErrorHandlerComponent } from '../../shared/components/form-error-ha
 import { InputComponent } from '../../shared/components/input/input.component';
 import { AuthService } from '../../services/auth.service';
 import { IConfirm } from '../../models/request';
+import { bubbleAnimation } from '../../animations/bubble.animation';
 
 @Component({
   selector: 'cabinet-confirm',
@@ -24,6 +25,7 @@ import { IConfirm } from '../../models/request';
   ],
   templateUrl: './confirm.component.html',
   styleUrl: './confirm.component.scss',
+  animations: [ bubbleAnimation ],
 })
 export class ConfirmComponent {
   constructor(private authService: AuthService, private router: Router) {}

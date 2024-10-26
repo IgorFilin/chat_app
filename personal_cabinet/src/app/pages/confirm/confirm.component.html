@@ -1,9 +1,10 @@
-<div class="ng-confirm">
+<div class="ng-confirm" @bubble>
   <form
     (ngSubmit)="onSubmit()"
     class="ng-confirmForm"
     [formGroup]="confirmForm"
   >
+   <div class="ng-confirm__title">Подтверждение аккаунта</div>
     <app-input
       placeholder="ключ"
       errorMessage="Не корректный ключ"

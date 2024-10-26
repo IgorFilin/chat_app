@@ -10,6 +10,8 @@ import { Router, RouterModule } from '@angular/router';
 import { FormErrorHandlerComponent } from '../../shared/components/form-error-handler/form-error-handler.component';
 import { AuthService } from '../../services/auth.service';
 import { InputComponent } from '../../shared/components/input/input.component';
+import { slideInOutAnimation } from '../../animations/slide-in-out.animations';
+import { bubbleAnimation } from '../../animations/bubble.animation';
 
 @Component({
   selector: 'cabinet-login',
@@ -23,6 +25,7 @@ import { InputComponent } from '../../shared/components/input/input.component';
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
+  animations: [bubbleAnimation],
 })
 export class LoginComponent {
   constructor(private authServise: AuthService) {}

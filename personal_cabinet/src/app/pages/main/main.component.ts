@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { slideInOutAnimation } from '../../animations/slide-in-out-animations';
+import { slideInOutAnimation } from '../../animations/slide-in-out.animations';
 
 @Component({
   selector: 'cabinet-main',

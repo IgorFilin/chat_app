@@ -14,7 +14,6 @@ import { FormErrorHandlerComponent } from '../form-error-handler/form-error-hand
   templateUrl: './input.component.html',
   styleUrls: ['./input.component.scss'],
   imports: [FormsModule, FormErrorHandlerComponent],
-  providers: [],
 })
 export class InputComponent implements ControlValueAccessor {
   @Input() placeholder: string = '';

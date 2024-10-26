@@ -10,6 +10,7 @@ import { FormErrorHandlerComponent } from '../../shared/components/form-error-ha
 import { Router, RouterModule } from '@angular/router';
 import { InputComponent } from '../../shared/components/input/input.component';
 import { AuthService } from '../../services/auth.service';
+import { bubbleAnimation } from '../../animations/bubble.animation';
 
 @Component({
   selector: 'cabinet-registration',
@@ -23,6 +24,7 @@ import { AuthService } from '../../services/auth.service';
   ],
   templateUrl: './registration.component.html',
   styleUrl: './registration.component.scss',
+  animations: [ bubbleAnimation ],
 })
 export class RegistrationComponent {
   constructor(private authService: AuthService) {}

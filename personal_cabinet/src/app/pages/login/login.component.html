@@ -1,9 +1,11 @@
-<div class="ng-login">
+<div class="ng-login" @bubble>
   <form (ngSubmit)="onSubmit()" class="ng-loginForm" [formGroup]="loginForm">
+    <div class="ng-login__title">Вход</div>
     <app-input
       placeholder="почта"
       errorMessage="Не корректный email"
       formControlName="email"
+      
     />
     <app-input
       type="password"

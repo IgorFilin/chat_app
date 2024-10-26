@@ -15,7 +15,7 @@ import { SectionListComponent } from './components/section-list/section-list.com
 import { Observable } from 'rxjs';
 import { IsOpenCloseService } from './services/is-open-close.service';
 import { CommonModule, DOCUMENT } from '@angular/common';
-import { slideInOutAnimation } from './animations/slide-in-out-animations';
+import { slideInOutAnimation } from './animations/slide-in-out.animations';
 
 @Component({
   selector: 'app-root',

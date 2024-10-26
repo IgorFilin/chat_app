@@ -1,9 +1,10 @@
-<div class="ng-registration">
+<div class="ng-registration" @bubble>
   <form
     (ngSubmit)="onSubmit()"
     class="ng-registrationForm"
     [formGroup]="registrationForm"
   >
+  <div class="ng-registration__title">Регистрация</div>
     <app-input
       placeholder="имя"
       errorMessage="Не корректное имя"
