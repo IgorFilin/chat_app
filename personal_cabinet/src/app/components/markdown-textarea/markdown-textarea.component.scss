@@ -106,3 +106,22 @@
       max-height: 100px;
     }
   }
+
+  .ng-markdownTextarea__codebuttonContainer {
+    width: -webkit-fill-available;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    border: 1px solid black;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    top: -4px;
+    position: relative;
+  }
+
+  .ng-markdownTextarea__markdownContainer {
+    padding-left: 10px;
+    margin-left: 10px;
+    border-left: 1px solid black;
+  }

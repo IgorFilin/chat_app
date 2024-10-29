@@ -2,33 +2,48 @@
   <label class="ng-markdownTextarea__textareaLabel" [for]="control.name" >Ваш вопрос:
   </label>
   <div class="ng-markdownTextarea__textareaContainer">
-    @if(!isPreWatch) {
-    <textarea
-      (mouseup)="getSelectedText($event)"
-      cdkTextareaAutosize
-      cdkAutosizeMinRows="6"
-      cdkAutosizeMaxRows="25"
-      [id]="control.name"
-      [(ngModel)]="value"
-      class="ng-markdownTextarea__textarea"></textarea>
+    @if (!isPreWatch) {
+      <textarea
+        (mouseup)="getSelectedText($event)"
+        cdkTextareaAutosize
+        cdkAutosizeMinRows="6"
+        cdkAutosizeMaxRows="25"
+        [id]="control.name"
+        [(ngModel)]="value"
+        class="ng-markdownTextarea__textarea">
+      </textarea>
     } @else {
-    <div class="ng-markdownTextarea__textareaMarkdownPreWatch">
-      <markdown
-        lineHighlight
-        [data]="value" />
-    </div>
+      <div class="ng-markdownTextarea__textareaMarkdownPreWatch">
+        <markdown
+          lineHighlight
+          [data]="value" />
+      </div>
     }
-    <div
-      (click)="onPreWatchHandler()"
-      class="ng-markdownTextarea__preWatchTextarea">
-      Превью
-    </div>
+      <div
+        (click)="onPreWatchHandler()"
+        class="ng-markdownTextarea__preWatchTextarea">
+        Превью
+      </div>
   </div>
-  <div
-    class="ng-markdownTextarea__transformCodebutton"
-    (click)="onChangeModeHandler()">
-    {{
-      this.codeFormsToggle ? "Текст" : "Режим разметки"
-    }}
+  <div class="ng-markdownTextarea__codebuttonContainer">
+    <div
+      class="ng-markdownTextarea__transformCodebutton"
+      (click)="onChangeModeHandler()">
+      {{
+        this.codeFormsToggle ? "Текст" : "Режим разметки"
+      }}
+    </div>
+    <div class="ng-markdownTextarea__markdownContainer" >
+      @if (this.codeFormsToggle) {
+        <div @bubble>
+          <cabinet-icon
+            (click)="onTransformTestInCode()"
+            [id]="'code'"
+            [color]="'white'"
+          >
+          </cabinet-icon>
+        </div>
+      }
+    </div>
   </div>
 </div>

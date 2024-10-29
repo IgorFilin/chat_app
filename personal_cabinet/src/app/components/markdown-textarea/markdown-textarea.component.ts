@@ -4,6 +4,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MarkdownModule } from 'ngx-markdown';
 import { AbstractControlComponent } from '../../shared/components/abstract-control-input/abstract-control-input.component';
+import { IconComponent } from '../../shared/components/icon/icon.component';
+import { bubbleAnimation } from '../../animations/bubble.animation';
 
 @Component({
   standalone: true,
@@ -16,7 +18,9 @@ import { AbstractControlComponent } from '../../shared/components/abstract-contr
     CdkTextareaAutosize,
     MarkdownModule,
     FormsModule,
+    IconComponent
   ],
+  animations: [bubbleAnimation]
 })
 export class MarkdownTextareaComponent extends AbstractControlComponent  {
   
@@ -24,6 +28,7 @@ export class MarkdownTextareaComponent extends AbstractControlComponent  {
   codeFormsToggle: boolean = false;
   fieldName: string = this.control?.name as string;
   isPreWatch: boolean = false
+
 
   getSelectedText(event: MouseEvent) {
     const textarea = event.target as HTMLTextAreaElement;
@@ -40,6 +45,23 @@ export class MarkdownTextareaComponent extends AbstractControlComponent  {
   
   onPreWatchHandler() {
     this.isPreWatch = !this.isPreWatch;
+  }
+
+  onTransformTestInCode() {
+    if(!this.copyedText) return
+   
+    const transformedText = `\`\`\`typescript \n ${this.copyedText.text} \n \`\`\` \n`;
+    const beforeString = this.value.substring(0, this.copyedText['start']);
+    const afterString = this.value.substring(
+        this.copyedText['end'],
+        this.value.length
+      );
+    const result = `${beforeString} ${transformedText} ${afterString}`;
+    console.log(result);
+    this.value = result;
+    this.onChange(this.value);
+    this.copyedText = null
+    // console.log(1) - это консоль лог
   }
 
   onChangeModeHandler() {
