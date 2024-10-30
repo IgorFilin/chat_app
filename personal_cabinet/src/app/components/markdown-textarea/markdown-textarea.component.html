@@ -5,6 +5,7 @@
     @if (!isPreWatch) {
       <textarea
         (mouseup)="getSelectedText($event)"
+        (input)="onTextareaChange($event)"
         cdkTextareaAutosize
         cdkAutosizeMinRows="6"
         cdkAutosizeMaxRows="25"
@@ -25,7 +26,8 @@
         Превью
       </div>
   </div>
-  <div class="ng-markdownTextarea__codebuttonContainer">
+  @if(!isPreWatch) {
+  <div class="ng-markdownTextarea__codebuttonContainer" @bubble>
     <div
       class="ng-markdownTextarea__transformCodebutton"
       (click)="onChangeModeHandler()">
@@ -33,17 +35,34 @@
         this.codeFormsToggle ? "Текст" : "Режим разметки"
       }}
     </div>
-    <div class="ng-markdownTextarea__markdownContainer" >
-      @if (this.codeFormsToggle) {
-        <div @bubble>
-          <cabinet-icon
-            (click)="onTransformTestInCode()"
-            [id]="'code'"
-            [color]="'white'"
-          >
-          </cabinet-icon>
-        </div>
-      }
-    </div>
+      <div class="ng-markdownTextarea__markdownContainer">
+        @if (this.codeFormsToggle) {
+          <div @bubble title="Код в текст">
+            <cabinet-icon
+              (click)="onTransformTest('code')"
+              [id]="'code'"
+              [color]="'white'"
+            >
+            </cabinet-icon>
+          </div>
+          <div @bubble title="Блок кода">
+            <cabinet-icon
+              (click)="onTransformTest('block-code')"
+              [id]="'code-block'"
+              [color]="'white'"
+            >
+            </cabinet-icon>
+          </div>
+          <div @bubble title="Линия между блоками">
+            <cabinet-icon
+              (click)="onTransformTest('line')"
+              [id]="'line'"
+              [color]="'white'"
+            >
+            </cabinet-icon>
+          </div>
+        }
+      </div>
   </div>
+  }
 </div>

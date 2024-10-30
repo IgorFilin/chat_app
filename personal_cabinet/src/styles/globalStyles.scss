@@ -21,3 +21,11 @@ body {
   margin: 15px auto;
   padding: 0 10px;
 }
+markdown {
+  code {
+    background: var(--primary-color);
+    border-radius: 2px;
+    padding: 0 3px;
+  }
+
+}
