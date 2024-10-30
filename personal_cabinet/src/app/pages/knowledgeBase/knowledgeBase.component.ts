@@ -10,12 +10,13 @@ import { CommonModule } from '@angular/common';
 import { TransformHtmlInCodePipe } from '../../pipes/transform-html-in-code.pipe';
 import { TECHNOLOGY_STACK } from '../../models/constants';
 import { TechnologyStackType } from '../../models/types';
+import { MarkdownModule } from 'ngx-markdown';
 
 @Component({
   standalone: true,
   selector: 'app-knowledgeBase',
   templateUrl: './knowledgeBase.component.html',
-  imports: [CommonModule, TransformHtmlInCodePipe],
+  imports: [CommonModule, TransformHtmlInCodePipe, MarkdownModule],
   styleUrls: ['./knowledgeBase.component.scss'],
 })
 export class KnowledgeBaseComponent implements OnInit {
