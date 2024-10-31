@@ -1,4 +1,4 @@
-<div class="ng-markdownTextarea__textareaBlock">
+<div class="ng-markdownTextarea__textareaBlock" >
   <label class="ng-markdownTextarea__textareaLabel" [for]="control.name" >Ваш вопрос:
   </label>
   <div class="ng-markdownTextarea__textareaContainer">
@@ -57,6 +57,14 @@
             <cabinet-icon
               (click)="onTransformTest('line')"
               [id]="'line'"
+              [color]="'white'"
+            >
+            </cabinet-icon>
+          </div>
+          <div @bubble title="Зачеркнуть текст">
+            <cabinet-icon
+              (click)="onTransformTest('text-slash')"
+              [id]="'text-slash'"
               [color]="'white'"
             >
             </cabinet-icon>

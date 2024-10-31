@@ -1,16 +1,18 @@
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MarkdownModule } from 'ngx-markdown';
 import { AbstractControlComponent } from '../../shared/components/abstract-control-input/abstract-control-input.component';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 import { bubbleAnimation } from '../../animations/bubble.animation';
+import { EventOutsideElementDirective } from '../../directives/event-outside-element.directive';
 
 export enum TransformText {
   CODE = 'code',
   BLOCK_CODE = 'block-code',
   LINE = 'line',
+  SLASH = 'text-slash',
 }
 
 @Component({
@@ -26,7 +28,11 @@ export enum TransformText {
     FormsModule,
     IconComponent
   ],
-  animations: [bubbleAnimation]
+  animations: [bubbleAnimation],
+  hostDirectives: [{
+    directive: EventOutsideElementDirective,
+    outputs: ['documentMousedown'],
+  }]
 })
 export class MarkdownTextareaComponent extends AbstractControlComponent  {
   
@@ -35,18 +41,18 @@ export class MarkdownTextareaComponent extends AbstractControlComponent  {
   fieldName: string = this.control?.name as string;
   isPreWatch: boolean = false
 
-
-  getSelectedText(event: MouseEvent | Event) {
+  @HostListener('documentMousedown',['$event']) onDocumentMousedown(event:Event) {
+    this.getSelectedText(event, true)
+  }
+  getSelectedText(event: MouseEvent | Event, isOutside:boolean = false) {
     const textarea = event.target as HTMLTextAreaElement;
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
-    // if (start - end) {
       this.copyedText = {
         start,
         end,
         text: textarea.value.substring(start, end),
       };
-    // }
   }
   
   onPreWatchHandler() {
@@ -58,23 +64,13 @@ export class MarkdownTextareaComponent extends AbstractControlComponent  {
     let result = '';
     switch (mode) {
       case TransformText.BLOCK_CODE:{
-        transformedText = `\`\`\`typescript \n ${this.copyedText?.text} \n \`\`\` \n`;
-        const beforeString = this.value.substring(0, this.copyedText!['start']);
-        const afterString = this.value.substring(
-            this.copyedText!['end'],
-            this.value.length
-          );
-        result = `${beforeString} ${transformedText} ${afterString}`;
+        const template = `\`\`\`typescript \n ${this.copyedText?.text} \n \`\`\` \n`
+        result = this.transformOnGetSelecrtedText(template);
         break;
       }
       case TransformText.CODE:{
-        transformedText = `\`\`\` ${this.copyedText?.text} \`\`\``;
-        const beforeString = this.value.substring(0, this.copyedText!['start']);
-        const afterString = this.value.substring(
-            this.copyedText!['end'],
-            this.value.length
-          );
-        result = `${beforeString} ${transformedText} ${afterString}`;
+        const template = `\`\`\` ${this.copyedText?.text} \`\`\``
+        result = this.transformOnGetSelecrtedText(template);
         break;
       }
       case TransformText.LINE:{
@@ -88,12 +84,25 @@ export class MarkdownTextareaComponent extends AbstractControlComponent  {
         console.log(result);
         break;
       }
+      case TransformText.SLASH:{
+        const template = `~~${this.copyedText?.text}~~`
+        result = this.transformOnGetSelecrtedText(template);
+        break;
+      }
     }
 
     this.value = result;
     this.onChange(this.value);
     this.copyedText = null
-    // console.log(1) - это консоль лог
+  }
+
+  transformOnGetSelecrtedText(template:string) {
+    const beforeString = this.value.substring(0, this.copyedText!['start']);
+    const afterString = this.value.substring(
+        this.copyedText!['end'],
+        this.value.length
+      );
+    return `${beforeString} ${template} ${afterString}`;
   }
 
   onTextareaChange(event: Event) { 
