@@ -4,15 +4,15 @@
   <div class="ng-markdownTextarea__textareaContainer">
     @if (!isPreWatch) {
       <textarea
-        (mouseup)="getSelectedText($event)"
+        (mouseup)="setSelectedText($event)"
         (input)="onTextareaChange($event)"
+        (blur)="setSelectedText($event)"
         cdkTextareaAutosize
         cdkAutosizeMinRows="6"
         cdkAutosizeMaxRows="25"
+        [value]="value"
         [id]="control.name"
-        [(ngModel)]="value"
-        class="ng-markdownTextarea__textarea">
-      </textarea>
+        class="ng-markdownTextarea__textarea"></textarea>
     } @else {
       <div class="ng-markdownTextarea__textareaMarkdownPreWatch">
         <markdown
@@ -23,7 +23,7 @@
       <div
         (click)="onPreWatchHandler()"
         class="ng-markdownTextarea__preWatchTextarea">
-        Превью
+        {{ !isPreWatch ? "Предв. просмотр" : "Ввод текста"}}
       </div>
   </div>
   @if(!isPreWatch) {
@@ -32,14 +32,14 @@
       class="ng-markdownTextarea__transformCodebutton"
       (click)="onChangeModeHandler()">
       {{
-        this.codeFormsToggle ? "Текст" : "Режим разметки"
+        codeFormsToggle ? "Текст" : "Режим разметки"
       }}
     </div>
       <div class="ng-markdownTextarea__markdownContainer">
-        @if (this.codeFormsToggle) {
+        @if (codeFormsToggle) {
           <div @bubble title="Код в текст">
             <cabinet-icon
-              (click)="onTransformTest('code')"
+              (click)="onTransformTest(transformTextEnum.CODE)"
               [id]="'code'"
               [color]="'white'"
             >
@@ -47,7 +47,7 @@
           </div>
           <div @bubble title="Блок кода">
             <cabinet-icon
-              (click)="onTransformTest('block-code')"
+              (click)="onTransformTest(transformTextEnum.BLOCK_CODE)"
               [id]="'code-block'"
               [color]="'white'"
             >
@@ -55,7 +55,7 @@
           </div>
           <div @bubble title="Линия между блоками">
             <cabinet-icon
-              (click)="onTransformTest('line')"
+              (click)="onTransformTest(transformTextEnum.LINE)"
               [id]="'line'"
               [color]="'white'"
             >
@@ -63,7 +63,7 @@
           </div>
           <div @bubble title="Зачеркнуть текст">
             <cabinet-icon
-              (click)="onTransformTest('text-slash')"
+              (click)="onTransformTest(transformTextEnum.SLASH)"
               [id]="'text-slash'"
               [color]="'white'"
             >

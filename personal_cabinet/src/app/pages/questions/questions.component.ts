@@ -48,7 +48,6 @@ export type CreateQuestionFormType = {
   ],
   templateUrl: './questions.component.html',
   styleUrl: './questions.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QuestionsComponent implements OnInit {
   questionForm!: FormGroup;
@@ -65,7 +64,6 @@ export class QuestionsComponent implements OnInit {
   ngOnInit() {
     this.initializeForm();
     this.questionForm.valueChanges.subscribe((form) => {
-      console.log('-_-', form);
       // this.isMarkdownCode = markdownRegex.test(form.question);
     });
   }

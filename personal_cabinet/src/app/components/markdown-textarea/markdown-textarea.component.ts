@@ -6,7 +6,6 @@ import { MarkdownModule } from 'ngx-markdown';
 import { AbstractControlComponent } from '../../shared/components/abstract-control-input/abstract-control-input.component';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 import { bubbleAnimation } from '../../animations/bubble.animation';
-import { EventOutsideElementDirective } from '../../directives/event-outside-element.directive';
 
 export enum TransformText {
   CODE = 'code',
@@ -14,6 +13,11 @@ export enum TransformText {
   LINE = 'line',
   SLASH = 'text-slash',
 }
+export interface ICopyedText {
+  start: number
+  end: number
+  text: string
+} 
 
 @Component({
   standalone: true,
@@ -29,87 +33,81 @@ export enum TransformText {
     IconComponent
   ],
   animations: [bubbleAnimation],
-  hostDirectives: [{
-    directive: EventOutsideElementDirective,
-    outputs: ['documentMousedown'],
-  }]
 })
 export class MarkdownTextareaComponent extends AbstractControlComponent  {
   
-  copyedText: {start: number, end: number, text: string} | null = null;
+  copyedText: ICopyedText | null = null;
   codeFormsToggle: boolean = false;
   fieldName: string = this.control?.name as string;
   isPreWatch: boolean = false
-
-  @HostListener('documentMousedown',['$event']) onDocumentMousedown(event:Event) {
-    this.getSelectedText(event, true)
+  transformTextEnum = TransformText
+  variantsTransformText = {
+    [TransformText.BLOCK_CODE]: {
+      changer: () => {
+        this.value = this.transformSelectedText(`\`\`\`typescript \n ${this.copyedText?.text} \n \`\`\` \n`)
+      } 
+    },
+    [TransformText.CODE]: {
+      changer: () => {
+        this.value = this.transformSelectedText(`\`\`\` ${this.copyedText?.text} \`\`\``)
+      } 
+    },
+    [TransformText.LINE]: {
+      changer: () => {
+        this.value = this.insertItem(`***`)
+      }  
+    },
+    [TransformText.SLASH]: {
+      changer: () => {
+        this.value = this.transformSelectedText(`~~${this.copyedText?.text.trim()}~~`)
+      } 
+    },
   }
-  getSelectedText(event: MouseEvent | Event, isOutside:boolean = false) {
+
+  onTransformTest(mode: TransformText) {
+    this.variantsTransformText[mode].changer()
+    this.onChange(this.value);
+    this.copyedText = null
+  }
+
+  setSelectedText(event: MouseEvent | Event) {
     const textarea = event.target as HTMLTextAreaElement;
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
       this.copyedText = {
         start,
         end,
-        text: textarea.value.substring(start, end),
+        text: textarea?.value?.substring(start, end),
       };
   }
-  
-  onPreWatchHandler() {
-    this.isPreWatch = !this.isPreWatch;
-  }
 
-  onTransformTest(mode: any) {
-    let transformedText = ''
-    let result = '';
-    switch (mode) {
-      case TransformText.BLOCK_CODE:{
-        const template = `\`\`\`typescript \n ${this.copyedText?.text} \n \`\`\` \n`
-        result = this.transformOnGetSelecrtedText(template);
-        break;
-      }
-      case TransformText.CODE:{
-        const template = `\`\`\` ${this.copyedText?.text} \`\`\``
-        result = this.transformOnGetSelecrtedText(template);
-        break;
-      }
-      case TransformText.LINE:{
-        transformedText = `***`;
-        const beforeString = this.value.substring(0, this.copyedText!['start']);
-        const afterString = this.value.substring(
-            this.copyedText!['start'],
-            this.value.length
-          );
-        result = `${beforeString} ${transformedText} ${afterString}`;
-        console.log(result);
-        break;
-      }
-      case TransformText.SLASH:{
-        const template = `~~${this.copyedText?.text}~~`
-        result = this.transformOnGetSelecrtedText(template);
-        break;
-      }
-    }
-
-    this.value = result;
-    this.onChange(this.value);
-    this.copyedText = null
-  }
-
-  transformOnGetSelecrtedText(template:string) {
+  insertItem(inseredItem:string) {
     const beforeString = this.value.substring(0, this.copyedText!['start']);
     const afterString = this.value.substring(
-        this.copyedText!['end'],
+        this.copyedText!['start'],
         this.value.length
       );
+    return `${beforeString} ${inseredItem} ${afterString}`;
+  }
+
+  transformSelectedText(template:string) {
+    const beforeString = this.value.substring(0, this.copyedText!['start']);
+    const afterString = this.value.substring(this.copyedText!['end'], this.value.length);
     return `${beforeString} ${template} ${afterString}`;
   }
 
   onTextareaChange(event: Event) { 
-    this.getSelectedText(event)
+    this.value = (event.currentTarget as HTMLTextAreaElement).value;
+    this.onChange(this.value)
+    this.onTouched()
+    this.setSelectedText(event)
   }
 
   onChangeModeHandler() {
     this.codeFormsToggle = !this.codeFormsToggle;
+  }
+
+  onPreWatchHandler() {
+    this.isPreWatch = !this.isPreWatch;
   }
 }
