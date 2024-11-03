@@ -1,70 +1,10 @@
 <form (ngSubmit)="onSubmit()" class="ng-questions" [formGroup]="questionForm">
   <div class="ng-questions__infoText">Выберите тему для вопроса:</div>
   <div>
-    <!-- <mat-form-field>
-      <mat-label>Тема</mat-label>
-      <mat-select formControlName="theme">
-        @for(tech of techologies; track tech) {
-          <mat-option value="{{ tech }}">{{ tech }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field> -->
     <custom-select [values]="techologies" formControlName="theme" />
   </div>
-  <!-- <div class="ng-questions__textareaBlock">
-    <label class="ng-questions__textareaLabel" for="question"
-      >Ваш вопрос:
-    </label>
-    <div class="ng-questions__textareaContainer">
-      @if(!copyedText['question']?.isPreWatch) {
-      <textarea
-        (mouseup)="getSelectedText($event)"
-        cdkTextareaAutosize
-        cdkAutosizeMinRows="6"
-        cdkAutosizeMaxRows="25"
-        id="question"
-        formControlName="question"
-        class="ng-questions__textarea"></textarea>
-      } @else {
-      <div class="ng-questions__textareaMarkdownPreWatch">
-        <markdown
-          lineHighlight
-          [data]="questionForm.get('question')?.value"></markdown>
-      </div>
-      }
-      @else {
-      <div class="ng-questions__textareaMarkdownPreWatch">
-        {{ questionForm.get("question")?.value }}
-      </div>
-      } 
-      <div
-        (click)="onPreWatchHandler('question')"
-        class="ng-questions__preWatchTextarea">
-        Превью
-      </div>
-    </div>
-    <div
-      class="ng-questions__transformCodebutton"
-      (click)="onChangeModeHandler('question')">
-      {{
-        this.markdownCodeFormsToggle["question"] ? "Текст" : "Режим разметки"
-      }}
-    </div>
-  </div> -->
-  <app-markdown-textarea formControlName="question" />
-  <div>
-    <label class="ng-questions__textareaLabel" for="description"
-      >Дополнительное описание правильного ответа (Опционально):
-    </label>
-    <textarea
-      (mouseup)="getSelectedText($event)"
-      cdkTextareaAutosize
-      cdkAutosizeMinRows="4"
-      cdkAutosizeMaxRows="13"
-      id="description"
-      formControlName="description"
-      class="ng-questions__textarea"></textarea>
-  </div>
+  <app-markdown-textarea formControlName="question" title="Ваш вопрос:"/>
+  <app-markdown-textarea formControlName="description" title="Дополнительное описание правильного ответа (Опционально):"/>
   <div class="ng-questions__infoText">
     Выберите правильный вариант ответа на Ваш вопрос, и заполните поля ответа
   </div>
@@ -72,13 +12,15 @@
     <div class="ng-questions__textareaLabel">Вариант(ы) ответа:</div>
     <div formArrayName="answers" class="ng-questions__variantAnswersContainer">
       @for (answer of answersArray.value; track $index){
-      <div class="ng-questions__answerContainer" [formGroupName]="$index">
-        <mat-checkbox formControlName="accept"></mat-checkbox>
-        <textarea
-          id="question"
-          formControlName="value"
-          class="ng-questions__textarea variantAnswer"></textarea>
-      </div>
+        <div class="ng-questions__answerContainer" [formGroupName]="$index">
+          <div class="customCheckbox">
+            <input type="checkbox" formControlName="accept"/>
+          </div>
+          <textarea
+            id="question"
+            formControlName="value"
+            class="customTextarea"></textarea>
+        </div>
       }
     </div>
   </div>
@@ -86,8 +28,7 @@
     <button
       type="button"
       class="primary"
-      (click)="onHandlerClickAddQuestions(); $event.stopPropagation()"
-    >
+      (click)="onHandlerClickAddQuestions(); $event.stopPropagation()">
       Добавить ещё ответ
     </button>
     <button
@@ -102,7 +43,3 @@
     </button>
   </div>
 </form>
-
-<!-- <markdown lineHighlight clipboard [data]="markdown"></markdown>
-
-<textarea name="" id="" [(ngModel)]="markdown"></textarea> -->

@@ -63,9 +63,6 @@ export class QuestionsComponent implements OnInit {
 
   ngOnInit() {
     this.initializeForm();
-    this.questionForm.valueChanges.subscribe((form) => {
-      // this.isMarkdownCode = markdownRegex.test(form.question);
-    });
   }
 
   initializeForm() {

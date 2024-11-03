@@ -1,6 +1,6 @@
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MarkdownModule } from 'ngx-markdown';
 import { AbstractControlComponent } from '../../shared/components/abstract-control-input/abstract-control-input.component';
@@ -36,6 +36,7 @@ export interface ICopyedText {
 })
 export class MarkdownTextareaComponent extends AbstractControlComponent  {
   
+  @Input() title:string = ''
   copyedText: ICopyedText | null = null;
   codeFormsToggle: boolean = false;
   fieldName: string = this.control?.name as string;
