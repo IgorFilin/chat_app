@@ -1,7 +1,7 @@
 <form (ngSubmit)="onSubmit()" class="ng-questions" [formGroup]="questionForm">
   <div class="ng-questions__infoText">Выберите тему для вопроса:</div>
   <div>
-    <custom-select [values]="techologies" formControlName="theme" />
+    <custom-select title="Ваш вопрос:" [values]="techologies" formControlName="theme" />
   </div>
   <app-markdown-textarea formControlName="question" title="Ваш вопрос:"/>
   <app-markdown-textarea formControlName="description" title="Дополнительное описание правильного ответа (Опционально):"/>

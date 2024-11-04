@@ -11,8 +11,8 @@
         (input)="onTextareaChange($event)"
         (blur)="setSelectedText($event)"
         cdkTextareaAutosize
-        cdkAutosizeMinRows="6"
-        cdkAutosizeMaxRows="25"
+        [cdkAutosizeMinRows]="cdkMinHeight"
+        [cdkAutosizeMaxRows]="cdkMaxHeight"
         [value]="value"
         [id]="control.name"
         class="ng-markdownTextarea__textarea"></textarea>

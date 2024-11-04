@@ -5,6 +5,9 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MarkdownTextareaComponent } from '../../components/markdown-textarea/markdown-textarea.component';
 import { CustomSelectComponent } from '../../shared/components/custom-select/custom-select.component';
 import { TECHNOLOGY_STACK } from '../../models/constants';
+import { InputComponent } from '../../shared/components/input/input.component';
+import { CanDeactivate } from '@angular/router';
+import { CanDeactivateType } from '../../core/guard/can-deactivate-guard';
 
 @Component({
   standalone: true,
@@ -15,21 +18,29 @@ import { TECHNOLOGY_STACK } from '../../models/constants';
     ReactiveFormsModule,
     CdkTextareaAutosize,
     MarkdownTextareaComponent,
-    CustomSelectComponent
+    CustomSelectComponent,
+    InputComponent
   ],
   styleUrls: ['./create-article.component.scss']
 })
-export class CreateArticleComponent implements OnInit {
+export class CreateArticleComponent implements CanDeactivate<void> {
   techologies: string[] = TECHNOLOGY_STACK;
   articleForm: FormGroup = new FormGroup({
     theme: new FormControl('', [Validators.required]),
+    title: new FormControl('', [Validators.required]),
     article: new FormControl('', [Validators.required]),
   });
 
   
   constructor() { }
 
-  ngOnInit() {
+  canDeactivate():CanDeactivateType  {
+    const result = confirm('Ваши данные могут не сохранится, вы уверены?');
+    return result;
+  }
+
+  onSubmit() {
+  
   }
 
 }

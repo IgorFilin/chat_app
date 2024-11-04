@@ -7,6 +7,7 @@ import { KnowledgeBaseComponent } from './pages/knowledgeBase/knowledgeBase.comp
 import { QuestionsComponent } from './pages/questions/questions.component';
 import { CreateArticleComponent } from './pages/create-article/create-article.component';
 import { MainComponent } from './pages/main/main.component';
+import { canDeactivateGuard } from './core/guard/can-deactivate-guard';
 
 export const routes: Routes = [
   { path: '', canActivate: [authGuard] , component: MainComponent },
@@ -27,5 +28,6 @@ export const routes: Routes = [
     component: CreateArticleComponent,
     path: 'articles',
     canActivate: [authGuard],
+    canDeactivate: [canDeactivateGuard]
   },
 ];

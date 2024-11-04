@@ -12,6 +12,7 @@ import { bubbleAnimation } from '../../../animations/bubble.animation';
 export class CustomSelectComponent extends AbstractControlComponent implements OnInit  {
 
   @Input() values: string[] = [];
+  @Input() title: string = ''
   currentValue: string = this.value
   toggleSelect: boolean = false
 

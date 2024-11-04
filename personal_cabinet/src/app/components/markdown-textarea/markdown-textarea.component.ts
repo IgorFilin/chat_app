@@ -37,6 +37,8 @@ export interface ICopyedText {
 export class MarkdownTextareaComponent extends AbstractControlComponent  {
   
   @Input() title:string = ''
+  @Input() cdkMinHeight:string = '6'
+  @Input() cdkMaxHeight:string = '25'
   copyedText: ICopyedText | null = null;
   codeFormsToggle: boolean = false;
   fieldName: string = this.control?.name as string;

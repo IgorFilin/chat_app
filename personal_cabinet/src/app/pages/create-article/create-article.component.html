@@ -1,4 +1,12 @@
 <form class="create-article" [formGroup]="articleForm">
-  <custom-select [values]="techologies" formControlName="theme" />
+  <app-input
+    placeholder="Заголовок статьи"
+    errorMessage="Обязательное поле"
+    formControlName="title"
+  />
+  <custom-select title="Стек статьи" [values]="techologies" formControlName="theme" />
   <app-markdown-textarea formControlName="article" title="Текст статьи/заметки:"/>
+  <button [disabled]="!articleForm.valid" class="primary" (click)="onSubmit()">
+    Создать
+  </button>
 </form>
