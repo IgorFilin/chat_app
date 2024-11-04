@@ -5,16 +5,14 @@ import { ConfirmComponent } from './pages/confirm/confirm.component';
 import { authGuard } from './core/guard/auth-guard';
 import { KnowledgeBaseComponent } from './pages/knowledgeBase/knowledgeBase.component';
 import { QuestionsComponent } from './pages/questions/questions.component';
+import { CreateArticleComponent } from './pages/create-article/create-article.component';
+import { MainComponent } from './pages/main/main.component';
 
 export const routes: Routes = [
+  { path: '', canActivate: [authGuard] , component: MainComponent },
   { component: RegistrationComponent, path: 'registration' },
   { component: LoginComponent, path: 'login' },
   { component: ConfirmComponent, path: 'confirm' },
-  {
-    redirectTo: 'questions',
-    path: '',
-    pathMatch: 'full',
-  },
   {
     component: QuestionsComponent,
     path: 'questions',
@@ -23,6 +21,11 @@ export const routes: Routes = [
   {
     component: KnowledgeBaseComponent,
     path: 'knowledgeBase',
+    canActivate: [authGuard],
+  },
+  {
+    component: CreateArticleComponent,
+    path: 'articles',
     canActivate: [authGuard],
   },
 ];

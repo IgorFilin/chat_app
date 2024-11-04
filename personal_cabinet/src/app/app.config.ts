@@ -1,4 +1,4 @@
-import { ApplicationConfig } from '@angular/core';
+import { APP_INITIALIZER, ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -13,6 +13,12 @@ import {
   ClipboardButtonComponent,
   provideMarkdown,
 } from 'ngx-markdown';
+import { AuthService } from './services/auth.service';
+import { Observable } from 'rxjs';
+
+function initializeAppFactory(authService: AuthService): () => Observable<any> {
+  return () => authService.authRequest()
+ }
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -31,5 +37,11 @@ export const appConfig: ApplicationConfig = {
         },
       },
     }),
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeAppFactory,
+      multi: true,
+      deps: [AuthService],
+    },
   ],
 };

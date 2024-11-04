@@ -30,7 +30,7 @@ export class UsersController {
     const expirationDate = new Date();
     expirationDate.setDate(expirationDate.getDate() + 3);
     res.cookie('authToken', result.token, {
-      httpOnly: true,
+      httpOnly: false,
       expires: expirationDate,
     });
     res.setHeader('Authorization', `Bearer ${result.token}`);
@@ -92,7 +92,7 @@ export class UsersController {
       const expirationDate = new Date();
       expirationDate.setDate(expirationDate.getDate() + 3);
       res.cookie('authToken', result.token, {
-        httpOnly: true,
+        httpOnly: false,
         expires: expirationDate,
       });
       if (mail) {

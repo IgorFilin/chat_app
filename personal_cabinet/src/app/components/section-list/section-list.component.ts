@@ -31,6 +31,12 @@ export class SectionListComponent {
       disabled: false,
     },
     {
+      icon: 'article',
+      title: 'Создать статью',
+      routeLink: '/articles',
+      disabled: false,
+    },
+    {
       icon: 'knowledgeBase',
       title: 'База знаний',
       routeLink: '/knowledgeBase',

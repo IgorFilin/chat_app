@@ -44,7 +44,8 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.authService.authRequest().subscribe();
+    // this.authService.authRequest().subscribe();
+    console.log(6);
     this.isOpenCloseService.dataToggle.subscribe((data) => {
       this.isOpenMenu = data['menu'];
     });

@@ -12,6 +12,7 @@ import { EmailService } from 'src/email/email.service';
 import * as fs from 'node:fs';
 import * as path from 'path';
 import { ConfigService } from '@nestjs/config';
+import { v4 as uuidv4 } from 'uuid';
 
 interface RestorePassType {
   key: string;
@@ -52,7 +53,7 @@ export class UsersService {
 
         const token = this.JwtService.sign({
           name: createUserDto.name,
-          password: createUserDto.password,
+          randomData: uuidv4(),
         });
 
         const ip = userIP.slice(7);

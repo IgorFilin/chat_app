@@ -7,13 +7,17 @@ import { LoadingService } from './loading.service';
 import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IConfirm, ILoginBody, IRegistrationBody } from '../models/request';
+import { CookieService } from './cookie.service';
 export interface AuthType {
   isAuth: boolean;
   isLoading: boolean;
 }
 
 interface GetAuthPesponseType {
-  isAuth: boolean;
+  id:string
+  isAcceptKey:boolean
+  isAuth:boolean
+  name:string
 }
 
 @Injectable({
@@ -21,6 +25,7 @@ interface GetAuthPesponseType {
 })
 export class AuthService {
   isAuth$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  isInitialApp:boolean = false
   destroyRef = inject(DestroyRef);
 
   constructor(
@@ -28,26 +33,31 @@ export class AuthService {
     private utilsService: UtilsService,
     private toastService: ToasterService,
     private loadingService: LoadingService,
+    private cookieService: CookieService,
     private router: Router
   ) {}
 
   authRequest(): Observable<any> {
     this.loadingService.startLoading();
+    const authToken = this.cookieService.getCookieByName('authToken');
+    if(this.isInitialApp && authToken) return of(true);
     return this.requestService.get<any, GetAuthPesponseType>('user/auth').pipe(
       takeUntilDestroyed(this.destroyRef),
       map((data: GetAuthPesponseType) => {
         if (data.isAuth) {
-          this.toastService.success('Вы успешно авторизованы');
+          if(!this.isInitialApp) {
+            this.toastService.success(`Приветствую ${data.name}`);
+          }
           this.isAuth$.next(data.isAuth);
-          this.router.navigateByUrl('/');
+          this.isInitialApp = true
         }
         this.loadingService.stopLoading();
+        return data.isAuth
       }),
       catchError((error) => {
-        // const errorMessage = error.error.message;
         this.loadingService.stopLoading();
-        // this.toastService.error('errorMessage');
-        return of(error);
+        this.isInitialApp = true
+        return error;
       })
     );
   }
@@ -59,7 +69,7 @@ export class AuthService {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(
         (data) => {
-          this.toastService.success(data.message);
+          // this.toastService.success(data.message);
           this.isAuth$.next(data.isAuth);
           this.router.navigateByUrl('/');
         },

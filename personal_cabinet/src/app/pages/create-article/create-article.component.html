@@ -1,0 +1,4 @@
+<form class="create-article" [formGroup]="articleForm">
+  <custom-select [values]="techologies" formControlName="theme" />
+  <app-markdown-textarea formControlName="article" title="Текст статьи/заметки:"/>
+</form>

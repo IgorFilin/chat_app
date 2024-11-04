@@ -35,14 +35,7 @@ export type CreateQuestionFormType = {
     CommonModule,
     ReactiveFormsModule,
     RadioButtonCustomComponent,
-    MatCheckboxModule,
-    MatSelectModule,
-    MatFormFieldModule,
-    MatCheckboxModule,
-    MatInputModule,
     CdkTextareaAutosize,
-    MarkdownModule,
-    FormsModule,
     MarkdownTextareaComponent,
     CustomSelectComponent
   ],
@@ -52,8 +45,6 @@ export type CreateQuestionFormType = {
 export class QuestionsComponent implements OnInit {
   questionForm!: FormGroup;
   techologies: string[] = TECHNOLOGY_STACK;
-  copyedText: Record<string, any> = {};
-  markdownCodeFormsToggle: any = {};
   
   constructor(
     private questionAnswerService: QuestionAnswerService,
@@ -94,45 +85,6 @@ export class QuestionsComponent implements OnInit {
 
   onHandlerClickRemoveQuestions() {
     this.answersArray.removeAt(this.answersArray.length - 1);
-  }
-
-  onChangeModeHandler(idForm: string) {
-    this.markdownCodeFormsToggle[idForm] = !this.markdownCodeFormsToggle[idForm];
-  }
-
-  getSelectedText(event: MouseEvent) {
-    const textarea = event.target as HTMLTextAreaElement;
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const id = textarea.id;
-    if (start - end) {
-      this.copyedText[id] = {
-        start,
-        end,
-        text: textarea.value.substring(start, end),
-      };
-    }
-  }
-
-  onTransformTestInCode(id: string) {
-    const transformedText = `\`\`\`typescript \n ${this.copyedText[id].text} \n \`\`\` \n`;
-    const beforeString = this.questionForm
-      .get('question')
-      ?.value.substring(0, this.copyedText[id]['start']);
-    const afterString = this.questionForm
-      .get('question')
-      ?.value.substring(
-        this.copyedText[id]['end'],
-        this.questionForm.get('question')?.value.length
-      );
-    const result = `${beforeString} ${transformedText} ${afterString}`;
-    this.questionForm.patchValue({ [id]: result });
-    // console.log(1) - это консоль лог
-  }
-
-  onPreWatchHandler(id: string) {
-    if (!this.copyedText[id]) this.copyedText[id] = {};
-    this.copyedText[id].isPreWatch = !this.copyedText[id].isPreWatch;
   }
 
   onSubmit() {
