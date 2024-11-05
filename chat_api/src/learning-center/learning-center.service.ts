@@ -112,6 +112,8 @@ export class LearningCenterService {
       article.theme = body.stack;
       article.description = body.text ?? '';
       article.user = user;
+
+      // добавить теги
       await this.ArticleTable.save(article);
 
       return {

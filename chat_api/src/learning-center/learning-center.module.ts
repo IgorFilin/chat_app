@@ -6,9 +6,10 @@ import { User } from 'src/users/entities/user.entity';
 import { Question } from './entities/question.entity';
 import { Answer } from './entities/answer.entity';
 import { Article } from './entities/article.entity';
+import { TagsArticle } from './entities/tags-article.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Answer, Question, Article])],
+  imports: [TypeOrmModule.forFeature([User, Answer, Question, Article, TagsArticle])],
   controllers: [LearningCenterController],
   providers: [LearningCenterService],
 })

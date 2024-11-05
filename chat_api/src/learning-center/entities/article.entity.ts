@@ -1,5 +1,6 @@
 import { User } from 'src/users/entities/user.entity';
-import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { TagsArticle } from './tags-article.entity';
 
 @Entity('atricle')
 export class Article {
@@ -20,4 +21,7 @@ export class Article {
 
   @ManyToOne(() => User, (user) => user.article)
   user: User;
+
+  @ManyToMany(()=> TagsArticle, (tags) => tags.article)
+  tags: TagsArticle[]
 }

@@ -26,9 +26,9 @@ import { CanDeactivateType } from '../../core/guard/can-deactivate-guard';
 export class CreateArticleComponent implements CanDeactivate<void> {
   techologies: string[] = TECHNOLOGY_STACK;
   articleForm: FormGroup = new FormGroup({
-    theme: new FormControl('', [Validators.required]),
+    stack: new FormControl('', [Validators.required]),
     title: new FormControl('', [Validators.required]),
-    article: new FormControl('', [Validators.required]),
+    text: new FormControl('', [Validators.required]),
   });
 
   
