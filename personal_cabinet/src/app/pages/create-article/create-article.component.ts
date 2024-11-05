@@ -1,6 +1,6 @@
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MarkdownTextareaComponent } from '../../components/markdown-textarea/markdown-textarea.component';
 import { CustomSelectComponent } from '../../shared/components/custom-select/custom-select.component';
@@ -32,11 +32,13 @@ export class CreateArticleComponent implements CanDeactivate<void> {
   });
 
   
-  constructor() { }
+  constructor(private changeDetection: ChangeDetectorRef) { }
 
   canDeactivate():CanDeactivateType  {
-    const result = confirm('Ваши данные могут не сохранится, вы уверены?');
-    return result;
+    if(this.articleForm.dirty) {
+      const result = confirm('Ваши данные могут не сохранится, вы уверены?');
+      return result;
+    } else return true
   }
 
   onSubmit() {

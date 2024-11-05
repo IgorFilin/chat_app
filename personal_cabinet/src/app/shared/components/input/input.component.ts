@@ -34,12 +34,8 @@ export class InputComponent implements ControlValueAccessor {
   }
 
   public get showError(): boolean | null {
-    if (!this.control) {
-      return false;
-    }
-
+    if (!this.control) return false;
     const { dirty, touched } = this.control;
-
     return this.invalid ? dirty || touched : false;
   }
 
