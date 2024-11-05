@@ -1,6 +1,7 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UserKeyResetPass } from './userKeyResetPass.entity';
-import { Question } from 'src/q&a/entities/question.entity';
+import { Question } from 'src/learning-center/entities/question.entity';
+import { Article } from 'src/learning-center/entities/article.entity';
 @Entity('Users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
@@ -42,4 +43,8 @@ export class User {
 
   @OneToMany(() => Question, (question) => question.user)
   question: Question[];
+
+  @OneToMany(() => Article, (article) => article.user)
+  article: Article[];
+  
 }

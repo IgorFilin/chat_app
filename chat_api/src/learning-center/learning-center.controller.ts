@@ -1,15 +1,15 @@
 import { Controller, Get, Post, Body, Res, Req } from '@nestjs/common';
 import { Response, Request } from 'express';
-import { QuestionAnswerService } from './q&a.service';
+import { LearningCenterService } from './learning-center.service';
 import { CreateQuestionDto } from './dto/createQuestion.dto';
 
-@Controller('question-answer')
-export class QuestionAnswerController {
-  constructor(private readonly questionAnswerService: QuestionAnswerService) {}
+@Controller('learning')
+export class LearningCenterController {
+  constructor(private readonly learningCenterService: LearningCenterService) {}
 
-  @Post('create')
+  @Post('create-question')
   async create(@Body() body: CreateQuestionDto, @Res() res: Response, @Req() req: Request) {
-    const result: any = await this.questionAnswerService.createQuestion(body, req.cookies.authToken);
+    const result: any = await this.learningCenterService.createQuestion(body, req.cookies.authToken);
     if (result) {
       return res.send(result);
     } else {
@@ -17,10 +17,10 @@ export class QuestionAnswerController {
     }
   }
 
-  @Get('dataQuestions')
+  @Get('questions')
   async getNoteList(@Req() req: Request, @Res() res: Response) {
     const filter: any = req.query?.filter;
-    const result = await this.questionAnswerService.getQuestions(filter);
+    const result = await this.learningCenterService.getQuestions(filter);
     if (result) {
       return res.send(result);
     } else {

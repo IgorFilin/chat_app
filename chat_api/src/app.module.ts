@@ -16,9 +16,10 @@ import { YaModule } from './yandexDisk/ya.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { QuestionAnswerModule } from './q&a/q&a.module';
-import { Question } from './q&a/entities/question.entity';
-import { Answer } from './q&a/entities/answer.entity';
+import { Question } from './learning-center/entities/question.entity';
+import { Answer } from './learning-center/entities/answer.entity';
+import { LearningCenterModule } from './learning-center/learning-center.module';
+import { Article } from './learning-center/entities/article.entity';
 
 const configEnv = process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development';
 
@@ -42,7 +43,7 @@ const configEnv = process.env.NODE_ENV === 'production' ? '.env.production' : '.
         username: configService.get('BD_USERNAME'),
         password: configService.get('BD_PASSWORD'),
         database: configService.get('BD_DATABASE'),
-        entities: [User, Room, Message, UserKeyResetPass, Question, Answer],
+        entities: [User, Room, Message, UserKeyResetPass, Question, Answer, Article],
         synchronize: true,
       }),
       inject: [ConfigService],
@@ -51,7 +52,7 @@ const configEnv = process.env.NODE_ENV === 'production' ? '.env.production' : '.
     WebsocketModule,
     CronModule,
     YaModule,
-    QuestionAnswerModule,
+    LearningCenterModule,
   ],
   controllers: [AppController],
   providers: [AppService, EmailService, StateService],

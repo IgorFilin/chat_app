@@ -5,17 +5,21 @@ import { User } from 'src/users/entities/user.entity';
 import { Question } from './entities/question.entity';
 import { Answer } from './entities/answer.entity';
 import { CreateQuestionDto } from './dto/createQuestion.dto';
-import { QuestionThemeEnum } from './model/questionAnswer.interface';
+import { QuestionThemeEnum } from './model/learning-center.interface';
+import { CreateArticleDto } from './dto/createArticle.dto';
+import { Article } from './entities/article.entity';
 
 @Injectable()
-export class QuestionAnswerService {
+export class LearningCenterService {
   constructor(
     @InjectRepository(User)
     private UserTable: Repository<User>,
     @InjectRepository(Question)
     private QuestionTable: Repository<Question>,
     @InjectRepository(Answer)
-    private AnswerTable: Repository<Answer>
+    private AnswerTable: Repository<Answer>,
+    @InjectRepository(Article)
+    private ArticleTable: Repository<Article>
   ) {}
 
   async createQuestion(body: CreateQuestionDto, token: string) {
@@ -93,6 +97,32 @@ export class QuestionAnswerService {
     }
 
     return responseQuestionData;
+  }
+
+  async createArticle(body: CreateArticleDto, token: string) {
+    try {
+      const user = await this.UserTable.findOneBy({ authToken: token });
+      if (!user) {
+        return {
+          message: 'Пользователь не найден',
+        };
+      }
+      const article = new Article();
+      article.title = body.title;
+      article.theme = body.stack;
+      article.description = body.text ?? '';
+      article.user = user;
+      await this.ArticleTable.save(article);
+
+      return {
+        message: 'Статья создана',
+      };
+    } catch (e) {
+      return {
+        error: 'Ошибка создания статьи',
+        message: e.message,
+      };
+    }
   }
 
   async deleteNote(id: string, token: string) {

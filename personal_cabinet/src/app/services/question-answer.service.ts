@@ -15,7 +15,7 @@ export class QuestionAnswerService {
   ) {}
 
   addQuestion$(payload: CreateQuestionFormType): Observable<any> {
-    return this.requestServise.post('question-answer/create', payload).pipe(
+    return this.requestServise.post<any,any>('learning/create-question', payload).pipe(
       tap((data) => {
         if (data.message) {
           this.toastService.info(data.message);
@@ -26,13 +26,13 @@ export class QuestionAnswerService {
 
   getQuestion$(filter?: TechnologyStackType): Observable<any> {
     return this.requestServise
-      .get('question-answer/dataQuestions', { filter })
-      .pipe(
-        tap((data) => {
-          if (data.message) {
-            this.toastService.info(data.message);
-          }
-        })
-      );
+    .get<any,any>('learning/questions', { filter })
+    .pipe(
+      tap((data) => {
+        if (data.message) {
+          this.toastService.info(data.message);
+        }
+      })
+    );
   }
 }

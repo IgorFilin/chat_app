@@ -34,8 +34,8 @@ export class CreateArticleComponent implements CanDeactivate<void> {
   
   constructor(private changeDetection: ChangeDetectorRef) { }
 
-  canDeactivate():CanDeactivateType  {
-    if(this.articleForm.dirty) {
+  canDeactivate(): CanDeactivateType  {
+    if (this.articleForm.dirty) {
       const result = confirm('Ваши данные могут не сохранится, вы уверены?');
       return result;
     } else return true
@@ -44,5 +44,4 @@ export class CreateArticleComponent implements CanDeactivate<void> {
   onSubmit() {
   
   }
-
 }
