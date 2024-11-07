@@ -4,6 +4,11 @@
     errorMessage="Обязательное поле"
     formControlName="title"
   />
+  <app-search-input
+    [searchedRequest$]="testRequest"
+    placeholder="Теги"
+    errorMessage="Обязательное поле"
+  />
   <custom-select title="Стек статьи" [values]="techologies" formControlName="stack" />
   <app-markdown-textarea formControlName="text" title="Текст статьи/заметки:"/>
   <button [disabled]="!articleForm.valid" class="primary" (click)="onSubmit()">

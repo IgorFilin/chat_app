@@ -73,3 +73,50 @@
     outline: none;
   }
 }
+
+.ng-input {
+  position: relative;
+
+  input {
+    width: -webkit-fill-available;
+    padding: 10px;
+    border: 1px solid var(--info-color);
+    background-color: var(--bg-global);
+    border-radius: 4px;
+    font-size: 16px;
+    position: relative;
+    transition: all 0.3s ease;
+
+    &:focus {
+      border-color: var(--primary-color);
+      outline: none;
+    }
+
+    + label {
+      content: "";
+      position: absolute;
+      top: 12px;
+      left: 10px;
+      z-index: 10;
+      font-size: 14px;
+      transition: all 0.2s ease-in-out;
+      pointer-events: none;
+      max-height: 14px;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &:focus + label,
+    &:not(:placeholder-shown) + label {
+      top: -12px;
+      left: 10px;
+      z-index: 10;
+      background-color: var(--bg-color);
+      font-size: 12px;
+      transition: all 0.2s ease-in-out;
+      padding: 3px;
+    }
+  }
+}

@@ -8,6 +8,8 @@ import { TECHNOLOGY_STACK } from '../../models/constants';
 import { InputComponent } from '../../shared/components/input/input.component';
 import { CanDeactivate } from '@angular/router';
 import { CanDeactivateType } from '../../core/guard/can-deactivate-guard';
+import { SearchInputComponent } from '../../shared/components/search-input/search-input.component';
+import { QuestionAnswerService } from '../../services/question-answer.service';
 
 @Component({
   standalone: true,
@@ -19,7 +21,8 @@ import { CanDeactivateType } from '../../core/guard/can-deactivate-guard';
     CdkTextareaAutosize,
     MarkdownTextareaComponent,
     CustomSelectComponent,
-    InputComponent
+    InputComponent,
+    SearchInputComponent
   ],
   styleUrls: ['./create-article.component.scss']
 })
@@ -29,10 +32,14 @@ export class CreateArticleComponent implements CanDeactivate<void> {
     stack: new FormControl('', [Validators.required]),
     title: new FormControl('', [Validators.required]),
     text: new FormControl('', [Validators.required]),
+    tags: new FormControl([])
   });
 
   
-  constructor(private changeDetection: ChangeDetectorRef) { }
+  constructor(
+    private changeDetection: ChangeDetectorRef,
+    private questionAnswerService: QuestionAnswerService,
+  ) { }
 
   canDeactivate(): CanDeactivateType  {
     if (this.articleForm.dirty) {
@@ -41,7 +48,11 @@ export class CreateArticleComponent implements CanDeactivate<void> {
     } else return true
   }
 
+  testRequest = () => {
+    return this.questionAnswerService.getQuestion$();
+  }
+
   onSubmit() {
-  
+    console.log('-_-', this.articleForm.getRawValue());
   }
 }
