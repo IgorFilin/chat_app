@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'cabinet-icon',
@@ -11,4 +11,14 @@ import { Component, Input } from '@angular/core';
 export class IconComponent {
   @Input() color: string = '';
   @Input() id!: string;
+  @Input() disabled: boolean = false;
+  @Output() iconClick = new EventEmitter<void>();
+  
+  onClickHandler(event: MouseEvent) {
+   event.stopPropagation()
+   
+   if(!this.disabled) {
+     this.iconClick.emit();
+   }
+  }
 }

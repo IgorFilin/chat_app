@@ -41,9 +41,21 @@ export class LearningCenterController {
   }
 
   @Get('article')
-  async getArticle(@Body() body: CreateArticleDto, @Res() res: Response, @Req() req: Request) {
+  async getArticle( @Res() res: Response, @Req() req: Request) {
     const filter: any = req.query?.filter || 'all';
     const result = await this.learningCenterService.getArticle(filter);
+    if (result) {
+      return res.send(result);
+    } else {
+      return res.status(403).send(result);
+    }
+  }
+
+  @Get('tags')
+  async getTags(@Res() res: Response, @Req() req: Request) {
+    const filter: any = req.query?.filter
+    const isAll: any = req.query?.isAll
+    const result = await this.learningCenterService.getTags(filter, isAll);
     if (result) {
       return res.send(result);
     } else {

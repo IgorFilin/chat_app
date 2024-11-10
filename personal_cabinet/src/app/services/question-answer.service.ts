@@ -48,7 +48,15 @@ export class QuestionAnswerService {
     );
   }
 
-  getArticle() {
-    
+  getTag(filter:string){
+    return this.requestServise
+    .get<any,any>('learning/tags', { filter })
+    .pipe(
+      tap((data) => {
+        if (data.message) {
+          this.toastService.info(data.message);
+        }
+      })
+    );
   }
 }

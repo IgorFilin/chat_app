@@ -161,4 +161,20 @@ export class LearningCenterService {
 
     }
   }
+
+  async getTags(filter?:string, isAll?:boolean) {
+    try {
+      let tags = await this.TagsTable.find()
+      
+      if(isAll) return tags
+
+      if(filter) return tags.filter(tag => tag.title.includes(filter))
+      return []
+    } catch (e) {
+      return {
+        error: 'Произошла ошибка',
+        message: e.message,
+      };
+    }
+  }
 }

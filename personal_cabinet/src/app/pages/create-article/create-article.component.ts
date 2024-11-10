@@ -10,6 +10,9 @@ import { CanDeactivate } from '@angular/router';
 import { CanDeactivateType } from '../../core/guard/can-deactivate-guard';
 import { SearchInputComponent } from '../../shared/components/search-input/search-input.component';
 import { QuestionAnswerService } from '../../services/question-answer.service';
+import { IconComponent } from '../../shared/components/icon/icon.component';
+import { ToasterService } from '../../services/toaster.service';
+import { bubbleAnimation } from '../../animations/bubble.animation';
 
 @Component({
   standalone: true,
@@ -22,18 +25,15 @@ import { QuestionAnswerService } from '../../services/question-answer.service';
     MarkdownTextareaComponent,
     CustomSelectComponent,
     InputComponent,
-    SearchInputComponent
+    SearchInputComponent,
+    IconComponent
   ],
-  styleUrls: ['./create-article.component.scss']
+  styleUrls: ['./create-article.component.scss'],
+  animations: [ bubbleAnimation ],
 })
 export class CreateArticleComponent implements CanDeactivate<void> {
   techologies: string[] = TECHNOLOGY_STACK;
   articleForm: FormGroup = new FormGroup({
-    // stack: new FormControl('js', [Validators.required]),
-    // title: new FormControl('тестовая статья', [Validators.required]),
-    // text: new FormControl('ТЕСТ', [Validators.required]),
-    // tags: new FormControl(['javaScript', 'typeScript','angular', 'vue', ])
-
     stack: new FormControl('', [Validators.required]),
     title: new FormControl('', [Validators.required]),
     text: new FormControl('', [Validators.required]),
@@ -44,6 +44,7 @@ export class CreateArticleComponent implements CanDeactivate<void> {
   constructor(
     private changeDetection: ChangeDetectorRef,
     private questionAnswerService: QuestionAnswerService,
+    private toasterService: ToasterService,
   ) { }
 
   canDeactivate(): CanDeactivateType  {
@@ -53,12 +54,36 @@ export class CreateArticleComponent implements CanDeactivate<void> {
     } else return true
   }
 
-  testRequest = () => {
-    return this.questionAnswerService.getQuestion$();
+  onRemoveTag(index: number) {
+    const tags = this.articleForm.get('tags')
+    if (tags) {
+      tags.patchValue([...tags.value.filter((tag:any, tagIndex:number) => tagIndex !== index)])
+    }
+  }
+
+  searchTag = (searchValue:string) => {
+    return this.questionAnswerService.getTag(searchValue);
+  }
+
+  onSetTag(tag:string) {
+   const tags = this.articleForm.get('tags')
+
+   if(tags?.value.length === 5) {
+    this.toasterService.info('Набрано максимальное количество тегов');
+    return
+  }
+   
+   if(tags?.value.includes(tag)) {
+     this.toasterService.info('Такой тег уже есть в списке');
+     return
+   }
+
+   if (tags) {
+     tags.patchValue([...tags.value, tag])
+   }
   }
 
   onSubmit() {
-    console.log('-_-', this.articleForm.getRawValue());
     this.questionAnswerService.createArticle(this.articleForm.getRawValue()).subscribe();
   }
 }

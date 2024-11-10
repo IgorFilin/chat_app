@@ -1,5 +1,5 @@
-<div class="ng-iconContainer">
-  <svg class="ng-icon" [ngClass]="color">
+<div class="ng-iconContainer" (click)="onClickHandler($event)">
+  <svg class="ng-icon" [ngClass]="color" [class.disabled]="disabled">
     <use [attr.xlink:href]="'assets/sprite.svg#' + id" overflow="visible" />
   </svg>
 </div>

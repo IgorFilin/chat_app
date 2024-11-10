@@ -1,24 +1,30 @@
-import { Component, Input, OnInit, Optional, Self } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Optional, Output, Self } from '@angular/core';
 import { AbstractControl, ControlValueAccessor, FormsModule, NgControl, ValidationErrors } from '@angular/forms';
 import { FormErrorHandlerComponent } from '../form-error-handler/form-error-handler.component';
 import { CommonModule } from '@angular/common';
 import { BehaviorSubject, debounce, debounceTime, distinctUntilChanged, Observable, Subject, tap } from 'rxjs';
+import { IconComponent } from '../icon/icon.component';
+import { bubbleAnimation } from '../../../animations/bubble.animation';
 
 @Component({
   standalone:true,
   selector: 'app-search-input',
   templateUrl: './search-input.component.html',
   styleUrls: ['./search-input.component.scss'],
-  imports: [FormsModule, FormErrorHandlerComponent],
+  imports: [FormsModule, FormErrorHandlerComponent, IconComponent],
+  animations: [ bubbleAnimation]
 })
 export class SearchInputComponent implements OnInit, ControlValueAccessor  {
   
   @Input() placeholder: string = '';
   @Input() errorMessage: string = '';
-  @Input() searchedRequest$: (() => Observable<any>) | null = null;
+  @Input() searchedRequest$: ((value:string) => Observable<any>) | null = null;
+  @Output() onSelectTag = new EventEmitter<string>();
+  searchData: Array<any> = []
   isLoadingData: boolean = false;
   value: string = '';
   valueSubject = new Subject()
+
   onTouch(isTouch: boolean) {}
   onChange(value: string) {}
 
@@ -30,20 +36,23 @@ export class SearchInputComponent implements OnInit, ControlValueAccessor  {
   ngOnInit(): void {
     this.valueSubject.pipe(
       tap(() => this.isLoadingData = true),
-      debounceTime(2000),
+      debounceTime(1000),
       distinctUntilChanged()
     ).subscribe((res) => {
-      console.log('valueSubject', res);
+      const valueSearch:string = res as string
       if (this.searchedRequest$) {
-        this.searchedRequest$()
+        this.searchedRequest$(valueSearch)
         .subscribe(res => {
-          console.log('searchedRequest', res);
+          this.searchData = res;
           this.isLoadingData = false;
         })
       }
     })
- 
   }
+
+  onSelectTagHandler(tag:string) { {
+    this.onSelectTag.emit(tag)
+  }}
 
   get invalid(): boolean | null {
     return this.control ? this.control.invalid : false;
@@ -75,6 +84,7 @@ export class SearchInputComponent implements OnInit, ControlValueAccessor  {
     const value = (event.currentTarget as HTMLInputElement).value;
     this.valueSubject.next(value);
     this.onTouch(true);
+    this.value = value;
     this.onChange(value);
   }
 

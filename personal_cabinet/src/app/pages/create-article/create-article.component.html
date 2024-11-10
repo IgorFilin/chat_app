@@ -4,18 +4,24 @@
     errorMessage="Обязательное поле"
     formControlName="title"
   />
-  <div>
+  <div class="create-article__addedTags">
     <div>Выбранные теги:</div>
-    <div>
-      @for(tag of articleForm.get('tags')!.value; track $index) {
-        {{tag}}
-      }
-    </div>
+    @for(tag of articleForm.get('tags')!.value; track $index) {
+      <div class="create-article__tag" @bubble>
+        <div class="create-article__tagTitle">{{ tag }}</div>
+        <cabinet-icon [id]="'close'" (iconClick)="onRemoveTag($index)"></cabinet-icon>
+      </div>
+    } @empty {
+      <div class="create-article__noAddedTag" @bubble>
+        Нет добавленных тегов
+      </div>
+    }
   </div>
   <app-search-input
-    [searchedRequest$]="testRequest"
+    [searchedRequest$]="searchTag"
     placeholder="Теги"
     errorMessage="Обязательное поле"
+    (onSelectTag)="onSetTag($event)"
   />
   <custom-select title="Стек статьи" [values]="techologies" formControlName="stack" />
   <app-markdown-textarea formControlName="text" title="Текст статьи/заметки:"/>
