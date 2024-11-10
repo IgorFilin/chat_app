@@ -35,4 +35,20 @@ export class QuestionAnswerService {
       })
     );
   }
+
+  createArticle(payload: any): Observable<any> {
+    return this.requestServise
+    .post<any,any>('learning/create-article', { ...payload })
+    .pipe(
+      tap((data) => {
+        if (data.message) {
+          this.toastService.info(data.message);
+        }
+      })
+    );
+  }
+
+  getArticle() {
+    
+  }
 }

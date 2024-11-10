@@ -8,6 +8,7 @@ import { CreateQuestionDto } from './dto/createQuestion.dto';
 import { QuestionThemeEnum } from './model/learning-center.interface';
 import { CreateArticleDto } from './dto/createArticle.dto';
 import { Article } from './entities/article.entity';
+import { Tags } from './entities/tags.entity';
 
 @Injectable()
 export class LearningCenterService {
@@ -19,7 +20,9 @@ export class LearningCenterService {
     @InjectRepository(Answer)
     private AnswerTable: Repository<Answer>,
     @InjectRepository(Article)
-    private ArticleTable: Repository<Article>
+    private ArticleTable: Repository<Article>,
+    @InjectRepository(Tags)
+    private TagsTable: Repository<Tags>
   ) {}
 
   async createQuestion(body: CreateQuestionDto, token: string) {
@@ -112,8 +115,26 @@ export class LearningCenterService {
       article.theme = body.stack;
       article.description = body.text ?? '';
       article.user = user;
+      article.tags = []
+      // const savedArticle = await this.ArticleTable.save(article);
 
-      // добавить теги
+      for (const tag of body.tags) {
+        let existingTag = await this.TagsTable.findOne({ where:{ title: tag }, relations: ['article'] });
+
+        if (!existingTag) {
+          existingTag = new Tags();
+          existingTag.title = tag
+          existingTag.article = [];
+        }
+       
+        if(!existingTag.article.includes(article)) {
+          existingTag.article.push(article);
+        }
+        
+        article.tags.push(existingTag);
+
+        await this.TagsTable.save(existingTag);
+      }
       await this.ArticleTable.save(article);
 
       return {
@@ -127,31 +148,17 @@ export class LearningCenterService {
     }
   }
 
-  async deleteNote(id: string, token: string) {
-    // try {
-    //   const { notes } = await this.UserTable.findOne({
-    //     where: { authToken: token },
-    //     relations: ['notes'],
-    //   });
-    //   if (!notes) {
-    //     return {
-    //       message: 'Пользователь не найден',
-    //     };
-    //   }
-    //   const currentNote = notes.find((note) => note.id === id);
-    //   if (!currentNote) {
-    //     return {
-    //       message: 'Запись не найдена',
-    //     };
-    //   }
-    //   await this.NoteTable.remove(currentNote);
-    //   return {
-    //     id,
-    //   };
-    // } catch (e) {
-    //   return {
-    //     message: 'Произошла ошибка, запись не удалена',
-    //   };
-    // }
+
+
+  async getArticle(filter:string) {
+    try {
+      let articles = await this.ArticleTable.find({
+        relations: ['tags'],
+      });
+
+      return articles
+    } catch (e) {
+
+    }
   }
 }
