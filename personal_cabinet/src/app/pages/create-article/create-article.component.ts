@@ -29,10 +29,15 @@ import { QuestionAnswerService } from '../../services/question-answer.service';
 export class CreateArticleComponent implements CanDeactivate<void> {
   techologies: string[] = TECHNOLOGY_STACK;
   articleForm: FormGroup = new FormGroup({
+    // stack: new FormControl('js', [Validators.required]),
+    // title: new FormControl('тестовая статья', [Validators.required]),
+    // text: new FormControl('ТЕСТ', [Validators.required]),
+    // tags: new FormControl(['javaScript', 'typeScript','angular', 'vue', ])
+
     stack: new FormControl('', [Validators.required]),
     title: new FormControl('', [Validators.required]),
     text: new FormControl('', [Validators.required]),
-    tags: new FormControl([])
+    tags: new FormControl([]) 
   });
 
   
@@ -54,5 +59,6 @@ export class CreateArticleComponent implements CanDeactivate<void> {
 
   onSubmit() {
     console.log('-_-', this.articleForm.getRawValue());
+    this.questionAnswerService.createArticle(this.articleForm.getRawValue()).subscribe();
   }
 }

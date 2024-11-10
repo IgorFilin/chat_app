@@ -4,6 +4,14 @@
     errorMessage="Обязательное поле"
     formControlName="title"
   />
+  <div>
+    <div>Выбранные теги:</div>
+    <div>
+      @for(tag of articleForm.get('tags')!.value; track $index) {
+        {{tag}}
+      }
+    </div>
+  </div>
   <app-search-input
     [searchedRequest$]="testRequest"
     placeholder="Теги"
