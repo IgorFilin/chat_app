@@ -1,6 +1,6 @@
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MarkdownTextareaComponent } from '../../components/markdown-textarea/markdown-textarea.component';
 import { CustomSelectComponent } from '../../shared/components/custom-select/custom-select.component';
@@ -33,6 +33,8 @@ import { bubbleAnimation } from '../../animations/bubble.animation';
 })
 export class CreateArticleComponent implements CanDeactivate<void> {
   techologies: string[] = TECHNOLOGY_STACK;
+  currentTag = new FormControl('')
+
   articleForm: FormGroup = new FormGroup({
     stack: new FormControl('', [Validators.required]),
     title: new FormControl('', [Validators.required]),
@@ -84,6 +86,9 @@ export class CreateArticleComponent implements CanDeactivate<void> {
   }
 
   onSubmit() {
-    this.questionAnswerService.createArticle(this.articleForm.getRawValue()).subscribe();
+    this.questionAnswerService.createArticle(this.articleForm.getRawValue()).subscribe((data) => {
+      this.articleForm.reset()
+      this.currentTag.reset()
+    });
   }
 }

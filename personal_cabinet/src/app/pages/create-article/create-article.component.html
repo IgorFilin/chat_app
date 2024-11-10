@@ -18,6 +18,7 @@
     }
   </div>
   <app-search-input
+    [formControl]="currentTag"
     [searchedRequest$]="searchTag"
     placeholder="Теги"
     errorMessage="Обязательное поле"

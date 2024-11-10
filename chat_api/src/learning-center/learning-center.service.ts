@@ -168,7 +168,7 @@ export class LearningCenterService {
       
       if(isAll) return tags
 
-      if(filter) return tags.filter(tag => tag.title.includes(filter))
+      if(filter) return tags.filter(tag => tag.title.toLowerCase().includes(filter.toLowerCase()))
       return []
     } catch (e) {
       return {

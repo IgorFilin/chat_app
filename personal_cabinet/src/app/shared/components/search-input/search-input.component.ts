@@ -33,6 +33,7 @@ export class SearchInputComponent implements OnInit, ControlValueAccessor  {
       this.control.valueAccessor = this;
     }
   }
+
   ngOnInit(): void {
     this.valueSubject.pipe(
       tap(() => this.isLoadingData = true),
@@ -43,6 +44,7 @@ export class SearchInputComponent implements OnInit, ControlValueAccessor  {
       if (this.searchedRequest$) {
         this.searchedRequest$(valueSearch)
         .subscribe(res => {
+          console.log('1');
           this.searchData = res;
           this.isLoadingData = false;
         })
@@ -50,9 +52,9 @@ export class SearchInputComponent implements OnInit, ControlValueAccessor  {
     })
   }
 
-  onSelectTagHandler(tag:string) { {
+  onSelectTagHandler(tag:string) { 
     this.onSelectTag.emit(tag)
-  }}
+  }
 
   get invalid(): boolean | null {
     return this.control ? this.control.invalid : false;
@@ -82,10 +84,10 @@ export class SearchInputComponent implements OnInit, ControlValueAccessor  {
 
   onChangeHandler(event: Event) {
     const value = (event.currentTarget as HTMLInputElement).value;
-    this.valueSubject.next(value);
     this.onTouch(true);
     this.value = value;
     this.onChange(value);
+    this.valueSubject.next(value);
   }
 
   validate(control: AbstractControl): ValidationErrors | null {
