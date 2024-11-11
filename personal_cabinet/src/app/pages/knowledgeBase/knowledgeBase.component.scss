@@ -1,8 +1,24 @@
 @import "../../../styles/colors.scss";
+:host {
+  width: 100%;
+}
+
 .knowledgeBase {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  width: --webkit-fill-available;
+}
+
+.knowledgeBase__article {
+  border: 2px solid var(--text-color);
+  width: --webkit-fill-available;
+  padding: 7px;
+
+  &:hover {
+    transition: 0.5s;
+    transform: scale(1.01);
+  }
 }
 
 .knowledgeBase__title {

@@ -59,4 +59,16 @@ export class QuestionAnswerService {
       })
     );
   }
+
+  getArticle(filter?: TechnologyStackType): Observable<any> {
+    return this.requestServise
+    .get<any,any>('learning/article', { filter })
+    .pipe(
+      tap((data) => {
+        if (data.message) {
+          this.toastService.info(data.message);
+        }
+      })
+    );
+  }
 }

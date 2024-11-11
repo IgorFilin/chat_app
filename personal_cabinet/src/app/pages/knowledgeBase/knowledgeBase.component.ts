@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import { QuestionAnswerService } from '../../services/question-answer.service';
 import { CommonModule } from '@angular/common';
-import { TransformHtmlInCodePipe } from '../../pipes/transform-html-in-code.pipe';
 import { TECHNOLOGY_STACK } from '../../models/constants';
 import { TechnologyStackType } from '../../models/types';
 import { MarkdownModule } from 'ngx-markdown';
@@ -16,20 +15,21 @@ import { MarkdownModule } from 'ngx-markdown';
   standalone: true,
   selector: 'app-knowledgeBase',
   templateUrl: './knowledgeBase.component.html',
-  imports: [CommonModule, TransformHtmlInCodePipe, MarkdownModule],
+  imports: [CommonModule, MarkdownModule],
   styleUrls: ['./knowledgeBase.component.scss'],
 })
 export class KnowledgeBaseComponent implements OnInit {
-  dataQuestions: any = [];
+  dataArticles: any = [];
   techologies: TechnologyStackType[] = TECHNOLOGY_STACK;
   currentTech: WritableSignal<TechnologyStackType> = signal('Angular');
 
   constructor(private questionAnswerService: QuestionAnswerService) {
     effect(() => {
       this.questionAnswerService
-        .getQuestion$(this.currentTech())
+        .getArticle(this.currentTech())
         .subscribe((data) => {
-          this.dataQuestions = data.data;
+          console.log('data', data);
+          this.dataArticles = data;
         });
     });
   }
