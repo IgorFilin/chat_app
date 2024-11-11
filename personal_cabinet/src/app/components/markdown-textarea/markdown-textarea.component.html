@@ -42,7 +42,7 @@
         @if (codeFormsToggle) {
           <div @bubble title="Код в текст">
             <cabinet-icon
-              (click)="onTransformTest(transformTextEnum.CODE)"
+              (iconClick)="onTransformTest(transformTextEnum.CODE)"
               [id]="'code'"
               [color]="'white'"
             >
@@ -50,7 +50,7 @@
           </div>
           <div @bubble title="Блок кода">
             <cabinet-icon
-              (click)="onTransformTest(transformTextEnum.BLOCK_CODE)"
+              (iconClick)="onTransformTest(transformTextEnum.BLOCK_CODE)"
               [id]="'code-block'"
               [color]="'white'"
             >
@@ -58,7 +58,7 @@
           </div>
           <div @bubble title="Линия между блоками">
             <cabinet-icon
-              (click)="onTransformTest(transformTextEnum.LINE)"
+              (iconClick)="onTransformTest(transformTextEnum.LINE)"
               [id]="'line'"
               [color]="'white'"
             >
@@ -66,7 +66,7 @@
           </div>
           <div @bubble title="Зачеркнуть текст">
             <cabinet-icon
-              (click)="onTransformTest(transformTextEnum.SLASH)"
+              (iconClick)="onTransformTest(transformTextEnum.SLASH)"
               [id]="'text-slash'"
               [color]="'white'"
             >
