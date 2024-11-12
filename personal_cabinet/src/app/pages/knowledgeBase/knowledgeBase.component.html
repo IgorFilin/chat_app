@@ -23,10 +23,13 @@
           <div class="knowledgeBase__tag">#{{ tag.title }}</div>
         }
       </div>
-      <div>
-        <markdown
-          lineHighlight
-          [data]="article.description" />
+      <markdown
+        class="knowledgeBase__markdown"
+        lineHighlight
+        [data]="article.description" 
+      />
+      <div class="knowledgeBase__configContainer">
+          <button class="secondary">Читать</button>
       </div>
     </div>
   }

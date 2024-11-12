@@ -11,10 +11,14 @@
 }
 
 .knowledgeBase__article {
-  border: 2px solid var(--text-color);
+  background-color: var(--bg-color);
+  border-radius: 12px;
   width: --webkit-fill-available;
   padding: 7px;
-
+  overflow: hidden;
+  max-height: 180px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  
   &:hover {
     transition: 0.5s;
     transform: scale(1.01);
@@ -61,4 +65,18 @@
   padding: 0 5px;
   background-color: var(--bg-color);
   border: 1px solid var(--primary-color);
+}
+
+.knowledgeBase__configContainer {
+  border-top: 2px solid var(--primary-color);
+  margin-top: 10px;
+  padding-top: 10px;
+  height: 30px;
+}
+
+.knowledgeBase__markdown {
+  max-height: 57px;
+  height: 100%;
+  display: block;
+  overflow: hidden;
 }
