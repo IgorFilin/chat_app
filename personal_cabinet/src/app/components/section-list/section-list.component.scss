@@ -1,4 +1,5 @@
 @import "colors.scss";
+@import '../styles/mixins.scss';
 
 .ng-sectionList {
   display: flex;
@@ -11,6 +12,12 @@
   border-radius: 7px;
   box-sizing: content-box;
   width: 240px;
+
+  @include tablet {
+    flex-direction: column;
+    width: -webkit-fill-available;
+    height: fit-content;
+  }
 }
 
 .ng-sectionList__list {
