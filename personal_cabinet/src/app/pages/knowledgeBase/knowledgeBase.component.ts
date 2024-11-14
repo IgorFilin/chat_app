@@ -10,12 +10,14 @@ import { CommonModule } from '@angular/common';
 import { TECHNOLOGY_STACK } from '../../models/constants';
 import { TechnologyStackType } from '../../models/types';
 import { MarkdownModule } from 'ngx-markdown';
+import { Router, RouterModule, UrlSegment } from '@angular/router';
+import { query } from '@angular/animations';
 
 @Component({
   standalone: true,
   selector: 'app-knowledgeBase',
   templateUrl: './knowledgeBase.component.html',
-  imports: [CommonModule, MarkdownModule],
+  imports: [CommonModule, MarkdownModule, RouterModule],
   styleUrls: ['./knowledgeBase.component.scss'],
 })
 export class KnowledgeBaseComponent implements OnInit {
@@ -24,7 +26,10 @@ export class KnowledgeBaseComponent implements OnInit {
   techologies: TechnologyStackType[] = TECHNOLOGY_STACK;
   currentTech: WritableSignal<TechnologyStackType> = signal('Angular');
 
-  constructor(private questionAnswerService: QuestionAnswerService) {
+  constructor(
+    private questionAnswerService: QuestionAnswerService,
+    private router: Router
+  ) {
     effect(() => {
       this.questionAnswerService
         .getArticles(this.currentTech())
@@ -39,11 +44,5 @@ export class KnowledgeBaseComponent implements OnInit {
 
   onClickTechTagHandler(tech: TechnologyStackType) {
     this.currentTech.set(tech);
-  }
-
-  listenArticle(id: string) {
-    this.questionAnswerService.getArticle(id).subscribe((data) => {
-      console.log(data);
-    })
   }
 }

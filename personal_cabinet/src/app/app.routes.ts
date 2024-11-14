@@ -8,6 +8,7 @@ import { QuestionsComponent } from './pages/questions/questions.component';
 import { CreateArticleComponent } from './pages/create-article/create-article.component';
 import { MainComponent } from './pages/main/main.component';
 import { canDeactivateGuard } from './core/guard/can-deactivate-guard';
+import { ArticleComponent } from './pages/article/article.component';
 
 export const routes: Routes = [
   { path: '', canActivate: [authGuard] , component: MainComponent },
@@ -29,5 +30,10 @@ export const routes: Routes = [
     path: 'articles',
     canActivate: [authGuard],
     canDeactivate: [canDeactivateGuard]
+  },
+  {
+    component: ArticleComponent,
+    path: 'article/:id',
+    canActivate: [authGuard],
   },
 ];
