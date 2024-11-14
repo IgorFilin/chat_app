@@ -148,17 +148,33 @@ export class LearningCenterService {
     }
   }
 
-
-
-  async getArticle(filter:string) {
+  async getArticles(filter:string) {
     try {
       let articles = await this.ArticleTable.find( { where: { theme: filter },
         relations: ['tags'],
       });
 
-      return articles
+      if (articles)  {
+        return articles
+      }
     } catch (e) {
+      return {
+        message: 'Произошла ошибка при получении статей'
+      }
+    }
+  }
 
+  async getArticle(id:string) {
+    try {
+      let article = await this.ArticleTable.findOne({ where:{ id },relations: ['tags']});
+
+      if (article)  {
+        return article
+      }
+    } catch (e) {
+      return {
+        message: 'Произошла ошибка статья недоступна'
+      }
     }
   }
 

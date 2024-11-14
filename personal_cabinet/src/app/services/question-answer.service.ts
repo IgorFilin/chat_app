@@ -60,9 +60,21 @@ export class QuestionAnswerService {
     );
   }
 
-  getArticle(filter?: TechnologyStackType): Observable<any> {
+  getArticles(filter?: TechnologyStackType): Observable<any> {
     return this.requestServise
-    .get<any,any>('learning/article', { filter })
+    .get<any,any>('learning/articles', { filter })
+    .pipe(
+      tap((data) => {
+        if (data.message) {
+          this.toastService.info(data.message);
+        }
+      })
+    );
+  }
+
+  getArticle(id: string): Observable<any> {
+    return this.requestServise
+    .get<any,any>('learning/article', { id })
     .pipe(
       tap((data) => {
         if (data.message) {

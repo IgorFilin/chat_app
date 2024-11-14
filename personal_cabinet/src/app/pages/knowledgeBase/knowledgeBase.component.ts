@@ -19,6 +19,7 @@ import { MarkdownModule } from 'ngx-markdown';
   styleUrls: ['./knowledgeBase.component.scss'],
 })
 export class KnowledgeBaseComponent implements OnInit {
+
   dataArticles: any = [];
   techologies: TechnologyStackType[] = TECHNOLOGY_STACK;
   currentTech: WritableSignal<TechnologyStackType> = signal('Angular');
@@ -26,7 +27,7 @@ export class KnowledgeBaseComponent implements OnInit {
   constructor(private questionAnswerService: QuestionAnswerService) {
     effect(() => {
       this.questionAnswerService
-        .getArticle(this.currentTech())
+        .getArticles(this.currentTech())
         .subscribe((data) => {
           console.log('data', data);
           this.dataArticles = data;
@@ -38,5 +39,11 @@ export class KnowledgeBaseComponent implements OnInit {
 
   onClickTechTagHandler(tech: TechnologyStackType) {
     this.currentTech.set(tech);
+  }
+
+  listenArticle(id: string) {
+    this.questionAnswerService.getArticle(id).subscribe((data) => {
+      console.log(data);
+    })
   }
 }

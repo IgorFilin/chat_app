@@ -29,7 +29,7 @@
         [data]="article.description" 
       />
       <div class="knowledgeBase__configContainer">
-          <button class="secondary">Читать</button>
+          <button (click)="listenArticle(article.id)" class="secondary">Читать</button>
       </div>
     </div>
   }

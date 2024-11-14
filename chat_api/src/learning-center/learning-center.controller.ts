@@ -40,10 +40,21 @@ export class LearningCenterController {
     }
   }
 
+  @Get('articles')
+  async getArticles( @Res() res: Response, @Req() req: Request) {
+    const filter: any = req.query?.filter || 'all';
+    const result = await this.learningCenterService.getArticles(filter);
+    if (result) {
+      return res.send(result);
+    } else {
+      return res.status(403).send(result);
+    }
+  }
+
   @Get('article')
   async getArticle( @Res() res: Response, @Req() req: Request) {
-    const filter: any = req.query?.filter || 'all';
-    const result = await this.learningCenterService.getArticle(filter);
+    const id: any = req.query?.id;
+    const result = await this.learningCenterService.getArticle(id);
     if (result) {
       return res.send(result);
     } else {
