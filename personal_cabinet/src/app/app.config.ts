@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, ApplicationConfig } from '@angular/core';
+import { APP_INITIALIZER, ApplicationConfig, LOCALE_ID } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -15,6 +15,10 @@ import {
 } from 'ngx-markdown';
 import { AuthService } from './services/auth.service';
 import { Observable } from 'rxjs';
+import localeRu from '@angular/common/locales/ru';
+import { registerLocaleData } from '@angular/common';
+
+registerLocaleData(localeRu);
 
 function initializeAppFactory(authService: AuthService): () => Observable<any> {
   return () => authService.authRequest()
@@ -43,5 +47,9 @@ export const appConfig: ApplicationConfig = {
       multi: true,
       deps: [AuthService],
     },
+    {
+      provide: LOCALE_ID,
+      useValue: 'ru'
+    }
   ],
 };

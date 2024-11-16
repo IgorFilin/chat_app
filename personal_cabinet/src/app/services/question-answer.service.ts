@@ -4,6 +4,7 @@ import { Observable, tap } from 'rxjs';
 import { CreateQuestionFormType } from '../pages/questions/questions.component';
 import { ToasterService } from './toaster.service';
 import { TechnologyStackType } from '../models/types';
+import { IArticleResponse } from '../models/interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -74,12 +75,12 @@ export class QuestionAnswerService {
 
   getArticle(id: string): Observable<any> {
     return this.requestServise
-    .get<any,any>('learning/article', { id })
+    .get<any, IArticleResponse>('learning/article', { id })
     .pipe(
       tap((data) => {
-        if (data.message) {
-          this.toastService.info(data.message);
-        }
+        // if (data.message) {
+        //   this.toastService.info(data.message);
+        // }
       })
     );
   }

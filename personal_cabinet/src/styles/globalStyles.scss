@@ -22,10 +22,8 @@ body {
   padding: 0 10px;
 }
 markdown {
-  code {
-    background: var(--primary-color);
-    border-radius: 2px;
-    padding: 0 3px;
+  code[class*=language-] {
+    white-space: pre-wrap;
   }
 
   p {
