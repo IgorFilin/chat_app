@@ -9,6 +9,8 @@ import { QuestionThemeEnum } from './model/learning-center.interface';
 import { CreateArticleDto } from './dto/createArticle.dto';
 import { Article } from './entities/article.entity';
 import { Tags } from './entities/tags.entity';
+import { Views } from './entities/views-article.entity';
+import { View } from 'typeorm/schema-builder/view/View';
 
 @Injectable()
 export class LearningCenterService {
@@ -22,7 +24,9 @@ export class LearningCenterService {
     @InjectRepository(Article)
     private ArticleTable: Repository<Article>,
     @InjectRepository(Tags)
-    private TagsTable: Repository<Tags>
+    private TagsTable: Repository<Tags>,
+    @InjectRepository(Views)
+    private ViewsTable: Repository<Views>
   ) {}
 
   async createQuestion(body: CreateQuestionDto, token: string) {
@@ -113,11 +117,11 @@ export class LearningCenterService {
       const article = new Article();
       article.title = body.title;
       article.theme = body.stack;
+      article.views = [];
       article.description = body.text ?? '';
       article.user = user;
       article.tags = []
-      // const savedArticle = await this.ArticleTable.save(article);
-
+  
       for (const tag of body.tags) {
         let existingTag = await this.TagsTable.findOne({ where:{ title: tag }, relations: ['article'] });
 
@@ -148,7 +152,7 @@ export class LearningCenterService {
     }
   }
 
-  async getArticles(filter:string) {
+  async getArticles(filter:string,) {
     try {
       let articles = await this.ArticleTable.find( { where: { theme: filter },
         relations: ['tags'],
@@ -164,10 +168,43 @@ export class LearningCenterService {
     }
   }
 
-  async getArticle(id:string) {
-    try {
-      let article = await this.ArticleTable.findOne({ where:{ id },relations: ['tags']});
+  private async setView(token: string, article: Article) {
+   try {
+    if (!token) return
+   
+    const user = await this.UserTable.findOneByOrFail({
+      authToken: token,
+    });
+    
+    if(!user) return
 
+    const existingView = await this.ViewsTable.findOne({
+        where: {
+          userId: user.id,
+          article: { id: article.id },
+
+        },
+    });
+    
+    if (!existingView) {
+        const view = new Views();
+        view.userId = user.id; 
+        view.article = article; 
+        await this.ViewsTable.save(view);
+    }
+
+    await this.ArticleTable.save(article);
+
+   } catch(e) {
+     console.log(e.message)
+   }
+  }
+  
+
+  async getArticle(id:string, token:string) {
+    try {
+      let article = await this.ArticleTable.findOne({ where:{ id }, relations: ['tags', 'views']});
+      await this.setView(token, article);
       if (article)  {
         return article
       }

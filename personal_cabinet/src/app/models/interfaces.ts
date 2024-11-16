@@ -10,4 +10,5 @@ export interface IArticleResponse {
     theme: string;
     date: string;
     tags: ITag[];
+    views: number;
 }

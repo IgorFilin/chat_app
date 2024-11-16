@@ -53,8 +53,9 @@ export class LearningCenterController {
 
   @Get('article')
   async getArticle( @Res() res: Response, @Req() req: Request) {
+    const authToken = req.cookies.authToken;
     const id: any = req.query?.id;
-    const result = await this.learningCenterService.getArticle(id);
+    const result = await this.learningCenterService.getArticle(id, authToken);
     if (result) {
       return res.send(result);
     } else {
