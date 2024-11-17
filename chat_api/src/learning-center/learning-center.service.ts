@@ -185,21 +185,17 @@ export class LearningCenterService {
 
         },
     });
-    
+
     if (!existingView) {
         const view = new Views();
         view.userId = user.id; 
         view.article = article; 
         await this.ViewsTable.save(view);
     }
-
-    await this.ArticleTable.save(article);
-
    } catch(e) {
      console.log(e.message)
    }
   }
-  
 
   async getArticle(id:string, token:string) {
     try {

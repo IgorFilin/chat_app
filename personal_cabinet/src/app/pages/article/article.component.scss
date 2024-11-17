@@ -34,3 +34,18 @@
   background-color: var(--bg-color);
   border: 1px solid var(--primary-color);
 }
+
+.article_viewsIconContainer {
+  width: fit-content;
+}
+
+.article_views {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.article_viewsCount {
+  font-size: 12px;
+  font-weight: 700;
+}

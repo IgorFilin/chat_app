@@ -4,13 +4,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MarkdownModule } from 'ngx-markdown';
 import { IArticleResponse } from '../../models/interfaces';
+import { IconComponent } from '../../shared/components/icon/icon.component';
 
 @Component({
   standalone: true,
   selector: 'app-article',
   templateUrl: './article.component.html',
   styleUrls: ['./article.component.scss'],
-  imports: [ CommonModule, MarkdownModule ]
+  imports: [ CommonModule, MarkdownModule, IconComponent ]
 })
 export class ArticleComponent implements OnInit {
 

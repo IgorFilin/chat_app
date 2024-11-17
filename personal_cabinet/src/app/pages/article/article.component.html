@@ -2,7 +2,12 @@
   <div class="article_titleContainer">
     <span class="article_title">{{ article?.title }}</span>
     <span class="article_titleDate">{{ article?.date | date: 'dd MMMM yyyy' }}</span>
- 
+    <div class="article_views">
+      <div class="article_viewsIconContainer">
+        <cabinet-icon id="eye"/>
+      </div>
+      <div class="article_viewsCount">{{ article?.views?.length }}</div>
+    </div>
   </div>
   <div class="article__tags">
     @for(tag of article?.tags; track $index){

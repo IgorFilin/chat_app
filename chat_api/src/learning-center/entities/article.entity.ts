@@ -21,7 +21,6 @@ export class Article {
   date: Date;
 
   @OneToMany(() => Views, (views) => views.article)
-  @JoinTable()
   views: Views[];
   
   @ManyToOne(() => User, (user) => user.article)
