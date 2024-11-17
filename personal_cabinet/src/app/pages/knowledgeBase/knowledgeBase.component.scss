@@ -16,7 +16,7 @@
   width: --webkit-fill-available;
   padding: 7px;
   overflow: hidden;
-  max-height: 180px;
+  max-height: 215px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   
   &:hover {
@@ -79,4 +79,19 @@
   height: 100%;
   display: block;
   overflow: hidden;
+}
+
+.knowledgeBase__info {
+  margin-bottom: 5px;
+  display: flex;
+  gap: 10px;
+}
+
+.knowledgeBase__views {
+  display: flex;
+  gap: 6px;
+}
+
+.knowledgeBase__viewsIconContainer {
+  width: fit-content;
 }

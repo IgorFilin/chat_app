@@ -18,6 +18,17 @@
         lineHighlight
         [data]="article.title" />
       </div>
+      <hr>
+      <div class="knowledgeBase__info">
+        <div class="knowledgeBase__titleDate">{{ article?.date | date: 'dd MMMM yyyy в HH:mm' }}</div>
+        <span>&middot;</span>
+        <div class="knowledgeBase__views">
+          <div class="knowledgeBase__viewsIconContainer">
+            <cabinet-icon id="eye"/>
+          </div>
+          <div class="knowledgeBase__viewsCount">{{ article?.views?.length }}</div>
+        </div>
+      </div>
       <div class="knowledgeBase__tags">
         @for(tag of article.tags; track tag) { 
           <div class="knowledgeBase__tag">#{{ tag.title }}</div>

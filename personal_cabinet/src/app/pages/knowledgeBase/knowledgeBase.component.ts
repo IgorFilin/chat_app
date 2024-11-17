@@ -12,12 +12,13 @@ import { TechnologyStackType } from '../../models/types';
 import { MarkdownModule } from 'ngx-markdown';
 import { Router, RouterModule, UrlSegment } from '@angular/router';
 import { query } from '@angular/animations';
+import { IconComponent } from '../../shared/components/icon/icon.component';
 
 @Component({
   standalone: true,
   selector: 'app-knowledgeBase',
   templateUrl: './knowledgeBase.component.html',
-  imports: [CommonModule, MarkdownModule, RouterModule],
+  imports: [CommonModule, MarkdownModule, RouterModule, IconComponent],
   styleUrls: ['./knowledgeBase.component.scss'],
 })
 export class KnowledgeBaseComponent implements OnInit {
