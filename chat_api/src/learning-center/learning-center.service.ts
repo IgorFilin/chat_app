@@ -155,7 +155,7 @@ export class LearningCenterService {
   async getArticles(filter:string,) {
     try {
       let articles = await this.ArticleTable.find( { where: { theme: filter },
-        relations: ['tags'],
+        relations: ['tags','views'],
       });
 
       if (articles)  {
