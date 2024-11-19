@@ -72,6 +72,46 @@
             >
             </cabinet-icon>
           </div>
+          <div @bubble title="Заголовок">
+            <cabinet-icon
+              (iconClick)="onTransformTest(transformTextEnum.SIZE_UP)"
+              [id]="'font-size'"
+              [color]="'white'"
+            >
+            </cabinet-icon>
+          </div>
+          <div @bubble title="Курсик">
+            <cabinet-icon
+              (iconClick)="onTransformTest(transformTextEnum.ITALIC)"
+              [id]="'letter-italic'"
+              [color]="'white'"
+            >
+            </cabinet-icon>
+          </div>
+          <div @bubble title="Курсик">
+            <cabinet-icon
+              (iconClick)="onTransformTest(transformTextEnum.UNDER)"
+              [id]="'letter-under'"
+              [color]="'white'"
+            >
+            </cabinet-icon>
+          </div>
+          <div @bubble title="Курсик">
+            <cabinet-icon
+              (iconClick)="onTransformTest(transformTextEnum.LINK)"
+              [id]="'link'"
+              [color]="'white'"
+            >
+            </cabinet-icon>
+          </div>
+          <div @bubble title="Курсик">
+            <cabinet-icon
+              (iconClick)="onTransformTest(transformTextEnum.IMAGE)"
+              [id]="'image'"
+              [color]="'white'"
+            >
+            </cabinet-icon>
+          </div>
         }
       </div>
   </div>

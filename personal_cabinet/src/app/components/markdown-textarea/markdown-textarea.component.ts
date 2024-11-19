@@ -12,6 +12,11 @@ export enum TransformText {
   BLOCK_CODE = 'block-code',
   LINE = 'line',
   SLASH = 'text-slash',
+  SIZE_UP = 'size-up',
+  ITALIC = 'italic',
+  UNDER = 'under',
+  LINK = 'link',
+  IMAGE = 'image',
 }
 export interface ICopyedText {
   start: number
@@ -63,6 +68,31 @@ export class MarkdownTextareaComponent extends AbstractControlComponent  {
     [TransformText.SLASH]: {
       changer: () => {
         this.value = this.transformSelectedText(`~~${this.copyedText?.text.trim()}~~`)
+      } 
+    },
+    [TransformText.SIZE_UP]: {
+      changer: () => {
+        this.value = this.transformSelectedText(`## ${this.copyedText?.text.trim()}`)
+      } 
+    },
+    [TransformText.ITALIC]: {
+      changer: () => {
+        this.value = this.transformSelectedText(`*${this.copyedText?.text.trim()}*`)
+      } 
+    },
+    [TransformText.UNDER]: {
+      changer: () => {
+        this.value = this.transformSelectedText(`<u>${this.copyedText?.text.trim()}</u>`)
+      } 
+    },
+    [TransformText.LINK]: {
+      changer: () => {
+        this.value = this.transformSelectedText(`<${this.copyedText?.text.trim()}/>`)
+      } 
+    },
+    [TransformText.IMAGE]: {
+      changer: () => {
+        this.value = this.transformSelectedText(`![Изображение](${this.copyedText?.text.trim()} "Логотип")`)
       } 
     },
   }

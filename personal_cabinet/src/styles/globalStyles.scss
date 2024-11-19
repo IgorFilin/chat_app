@@ -29,4 +29,20 @@ markdown {
   p {
     margin: 5px;
   }
+
+  img {
+    max-width: 500px;
+    width: 100%;
+  }
+
+  code {
+      background-color: var(--secondary-color); 
+      color: var(--text-color); 
+      padding: 2px 4px;
+      border-radius: 4px; 
+  }
+
+  h1,h2,ul {
+    margin: 0;
+  }
 }
