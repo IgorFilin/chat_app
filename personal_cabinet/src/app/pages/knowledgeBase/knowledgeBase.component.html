@@ -11,7 +11,7 @@
     </div>
     }
   </div>
-  @for (article of dataArticles; track article.id) {
+  @for (article of dataArticles | textSlice : 'description' : 190; track article.id) {
     <div class="knowledgeBase__article">
       <div class="knowledgeBase__title">
         <markdown

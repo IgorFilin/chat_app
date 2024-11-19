@@ -11,14 +11,14 @@ import { TECHNOLOGY_STACK } from '../../models/constants';
 import { TechnologyStackType } from '../../models/types';
 import { MarkdownModule } from 'ngx-markdown';
 import { Router, RouterModule, UrlSegment } from '@angular/router';
-import { query } from '@angular/animations';
 import { IconComponent } from '../../shared/components/icon/icon.component';
+import { TextSlicePipe } from '../../pipes/text-slice.pipe';
 
 @Component({
   standalone: true,
   selector: 'app-knowledgeBase',
   templateUrl: './knowledgeBase.component.html',
-  imports: [CommonModule, MarkdownModule, RouterModule, IconComponent],
+  imports: [CommonModule, MarkdownModule, RouterModule, IconComponent, TextSlicePipe],
   styleUrls: ['./knowledgeBase.component.scss'],
 })
 export class KnowledgeBaseComponent implements OnInit {

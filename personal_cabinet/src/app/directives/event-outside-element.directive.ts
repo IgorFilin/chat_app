@@ -11,6 +11,5 @@ export class EventOutsideElementDirective {
   @HostListener('document:mouseup', ['$event'])
     onMousedown(event: MouseEvent) {
       this.documentMousedown.emit(event);
-      console.log('1231');
     }
 }
