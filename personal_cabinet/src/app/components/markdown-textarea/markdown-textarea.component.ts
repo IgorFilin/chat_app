@@ -87,7 +87,7 @@ export class MarkdownTextareaComponent extends AbstractControlComponent  {
     },
     [TransformText.LINK]: {
       changer: () => {
-        this.value = this.transformSelectedText(`<${this.copyedText?.text.trim()}/>`)
+        this.value = this.transformSelectedText(`[${this.copyedText?.text.trim()}](ссылка)`)
       } 
     },
     [TransformText.IMAGE]: {
