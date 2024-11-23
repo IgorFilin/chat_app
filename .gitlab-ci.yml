@@ -1,16 +1,16 @@
-image: node:18
 
 stages:          # List of stages for jobs, and their order of execution
   - build
   - test
   - deploy
 
-build-job:       # This job runs in the build stage, which runs first.
+build-job:   
+  image: debian:latest    # This job runs in the build stage, which runs first.
   stage: build
   script:
     - apt-get update
     - apt-get install -y sshpass
-    - sshpass -p {$server_pass} ssh root@https://filin.tech
+    - sshpass -p {$server_pass} ssh root@filin.tech
   artifacts:
     paths:
       - "./personal_cabinet/dist/personal_cabinet/browser/"
