@@ -11,7 +11,7 @@ build-server:
     - apt-get update
     - apt-get install -y sshpass
     - sshpass -p "$server_pass" ssh -o StrictHostKeyChecking=no root@filin.tech 
-      "cd ../var/www/chat_app/" 
+      "cd ./var/www/chat_app" 
       "git clone https://IgorFilin:$token@gitlab.com/IgorFilin/learning-cabinet.git &&"
       "cd /var/www/chat_app/chat_api;"
       "echo "$ENV_BACKEND" > .env.production;"
