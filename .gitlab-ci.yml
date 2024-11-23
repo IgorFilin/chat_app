@@ -10,8 +10,7 @@ build-job:
   script:
     - apt-get update
     - apt-get install -y sshpass
-    - echo "$server_pass"
-    - sshpass -p "$server_pass" ssh -o StrictHostKeyChecking=no root@filin.tech "echo 'Connected successfully'"
+    - sshpass -p "$server_pass" ssh -o root@filin.tech "echo 'Connected successfully'"
   artifacts:
     paths:
       - "./personal_cabinet/dist/personal_cabinet/browser/"
