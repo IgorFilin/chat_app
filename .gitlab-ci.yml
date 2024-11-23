@@ -8,9 +8,11 @@ build-server:
   image: debian:latest    # This job runs in the build stage, which runs first.
   stage: build
   script:
+    - echo "$ENV_BACKEND"
+    - echo "$ENV_FRONTEND" 
     - apt-get update
     - apt-get install -y sshpass
-    - sshpass -p "$server_pass" ssh -o StrictHostKeyChecking=no root@filin.tech "cd /var/www/ && git clone --branch develop https://IgorFilin:$token@gitlab.com/IgorFilin/learning-cabinet.git && cd /var/www/learning-cabinet/ && echo 'test' > .env && cd /var/www/learning-cabinet/chat_api && echo \"$ENV_BACKEND\" > .env.production && cd /var/www/learning-cabinet/chat && echo \"$ENV_FRONTEND\" > .env.production && cd /var/www/learning-cabinet && docker-compose down -v && docker builder prune -af && docker image prune -af && docker-compose -f docker-compose.yml up -d && rm -rf /var/www/learning-cabinet/"
+    - sshpass -p "$server_pass" ssh -o StrictHostKeyChecking=no root@filin.tech "cd /var/www/ && git clone --branch develop https://IgorFilin:$token@gitlab.com/IgorFilin/learning-cabinet.git && cd /var/www/learning-cabinet/ && echo 'test' > .env && cd /var/www/learning-cabinet/chat_api && echo \"\$ENV_BACKEND\" > .env.production && cd /var/www/learning-cabinet/chat && echo \"\$ENV_FRONTEND\" > .env.production && cd /var/www/learning-cabinet && docker-compose down -v && docker builder prune -af && docker image prune -af && docker-compose -f docker-compose.yml up -d && rm -rf /var/www/learning-cabinet/"
   artifacts:
     paths:
       - "./personal_cabinet/dist/personal_cabinet/browser/"
