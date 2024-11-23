@@ -10,15 +10,16 @@ build-server:
   script:
     - apt-get update
     - apt-get install -y sshpass
-    - sshpass -p "$server_pass" ssh -o StrictHostKeyChecking=no root@filin.tech "
+    - sshpass -p "$server_pass" ssh -o StrictHostKeyChecking=no root@filin.tech"
         cd ../home/root/;
-        rm -rf learning-cabinet && git clone --branch develop https://IgorFilin:$token@gitlab.com/IgorFilin/learning-cabinet.git &&
-        cd learning-cabinet/chat_api || echo 'chat_api not found' &&
+        rm -rf learning-cab && git clone --branch develop https://IgorFilin:$token@gitlab.com/IgorFilin/learning-cabinet.git &&
+        cd learning-cabinet/chat_api || { echo 'chat_api not found'; exit 1; } &&
         echo \"$ENV_BACKEND\" > .env.production &&
-        cd ../chat || 'chat not found' &&
+        cd ../chat || { echo 'chat not found'; exit 1; } &&
         echo \"$ENV_FRONTEND\" > .env.production &&
         cd .. &&
-        echo \"$ENV_BACKEND\" > .env &&
+        echo \"ENV_BACKEND=$ENV_BACKEND\" > .env && 
+        echo \"ENV_FRONTEND=$ENV_FRONTEND\" >> .env &&
         docker-compose down -v &&
         docker builder prune -af &&
         docker image prune -af &&
