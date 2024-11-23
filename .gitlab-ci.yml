@@ -11,18 +11,19 @@ build-server:
     - apt-get update
     - apt-get install -y sshpass
     - sshpass -p "$server_pass" ssh -o StrictHostKeyChecking=no root@filin.tech "
-      cd ../home/root/;
-      rm -rf learning-cabinet && git clone --branch develop https://IgorFilin:$token@gitlab.com/IgorFilin/learning-cabinet.git &&
-      cd learning-cabinet/chat_api || exit &&
-      echo \"$ENV_BACKEND\" > .env.production &&
-      cd ../chat || exit &&
-      echo \"$ENV_FRONTEND\" > .env.production &&
-      cd .. &&
-      docker-compose down -v &&
-      docker builder prune -af &&
-      docker image prune -af &&
-      docker-compose -f docker-compose.yml up -d &&
-      rm -rf /var/www/chat_app/;"
+        cd ../home/root/;
+        rm -rf learning-cabinet && git clone --branch develop https://IgorFilin:$token@gitlab.com/IgorFilin/learning-cabinet.git &&
+        cd learning-cabinet/chat_api || echo 'chat_api not found' &&
+        echo \"$ENV_BACKEND\" > .env.production &&
+        cd ../chat || 'chat not found' &&
+        echo \"$ENV_FRONTEND\" > .env.production &&
+        cd .. &&
+        echo \"$ENV_BACKEND\" > .env &&
+        docker-compose down -v &&
+        docker builder prune -af &&
+        docker image prune -af &&
+        docker-compose -f docker-compose.yml up -d &&
+        rm -rf /var/www/chat_app/;"
   artifacts:
     paths:
       - "./personal_cabinet/dist/personal_cabinet/browser/"
