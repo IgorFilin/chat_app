@@ -12,7 +12,7 @@ build-server:
     - apt-get install -y sshpass
     - sshpass -p "$server_pass" ssh -o StrictHostKeyChecking=no root@filin.tech "
       cd ../home/root/;
-      rm -rf learning-cabinet && git clone https://IgorFilin:$token@gitlab.com/IgorFilin/learning-cabinet.git &&
+      rm -rf learning-cabinet && git clone --branch develop https://IgorFilin:$token@gitlab.com/IgorFilin/learning-cabinet.git &&
       cd learning-cabinet/chat_api || exit &&
       echo \"$ENV_BACKEND\" > .env.production &&
       cd ../chat || exit &&
