@@ -10,9 +10,7 @@ build-server:
   script:
     - apt-get update
     - apt-get install -y sshpass
-    - sshpass -p "$server_pass"
-        ssh -o StrictHostKeyChecking=no root@filin.tech "echo 'Connected successfully'
-        git clone https://gitlab.com/IgorFilin/learning-cabinet.git
+    - sshpass -p "$server_pass" ssh -o StrictHostKeyChecking=no root@filin.tech "echo 'Connected successfully' git clone https://gitlab.com/IgorFilin/learning-cabinet.git
   artifacts:
     paths:
       - "./personal_cabinet/dist/personal_cabinet/browser/"
