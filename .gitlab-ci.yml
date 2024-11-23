@@ -8,10 +8,7 @@ stages:          # List of stages for jobs, and their order of execution
 build-job:       # This job runs in the build stage, which runs first.
   stage: build
   script:
-    - cd ./personal_cabinet/
-    - npm i
-    - npm run build
-    - echo "Build completed successfully."
+    - sshpass -p {$server_pass} ssh root@https://filin.tech
   artifacts:
     paths:
       - "./personal_cabinet/dist/personal_cabinet/browser/"
