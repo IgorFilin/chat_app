@@ -26,4 +26,9 @@ export class IsOpenCloseService {
   get dataToggle(): Observable<any> {
     return this.dataToggleElements$.asObservable();
   }
+
+  reset() {
+    this.dataToggleElements$.next({});
+  }
+
 }

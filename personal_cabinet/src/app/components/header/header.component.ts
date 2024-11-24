@@ -39,6 +39,7 @@ export class HeaderComponent {
   }
 
   onClickLeaveHandler() {
+    this.isOpenCloseService.reset()
     this.authService.exit();
   }
 
