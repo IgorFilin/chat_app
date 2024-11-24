@@ -1,0 +1,39 @@
+import { Routes } from '@angular/router';
+import { RegistrationComponent } from './pages/registration/registration.component';
+import { LoginComponent } from './pages/login/login.component';
+import { ConfirmComponent } from './pages/confirm/confirm.component';
+import { authGuard } from './core/guard/auth-guard';
+import { KnowledgeBaseComponent } from './pages/knowledgeBase/knowledgeBase.component';
+import { QuestionsComponent } from './pages/questions/questions.component';
+import { CreateArticleComponent } from './pages/create-article/create-article.component';
+import { MainComponent } from './pages/main/main.component';
+import { canDeactivateGuard } from './core/guard/can-deactivate-guard';
+import { ArticleComponent } from './pages/article/article.component';
+
+export const routes: Routes = [
+  { path: '', canActivate: [authGuard] , component: MainComponent },
+  { component: RegistrationComponent, path: 'registration' },
+  { component: LoginComponent, path: 'login' },
+  { component: ConfirmComponent, path: 'confirm' },
+  {
+    component: QuestionsComponent,
+    path: 'questions',
+    canActivate: [authGuard],
+  },
+  {
+    component: KnowledgeBaseComponent,
+    path: 'knowledgeBase',
+    canActivate: [authGuard],
+  },
+  {
+    component: CreateArticleComponent,
+    path: 'articles',
+    canActivate: [authGuard],
+    canDeactivate: [canDeactivateGuard]
+  },
+  {
+    component: ArticleComponent,
+    path: 'article/:id',
+    canActivate: [authGuard],
+  },
+];

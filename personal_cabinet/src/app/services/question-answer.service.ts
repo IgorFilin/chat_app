@@ -1,0 +1,87 @@
+import { Injectable } from '@angular/core';
+import { RequestService } from './request.service';
+import { Observable, tap } from 'rxjs';
+import { CreateQuestionFormType } from '../pages/questions/questions.component';
+import { ToasterService } from './toaster.service';
+import { TechnologyStackType } from '../models/types';
+import { IArticleResponse } from '../models/interfaces';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class QuestionAnswerService {
+  constructor(
+    private requestServise: RequestService,
+    private toastService: ToasterService
+  ) {}
+
+  addQuestion$(payload: CreateQuestionFormType): Observable<any> {
+    return this.requestServise.post<any,any>('learning/create-question', payload).pipe(
+      tap((data) => {
+        if (data.message) {
+          this.toastService.info(data.message);
+        }
+      })
+    );
+  }
+
+  getQuestion$(filter?: TechnologyStackType): Observable<any> {
+    return this.requestServise
+    .get<any,any>('learning/questions', { filter })
+    .pipe(
+      tap((data) => {
+        if (data.message) {
+          this.toastService.info(data.message);
+        }
+      })
+    );
+  }
+
+  createArticle(payload: any): Observable<any> {
+    return this.requestServise
+    .post<any,any>('learning/create-article', { ...payload })
+    .pipe(
+      tap((data) => {
+        if (data.message) {
+          this.toastService.info(data.message);
+        }
+      })
+    );
+  }
+
+  getTag(filter:string){
+    return this.requestServise
+    .get<any,any>('learning/tags', { filter })
+    .pipe(
+      tap((data) => {
+        if (data.message) {
+          this.toastService.info(data.message);
+        }
+      })
+    );
+  }
+
+  getArticles(filter?: TechnologyStackType): Observable<any> {
+    return this.requestServise
+    .get<any,any>('learning/articles', { filter })
+    .pipe(
+      tap((data) => {
+        if (data.message) {
+          this.toastService.info(data.message);
+        }
+      })
+    );
+  }
+
+  getArticle(id: string): Observable<any> {
+    return this.requestServise
+    .get<any, IArticleResponse>('learning/article', { id })
+    .pipe(
+      tap((data) => {
+        // if (data.message) {
+        //   this.toastService.info(data.message);
+        // }
+      })
+    );
+  }
+}

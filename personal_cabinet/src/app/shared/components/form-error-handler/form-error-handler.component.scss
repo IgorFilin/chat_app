@@ -1,0 +1,7 @@
+@import "colors.scss";
+.error {
+  color: var(--error-color);
+  font-size: 12px;
+  left: 5px;
+  position: relative;
+}

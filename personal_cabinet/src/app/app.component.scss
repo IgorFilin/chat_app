@@ -1,0 +1,16 @@
+@import '../styles/mixins.scss';
+.app {
+  display: flex;
+  gap: 20px;
+  margin: 15px;
+  justify-content: flex-start;
+
+  @include tablet {
+    flex-direction: column;
+  }
+
+  router-outlet {
+    display: none;
+  }
+
+}

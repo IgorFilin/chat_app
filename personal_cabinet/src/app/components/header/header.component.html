@@ -1,0 +1,25 @@
+<div class="ng-header">
+  <div class="ng-headerContainer">
+    @if(isAuth) {
+    <cabinet-icon
+      (iconClick)="onIconHomeClickHandler()"
+      [id]="'home'"
+      [color]="'white'"
+    />
+    }
+    <label class="toggle">
+      <input
+        [checked]="checked"
+        (input)="onCheckHandler($event)"
+        id="toggle"
+        type="checkbox"
+      />
+      <span for="toggle" class="toggle__radius"></span>
+    </label>
+    @if(isAuth) {
+    <button (click)="onClickLeaveHandler()" class="ng-header__button">
+      Выход
+    </button>
+    }
+  </div>
+</div>

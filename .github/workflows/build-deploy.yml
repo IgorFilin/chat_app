@@ -1,0 +1,51 @@
+name: build & deploy
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: [self-hosted, linux]
+    steps:
+      - name: Качаю репозиторий
+        uses: actions/checkout@v2
+
+      - name: Проверяю структуру директории перед копированием
+        run: |
+          ls -R
+
+      - name: 'Create env file'
+        run: |
+          echo "${{ secrets.VPS_POSTGRES }}" > .env
+
+      - name: Копирую папку на VPS сервер
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          source: ./
+          target: /var/www/chat_app
+
+      - name: Захожу на VPS и запускаю сборку образа
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          script: |
+            cd /var/www/chat_app/chat_api
+            echo "${{ secrets.ENV_BACKEND }}" > .env.production
+            cd /var/www/chat_app/chat
+            echo "${{ secrets.ENV_FRONTEND }}" > .env.production
+            cd /var/www/chat_app/question_bot
+            echo "${{ secrets.ENV_BOT }}" > .env.production
+            cd /var/www/chat_app
+            docker-compose down -v
+            docker builder prune -af
+            docker image prune -af
+            docker-compose -f docker-compose.yml up -d
+            rm -rf /var/www/chat_app/
