@@ -43,7 +43,9 @@ export class LearningCenterController {
   @Get('articles')
   async getArticles( @Res() res: Response, @Req() req: Request) {
     const filter: any = req.query?.filter || 'all';
+    console.log('filter', filter);
     const result = await this.learningCenterService.getArticles(filter);
+    console.log('articles', result);
     if (result) {
       return res.send(result);
     } else {

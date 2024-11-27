@@ -157,7 +157,8 @@ export class LearningCenterService {
       let articles = await this.ArticleTable.find( { where: { theme: filter },
         relations: ['tags','views'],
       });
-
+      console.log('getArticles', articles);
+      
       if (articles)  {
         return articles
       }
@@ -182,15 +183,14 @@ export class LearningCenterService {
         where: {
           userId: user.id,
           article: { id: article.id },
-
         },
     });
 
     if (!existingView) {
-        const view = new Views();
-        view.userId = user.id; 
-        view.article = article; 
-        await this.ViewsTable.save(view);
+      const view = new Views();
+      view.userId = user.id; 
+      view.article = article; 
+      await this.ViewsTable.save(view);
     }
    } catch(e) {
      console.log(e.message)
@@ -200,7 +200,9 @@ export class LearningCenterService {
   async getArticle(id:string, token:string) {
     try {
       let article = await this.ArticleTable.findOne({ where:{ id }, relations: ['tags', 'views']});
+
       await this.setView(token, article);
+
       if (article)  {
         return article
       }
