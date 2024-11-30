@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UserKeyResetPass } from './userKeyResetPass.entity';
-import { Question } from 'src/learning-center/entities/question.entity';
-import { Article } from 'src/learning-center/entities/article.entity';
+import { Question } from '../../learning-center/entities/question.entity';
+import { Article } from '../../learning-center/entities/article.entity';
 import { IUserRoles } from '../model/models.interface';
 @Entity('Users')
 export class User {

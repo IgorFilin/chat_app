@@ -17,7 +17,7 @@ import { Message } from 'src/websocket/entities/message.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Room, Message, User, UserKeyResetPass]),
+    TypeOrmModule.forFeature([User, Room, Message, UserKeyResetPass]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({

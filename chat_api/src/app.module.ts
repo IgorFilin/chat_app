@@ -38,7 +38,7 @@ const configEnv = process.env.NODE_ENV === 'production' ? '.env.production' : '.
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
+      useFactory: async (configService: ConfigService) => ({
         type: 'postgres',
         host: configService.get('BD_HOST'),
         port: configService.get('BD_PORT'),
@@ -46,7 +46,7 @@ const configEnv = process.env.NODE_ENV === 'production' ? '.env.production' : '.
         password: configService.get('BD_PASSWORD'),
         database: configService.get('BD_DATABASE'),
         entities: [User, Room, Message, UserKeyResetPass, Question, Answer, Article, Tags, Views],
-        synchronize: true,
+        synchronize: false,
       }),
       inject: [ConfigService],
     }),
