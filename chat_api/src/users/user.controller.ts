@@ -46,6 +46,7 @@ export class UsersController {
       resultObject.name = result.name;
       resultObject.id = result.id;
       resultObject.isAcceptKey = true;
+      resultObject.role = result.role;
       res.status(201).send(resultObject);
     } else {
       res.status(202).send(resultObject);

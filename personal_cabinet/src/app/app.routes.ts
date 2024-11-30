@@ -9,6 +9,7 @@ import { CreateArticleComponent } from './pages/create-article/create-article.co
 import { MainComponent } from './pages/main/main.component';
 import { canDeactivateGuard } from './core/guard/can-deactivate-guard';
 import { ArticleComponent } from './pages/article/article.component';
+import { PermissionGuard } from './core/guard/permission-guard';
 
 export const routes: Routes = [
   { path: '', canActivate: [authGuard] , component: MainComponent },
@@ -18,7 +19,7 @@ export const routes: Routes = [
   {
     component: QuestionsComponent,
     path: 'questions',
-    canActivate: [authGuard],
+    canActivate: [authGuard, PermissionGuard],
   },
   {
     component: KnowledgeBaseComponent,

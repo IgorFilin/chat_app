@@ -8,17 +8,8 @@ import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IConfirm, ILoginBody, IRegistrationBody } from '../models/request';
 import { CookieService } from './cookie.service';
-export interface AuthType {
-  isAuth: boolean;
-  isLoading: boolean;
-}
-
-interface GetAuthPesponseType {
-  id:string
-  isAcceptKey:boolean
-  isAuth:boolean
-  name:string
-}
+import { GetAuthPesponseType } from '../models/interfaces';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root',
@@ -34,6 +25,7 @@ export class AuthService {
     private toastService: ToasterService,
     private loadingService: LoadingService,
     private cookieService: CookieService,
+    private userService: UserService,
     private router: Router
   ) {}
 
@@ -51,6 +43,7 @@ export class AuthService {
           this.isAuth$.next(data.isAuth);
           this.isInitialApp = true
         }
+        this.userService.userInfo.next(data)
         this.loadingService.stopLoading();
         return data.isAuth
       }),

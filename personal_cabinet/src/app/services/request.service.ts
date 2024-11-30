@@ -16,7 +16,6 @@ export class RequestService {
     params?: T,
     api: string = this.apiUrl
   ): Observable<R> {
-    console.log(params);
     let httpParams = new HttpParams();
     if (params) {
       for (const key in params) {

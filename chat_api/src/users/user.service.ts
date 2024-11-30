@@ -67,9 +67,10 @@ export class UsersService {
         user.acceptKey = confirmRegKey;
         user.authToken = token;
         user.userPhoto = imagePath;
-        user.isAdmin = false;
+        user.role = 'user';
         user.ip = ip ? ip : 'Скрыт';
 
+        
         // Сохраняем в БД пользователя с регистрационным key
         await this.UserTable.save(user);
         // Отсылаем на почту ключ подтверждения
@@ -233,6 +234,8 @@ export class UsersService {
         token: user.authToken,
         isAuth: true,
         id: user.id,
+        role: user.role
+
       };
     } catch (error) {
       return { isAuth: false };
