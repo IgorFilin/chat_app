@@ -18,5 +18,8 @@ migration-bd:
   script:
     - apt-get update
     - apt-get install -y sshpass
+    - sudo apt install nodejs npm
+    - node -v
+    - npm -v
     - sshpass -p "$server_pass" ssh -o StrictHostKeyChecking=no root@filin.tech "cd /var/www/ && rm -rf /var/www/learning-cabinet && git clone --branch develop https://IgorFilin:$token@gitlab.com/IgorFilin/learning-cabinet.git && cd /var/www/learning-cabinet/ && echo 'test' > .env && cd /var/www/learning-cabinet/chat_api && echo \"$ENV_BACKEND\" > .env.production && cd /var/www/learning-cabinet/chat && echo \"$ENV_FRONTEND\" > .env.production && cd /var/www/learning-cabinet/chat_api/ && npm i && npm run migration:generate && npm run migration:run"
   when: manual
