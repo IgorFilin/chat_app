@@ -1,4 +1,4 @@
-import { Component, Input, Optional, Self } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, Optional, Self, SimpleChanges } from '@angular/core';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -23,7 +23,10 @@ export class InputComponent implements ControlValueAccessor {
   onTouch(isTouch: boolean) {}
   onChange(value: string) {}
 
-  constructor(@Self() @Optional() private control: NgControl) {
+  constructor(
+    @Self() @Optional() private control: NgControl,
+    private changeDetector: ChangeDetectorRef
+  ) {
     if (this.control) {
       this.control.valueAccessor = this;
     }
@@ -50,7 +53,7 @@ export class InputComponent implements ControlValueAccessor {
   registerOnTouched(fn: any): void {
     this.onTouch = fn;
   }
-
+    
   handleBlur(): void {
     this.onTouch(true);
   }

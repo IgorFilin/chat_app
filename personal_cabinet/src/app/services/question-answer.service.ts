@@ -63,7 +63,7 @@ export class QuestionAnswerService {
 
   getArticles(filter?: TechnologyStackType): Observable<any> {
     return this.requestServise
-    .get<any,any>('learning/articles', { filter })
+    .get<any,any>('learning/articles', { filter : filter ?? '' })
     .pipe(
       tap((data) => {
         if (data.message) {

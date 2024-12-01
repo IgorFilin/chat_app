@@ -152,12 +152,21 @@ export class LearningCenterService {
     }
   }
 
-  async getArticles(filter:string,) {
+  async getArticles(filter:string) {
     try {
-      let articles = await this.ArticleTable.find( { where: { theme: filter },
-        relations: ['tags','views'],
-      });
-      console.log('getArticles', articles);
+      let articles: Article[];
+
+      if (filter === 'all') {
+        articles = await this.ArticleTable.find({
+          relations: ['tags', 'views'],
+        });
+
+      } else {
+        articles = await this.ArticleTable.find({
+          where: { theme: filter },
+          relations: ['tags', 'views'],
+        });
+      }
       
       if (articles)  {
         return articles

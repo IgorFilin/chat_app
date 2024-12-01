@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Optional, Output, Self } from '
 import { AbstractControl, ControlValueAccessor, FormsModule, NgControl, ValidationErrors } from '@angular/forms';
 import { FormErrorHandlerComponent } from '../form-error-handler/form-error-handler.component';
 import { CommonModule } from '@angular/common';
-import { BehaviorSubject, debounce, debounceTime, distinctUntilChanged, Observable, Subject, tap } from 'rxjs';
+import { BehaviorSubject, debounce, debounceTime, distinctUntilChanged, Observable, Subject, take, tap } from 'rxjs';
 import { IconComponent } from '../icon/icon.component';
 import { bubbleAnimation } from '../../../animations/bubble.animation';
 
@@ -35,16 +35,19 @@ export class SearchInputComponent implements OnInit, ControlValueAccessor  {
   }
 
   ngOnInit(): void {
-    this.valueSubject.pipe(
-      tap(() => this.isLoadingData = true),
+    this.valueSubject
+    .asObservable()
+    .pipe(
+      tap(() => {
+        this.isLoadingData = true
+      }),
       debounceTime(1000),
-      distinctUntilChanged()
+      distinctUntilChanged(),
     ).subscribe((res) => {
       const valueSearch:string = res as string
       if (this.searchedRequest$) {
         this.searchedRequest$(valueSearch)
         .subscribe(res => {
-          console.log('1');
           this.searchData = res;
           this.isLoadingData = false;
         })
@@ -68,6 +71,7 @@ export class SearchInputComponent implements OnInit, ControlValueAccessor  {
 
   writeValue(value: string): void {
     this.value = value;
+    this.searchData = []
   }
 
   registerOnChange(onChange: any): void {

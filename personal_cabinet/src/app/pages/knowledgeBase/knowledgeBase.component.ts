@@ -25,25 +25,26 @@ export class KnowledgeBaseComponent implements OnInit {
 
   dataArticles: any = [];
   techologies: TechnologyStackType[] = TECHNOLOGY_STACK;
-  currentTech: WritableSignal<TechnologyStackType> = signal('Angular');
+  // currentTech: WritableSignal<TechnologyStackType> = signal('');
 
   constructor(
     private questionAnswerService: QuestionAnswerService,
     private router: Router
   ) {
-    effect(() => {
-      this.questionAnswerService
-        .getArticles(this.currentTech())
-        .subscribe((data) => {
-          console.log('data', data);
-          this.dataArticles = data;
-        });
+    // effect(() => {
+   
+    // });
+  }
+
+  ngOnInit() {
+    this.questionAnswerService
+    .getArticles()
+    .subscribe((data) => {
+      this.dataArticles = data;
     });
   }
 
-  ngOnInit() {}
-
   onClickTechTagHandler(tech: TechnologyStackType) {
-    this.currentTech.set(tech);
+    // this.currentTech.set(tech);
   }
 }
