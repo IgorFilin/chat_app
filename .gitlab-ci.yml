@@ -20,6 +20,7 @@ migration-bd:
     - apt install -y nodejs npm
     - node -v
     - npm -v
+    - npm i
     - cd chat_api
     - npm run migration:generate
     - npm run migration:run
