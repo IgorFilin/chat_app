@@ -13,6 +13,6 @@ export  const connectionSource = new DataSource ({
     database: process.env.BD_DATABASE,
     entities : [__dirname + '/../**/*.entity{.ts,.js}' ], 
     migrations: [join(__dirname, '../migrations/*')],
-    synchronize: false,
-    migrationsRun : false
+    synchronize: true,
+    migrationsRun : true
 });
