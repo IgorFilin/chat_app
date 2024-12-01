@@ -11,12 +11,3 @@ build-server:
     - apt-get install -y sshpass
     - sshpass -p "$server_pass" ssh -o StrictHostKeyChecking=no root@filin.tech "cd /var/www/ && rm -rf /var/www/learning-cabinet && git clone --branch develop https://IgorFilin:$token@gitlab.com/IgorFilin/learning-cabinet.git && cd /var/www/learning-cabinet/ && echo 'test' > .env && cd /var/www/learning-cabinet/chat_api && echo \"$ENV_BACKEND\" > .env.production && cd /var/www/learning-cabinet/chat && echo \"$ENV_FRONTEND\" > .env.production && cd /var/www/learning-cabinet && docker-compose down -v && docker builder prune -af && docker image prune -af && docker-compose -f docker-compose.yml up -d && rm -rf /var/www/learning-cabinet/"
   when: manual
-
-migration-bd:   
-  image: debian:latest
-  stage: build
-  script:
-    - apt-get update
-    - apt-get install -y sshpass
-    - sshpass -p "$server_pass" ssh -o StrictHostKeyChecking=no root@filin.tech "cd /var/www/ && rm -rf /var/www/learning-cabinet && git clone --branch develop https://IgorFilin:$token@gitlab.com/IgorFilin/learning-cabinet.git && cd /var/www/learning-cabinet/ && echo 'test' > .env && cd /var/www/learning-cabinet/chat_api && echo \"$ENV_BACKEND\" > .env.production && cd /var/www/learning-cabinet/chat && echo \"$ENV_FRONTEND\" > .env.production && cd /var/www/learning-cabinet/chat_api/ && npm run migration:generate && npm run migration:run"
-  when: manual
