@@ -1,10 +1,16 @@
 FROM node:18
+ 
+RUN apt install -y npm
 
 WORKDIR /usr/src/app
 
 COPY package*.json ./
 
 RUN npm install
+
+RUN npm run migration:generate
+
+RUN npm run migration:run
 
 COPY . .
 
