@@ -1,6 +1,4 @@
 FROM node:18
- 
-RUN apt install -y npm
 
 WORKDIR /usr/src/app
 
