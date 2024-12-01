@@ -6,16 +6,16 @@ COPY package*.json ./
 
 RUN npm install
 
-RUN npm run migration:generate
-
-RUN npm run migration:run
-
 COPY . .
 
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
 
 COPY .env.${NODE_ENV} .env
+
+RUN npm run migration:generate
+
+RUN npm run migration:run
 
 RUN npm run build
 
