@@ -32,7 +32,7 @@ export class User {
   @Column()
   userPhoto: string;
 
-  @Column()
+  @Column({default: 'user'})
   role: IUserRoles;
 
   @CreateDateColumn()
