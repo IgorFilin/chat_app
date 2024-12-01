@@ -22,26 +22,57 @@ import { TextSlicePipe } from '../../pipes/text-slice.pipe';
   styleUrls: ['./knowledgeBase.component.scss'],
 })
 export class KnowledgeBaseComponent implements OnInit {
-
+  
   dataArticles: any = [];
+  dataPaginationArticles: any = [];
   techologies: TechnologyStackType[] = TECHNOLOGY_STACK;
+  currentPage: WritableSignal<number> = signal(1);
+  dataArticlesInPage: number = 10;
+  start:number= 0;
+  end:number= 10;
+  pagination:number[] = [];
   // currentTech: WritableSignal<TechnologyStackType> = signal('');
 
   constructor(
     private questionAnswerService: QuestionAnswerService,
     private router: Router
-  ) {
-    // effect(() => {
-   
-    // });
-  }
+  ) {}
 
   ngOnInit() {
     this.questionAnswerService
     .getArticles()
     .subscribe((data) => {
       this.dataArticles = data;
+      this.dataPaginationArticles = this.dataArticles.slice(this.start, this.end);
+      this.initialPagination()
     });
+  }
+
+  filteredPagination(isIncrement?:boolean) {
+    if(isIncrement) {
+      this.start = this.start + this.dataArticlesInPage
+      this.end = this.end + this.dataArticlesInPage
+    } else {
+      this.start = this.start - this.dataArticlesInPage
+      this.end = this.end - this.dataArticlesInPage
+    }
+    this.dataPaginationArticles = this.dataArticles.slice(this.start, this.end);
+
+  }
+
+  initialPagination() {
+    for(let i = 0; i < Math.ceil(this.dataArticles.length / this.dataArticlesInPage); i++) {
+      this.pagination.push(i + 1);
+    }
+  }
+
+  setPage(page: number) { 
+    if(page > this.currentPage()) {
+      this.filteredPagination(true);
+    } else {
+      this.filteredPagination();
+    }
+    this.currentPage.set(page);
   }
 
   onClickTechTagHandler(tech: TechnologyStackType) {

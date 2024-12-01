@@ -95,3 +95,17 @@
 .knowledgeBase__viewsIconContainer {
   width: fit-content;
 }
+
+.knowledgeBase__pagination {
+  display: flex;
+  gap: 15px;
+}
+
+.knowledgeBase__page {
+  font-size: 15px;
+  cursor: pointer;
+
+  &.active {
+    color: var(--success-color);
+  }
+}

@@ -11,7 +11,7 @@
     </div>
     }
   </div> -->
-  @for (article of dataArticles | textSlice : 'description' : 190; track article.id) {
+  @for (article of dataPaginationArticles | textSlice : 'description' : 190; track article.id) {
     <div class="knowledgeBase__article">
       <div class="knowledgeBase__title">
         <markdown
@@ -44,4 +44,14 @@
       </div>
     </div>
   }
+  <div class="knowledgeBase__pagination">
+    @for(page of pagination; track $index) {
+      <div 
+        class="knowledgeBase__page" 
+        (click)="setPage($index + 1)" 
+        [ngClass]="{active: currentPage() === ($index + 1)}">
+        {{page}}
+      </div>
+    }
+  </div>
 </div>
