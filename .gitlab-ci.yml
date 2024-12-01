@@ -21,6 +21,7 @@ migration-bd:
     - node -v
     - npm -v
     - cd /builds/IgorFilin/learning-cabinet/chat_api/
+    - echo \"$ENV_BACKEND\" > .env.production
     - npm i
     - npm run migration:generate
     - npm run migration:run
