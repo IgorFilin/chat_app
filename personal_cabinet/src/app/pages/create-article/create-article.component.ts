@@ -39,7 +39,7 @@ export class CreateArticleComponent implements CanDeactivate<void> {
     stack: new FormControl('', [Validators.required]),
     title: new FormControl('', [Validators.required]),
     text: new FormControl('', [Validators.required]),
-    tags: new FormControl([]) 
+    tags: new FormControl([], [Validators.required]) 
   });
 
   
