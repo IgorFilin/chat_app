@@ -20,8 +20,9 @@ migration-bd:
     - apt install -y nodejs npm
     - node -v
     - npm -v
+    - cd /builds/IgorFilin/learning-cabinet/
     - npm i
-    - cd chat_api
+    - cd /builds/IgorFilin/learning-cabinet/chat_api/
     - npm run migration:generate
     - npm run migration:run
   when: manual
