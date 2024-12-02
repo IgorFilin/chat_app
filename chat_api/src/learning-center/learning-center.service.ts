@@ -116,7 +116,6 @@ export class LearningCenterService {
       }
       const article = new Article();
       article.title = body.title;
-      article.theme = body.stack;
       article.views = [];
       article.description = body.text ?? '';
       article.user = user;
@@ -162,10 +161,10 @@ export class LearningCenterService {
         });
 
       } else {
-        articles = await this.ArticleTable.find({
-          where: { theme: filter },
-          relations: ['tags', 'views'],
-        });
+        // articles = await this.ArticleTable.find({
+        //   where: { theme: filter },
+        //   relations: ['tags', 'views'],
+        // });
       }
       
       if (articles)  {

@@ -71,3 +71,8 @@
     border-radius: 10px;
   }
 }
+
+.ng-header__searchInputContainer {
+  max-width: 600px;
+  width: calc(100% - 180px);
+}

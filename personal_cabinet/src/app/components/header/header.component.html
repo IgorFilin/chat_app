@@ -16,7 +16,13 @@
       />
       <span for="toggle" class="toggle__radius"></span>
     </label>
-    @if(isAuth) {
+    @if (isAuth && currentRoute === '/knowledgeBase') {
+    <div class="ng-header__searchInputContainer">
+      <app-search-input
+        placeholder="Поиск статьи"
+        errorMessage="Обязательное поле"
+      />
+    </div>
     <button (click)="onClickLeaveHandler()" class="ng-header__button">
       Выход
     </button>

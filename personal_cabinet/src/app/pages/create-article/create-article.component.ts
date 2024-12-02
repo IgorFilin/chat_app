@@ -21,9 +21,7 @@ import { bubbleAnimation } from '../../animations/bubble.animation';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    CdkTextareaAutosize,
     MarkdownTextareaComponent,
-    CustomSelectComponent,
     InputComponent,
     SearchInputComponent,
     IconComponent
@@ -32,11 +30,10 @@ import { bubbleAnimation } from '../../animations/bubble.animation';
   animations: [ bubbleAnimation ],
 })
 export class CreateArticleComponent implements CanDeactivate<void> {
-  techologies: string[] = TECHNOLOGY_STACK;
+  // techologies: string[] = TECHNOLOGY_STACK;
   currentTag = new FormControl('')
 
   articleForm: FormGroup = new FormGroup({
-    stack: new FormControl('', [Validators.required]),
     title: new FormControl('', [Validators.required]),
     text: new FormControl('', [Validators.required]),
     tags: new FormControl([], [Validators.required]) 
@@ -90,7 +87,6 @@ export class CreateArticleComponent implements CanDeactivate<void> {
   onSubmit() {
     this.questionAnswerService.createArticle(this.articleForm.getRawValue()).subscribe((data) => {
       this.articleForm.reset({
-          stack: '',
           title: '',
           text: '',
           tags: []

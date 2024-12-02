@@ -14,9 +14,6 @@ export class Article {
   @Column()
   description: string;
 
-  @Column()
-  theme: string;
-
   @CreateDateColumn()
   date: Date;
 

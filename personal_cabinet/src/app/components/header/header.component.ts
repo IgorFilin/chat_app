@@ -5,11 +5,14 @@ import { AuthService } from '../../services/auth.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IsOpenCloseService } from '../../services/is-open-close.service';
 import { ThemeService } from '../../services/theme.service';
+import { SearchInputComponent } from '../../shared/components/search-input/search-input.component';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'cabinet-header',
   standalone: true,
-  imports: [CommonModule, IconComponent],
+  imports: [CommonModule, IconComponent, SearchInputComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
@@ -18,11 +21,13 @@ export class HeaderComponent {
   isAuth = false;
   destroyRef = inject(DestroyRef);
   checked: boolean = false;
+  currentRoute: string = '';
 
   constructor(
     private authService: AuthService,
     private isOpenCloseService: IsOpenCloseService,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    private router: Router
   ) {
     this.checked = this.themeService.getCurrentTheme === 'dark';
     this.authService.isAuth$
@@ -36,6 +41,16 @@ export class HeaderComponent {
       .subscribe((data) => {
         this.isOpenMenu = data['menu'];
       });
+
+      // Поток данных роута, и когда событие NavigationEnd мы устанавливает роут, что бы поймать актуальный
+      this.router.events
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe((data) => {
+        this.currentRoute = this.router.url
+      })
   }
 
   onClickLeaveHandler() {
