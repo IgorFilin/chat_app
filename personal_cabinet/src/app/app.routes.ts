@@ -12,7 +12,8 @@ import { ArticleComponent } from './pages/article/article.component';
 import { PermissionGuard } from './core/guard/permission-guard';
 
 export const routes: Routes = [
-  { path: '', canActivate: [authGuard] , component: MainComponent },
+  // { path: '', canActivate: [authGuard] , component: MainComponent },
+  { path: '', redirectTo: 'knowledgeBase', pathMatch: 'full'},
   { component: RegistrationComponent, path: 'registration' },
   { component: LoginComponent, path: 'login' },
   { component: ConfirmComponent, path: 'confirm' },

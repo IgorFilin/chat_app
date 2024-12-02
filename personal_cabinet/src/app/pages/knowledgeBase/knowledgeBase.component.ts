@@ -67,9 +67,11 @@ export class KnowledgeBaseComponent implements OnInit {
   }
 
   setPage(page: number) { 
+    if(page === this.currentPage()) return 
+    
     if(page > this.currentPage()) {
       this.filteredPagination(true);
-    } else {
+    } else if (page < this.currentPage()) {
       this.filteredPagination();
     }
     this.currentPage.set(page);

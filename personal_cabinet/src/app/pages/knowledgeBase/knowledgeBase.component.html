@@ -47,7 +47,7 @@
   <div class="knowledgeBase__pagination">
     @for(page of pagination; track $index) {
       <div 
-        class="knowledgeBase__page" 
+        class="knowledgeBase__page paginationBtn" 
         (click)="setPage($index + 1)" 
         [ngClass]="{active: currentPage() === ($index + 1)}">
         {{page}}
