@@ -13,6 +13,7 @@ import { QuestionAnswerService } from '../../services/question-answer.service';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 import { ToasterService } from '../../services/toaster.service';
 import { bubbleAnimation } from '../../animations/bubble.animation';
+import { Observable } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -60,7 +61,7 @@ export class CreateArticleComponent implements CanDeactivate<void> {
     }
   }
 
-  searchTag = (searchValue:string) => {
+  searchTag: (value: string) => Observable<any> | undefined = (searchValue:string) => {
     return this.questionAnswerService.getTag(searchValue);
   }
 

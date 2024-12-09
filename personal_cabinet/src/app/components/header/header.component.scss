@@ -35,6 +35,24 @@
   }
 }
 
+.ng-header__icons {
+  display: flex;
+  gap: 15px;
+}
+
+.ng-header__searchedArticles {
+  position: absolute;
+  top: 61px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: 580px;
+  overflow: hidden;
+  background-color: var(--secondary-color);
+  padding: 10px;
+  z-index: 50;
+}
+
+
 .toggle {
   width: 37px;
   height: 22px;

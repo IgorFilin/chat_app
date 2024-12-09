@@ -19,7 +19,7 @@
   </div>
   <app-search-input
     [formControl]="currentTag"
-    [searchedRequest$]="searchTag"
+    [searchedRequest]="searchTag"
     placeholder="Теги"
     errorMessage="Обязательное поле"
     (onSelectTag)="onSetTag($event)"

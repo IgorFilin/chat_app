@@ -8,6 +8,7 @@ import { ThemeService } from '../../services/theme.service';
 import { SearchInputComponent } from '../../shared/components/search-input/search-input.component';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
+import { KnowledgeService } from '../../services/knowledge.service';
 
 @Component({
   selector: 'cabinet-header',
@@ -22,12 +23,14 @@ export class HeaderComponent {
   destroyRef = inject(DestroyRef);
   checked: boolean = false;
   currentRoute: string = '';
+  searchedArticles:any = [];
 
   constructor(
     private authService: AuthService,
     private isOpenCloseService: IsOpenCloseService,
     private themeService: ThemeService,
-    private router: Router
+    private router: Router,
+    private knowledgeService: KnowledgeService
   ) {
     this.checked = this.themeService.getCurrentTheme === 'dark';
     this.authService.isAuth$
@@ -51,6 +54,11 @@ export class HeaderComponent {
       .subscribe((data) => {
         this.currentRoute = this.router.url
       })
+  }
+
+  onSearchArticles: any = (searchValue: string) => {
+    this.searchedArticles = this.knowledgeService.articles.filter((article) => article.title.includes(searchValue));
+    console.log('-_-', this.searchedArticles);
   }
 
   onClickLeaveHandler() {

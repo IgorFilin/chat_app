@@ -1,7 +1,9 @@
 import {
   Component,
+  computed,
   effect,
   OnInit,
+  Signal,
   signal,
   WritableSignal,
 } from '@angular/core';
@@ -13,6 +15,7 @@ import { MarkdownModule } from 'ngx-markdown';
 import { Router, RouterModule, UrlSegment } from '@angular/router';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 import { TextSlicePipe } from '../../pipes/text-slice.pipe';
+import { KnowledgeService } from '../../services/knowledge.service';
 
 @Component({
   standalone: true,
@@ -23,27 +26,30 @@ import { TextSlicePipe } from '../../pipes/text-slice.pipe';
 })
 export class KnowledgeBaseComponent implements OnInit {
   
-  dataArticles: any = [];
+  dataArticles: Signal<any> = computed(() => this.knowledgeService.articles );
   dataPaginationArticles: any = [];
   techologies: TechnologyStackType[] = TECHNOLOGY_STACK;
   currentPage: WritableSignal<number> = signal(1);
   dataArticlesInPage: number = 10;
-  start:number= 0;
-  end:number= 10;
+  start:number = 0;
+  end:number = 10;
   pagination:number[] = [];
   // currentTech: WritableSignal<TechnologyStackType> = signal('');
 
   constructor(
     private questionAnswerService: QuestionAnswerService,
-    private router: Router
+    private router: Router,
+    private knowledgeService: KnowledgeService
   ) {}
 
   ngOnInit() {
     this.questionAnswerService
     .getArticles()
     .subscribe((data) => {
-      this.dataArticles = data;
-      this.dataPaginationArticles = this.dataArticles.slice(this.start, this.end);
+      this.knowledgeService.articles = data;
+      this.dataPaginationArticles = this.dataArticles().slice(this.start, this.end);
+      console.log('-_-', this.dataPaginationArticles);
+
       this.initialPagination()
     });
   }
@@ -56,12 +62,12 @@ export class KnowledgeBaseComponent implements OnInit {
       this.start = this.start - this.dataArticlesInPage
       this.end = this.end - this.dataArticlesInPage
     }
-    this.dataPaginationArticles = this.dataArticles.slice(this.start, this.end);
+    this.dataPaginationArticles = this.dataArticles().slice(this.start, this.end);
 
   }
 
   initialPagination() {
-    for(let i = 0; i < Math.ceil(this.dataArticles.length / this.dataArticlesInPage); i++) {
+    for(let i = 0; i < Math.ceil(this.dataArticles().length / this.dataArticlesInPage); i++) {
       this.pagination.push(i + 1);
     }
   }

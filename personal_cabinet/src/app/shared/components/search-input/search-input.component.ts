@@ -18,7 +18,7 @@ export class SearchInputComponent implements OnInit, ControlValueAccessor  {
   
   @Input() placeholder: string = '';
   @Input() errorMessage: string = '';
-  @Input() searchedRequest$: ((value:string) => Observable<any>) | null = null;
+  @Input() searchedRequest: ((value:string) => Observable<any> | undefined) | null = null;
   @Output() onSelectTag = new EventEmitter<string>();
   searchData: Array<any> = []
   isLoadingData: boolean = false;
@@ -45,12 +45,17 @@ export class SearchInputComponent implements OnInit, ControlValueAccessor  {
       distinctUntilChanged(),
     ).subscribe((res) => {
       const valueSearch:string = res as string
-      if (this.searchedRequest$) {
-        this.searchedRequest$(valueSearch)
+      if(!this.searchedRequest) return
+
+      if (this.searchedRequest(valueSearch) instanceof Observable) {
+        this.searchedRequest(valueSearch)!
         .subscribe(res => {
           this.searchData = res;
           this.isLoadingData = false;
         })
+      } else {
+        this.searchedRequest(valueSearch)
+        this.isLoadingData = false;
       }
     })
   }
