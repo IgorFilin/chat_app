@@ -9,6 +9,7 @@ import { SearchInputComponent } from '../../shared/components/search-input/searc
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 import { KnowledgeService } from '../../services/knowledge.service';
+import { bubbleAnimation } from '../../animations/bubble.animation';
 
 @Component({
   selector: 'cabinet-header',
@@ -16,6 +17,7 @@ import { KnowledgeService } from '../../services/knowledge.service';
   imports: [CommonModule, IconComponent, SearchInputComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
+  animations: [],
 })
 export class HeaderComponent {
   isOpenMenu: boolean = false;
@@ -57,8 +59,8 @@ export class HeaderComponent {
   }
 
   onSearchArticles: any = (searchValue: string) => {
-    this.searchedArticles = this.knowledgeService.articles.filter((article) => article.title.includes(searchValue));
-    console.log('-_-', this.searchedArticles);
+    if(!searchValue) this.searchedArticles = [] 
+    else this.searchedArticles = this.knowledgeService.articles.filter((article) => article.title.includes(searchValue));
   }
 
   onClickLeaveHandler() {

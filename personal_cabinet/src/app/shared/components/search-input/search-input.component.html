@@ -15,7 +15,7 @@
     <div class="search-input__iconContainer">
       <div class="loader-spinner"></div>
     </div>
-  } @else {
+  } @else if (isIcon) {
     <div class="search-input__iconContainer">
      <cabinet-icon [disabled]="!value" [id]="'circle-plus'" (iconClick)="onSelectTagHandler(value)"></cabinet-icon>
     </div>

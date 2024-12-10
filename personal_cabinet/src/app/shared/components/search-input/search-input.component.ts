@@ -18,6 +18,7 @@ export class SearchInputComponent implements OnInit, ControlValueAccessor  {
   
   @Input() placeholder: string = '';
   @Input() errorMessage: string = '';
+  @Input() isIcon: boolean = true;
   @Input() searchedRequest: ((value:string) => Observable<any> | undefined) | null = null;
   @Output() onSelectTag = new EventEmitter<string>();
   searchData: Array<any> = []
