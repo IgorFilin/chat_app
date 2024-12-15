@@ -80,12 +80,12 @@
 .ng-header__searchInputContainer {
   max-width: 600px;
   width: calc(100% - 180px);
+  position: relative;
 }
 
 .ng-header__searchedArticles {
   display: flex;
   flex-direction: column;
-  gap: 3px;
   position: absolute;
   top: 61px;
   left: 50%;
@@ -98,6 +98,8 @@
   max-height: 500px;
   overflow-y: auto;
   box-sizing: border-box;
+  border-bottom-right-radius: 14px;
+  border-bottom-left-radius: 14px;
 
   &::-webkit-scrollbar-thumb {
     border-radius: 8px;
@@ -117,6 +119,12 @@
   cursor: pointer;
   max-width: 600px;
   width: 100%;
+
+  &:hover {
+    .ng-header__searchedTitle {
+      color: var(--accent-color);
+    }
+  }
   
   &:not(:last-child) {
     border-bottom: 2px solid var(--tags-color);

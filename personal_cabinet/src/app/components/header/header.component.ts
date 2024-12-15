@@ -1,20 +1,20 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
-import { Component, DestroyRef, Inject, inject } from '@angular/core';
+import { Component, DestroyRef, Inject, inject, OnDestroy } from '@angular/core';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 import { AuthService } from '../../services/auth.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IsOpenCloseService } from '../../services/is-open-close.service';
 import { ThemeService } from '../../services/theme.service';
 import { SearchInputComponent } from '../../shared/components/search-input/search-input.component';
-import { NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { filter } from 'rxjs';
 import { KnowledgeService } from '../../services/knowledge.service';
-import { bubbleAnimation } from '../../animations/bubble.animation';
+import { IArticle } from '../../models/interfaces';
 
 @Component({
   selector: 'cabinet-header',
   standalone: true,
-  imports: [CommonModule, IconComponent, SearchInputComponent],
+  imports: [CommonModule, IconComponent, SearchInputComponent, RouterModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
   animations: [],
@@ -25,7 +25,7 @@ export class HeaderComponent {
   destroyRef = inject(DestroyRef);
   checked: boolean = false;
   currentRoute: string = '';
-  searchedArticles:any = [];
+  searchedArticles: IArticle[] = [];
 
   constructor(
     private authService: AuthService,
@@ -58,9 +58,17 @@ export class HeaderComponent {
       })
   }
 
+  onOpenArticle(id:string) {
+    this.router.navigate(['/article', id]).then(() => {
+      this.searchedArticles = []
+    });
+  }
+
   onSearchArticles: any = (searchValue: string) => {
     if(!searchValue) this.searchedArticles = [] 
-    else this.searchedArticles = this.knowledgeService.articles.filter((article) => article.title.includes(searchValue));
+    else this.searchedArticles = this.knowledgeService.articles
+      .filter((article) => article.title.includes(searchValue) 
+      || article.tags.some(tag => tag.title.includes(searchValue)));
   }
 
   onClickLeaveHandler() {

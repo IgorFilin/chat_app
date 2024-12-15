@@ -37,3 +37,22 @@ export interface IUserInfo {
     isAcceptKey: boolean,
     role: RoleType
 }
+
+export interface Tag {
+    id: string;
+    title: string;
+}
+
+export interface View {
+    id: string;
+    userId: string;
+}
+
+export interface IArticle {
+    date: string; 
+    description: string;
+    id: string;
+    tags: Tag[];
+    title: string;
+    views: View[];
+}

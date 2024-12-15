@@ -1,11 +1,12 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
+import { IArticle } from '../models/interfaces';
 
 @Injectable({
   providedIn: 'root'
 })
 export class KnowledgeService {
 
-  dataArticles: WritableSignal<any> = signal([]);
+  dataArticles: WritableSignal<IArticle[]> = signal([]);
   
   constructor() { }
   
@@ -13,7 +14,7 @@ export class KnowledgeService {
     return this.dataArticles()
   }
   
-  set articles(articles:Array<any>) {
+  set articles(articles:Array<IArticle>) {
     this.dataArticles.set(articles)
   }
 }

@@ -25,21 +25,21 @@
         [isIcon]="false"
         [searchedRequest]="onSearchArticles"
       />
-    </div>
-    @if(searchedArticles.length) {
-      <div class="ng-header__searchedArticles">
-        @for(article of searchedArticles; track $index) {
-            <div class="ng-header__searchedArticle">
-              <div class="ng-header__searchedTitle">{{article.title}}</div>
-              <div class="ng-header__tags">
-                @for(tag of article.tags; track $index) {
-                  <div class="ng-header__tag">#{{tag.title}}</div>
-                }
+      @if(searchedArticles.length) {
+        <div class="ng-header__searchedArticles">
+          @for(article of searchedArticles; track $index) {
+              <div class="ng-header__searchedArticle" (click)="onOpenArticle(article.id)" >
+                <div class="ng-header__searchedTitle">{{article.title}}</div>
+                <div class="ng-header__tags">
+                  @for(tag of article.tags; track $index) {
+                    <div class="ng-header__tag">#{{tag.title}}</div>
+                  }
+                </div>
               </div>
-            </div>
-        }
-      </div>
-    }
+          }
+        </div>
+      }
+    </div>
     <button (click)="onClickLeaveHandler()" class="ng-header__button">
       Выход
     </button>
