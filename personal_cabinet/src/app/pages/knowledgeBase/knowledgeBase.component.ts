@@ -32,7 +32,7 @@ export class KnowledgeBaseComponent implements OnInit {
   currentPage: WritableSignal<number> = signal(1);
   dataArticlesInPage: number = 10;
   start:number = 0;
-  end:number = 10;
+  end:number = 0;
   pagination:number[] = [];
   // currentTech: WritableSignal<TechnologyStackType> = signal('');
 
@@ -47,40 +47,27 @@ export class KnowledgeBaseComponent implements OnInit {
     .getArticles()
     .subscribe((data) => {
       this.knowledgeService.articles = data;
-      this.dataPaginationArticles = this.dataArticles().slice(this.start, this.end);
-      console.log('-_-', this.dataPaginationArticles);
-
+      this.dataPaginationArticles = this.dataArticles().slice(this.start, this.end + this.dataArticlesInPage);
       this.initialPagination()
     });
   }
 
-  filteredPagination(isIncrement?:boolean) {
-    if(isIncrement) {
-      this.start = this.start + this.dataArticlesInPage
-      this.end = this.end + this.dataArticlesInPage
-    } else {
-      this.start = this.start - this.dataArticlesInPage
-      this.end = this.end - this.dataArticlesInPage
-    }
-    this.dataPaginationArticles = this.dataArticles().slice(this.start, this.end);
+  filteredPagination(page: number) {
+    const start = this.dataArticlesInPage * page
+    const end = (this.dataArticlesInPage * page) + this.dataArticlesInPage
 
+    this.dataPaginationArticles = this.dataArticles().slice(start, end);
   }
 
   initialPagination() {
-    for(let i = 0; i < Math.ceil(this.dataArticles().length / this.dataArticlesInPage); i++) {
+    for(let i = 0; i < Math.floor(this.dataArticles().length / this.dataArticlesInPage); i++) {
       this.pagination.push(i + 1);
     }
   }
 
   setPage(page: number) { 
-    if(page === this.currentPage()) return 
-    
-    if(page > this.currentPage()) {
-      this.filteredPagination(true);
-    } else if (page < this.currentPage()) {
-      this.filteredPagination();
-    }
     this.currentPage.set(page);
+    this.filteredPagination(page);
   }
 
   onClickTechTagHandler(tech: TechnologyStackType) {
