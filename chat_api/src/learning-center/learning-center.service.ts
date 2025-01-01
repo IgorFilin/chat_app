@@ -10,7 +10,6 @@ import { CreateArticleDto } from './dto/createArticle.dto';
 import { Article } from './entities/article.entity';
 import { Tags } from './entities/tags.entity';
 import { Views } from './entities/views-article.entity';
-import { View } from 'typeorm/schema-builder/view/View';
 
 @Injectable()
 export class LearningCenterService {
@@ -207,12 +206,17 @@ export class LearningCenterService {
 
   async getArticle(id:string, token:string) {
     try {
-      let article = await this.ArticleTable.findOne({ where:{ id }, relations: ['tags', 'views']});
-
+      let article = await this.ArticleTable.findOne({ where:{ id }, relations: ['tags', 'views', 'user']});
       await this.setView(token, article);
 
       if (article)  {
-        return article
+        return {
+          ...article,
+          user: {
+            id: article.user.id,
+            name:  article.user.name,
+          }
+        }
       }
     } catch (e) {
       return {
