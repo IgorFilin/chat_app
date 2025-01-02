@@ -9,7 +9,7 @@ export class VkAuthService {
   constructor() {
     VKID.Config.init({
       app: 52897712, // Идентификатор приложения.
-      redirectUrl: 'https://filin.tech', // Адрес для перехода после авторизации.
+      redirectUrl: 'https://filin.tech/api/user/vk_auth', // Адрес для перехода после авторизации.
       state: 'test', // Произвольная строка состояния приложения.
       codeVerifier: 'test1', // Параметр в виде случайной строки. Обеспечивает защиту передаваемых данных.
       scope: 'email phone', // Список прав доступа, которые нужны приложению.
