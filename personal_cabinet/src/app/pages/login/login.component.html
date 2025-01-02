@@ -1,11 +1,17 @@
-<div class="ng-login" @bubble>
-  <form (ngSubmit)="onSubmit()" class="ng-loginForm" [formGroup]="loginForm">
+<div
+  class="ng-login"
+  @bubble
+>
+  <form
+    (ngSubmit)="onSubmit()"
+    class="ng-loginForm"
+    [formGroup]="loginForm"
+  >
     <div class="ng-login__title">Вход</div>
     <app-input
       placeholder="почта"
       errorMessage="Не корректный email"
       formControlName="email"
-      
     />
     <app-input
       type="password"
@@ -15,13 +21,28 @@
     />
     <div class="ng-loginForm__regRouteContainer">
       <div>У вас нет учетной записи?</div>
-      <a routerLink="/registration" class="buttonLink">Регистрация</a>
+      <a
+        routerLink="/registration"
+        class="buttonLink"
+      >
+        Регистрация
+      </a>
     </div>
     <div class="ng-loginForm__regRouteContainer">
       <div>Вам нужно подтвердить свою учетную запись?</div>
-      <a routerLink="/confirm" class="buttonLink">Подтверждение</a>
+      <a
+        routerLink="/confirm"
+        class="buttonLink"
+      >
+        Подтверждение
+      </a>
     </div>
-    <button class="primary" type="submit" [disabled]="loginForm.invalid">
+    <div id="VkIdSdkOneTap"></div>
+    <button
+      class="primary"
+      type="submit"
+      [disabled]="loginForm.invalid"
+    >
       Войти
     </button>
   </form>

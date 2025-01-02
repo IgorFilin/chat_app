@@ -53,6 +53,13 @@ export class UsersController {
     }
   }
 
+  @Get('vk_auth')
+  async vk_auth(@Req() req: Request, @Res() res: Response) {
+    const query = req.query;
+    console.log('query', query);
+    res.status(200).send(query);
+  }
+
   @Get('avatar')
   async getAvatar(@Req() req: Request, @Res() res: Response) {
     const token = req.cookies.authToken;
