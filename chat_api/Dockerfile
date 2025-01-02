@@ -13,9 +13,9 @@ ENV NODE_ENV=${NODE_ENV}
 
 COPY .env.${NODE_ENV} .env
 
-RUN npm run migration:generate
+RUN npm run migration:generate || echo "Миграции не сгенерировались"
 
-RUN npm run migration:run
+RUN npm run migration:run || echo "Нет миграция для запуска"
 
 RUN npm run build
 
