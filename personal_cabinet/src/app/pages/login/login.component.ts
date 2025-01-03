@@ -37,6 +37,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.vkAuthService.initialVkConfig();
     this.vkAuthService.initialOneTapButton();
   }
 

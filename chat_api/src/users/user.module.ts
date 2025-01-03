@@ -14,6 +14,7 @@ import { WebsocketService } from 'src/websocket/websocket.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Room } from 'src/websocket/entities/room.entity';
 import { Message } from 'src/websocket/entities/message.entity';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { Message } from 'src/websocket/entities/message.entity';
         cleanupAfterFailedHandle: true,
       }),
     }),
+    HttpModule,
   ],
   controllers: [UsersController],
   providers: [UsersService, EmailService, StateService, UserSubscriber, WebsocketService],

@@ -16,40 +16,32 @@ import { UserService } from './user.service';
 })
 export class AuthService {
   isAuth$: BehaviorSubject<boolean> = new BehaviorSubject(false);
-  isInitialApp:boolean = false
+  isInitialApp: boolean = false;
   destroyRef = inject(DestroyRef);
 
-  constructor(
-    private requestService: RequestService,
-    private utilsService: UtilsService,
-    private toastService: ToasterService,
-    private loadingService: LoadingService,
-    private cookieService: CookieService,
-    private userService: UserService,
-    private router: Router
-  ) {}
+  constructor(private requestService: RequestService, private utilsService: UtilsService, private toastService: ToasterService, private loadingService: LoadingService, private cookieService: CookieService, private userService: UserService, private router: Router) {}
 
   authRequest(): Observable<any> {
     this.loadingService.startLoading();
     const authToken = this.cookieService.getCookieByName('authToken');
-    if(this.isInitialApp && authToken) return of(true);
+    if (this.isInitialApp && authToken) return of(true);
     return this.requestService.get<any, GetAuthPesponseType>('user/auth').pipe(
       takeUntilDestroyed(this.destroyRef),
       map((data: GetAuthPesponseType) => {
         if (data.isAuth) {
-          if(!this.isInitialApp) {
+          if (!this.isInitialApp) {
             this.toastService.success(`Приветствую ${data.name}`);
           }
           this.isAuth$.next(data.isAuth);
-          this.isInitialApp = true
+          this.isInitialApp = true;
         }
-        this.userService.userInfo.next(data)
+        this.userService.userInfo.next(data);
         this.loadingService.stopLoading();
-        return data.isAuth
+        return data.isAuth;
       }),
       catchError((error) => {
         this.loadingService.stopLoading();
-        this.isInitialApp = true
+        this.isInitialApp = true;
         return error;
       })
     );
@@ -63,12 +55,10 @@ export class AuthService {
       .subscribe(
         (data) => {
           // this.toastService.success(data.message);
-          this.isAuth$.next(data.isAuth);
-          this.router.navigateByUrl('/');
+          this.setAuthAndNavigateMainPage(data);
         },
         (error) => {
-          const errorMessage =
-            error.error.message || 'К сожалению произошла ошибка';
+          const errorMessage = error.error.message || 'К сожалению произошла ошибка';
           this.toastService.error(errorMessage);
         }
       );
@@ -131,5 +121,10 @@ export class AuthService {
         this.isAuth$.next(data.isAuth);
         this.router.navigateByUrl('registration');
       });
+  }
+
+  setAuthAndNavigateMainPage(data: any): void {
+    this.isAuth$.next(data.isAuth);
+    this.router.navigateByUrl('/');
   }
 }

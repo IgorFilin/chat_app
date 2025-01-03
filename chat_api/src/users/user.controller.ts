@@ -6,7 +6,6 @@ import { ValidationPipe } from '@nestjs/common';
 import { Response, Request, Express } from 'express';
 import { FileSystemStoredFile, FormDataRequest } from 'nestjs-form-data';
 import { FormDataUserRestorePass } from './dto/user-restore-pass.dto';
-import { RequestFileDto } from './dto/request-file.dto';
 import * as https from 'https';
 
 @Controller('user')
@@ -17,7 +16,7 @@ export class UsersController {
   @UsePipes(new ValidationPipe())
   async create(@Body() createUserDto: CreateUserDto, @Res() res: Response, @Ip() ip: string) {
     const result = await this.usersService.create(createUserDto, ip);
-    if (result.isAcceptKey === false) {
+    if (!result['isAcceptKey']) {
       return res.send(result);
     } else {
       return res.status(403).send(result);
@@ -53,11 +52,22 @@ export class UsersController {
     }
   }
 
-  @Get('vk_auth')
-  async vk_auth(@Req() req: Request, @Res() res: Response) {
-    const query = req.query;
-    console.log('query', query);
-    res.status(200).send(query);
+  @Post('vk_auth')
+  async vk_auth(@Body() body: any, @Res() res: Response, @Ip() ip: string) {
+    const result = await this.usersService.auth_vk({ ...body, ip });
+
+    if (result['token']) {
+      const expirationDate = new Date();
+      expirationDate.setDate(expirationDate.getDate() + 3);
+      res.cookie('authToken', result['token'], {
+        httpOnly: false,
+        expires: expirationDate,
+      });
+      res.setHeader('Authorization', `Bearer ${result['token']}`);
+      res.status(201).send(result);
+    } else {
+      res.status(400).send(result);
+    }
   }
 
   @Get('avatar')

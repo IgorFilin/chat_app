@@ -19,8 +19,22 @@ interface RestorePassType {
   password: string;
 }
 
+interface IUserVkAuthData {
+  user_id: string;
+  first_name: string;
+  last_name: string;
+  avatar: string;
+  email: string;
+  sex: number;
+  verified: boolean;
+  birthday: string;
+  ip: string;
+}
+
 @Injectable()
 export class UsersService {
+  lenthBcryptPassword: number = 60;
+
   constructor(
     @InjectRepository(User)
     private UserTable: Repository<User>,
@@ -33,7 +47,7 @@ export class UsersService {
 
   blockedKeysSendingMails = {};
 
-  async create(createUserDto: CreateUserDto, userIP: string) {
+  async create(createUserDto?: CreateUserDto, userIP?: string, isAuthVk?: boolean) {
     try {
       if (!createUserDto || !createUserDto.email || !createUserDto.name || !createUserDto.password) {
         return { message: 'Недостаточно данных для регистрации' };
@@ -41,8 +55,10 @@ export class UsersService {
       const findUser = await this.UserTable.findOneBy({
         email: createUserDto.email,
       });
-      if (findUser) {
+      if (findUser && !isAuthVk) {
         return { message: 'К сожалению такая почта уже существует' };
+      } else if (findUser && isAuthVk) {
+        return await this.login({ email: findUser.email, password: findUser.password });
       } else {
         const salt = await bcrypt.genSalt();
         const hashedPassword = await bcrypt.hash(createUserDto.password, salt);
@@ -63,25 +79,29 @@ export class UsersService {
         user.email = createUserDto.email;
         user.password = hashedPassword;
         user.date = new Date();
-        user.isAcceptKey = false;
+        user.isAcceptKey = !!isAuthVk;
         user.acceptKey = confirmRegKey;
         user.authToken = token;
         user.userPhoto = imagePath;
         user.role = 'user';
         user.ip = ip ? ip : 'Скрыт';
 
-        
         // Сохраняем в БД пользователя с регистрационным key
         await this.UserTable.save(user);
-        // Отсылаем на почту ключ подтверждения
-        await this.emailService.sendMailTemplate(user.email, confirmRegKey);
 
-        // Возвращаем значение что ключ на почту отправлен, но не подтвержден
-        return {
-          isAcceptKey: false,
-          email: user.email,
-          message: `Приветствую ${user.name}, пожалуйста введи код подтверждения`,
-        };
+        if (isAuthVk) {
+          return await this.login({ email: createUserDto.email, password: createUserDto.password });
+        } else {
+          // Отсылаем на почту ключ подтверждения
+          await this.emailService.sendMailTemplate(user.email, confirmRegKey);
+
+          // Возвращаем значение что ключ на почту отправлен, но не подтвержден
+          return {
+            isAcceptKey: false,
+            email: user.email,
+            message: `Приветствую ${user.name}, пожалуйста введи код подтверждения`,
+          };
+        }
       }
     } catch (e) {}
   }
@@ -143,7 +163,6 @@ export class UsersService {
   async confirmKeyRestorePass(restoreData: RestorePassType) {
     try {
       if (restoreData.password.length < 7) {
-        console.log(restoreData.password);
         return {
           message: 'Пожалуйста введите пароль, не менее 7 символов',
           isAccept: false,
@@ -196,28 +215,39 @@ export class UsersService {
   }
 
   async login(LoginUserDto: LoginUserDto) {
-    if (!LoginUserDto.email || !LoginUserDto.password) {
-      throw new BadRequestException('К сожалению недостаточно данных для авторизации');
-    }
-    const user = await this.UserTable.findOneBy({ email: LoginUserDto.email });
-    if (user && !user.isAcceptKey) {
-      throw new BadRequestException('Пожалуйста подтвердите вашу почту');
-    }
-    if (user && Object.keys(user).length) {
-      const userPasswordValid = await bcrypt.compare(LoginUserDto.password, user.password);
-      if (userPasswordValid) {
+    try {
+      if (!LoginUserDto.email || !LoginUserDto.password) {
         return {
-          message: `Добро пожаловать ${user.name}`,
-          name: user.name,
-          token: user.authToken,
-          isAuth: true,
-          id: user.id,
+          message: 'К сожалению недостаточно данных для авторизации',
         };
-      } else {
-        throw new BadRequestException('Неверный пароль');
       }
-    } else {
-      throw new BadRequestException('К сожалению такого пользователя не существует');
+      const user = await this.UserTable.findOneBy({ email: LoginUserDto.email });
+      if (user && !user.isAcceptKey) {
+        return {
+          message: 'Пожалуйста подтвердите вашу почту',
+        };
+      }
+      if (user && Object.keys(user).length) {
+        let isUserPasswordValid: boolean = false;
+
+        if (LoginUserDto.password.length === this.lenthBcryptPassword) isUserPasswordValid = LoginUserDto.password === user.password;
+        else isUserPasswordValid = await bcrypt.compare(LoginUserDto.password, user.password);
+        if (isUserPasswordValid) {
+          return {
+            message: `Добро пожаловать ${user.name}`,
+            name: user.name,
+            token: user.authToken,
+            isAuth: true,
+            id: user.id,
+          };
+        } else {
+          throw new BadRequestException('Неверный пароль');
+        }
+      } else {
+        throw new BadRequestException('К сожалению такого пользователя не существует');
+      }
+    } catch (e) {
+      console.warn(e);
     }
   }
 
@@ -234,8 +264,7 @@ export class UsersService {
         token: user.authToken,
         isAuth: true,
         id: user.id,
-        role: user.role
-
+        role: user.role,
       };
     } catch (error) {
       return { isAuth: false };
@@ -317,5 +346,21 @@ export class UsersService {
         where: { authToken: Not(authToken) },
       });
     } catch (e) {}
+  }
+
+  async auth_vk(payload: IUserVkAuthData) {
+    try {
+      if (!payload.email || !payload.first_name || !payload.last_name) return { message: 'К сожалению произошла ошибка, попробуйте ещё раз' };
+      const randomGeneratePassword = randomBytes(10).toString('hex');
+      const authData: CreateUserDto = {
+        email: payload.email,
+        password: randomGeneratePassword,
+        name: `${payload.first_name} ${payload.last_name}`,
+      };
+      const responseCreated = await this.create(authData, payload.ip, true);
+      return responseCreated;
+    } catch (e) {
+      console.log('error', e);
+    }
   }
 }
