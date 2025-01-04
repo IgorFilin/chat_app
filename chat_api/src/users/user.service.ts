@@ -55,52 +55,19 @@ export class UsersService {
       const findUser = await this.UserTable.findOneBy({
         email: createUserDto.email,
       });
-      if (findUser && !isAuthVk) {
+      if (findUser) {
         return { message: 'К сожалению такая почта уже существует' };
-      } else if (findUser && isAuthVk) {
-        return await this.login({ email: findUser.email, password: findUser.password });
       } else {
-        const salt = await bcrypt.genSalt();
-        const hashedPassword = await bcrypt.hash(createUserDto.password, salt);
-        const confirmRegKey = randomBytes(5).toString('hex');
-
-        const dirname = process.cwd();
-        const imagePath = path.join('static', 'image', 'default_photo_user.webp');
-
-        const token = this.JwtService.sign({
-          name: createUserDto.name,
-          randomData: uuidv4(),
-        });
-
-        const ip = userIP.slice(7);
-        // Создаем пользователя по сущности
-        const user = new User();
-        user.name = createUserDto.name;
-        user.email = createUserDto.email;
-        user.password = hashedPassword;
-        user.date = new Date();
-        user.isAcceptKey = !!isAuthVk;
-        user.acceptKey = confirmRegKey;
-        user.authToken = token;
-        user.userPhoto = imagePath;
-        user.role = 'user';
-        user.ip = ip ? ip : 'Скрыт';
-
-        // Сохраняем в БД пользователя с регистрационным key
-        await this.UserTable.save(user);
-
-        if (isAuthVk) {
-          return await this.login({ email: createUserDto.email, password: createUserDto.password });
-        } else {
-          // Отсылаем на почту ключ подтверждения
-          await this.emailService.sendMailTemplate(user.email, confirmRegKey);
-
-          // Возвращаем значение что ключ на почту отправлен, но не подтвержден
+        const savedUserData = await this.saveNewUserDb(createUserDto, userIP);
+        if (savedUserData) {
+          await this.emailService.sendMailTemplate(savedUserData.email, savedUserData.acceptKey);
           return {
-            isAcceptKey: false,
-            email: user.email,
-            message: `Приветствую ${user.name}, пожалуйста введи код подтверждения`,
+            isAcceptKey: savedUserData.isAcceptKey,
+            email: savedUserData.email,
+            message: !savedUserData.isAcceptKey ? `Приветствую ${savedUserData.name}, пожалуйста введи код подтверждения` : '',
           };
+        } else {
+          return { message: 'Что-то пошло не так, попробуйте ещё раз' };
         }
       }
     } catch (e) {}
@@ -357,10 +324,51 @@ export class UsersService {
         password: randomGeneratePassword,
         name: `${payload.first_name} ${payload.last_name}`,
       };
-      const responseCreated = await this.create(authData, payload.ip, true);
-      return responseCreated;
+      const findedUser = await this.UserTable.findOneBy({
+        email: payload.email,
+      });
+
+      if (findedUser) {
+        return await this.login({ email: findedUser.email, password: findedUser.password });
+      } else {
+        return this.saveNewUserDb(authData, payload.ip, true);
+      }
     } catch (e) {
       console.log('error', e);
+    }
+  }
+
+  private async saveNewUserDb(createUserDto: CreateUserDto, userIP?: string, isAcceptKey: boolean = false) {
+    try {
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(createUserDto.password, salt);
+      const confirmRegKey = randomBytes(5).toString('hex');
+
+      const imagePath = path.join('static', 'image', 'default_photo_user.webp');
+
+      const token = this.JwtService.sign({
+        name: createUserDto.name,
+        randomData: uuidv4(),
+      });
+
+      const ip = userIP?.slice(7) || 'Скрыт';
+
+      // Создаем пользователя по сущности
+      const user = new User();
+      user.name = createUserDto.name;
+      user.email = createUserDto.email;
+      user.password = hashedPassword;
+      user.date = new Date();
+      user.isAcceptKey = isAcceptKey;
+      user.acceptKey = confirmRegKey;
+      user.authToken = token;
+      user.userPhoto = imagePath;
+      user.role = 'user';
+      user.ip = ip;
+
+      return await this.UserTable.save(user);
+    } catch (e) {
+      return;
     }
   }
 }
