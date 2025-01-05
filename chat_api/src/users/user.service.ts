@@ -196,9 +196,10 @@ export class UsersService {
       }
       if (user && Object.keys(user).length) {
         let isUserPasswordValid: boolean = false;
-
+        console.log('LoginUserDto', LoginUserDto);
         if (LoginUserDto.password.length === this.lenthBcryptPassword) isUserPasswordValid = LoginUserDto.password === user.password;
         else isUserPasswordValid = await bcrypt.compare(LoginUserDto.password, user.password);
+
         if (isUserPasswordValid) {
           return {
             message: `Добро пожаловать ${user.name}`,

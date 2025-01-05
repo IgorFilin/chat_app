@@ -3,7 +3,6 @@
   @bubble
 >
   <form
-    (ngSubmit)="onSubmit()"
     class="ng-loginForm"
     [formGroup]="loginForm"
   >
@@ -40,7 +39,7 @@
     <div id="VkIdSdkOneTap"></div>
     <button
       class="primary"
-      type="submit"
+      (click)="onSubmit()"
       [disabled]="loginForm.invalid"
     >
       Войти
