@@ -10,6 +10,7 @@ import { IConfirm, ILoginBody, IRegistrationBody } from '../models/request';
 import { CookieService } from './cookie.service';
 import { GetAuthPesponseType } from '../models/interfaces';
 import { UserService } from './user.service';
+import { UserStore } from '../store/user/user.store';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +19,8 @@ export class AuthService {
   isAuth$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   isInitialApp: boolean = false;
   destroyRef = inject(DestroyRef);
+
+  userStore = inject(UserStore)
 
   constructor(private requestService: RequestService, private utilsService: UtilsService, private toastService: ToasterService, private loadingService: LoadingService, private cookieService: CookieService, private userService: UserService, private router: Router) {}
 
@@ -36,6 +39,7 @@ export class AuthService {
           this.isInitialApp = true;
         }
         this.userService.userInfo.next(data);
+        this.userStore.setUserInfo(data)
         this.loadingService.stopLoading();
         return data.isAuth;
       }),

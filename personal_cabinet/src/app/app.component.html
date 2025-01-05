@@ -1,4 +1,5 @@
 <cabinet-header />
+{{ userStore.userInfoData() | json}}
 <div class="app">
   <cabinet-section-list *ngIf="isOpenMenu" @slideInOut />
   <router-outlet  />
