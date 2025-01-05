@@ -1,4 +1,4 @@
-@import "colors.scss";
+@import 'colors.scss';
 
 .ng-header {
   padding: 10px;
@@ -87,7 +87,7 @@
   display: flex;
   flex-direction: column;
   position: absolute;
-  top: 61px;
+  top: 48px;
   left: 50%;
   transform: translate(-50%, 0);
   max-width: 600px;
@@ -125,7 +125,7 @@
       color: var(--accent-color);
     }
   }
-  
+
   &:not(:last-child) {
     border-bottom: 2px solid var(--tags-color);
   }
@@ -151,4 +151,13 @@
   padding: 0 5px;
   background-color: var(--bg-color);
   border: 1px solid var(--primary-color);
+}
+
+.ng-header__input {
+  --input_padding: 5px;
+  --input_size: 14px;
+  --input_labelTop: 8px;
+  --loader__width: 20px;
+  --b: 2px;
+  --input_labelPadding: 2px;
 }

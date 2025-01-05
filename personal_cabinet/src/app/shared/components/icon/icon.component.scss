@@ -1,4 +1,4 @@
-@import "colors.scss";
+@import 'colors.scss';
 
 .ng-iconContainer {
   display: flex;
@@ -6,8 +6,8 @@
   align-items: center;
 }
 .ng-icon {
-  width: 24px;
-  height: 24px;
+  width: var(--icon_width, 24px);
+  height: var(--icon_height, 24px);
   cursor: pointer;
 
   &.white {
