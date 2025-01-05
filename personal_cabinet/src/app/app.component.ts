@@ -31,8 +31,6 @@ export class AppComponent implements OnInit {
   isOpenMenu: boolean | null = null;
   htmlRef: any;
 
-  userStore = inject(UserStore);
-
   constructor(
     public loadingService: LoadingService,
     private isOpenCloseService: IsOpenCloseService,
