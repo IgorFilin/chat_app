@@ -5,7 +5,7 @@
 
 .article {
   display: grid;
-  gap: 15px;
+  gap: 10px;
 }
 
 .article_titleContainer {
@@ -48,6 +48,11 @@
   display: flex;
   align-items: center;
   gap: 5px;
+}
+
+.article_description {
+  border-top: 3px solid;
+  border-color: var(--warning-color);
 }
 
 .article_viewsCount {

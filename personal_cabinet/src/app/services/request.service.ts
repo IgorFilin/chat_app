@@ -40,4 +40,10 @@ export class RequestService {
       withCredentials: true,
     });
   }
+
+  put<T, R>(path: string, body: T, api: string = this.apiUrl): Observable<R> {
+    return this.http.put<R>(`${api}/${path}`, body, {
+      withCredentials: true,
+    });
+  }
 }

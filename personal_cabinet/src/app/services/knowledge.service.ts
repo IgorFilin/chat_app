@@ -1,6 +1,6 @@
 import { DestroyRef, inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { IArticle, IArticleResponse } from '../models/interfaces';
-import { IEditArtickeBody } from '../models/request';
+import { IEditArticleBody } from '../models/request';
 import { RequestService } from './request.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ToasterService } from './toaster.service';
@@ -13,7 +13,7 @@ import { TechnologyStackType } from '../models/types';
 export class KnowledgeService {
 
   dataArticles: WritableSignal<IArticle[]> = signal([]);
-  destroyRef = inject(DestroyRef)
+  
   constructor(
     private requestService: RequestService,
     private toastService: ToasterService,
@@ -69,20 +69,7 @@ export class KnowledgeService {
     .get<any, IArticleResponse>('learning/article', { id })
   }
 
-  editArticle(body: IEditArtickeBody): void {
-    // this.loadingService.startLoading();
-    this.requestService
-      .post<IEditArtickeBody, any>('user/login', body)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(
-        (data) => {
-          // this.toastService.success(data.message);
-          console.log('data response', data);
-        },
-        (error) => {
-          const errorMessage = error.error.message || 'К сожалению произошла ошибка';
-          this.toastService.error(errorMessage);
-        }
-      );
+  editArticle(body: IEditArticleBody): Observable<any> {
+    return this.requestService.put<IEditArticleBody, any>('learning/edit_article', body)
   }
 }

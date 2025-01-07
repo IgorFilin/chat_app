@@ -17,3 +17,9 @@ export interface IArticleCreator {
   id: string;
   name: string;
 }
+
+export interface IEditBodyArticle {
+  id: string
+  title?: string
+  description?: string
+}

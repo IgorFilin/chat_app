@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Res, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Res, Req, Patch, Put } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { LearningCenterService } from './learning-center.service';
 import { CreateQuestionDto } from './dto/createQuestion.dto';
 import { CreateArticleDto } from './dto/createArticle.dto';
+import { IEditBodyArticle } from './model/learning-center.interface';
 
 @Controller('learning')
 export class LearningCenterController {
@@ -31,7 +32,6 @@ export class LearningCenterController {
 
   @Post('create-article')
   async createArticle(@Body() body: CreateArticleDto, @Res() res: Response, @Req() req: Request) {
-    console.log('asd');
     const result: any = await this.learningCenterService.createArticle(body, req.cookies.authToken);
     if (result) {
       return res.send(result);
@@ -57,6 +57,17 @@ export class LearningCenterController {
     const id: any = req.query?.id;
     const result = await this.learningCenterService.getArticle(id, authToken);
     if (result) {
+      return res.send(result);
+    } else {
+      return res.status(403).send(result);
+    }
+  }
+
+  @Put('edit_article')
+  async putArticle( @Body() body: IEditBodyArticle, @Req() req: Request, @Res() res: Response) {
+    const authToken = req.cookies.authToken;
+    const result = await this.learningCenterService.editArticle(authToken, body);
+    if (result['id']) {
       return res.send(result);
     } else {
       return res.status(403).send(result);

@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, OnInit, Signal, signal, WritableSignal } from '@angular/core';
+import { Component, computed, DestroyRef, effect, inject, OnInit, Signal, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MarkdownModule } from 'ngx-markdown';
@@ -6,10 +6,13 @@ import { IArticleResponse } from '../../models/interfaces';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 import { UserStore } from '../../store/user/user.store';
 import { bubbleAnimation } from '../../animations/bubble.animation';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MarkdownTextareaComponent } from '../../components/markdown-textarea/markdown-textarea.component';
 import { InputComponent } from '../../shared/components/input/input.component';
 import { KnowledgeService } from '../../services/knowledge.service';
+import { IEditArticleBody } from '../../models/request';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ToasterService } from '../../services/toaster.service';
 
 @Component({
   standalone: true,
@@ -34,18 +37,20 @@ export class ArticleComponent implements OnInit {
   userStore = inject(UserStore)
   editedArticleForm = this.formBuilder.group({
     title: ['', [Validators.required]],
-    text: ['', [Validators.required]],
+    description: ['', [Validators.required]],
   })
+  destroyRef = inject(DestroyRef)
 
   constructor(
     private knowledgeService: KnowledgeService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private toasterService: ToasterService
   ) { 
     effect(() => {
-      this.knowledgeService.getArticle(this.articleId()).subscribe((data) => {
-        this.article.set(data)
+      this.knowledgeService.getArticle(this.articleId()).subscribe((articleData) => {
+        this.article.set(articleData)
         this.setInitialDataArticle()
       })
     })
@@ -54,7 +59,7 @@ export class ArticleComponent implements OnInit {
   setInitialDataArticle() {
     this.editedArticleForm.patchValue({
       title: this.article()?.title,
-      text: this.article()?.description,
+      description: this.article()?.description,
     })
   }
 
@@ -64,7 +69,21 @@ export class ArticleComponent implements OnInit {
   }
 
   onSaveArticleHandler() { 
-    const formData = this.editedArticleForm.getRawValue()
-    console.log('data ', formData);
+    const formData = {
+      id: this.article()?.id ?? '',
+      ...this.editedArticleForm.getRawValue()
+    } as IEditArticleBody
+    this.knowledgeService.editArticle(formData)
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe((updatedArticle) => {
+      this.isEditMode.set(false)
+      this.article.set(updatedArticle)
+      this.setInitialDataArticle()
+    },
+    (error) => {
+      const errorMessage = error.error.message || 'К сожалению произошла ошибка'
+      this.toasterService.error(errorMessage)
+    }
+   )
   }
 }

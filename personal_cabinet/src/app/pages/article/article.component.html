@@ -25,7 +25,7 @@
     }
     @if (isEditMode()) {
       <div class="article_editButtons">
-        <button (click)="isEditMode.set(false);this.setInitialDataArticle()" class="article_editButton secondary">Назад</button>
+        <button (click)="isEditMode.set(false); this.setInitialDataArticle()" class="article_editButton secondary">Назад</button>
         <button (click)="onSaveArticleHandler()" [disabled]="!editedArticleForm.valid" class="article_editButton secondary">Сохранить</button>
       </div>
     }
@@ -37,7 +37,7 @@
   </div>
   <div class="article_description">
     @if(isEditMode()) {
-      <app-markdown-textarea formControlName="text" title="Текст статьи/заметки:"/>
+      <app-markdown-textarea formControlName="description" title="Отредактируйте текст статьи:"/>
     } @else {
       <markdown
         lineHighlight

@@ -26,6 +26,10 @@ markdown {
     white-space: pre-wrap;
   }
 
+  pre[class*=language-] {
+    max-width: fit-content;
+  }
+
   p {
     margin: 5px;
     word-break: break-all;

@@ -13,7 +13,7 @@ export interface IConfirm {
   key: string;
 }
 
-export interface IEditArtickeBody {
+export interface IEditArticleBody {
   id: string;
   title: string;
   description: string;

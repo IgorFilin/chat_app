@@ -5,7 +5,7 @@ import { User } from 'src/users/entities/user.entity';
 import { Question } from './entities/question.entity';
 import { Answer } from './entities/answer.entity';
 import { CreateQuestionDto } from './dto/createQuestion.dto';
-import { QuestionThemeEnum } from './model/learning-center.interface';
+import { IEditBodyArticle, QuestionThemeEnum } from './model/learning-center.interface';
 import { CreateArticleDto } from './dto/createArticle.dto';
 import { Article } from './entities/article.entity';
 import { Tags } from './entities/tags.entity';
@@ -239,5 +239,33 @@ export class LearningCenterService {
         message: e.message,
       };
     }
+  }
+
+
+  async editArticle(authToken:string, body:IEditBodyArticle) {
+    const user = await this.UserTable.findOneBy({ authToken });
+    if (!user) {
+      return {
+        message: 'Пользователь не найден',
+      };
+    }
+    const article = await this.ArticleTable.findOne({ where: { id: body.id }, relations: ['user'] });
+    if(article.user.id !== user.id) {
+      return {
+        message: 'У вас нет прав на редактирование статьи',
+      };
+    }
+    await this.ArticleTable.update(body.id, {
+      title: body.title,
+      description: body.description,
+    });
+    const updatedArticle = await this.ArticleTable.findOne({ where: { id: body.id }, relations: ['user'] });
+    return {
+      ...updatedArticle,
+      user: {
+        id: updatedArticle.user.id,
+        name: updatedArticle.user.name,
+      }
+    };
   }
 }
