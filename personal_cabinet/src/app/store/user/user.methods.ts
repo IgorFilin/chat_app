@@ -1,14 +1,13 @@
-import { patchState, SignalState, WritableStateSource } from "@ngrx/signals";
+import { patchState, SignalState, signalStoreFeature, type, withMethods, WritableStateSource } from "@ngrx/signals";
 import { tapResponse } from '@ngrx/operators';
 import { rxMethod } from "@ngrx/signals/rxjs-interop";
 import { IUserState } from "../models";
 import { pipe } from "rxjs";
-type UserStoreType = {
-    state: IUserState;
-    methods: any;
-};
-export function userMethods() {
-    return (store: any) => ({
+
+export function withUserMethods() {
+    return signalStoreFeature(
+      { state: type<IUserState>() },
+      withMethods((store) => ({
         setUserInfo(userInfo:any) {
             patchState(store, (state: IUserState) => ({
                 ...state, 
@@ -27,5 +26,6 @@ export function userMethods() {
                   }),
             ),
         )
-    })
+      }))
+    )
 }

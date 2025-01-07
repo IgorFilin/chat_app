@@ -34,4 +34,10 @@ export class RequestService {
       withCredentials: true,
     });
   }
+
+  patch<T, R>(path: string, body: T, api: string = this.apiUrl): Observable<R> {
+    return this.http.patch<R>(`${api}/${path}`, body, {
+      withCredentials: true,
+    });
+  }
 }

@@ -37,13 +37,12 @@ export class KnowledgeBaseComponent implements OnInit {
   // currentTech: WritableSignal<TechnologyStackType> = signal('');
 
   constructor(
-    private questionAnswerService: QuestionAnswerService,
     private router: Router,
     private knowledgeService: KnowledgeService
   ) {}
 
   ngOnInit() {
-    this.questionAnswerService
+    this.knowledgeService
     .getArticles()
     .subscribe((data) => {
       this.knowledgeService.articles = data;

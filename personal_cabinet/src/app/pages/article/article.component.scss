@@ -54,3 +54,13 @@
   font-size: 12px;
   font-weight: 700;
 }
+
+.article_editButton {
+  width: 100px;
+  padding: 7px;
+}
+
+.article_editButtons {
+  display: flex;
+  gap: 10px;
+}

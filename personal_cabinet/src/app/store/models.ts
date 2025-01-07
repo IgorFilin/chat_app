@@ -1,3 +1,9 @@
 export interface IUserState {
-    userInfo: any
+    userInfo: {
+        isAuth: boolean
+        name: string
+        id: string
+        isAcceptKey: boolean
+        role: string
+    } | null
 }

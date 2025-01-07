@@ -1,7 +1,14 @@
 import { computed } from '@angular/core';
 
-export function userSelector() {
-  return (store: any) => ({
-    userInfoData: computed(() => store.userInfo()),
-  });
+import { signalStoreFeature, withComputed, type } from '@ngrx/signals';
+import { IUserState } from '../models';
+
+export function withUserSelectors() {
+  return signalStoreFeature(
+    { state: type<IUserState>() },
+    withComputed((state) => ({
+      userInfoData: computed(() => state.userInfo),
+      userId: computed(() => state.userInfo()?.id),
+    }))
+  )
 }

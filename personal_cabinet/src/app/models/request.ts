@@ -12,3 +12,9 @@ export interface ILoginBody {
 export interface IConfirm {
   key: string;
 }
+
+export interface IEditArtickeBody {
+  id: string;
+  title: string;
+  description: string;
+}
