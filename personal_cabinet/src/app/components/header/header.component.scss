@@ -119,6 +119,7 @@
   cursor: pointer;
   max-width: 600px;
   width: 100%;
+  box-sizing: border-box;
 
   &:hover {
     .ng-header__searchedTitle {

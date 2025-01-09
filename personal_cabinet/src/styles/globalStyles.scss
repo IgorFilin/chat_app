@@ -12,8 +12,8 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow: auto;
   background-color: var(--bg-global);
+  overflow: hidden;
 }
 .container {
   width: auto;

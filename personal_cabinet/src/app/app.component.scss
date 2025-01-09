@@ -2,8 +2,11 @@
 .app {
   display: flex;
   gap: 20px;
-  margin: 15px;
+  padding: 15px;
   justify-content: flex-start;
+  height: 90vh;
+  overflow: auto;
+  box-sizing: border-box;
 
   @include tablet {
     flex-direction: column;
