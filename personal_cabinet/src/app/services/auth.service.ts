@@ -44,9 +44,10 @@ export class AuthService {
         return data.isAuth;
       }),
       catchError((error) => {
+        this.isAuth$.next(false);
         this.loadingService.stopLoading();
         this.isInitialApp = true;
-        return error;
+        return of(false);
       })
     );
   }

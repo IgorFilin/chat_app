@@ -69,3 +69,23 @@
   display: flex;
   gap: 10px;
 }
+
+.article_actionsButtons {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.article_removeIconContainer {
+  display: flex;
+  align-items: center;
+  background: var(--secondary-color);
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}

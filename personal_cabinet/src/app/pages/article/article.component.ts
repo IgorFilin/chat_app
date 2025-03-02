@@ -13,6 +13,7 @@ import { KnowledgeService } from '../../services/knowledge.service';
 import { IEditArticleBody } from '../../models/request';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ToasterService } from '../../services/toaster.service';
+import { PopupService } from '../../services/popup.service';
 
 @Component({
   standalone: true,
@@ -46,7 +47,8 @@ export class ArticleComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private toasterService: ToasterService
+    private toasterService: ToasterService,
+    private popupService: PopupService
   ) { 
     effect(() => {
       this.knowledgeService.getArticle(this.articleId()).subscribe((articleData) => {
@@ -85,5 +87,9 @@ export class ArticleComponent implements OnInit {
       this.toasterService.error(errorMessage)
     }
    )
+  }
+
+  deleteArticle() { 
+     this.popupService.openedClosedPopup()
   }
 }

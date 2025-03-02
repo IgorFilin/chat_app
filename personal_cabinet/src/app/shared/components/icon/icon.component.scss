@@ -1,5 +1,10 @@
 @import 'colors.scss';
 
+:host {
+  width: fit-content;
+  display: block;
+}
+
 .ng-iconContainer {
   display: flex;
   justify-content: center;

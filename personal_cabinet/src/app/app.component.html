@@ -2,4 +2,7 @@
 <div class="app">
   <cabinet-section-list *ngIf="isOpenMenu" @slideInOut />
   <router-outlet  />
+  @if(isOpenedPopup()) {
+    <app-popup @bubble />
+  }
 </div>

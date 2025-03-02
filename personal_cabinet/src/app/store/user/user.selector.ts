@@ -7,7 +7,7 @@ export function withUserSelectors() {
   return signalStoreFeature(
     { state: type<IUserState>() },
     withComputed((state) => ({
-      userInfoData: computed(() => state.userInfo),
+      userInfoData: computed(() => state.userInfo()),
       userId: computed(() => state.userInfo()?.id),
     }))
   )

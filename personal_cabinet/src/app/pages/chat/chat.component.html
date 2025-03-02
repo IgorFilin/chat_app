@@ -1,0 +1,12 @@
+<div class="chat">
+  <div class="chat__messageBlock">
+    @for(message of messages(); track $index) {
+      <div class="chat__message">
+        <div>{{message.Name}}</div>
+        <div>{{message.Message}}</div>
+      </div>
+    }
+  </div>
+  <textarea name="message" id="message" [formControl]="message"></textarea>
+  <button (click)="sendMessage()">Send Message</button>
+</div>

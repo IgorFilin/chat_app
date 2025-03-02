@@ -1,7 +1,9 @@
 import {
   Component,
+  computed,
   inject,
   OnInit,
+  Signal,
 } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
@@ -10,7 +12,9 @@ import { SectionListComponent } from './components/section-list/section-list.com
 import { IsOpenCloseService } from './services/is-open-close.service';
 import { CommonModule } from '@angular/common';
 import { slideInOutAnimation } from './animations/slide-in-out.animations';
-import { UserStore } from './store/user/user.store';
+import { PopupComponent } from './shared/components/popup/popup.component';
+import { PopupService } from './services/popup.service';
+import { bubbleAnimation } from './animations/bubble.animation';
 
 @Component({
   selector: 'app-root',
@@ -21,19 +25,22 @@ import { UserStore } from './store/user/user.store';
     SectionListComponent,
     RouterModule,
     CommonModule,
+    PopupComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  animations: [slideInOutAnimation],
+  animations: [slideInOutAnimation, bubbleAnimation]
 })
 export class AppComponent implements OnInit {
   title = 'personal_cabinet';
   isOpenMenu: boolean | null = null;
+  isOpenedPopup: Signal<boolean> = computed(() => this.popupService.isOpened());
   htmlRef: any;
 
   constructor(
     public loadingService: LoadingService,
     private isOpenCloseService: IsOpenCloseService,
+    private popupService: PopupService,
   ) {}
 
   ngOnInit() {

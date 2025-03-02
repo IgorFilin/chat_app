@@ -60,3 +60,8 @@ export interface IArticle {
   title: string;
   views: View[];
 }
+
+export interface IResponseUserDataWs {
+  Name: string
+  Message: string
+}

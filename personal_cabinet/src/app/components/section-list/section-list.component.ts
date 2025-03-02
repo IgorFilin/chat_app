@@ -44,6 +44,12 @@ export class SectionListComponent {
       routeLink: '/knowledgeBase',
       disabled: false,
     },
+    {
+      icon: 'chat',
+      title: 'Общий чат',
+      routeLink: '/chat',
+      disabled: false,
+    },
   ]);
 
   constructor(

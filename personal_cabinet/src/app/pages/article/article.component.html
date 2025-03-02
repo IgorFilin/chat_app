@@ -21,7 +21,12 @@
       <div class="article_viewsCount">{{ article()?.views?.length }}</div>
     </div>
     @if (isYourArticle() && !isEditMode()) {
-      <button (click)="isEditMode.set(true)" class="article_editButton secondary">Редактировать</button>
+      <div class="article_actionsButtons">
+        <button (click)="isEditMode.set(true)" class="article_editButton secondary">Редактировать</button>
+        <div class="article_removeIconContainer">
+          <cabinet-icon (iconClick)="deleteArticle()" id="trash" class=""/>
+        </div>
+      </div>
     }
     @if (isEditMode()) {
       <div class="article_editButtons">

@@ -12,6 +12,7 @@ export const authGuard: CanActivateFn = (route, state) => {
  
   return authService.authRequest().pipe(
     map((isAuth) => {
+      console.log('-__', isAuth);
       if(!isAuth) {
         appFacadeService.resetAppSettings()
         router.navigateByUrl('/login')

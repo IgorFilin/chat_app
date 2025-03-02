@@ -10,6 +10,7 @@ import { MainComponent } from './pages/main/main.component';
 import { canDeactivateGuard } from './core/guard/can-deactivate-guard';
 import { ArticleComponent } from './pages/article/article.component';
 import { PermissionGuard } from './core/guard/permission-guard';
+import { ChatComponent } from './pages/chat/chat.component';
 
 export const routes: Routes = [
   // { path: '', canActivate: [authGuard] , component: MainComponent },
@@ -36,6 +37,11 @@ export const routes: Routes = [
   {
     component: ArticleComponent,
     path: 'article/:id',
+    canActivate: [authGuard],
+  },
+  {
+    component: ChatComponent,
+    path: 'chat',
     canActivate: [authGuard],
   },
 ];
