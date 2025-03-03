@@ -64,4 +64,5 @@ export interface IArticle {
 export interface IResponseUserDataWs {
   Name: string
   Message: string
+  Event: string
 }

@@ -7,6 +7,7 @@ import { IResponseUserDataWs } from '../models/interfaces';
 export class SocketClientService {
   private socket: any
   messages:any = signal([])
+  typingUsers:any = signal([])
   userStore = inject(UserStore)
 
   constructor() {
@@ -18,14 +19,25 @@ export class SocketClientService {
 
     this.socket.onopen = () => {
       console.log("Соединение установлено");
-      this.socket.send("Привет, сервер!");
     };
 
     this.socket
     
     this.socket.onmessage = (event:any) => {
-      const data: IResponseUserDataWs = JSON.parse(event.data)
-      this.messages.update((messages:any) => [...messages, data])
+      const eventData: IResponseUserDataWs = JSON.parse(event.data)
+      switch(eventData.Event) {
+        case 'start_typing':
+          console.log('Пользователь начал печатать', )
+          this.typingUsers.update((users:any) => [...users, eventData.Name])
+          break;
+        case 'stop_typing':
+          console.log('Пользователь закончил печатать')
+          this.typingUsers.update((users:any) => users.filter((user:any) => user !== eventData.Name))
+          break;
+        default:
+          this.messages.update((messages:any) => [...messages, eventData])
+          break;
+      }
     };
     
     this.socket.onclose = () => {
@@ -33,7 +45,12 @@ export class SocketClientService {
     };
   }
 
-  sendMessage(data:any) {
-    this.socket.send(JSON.stringify(data))
+  sendMessage(data:string) {
+    this.socket.send(JSON.stringify({event:'', message: data}))
+  }
+
+  sendTypingEvent(isTyping:boolean) {
+    let typing = isTyping ? 'start_typing' : 'stop_typing'
+    this.socket.send(JSON.stringify({ event: typing }))
   }
 }
