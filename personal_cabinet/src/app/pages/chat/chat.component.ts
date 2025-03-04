@@ -2,7 +2,7 @@ import { Component, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { SocketClientService } from '../../services/socket-client.service';
-import { debounceTime, startWith, tap } from 'rxjs';
+import { debounceTime, tap } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -18,6 +18,7 @@ export class ChatComponent implements OnInit {
   messages = computed(() => this.socketClientService.messages())
   typingUsers = computed(() => this.socketClientService.typingUsers())
   isTyping: boolean = false
+  
   constructor(
     private socketClientService: SocketClientService
   ) { }

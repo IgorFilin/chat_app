@@ -1,5 +1,4 @@
 <div class="chat">
-  {{typingUsers() | json}}
   <div class="chat__messageBlock">
     @for(message of messages(); track $index) {
       <div class="chat__message">
@@ -8,12 +7,13 @@
       </div>
     }
   </div>
+  <div class="chat__usersTyping">
     @for(typingUser of typingUsers() ; track $index) {
-      <div>...{{typingUser}} печатает</div>
+      <div class="chat__userTyping">
+        {{typingUser.Name}} печатает
+      </div>
     }
-  <div>
-
   </div>
   <textarea name="message" id="message" [formControl]="message"></textarea>
-  <button (click)="sendMessage()">Send Message</button>
+  <button class="primary" [disabled]="!message.value" (click)="sendMessage()">Send Message</button>
 </div>

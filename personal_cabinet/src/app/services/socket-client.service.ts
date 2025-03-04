@@ -1,13 +1,13 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { UserStore } from '../store/user/user.store';
-import { IResponseUserDataWs } from '../models/interfaces';
+import { IResponseUserDataWs, IUsersWs } from '../models/interfaces';
 @Injectable({
   providedIn: 'root'
 })
 export class SocketClientService {
   private socket: any
   messages:any = signal([])
-  typingUsers:any = signal([])
+  typingUsers:WritableSignal<IUsersWs[]> = signal([])
   userStore = inject(UserStore)
 
   constructor() {
@@ -27,12 +27,12 @@ export class SocketClientService {
       const eventData: IResponseUserDataWs = JSON.parse(event.data)
       switch(eventData.Event) {
         case 'start_typing':
-          console.log('Пользователь начал печатать', )
-          this.typingUsers.update((users:any) => [...users, eventData.Name])
+          console.log('Пользователь начал печатать', eventData.Names)
+          this.typingUsers.set(eventData.Names)
           break;
         case 'stop_typing':
           console.log('Пользователь закончил печатать')
-          this.typingUsers.update((users:any) => users.filter((user:any) => user !== eventData.Name))
+          this.typingUsers.set(eventData.Names)
           break;
         default:
           this.messages.update((messages:any) => [...messages, eventData])

@@ -62,7 +62,12 @@ export interface IArticle {
 }
 
 export interface IResponseUserDataWs {
-  Name: string
+  Names: IUsersWs[]
   Message: string
   Event: string
+}
+
+export interface IUsersWs {
+  Name:string,
+  Id: string
 }
