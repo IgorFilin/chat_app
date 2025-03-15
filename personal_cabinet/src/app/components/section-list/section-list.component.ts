@@ -11,11 +11,10 @@ interface ListType {
   disabled: boolean;
 }
 @Component({
-  selector: 'cabinet-section-list',
-  standalone: true,
-  imports: [CommonModule, IconComponent, RouterModule, RouterLinkActive],
-  templateUrl: './section-list.component.html',
-  styleUrl: './section-list.component.scss',
+    selector: 'cabinet-section-list',
+    imports: [CommonModule, IconComponent, RouterModule, RouterLinkActive],
+    templateUrl: './section-list.component.html',
+    styleUrl: './section-list.component.scss'
 })
 export class SectionListComponent {
 

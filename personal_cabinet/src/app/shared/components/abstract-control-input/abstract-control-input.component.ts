@@ -2,15 +2,9 @@ import { Component, forwardRef, Optional, Self } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
 
 @Component({
-  template: '',
-  selector: 'app-abstract-control',
-  // providers: [
-  //   {
-  //     provide: NG_VALUE_ACCESSOR,
-  //     useExisting: forwardRef((() => AbstractControlComponent)),
-  //     multi: true,
-  //   }
-  // ]
+    template: '',
+    selector: 'app-abstract-control',
+    standalone: false
 })
 export abstract class AbstractControlComponent implements ControlValueAccessor {
 

@@ -3,11 +3,10 @@ import { IconComponent } from '../icon/icon.component';
 import { PopupService } from '../../../services/popup.service';
 
 @Component({
-  standalone: true,
-  selector: 'app-popup',
-  imports: [IconComponent],
-  templateUrl: './popup.component.html',
-  styleUrls: ['./popup.component.scss']
+    selector: 'app-popup',
+    imports: [IconComponent],
+    templateUrl: './popup.component.html',
+    styleUrls: ['./popup.component.scss']
 })
 export class PopupComponent implements OnInit {
 

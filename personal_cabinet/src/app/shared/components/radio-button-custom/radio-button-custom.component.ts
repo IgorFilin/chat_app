@@ -3,18 +3,17 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  standalone: true,
-  selector: 'app-radio-button-custom',
-  templateUrl: './radio-button-custom.component.html',
-  styleUrls: ['./radio-button-custom.component.scss'],
-  imports: [CommonModule],
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => RadioButtonCustomComponent),
-      multi: true,
-    },
-  ],
+    selector: 'app-radio-button-custom',
+    templateUrl: './radio-button-custom.component.html',
+    styleUrls: ['./radio-button-custom.component.scss'],
+    imports: [CommonModule],
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => RadioButtonCustomComponent),
+            multi: true,
+        },
+    ]
 })
 export class RadioButtonCustomComponent
   implements ControlValueAccessor, OnInit

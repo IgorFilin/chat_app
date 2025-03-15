@@ -14,19 +14,18 @@ import { Observable } from 'rxjs';
 import { KnowledgeService } from '../../services/knowledge.service';
 
 @Component({
-  standalone: true,
-  selector: 'app-create-article',
-  templateUrl: './create-article.component.html',
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MarkdownTextareaComponent,
-    InputComponent,
-    SearchInputComponent,
-    IconComponent
-  ],
-  styleUrls: ['./create-article.component.scss'],
-  animations: [ bubbleAnimation ],
+    selector: 'app-create-article',
+    templateUrl: './create-article.component.html',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MarkdownTextareaComponent,
+        InputComponent,
+        SearchInputComponent,
+        IconComponent
+    ],
+    styleUrls: ['./create-article.component.scss'],
+    animations: [bubbleAnimation]
 })
 export class CreateArticleComponent implements CanDeactivate<void> {
   // techologies: string[] = TECHNOLOGY_STACK;

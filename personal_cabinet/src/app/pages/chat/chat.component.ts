@@ -5,12 +5,11 @@ import { SocketClientService } from '../../services/socket-client.service';
 import { debounceTime, tap } from 'rxjs';
 
 @Component({
-  standalone: true,
-  selector: 'app-chat',
-  templateUrl: './chat.component.html',
-  styleUrls: ['./chat.component.scss'],
-  imports: [CommonModule, ReactiveFormsModule],
-  providers: [SocketClientService]
+    selector: 'app-chat',
+    templateUrl: './chat.component.html',
+    styleUrls: ['./chat.component.scss'],
+    imports: [CommonModule, ReactiveFormsModule],
+    providers: [SocketClientService]
 })
 export class ChatComponent implements OnInit {
 

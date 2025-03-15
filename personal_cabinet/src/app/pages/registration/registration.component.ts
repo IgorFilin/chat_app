@@ -13,18 +13,17 @@ import { AuthService } from '../../services/auth.service';
 import { bubbleAnimation } from '../../animations/bubble.animation';
 
 @Component({
-  selector: 'cabinet-registration',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    CommonModule,
-    FormErrorHandlerComponent,
-    InputComponent,
-    RouterModule,
-  ],
-  templateUrl: './registration.component.html',
-  styleUrl: './registration.component.scss',
-  animations: [ bubbleAnimation ],
+    selector: 'cabinet-registration',
+    imports: [
+        ReactiveFormsModule,
+        CommonModule,
+        FormErrorHandlerComponent,
+        InputComponent,
+        RouterModule,
+    ],
+    templateUrl: './registration.component.html',
+    styleUrl: './registration.component.scss',
+    animations: [bubbleAnimation]
 })
 export class RegistrationComponent {
   constructor(private authService: AuthService) {}

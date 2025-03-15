@@ -10,12 +10,11 @@ import { bubbleAnimation } from '../../animations/bubble.animation';
 import { VkAuthService } from '../../services/vk-auth.service';
 
 @Component({
-  selector: 'cabinet-login',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, InputComponent, RouterModule],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.scss',
-  animations: [bubbleAnimation],
+    selector: 'cabinet-login',
+    imports: [CommonModule, ReactiveFormsModule, InputComponent, RouterModule],
+    templateUrl: './login.component.html',
+    styleUrl: './login.component.scss',
+    animations: [bubbleAnimation]
 })
 export class LoginComponent implements OnInit {
   constructor(private authServise: AuthService, private vkAuthService: VkAuthService) {}

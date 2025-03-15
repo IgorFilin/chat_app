@@ -25,19 +25,18 @@ export interface ICopyedText {
 } 
 
 @Component({
-  standalone: true,
-  selector: 'app-markdown-textarea',
-  templateUrl: './markdown-textarea.component.html',
-  styleUrls: ['./markdown-textarea.component.scss'],
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    CdkTextareaAutosize,
-    MarkdownModule,
-    FormsModule,
-    IconComponent
-  ],
-  animations: [bubbleAnimation],
+    selector: 'app-markdown-textarea',
+    templateUrl: './markdown-textarea.component.html',
+    styleUrls: ['./markdown-textarea.component.scss'],
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        CdkTextareaAutosize,
+        MarkdownModule,
+        FormsModule,
+        IconComponent
+    ],
+    animations: [bubbleAnimation]
 })
 export class MarkdownTextareaComponent extends AbstractControlComponent  {
   

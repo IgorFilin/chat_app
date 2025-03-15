@@ -9,11 +9,10 @@ import {
 import { FormErrorHandlerComponent } from '../form-error-handler/form-error-handler.component';
 
 @Component({
-  standalone: true,
-  selector: 'app-input',
-  templateUrl: './input.component.html',
-  styleUrls: ['./input.component.scss'],
-  imports: [FormsModule, FormErrorHandlerComponent],
+    selector: 'app-input',
+    templateUrl: './input.component.html',
+    styleUrls: ['./input.component.scss'],
+    imports: [FormsModule, FormErrorHandlerComponent]
 })
 export class InputComponent implements ControlValueAccessor {
   @Input() placeholder: string = '';

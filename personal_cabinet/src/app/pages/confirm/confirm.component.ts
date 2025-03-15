@@ -14,18 +14,17 @@ import { IConfirm } from '../../models/request';
 import { bubbleAnimation } from '../../animations/bubble.animation';
 
 @Component({
-  selector: 'cabinet-confirm',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    FormErrorHandlerComponent,
-    InputComponent,
-    RouterModule,
-  ],
-  templateUrl: './confirm.component.html',
-  styleUrl: './confirm.component.scss',
-  animations: [ bubbleAnimation ],
+    selector: 'cabinet-confirm',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        FormErrorHandlerComponent,
+        InputComponent,
+        RouterModule,
+    ],
+    templateUrl: './confirm.component.html',
+    styleUrl: './confirm.component.scss',
+    animations: [bubbleAnimation]
 })
 export class ConfirmComponent {
   constructor(private authService: AuthService, private router: Router) {}

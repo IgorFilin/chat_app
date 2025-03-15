@@ -12,12 +12,11 @@ import { KnowledgeService } from '../../services/knowledge.service';
 import { IArticle } from '../../models/interfaces';
 
 @Component({
-  selector: 'cabinet-header',
-  standalone: true,
-  imports: [CommonModule, IconComponent, SearchInputComponent, RouterModule],
-  templateUrl: './header.component.html',
-  styleUrl: './header.component.scss',
-  animations: [],
+    selector: 'cabinet-header',
+    imports: [CommonModule, IconComponent, SearchInputComponent, RouterModule],
+    templateUrl: './header.component.html',
+    styleUrl: './header.component.scss',
+    animations: []
 })
 export class HeaderComponent {
   isOpenMenu: boolean = false;

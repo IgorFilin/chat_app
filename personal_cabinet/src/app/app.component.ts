@@ -17,19 +17,18 @@ import { PopupService } from './services/popup.service';
 import { bubbleAnimation } from './animations/bubble.animation';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [
-    RouterOutlet,
-    HeaderComponent,
-    SectionListComponent,
-    RouterModule,
-    CommonModule,
-    PopupComponent
-  ],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
-  animations: [slideInOutAnimation, bubbleAnimation]
+    selector: 'app-root',
+    imports: [
+        RouterOutlet,
+        HeaderComponent,
+        SectionListComponent,
+        RouterModule,
+        CommonModule,
+        PopupComponent
+    ],
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.scss',
+    animations: [slideInOutAnimation, bubbleAnimation]
 })
 export class AppComponent implements OnInit {
   title = 'personal_cabinet';

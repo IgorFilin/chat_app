@@ -18,11 +18,10 @@ import { TextSlicePipe } from '../../pipes/text-slice.pipe';
 import { KnowledgeService } from '../../services/knowledge.service';
 
 @Component({
-  standalone: true,
-  selector: 'app-knowledgeBase',
-  templateUrl: './knowledgeBase.component.html',
-  imports: [CommonModule, MarkdownModule, RouterModule, IconComponent, TextSlicePipe],
-  styleUrls: ['./knowledgeBase.component.scss'],
+    selector: 'app-knowledgeBase',
+    templateUrl: './knowledgeBase.component.html',
+    imports: [CommonModule, MarkdownModule, RouterModule, IconComponent, TextSlicePipe],
+    styleUrls: ['./knowledgeBase.component.scss']
 })
 export class KnowledgeBaseComponent implements OnInit {
   

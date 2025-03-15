@@ -16,19 +16,18 @@ import { ToasterService } from '../../services/toaster.service';
 import { PopupService } from '../../services/popup.service';
 
 @Component({
-  standalone: true,
-  selector: 'app-article',
-  templateUrl: './article.component.html',
-  styleUrls: ['./article.component.scss'],
-  imports: [ 
-    CommonModule,
-    MarkdownModule,
-    IconComponent,
-    ReactiveFormsModule,
-    MarkdownTextareaComponent, 
-    InputComponent,
-  ],
-  animations: [ bubbleAnimation ],
+    selector: 'app-article',
+    templateUrl: './article.component.html',
+    styleUrls: ['./article.component.scss'],
+    imports: [
+        CommonModule,
+        MarkdownModule,
+        IconComponent,
+        ReactiveFormsModule,
+        MarkdownTextareaComponent,
+        InputComponent,
+    ],
+    animations: [bubbleAnimation]
 })
 export class ArticleComponent implements OnInit {
   isYourArticle: Signal<boolean> = computed(() => this.userStore.userId() === this.article()?.user.id);

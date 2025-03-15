@@ -7,12 +7,11 @@ import { IconComponent } from '../icon/icon.component';
 import { bubbleAnimation } from '../../../animations/bubble.animation';
 
 @Component({
-  standalone:true,
-  selector: 'app-search-input',
-  templateUrl: './search-input.component.html',
-  styleUrls: ['./search-input.component.scss'],
-  imports: [FormsModule, FormErrorHandlerComponent, IconComponent],
-  animations: [ bubbleAnimation]
+    selector: 'app-search-input',
+    templateUrl: './search-input.component.html',
+    styleUrls: ['./search-input.component.scss'],
+    imports: [FormsModule, FormErrorHandlerComponent, IconComponent],
+    animations: [bubbleAnimation]
 })
 export class SearchInputComponent implements OnInit, ControlValueAccessor  {
   
