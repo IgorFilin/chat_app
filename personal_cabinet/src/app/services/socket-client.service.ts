@@ -6,7 +6,9 @@ import { IResponseUserDataWs, IUsersWs } from '../models/interfaces';
 })
 export class SocketClientService {
   private socket: any
-  messages:any = signal([])
+  isConnected = signal(false)
+  isLoading = signal(true)
+  messages:WritableSignal<Array<any>> = signal([])
   typingUsers:WritableSignal<IUsersWs[]> = signal([])
   userStore = inject(UserStore)
 
@@ -18,11 +20,10 @@ export class SocketClientService {
     this.socket = new WebSocket(`ws://localhost:3001/ws/chat?id=${this.userStore.userInfoData()?.id}&name=${this.userStore.userInfoData()?.name}`);
 
     this.socket.onopen = () => {
-      console.log("Соединение установлено");
+      this.isConnected.set(true)
+      this.isLoading.set(false)
     };
 
-    this.socket
-    
     this.socket.onmessage = (event:any) => {
       const eventData: IResponseUserDataWs = JSON.parse(event.data)
       switch(eventData.Event) {
@@ -41,7 +42,11 @@ export class SocketClientService {
     };
     
     this.socket.onclose = () => {
-      console.log("Соединение закрыто");
+      this.isLoading.set(false)
+    };
+
+    this.socket.onerror = (error:any) => {
+      console.log("Ошибка", error);
     };
   }
 

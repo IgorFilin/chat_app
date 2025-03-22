@@ -14,7 +14,8 @@ export class RequestService {
   get<T, R>(
     path: string,
     params?: T,
-    api: string = this.apiUrl
+    api: string = this.apiUrl,
+    withCredentials = true
   ): Observable<R> {
     let httpParams = new HttpParams();
     if (params) {
@@ -25,7 +26,7 @@ export class RequestService {
 
     return this.http.get<R>(`${api}/${path}`, {
       params: httpParams,
-      withCredentials: true,
+      withCredentials,
     });
   }
 
