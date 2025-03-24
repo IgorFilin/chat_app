@@ -62,12 +62,17 @@ export interface IArticle {
 }
 
 export interface IResponseUserDataWs {
-  Names: IUsersWs[]
-  Message: string
-  Event: string
+  Names: IUsersWs[];
+  Message: IResponseMessage;
+  Event: string;
+}
+
+export interface IResponseMessage {
+  Text: string;
+  IsRemoved: boolean;
 }
 
 export interface IUsersWs {
-  Name:string,
-  Id: string
+  Name: string;
+  Id: string;
 }

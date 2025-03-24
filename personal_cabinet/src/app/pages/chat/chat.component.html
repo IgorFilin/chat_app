@@ -14,7 +14,7 @@
     } @else { @for(message of messages(); track $index) {
     <div class="chat__message">
       <div>{{ message.Name }}</div>
-      <div>{{ message.Message }}</div>
+      <div>{{ message.Message.Text }}</div>
     </div>
     } }
   </div>
