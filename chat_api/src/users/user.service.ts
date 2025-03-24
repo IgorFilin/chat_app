@@ -19,8 +19,22 @@ interface RestorePassType {
   password: string;
 }
 
+interface IUserVkAuthData {
+  user_id: string;
+  first_name: string;
+  last_name: string;
+  avatar: string;
+  email: string;
+  sex: number;
+  verified: boolean;
+  birthday: string;
+  ip: string;
+}
+
 @Injectable()
 export class UsersService {
+  lenthBcryptPassword: number = 60;
+
   constructor(
     @InjectRepository(User)
     private UserTable: Repository<User>,
@@ -33,7 +47,7 @@ export class UsersService {
 
   blockedKeysSendingMails = {};
 
-  async create(createUserDto: CreateUserDto, userIP: string) {
+  async create(createUserDto?: CreateUserDto, userIP?: string, isAuthVk?: boolean) {
     try {
       if (!createUserDto || !createUserDto.email || !createUserDto.name || !createUserDto.password) {
         return { message: 'Недостаточно данных для регистрации' };
@@ -44,43 +58,17 @@ export class UsersService {
       if (findUser) {
         return { message: 'К сожалению такая почта уже существует' };
       } else {
-        const salt = await bcrypt.genSalt();
-        const hashedPassword = await bcrypt.hash(createUserDto.password, salt);
-        const confirmRegKey = randomBytes(5).toString('hex');
-
-        const dirname = process.cwd();
-        const imagePath = path.join('static', 'image', 'default_photo_user.webp');
-
-        const token = this.JwtService.sign({
-          name: createUserDto.name,
-          randomData: uuidv4(),
-        });
-
-        const ip = userIP.slice(7);
-        // Создаем пользователя по сущности
-        const user = new User();
-        user.name = createUserDto.name;
-        user.email = createUserDto.email;
-        user.password = hashedPassword;
-        user.date = new Date();
-        user.isAcceptKey = false;
-        user.acceptKey = confirmRegKey;
-        user.authToken = token;
-        user.userPhoto = imagePath;
-        user.isAdmin = false;
-        user.ip = ip ? ip : 'Скрыт';
-
-        // Сохраняем в БД пользователя с регистрационным key
-        await this.UserTable.save(user);
-        // Отсылаем на почту ключ подтверждения
-        await this.emailService.sendMailTemplate(user.email, confirmRegKey);
-
-        // Возвращаем значение что ключ на почту отправлен, но не подтвержден
-        return {
-          isAcceptKey: false,
-          email: user.email,
-          message: `Приветствую ${user.name}, пожалуйста введи код подтверждения`,
-        };
+        const savedUserData = await this.saveNewUserDb(createUserDto, userIP);
+        if (savedUserData) {
+          await this.emailService.sendMailTemplate(savedUserData.email, savedUserData.acceptKey);
+          return {
+            isAcceptKey: savedUserData.isAcceptKey,
+            email: savedUserData.email,
+            message: !savedUserData.isAcceptKey ? `Приветствую ${savedUserData.name}, пожалуйста введи код подтверждения` : '',
+          };
+        } else {
+          return { message: 'Что-то пошло не так, попробуйте ещё раз' };
+        }
       }
     } catch (e) {}
   }
@@ -142,7 +130,6 @@ export class UsersService {
   async confirmKeyRestorePass(restoreData: RestorePassType) {
     try {
       if (restoreData.password.length < 7) {
-        console.log(restoreData.password);
         return {
           message: 'Пожалуйста введите пароль, не менее 7 символов',
           isAccept: false,
@@ -195,28 +182,40 @@ export class UsersService {
   }
 
   async login(LoginUserDto: LoginUserDto) {
-    if (!LoginUserDto.email || !LoginUserDto.password) {
-      throw new BadRequestException('К сожалению недостаточно данных для авторизации');
-    }
-    const user = await this.UserTable.findOneBy({ email: LoginUserDto.email });
-    if (user && !user.isAcceptKey) {
-      throw new BadRequestException('Пожалуйста подтвердите вашу почту');
-    }
-    if (user && Object.keys(user).length) {
-      const userPasswordValid = await bcrypt.compare(LoginUserDto.password, user.password);
-      if (userPasswordValid) {
+    try {
+      if (!LoginUserDto.email || !LoginUserDto.password) {
         return {
-          message: `Добро пожаловать ${user.name}`,
-          name: user.name,
-          token: user.authToken,
-          isAuth: true,
-          id: user.id,
+          message: 'К сожалению недостаточно данных для авторизации',
         };
-      } else {
-        throw new BadRequestException('Неверный пароль');
       }
-    } else {
-      throw new BadRequestException('К сожалению такого пользователя не существует');
+      const user = await this.UserTable.findOneBy({ email: LoginUserDto.email });
+      if (user && !user.isAcceptKey) {
+        return {
+          message: 'Пожалуйста подтвердите вашу почту',
+        };
+      }
+      if (user && Object.keys(user).length) {
+        let isUserPasswordValid: boolean = false;
+        console.log('LoginUserDto', LoginUserDto);
+        if (LoginUserDto.password.length === this.lenthBcryptPassword) isUserPasswordValid = LoginUserDto.password === user.password;
+        else isUserPasswordValid = await bcrypt.compare(LoginUserDto.password, user.password);
+
+        if (isUserPasswordValid) {
+          return {
+            message: `Добро пожаловать ${user.name}`,
+            name: user.name,
+            token: user.authToken,
+            isAuth: true,
+            id: user.id,
+          };
+        } else {
+          throw new BadRequestException('Неверный пароль');
+        }
+      } else {
+        throw new BadRequestException('К сожалению такого пользователя не существует');
+      }
+    } catch (e) {
+      console.warn(e);
     }
   }
 
@@ -233,6 +232,7 @@ export class UsersService {
         token: user.authToken,
         isAuth: true,
         id: user.id,
+        role: user.role,
       };
     } catch (error) {
       return { isAuth: false };
@@ -314,5 +314,62 @@ export class UsersService {
         where: { authToken: Not(authToken) },
       });
     } catch (e) {}
+  }
+
+  async auth_vk(payload: IUserVkAuthData) {
+    try {
+      if (!payload.email || !payload.first_name || !payload.last_name) return { message: 'К сожалению произошла ошибка, попробуйте ещё раз' };
+      const randomGeneratePassword = randomBytes(10).toString('hex');
+      const authData: CreateUserDto = {
+        email: payload.email,
+        password: randomGeneratePassword,
+        name: `${payload.first_name} ${payload.last_name}`,
+      };
+      const findedUser = await this.UserTable.findOneBy({
+        email: payload.email,
+      });
+
+      if (findedUser) {
+        return await this.login({ email: findedUser.email, password: findedUser.password });
+      } else {
+        return this.saveNewUserDb(authData, payload.ip, true);
+      }
+    } catch (e) {
+      console.log('error', e);
+    }
+  }
+
+  private async saveNewUserDb(createUserDto: CreateUserDto, userIP?: string, isAcceptKey: boolean = false) {
+    try {
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(createUserDto.password, salt);
+      const confirmRegKey = randomBytes(5).toString('hex');
+
+      const imagePath = path.join('static', 'image', 'default_photo_user.webp');
+
+      const token = this.JwtService.sign({
+        name: createUserDto.name,
+        randomData: uuidv4(),
+      });
+
+      const ip = userIP?.slice(7) || 'Скрыт';
+
+      // Создаем пользователя по сущности
+      const user = new User();
+      user.name = createUserDto.name;
+      user.email = createUserDto.email;
+      user.password = hashedPassword;
+      user.date = new Date();
+      user.isAcceptKey = isAcceptKey;
+      user.acceptKey = confirmRegKey;
+      user.authToken = token;
+      user.userPhoto = imagePath;
+      user.role = 'user';
+      user.ip = ip;
+
+      return await this.UserTable.save(user);
+    } catch (e) {
+      return;
+    }
   }
 }

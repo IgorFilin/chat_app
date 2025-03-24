@@ -1,4 +1,4 @@
-@import "colors.scss";
+@use "colors.scss" as *;
 .error {
   color: var(--error-color);
   font-size: 12px;

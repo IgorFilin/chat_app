@@ -1,45 +1,27 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { FormErrorHandlerComponent } from '../../shared/components/form-error-handler/form-error-handler.component';
 import { AuthService } from '../../services/auth.service';
 import { InputComponent } from '../../shared/components/input/input.component';
 import { slideInOutAnimation } from '../../animations/slide-in-out.animations';
 import { bubbleAnimation } from '../../animations/bubble.animation';
+import { VkAuthService } from '../../services/vk-auth.service';
 
 @Component({
-  selector: 'cabinet-login',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    FormErrorHandlerComponent,
-    InputComponent,
-    RouterModule,
-  ],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.scss',
-  animations: [bubbleAnimation],
+    selector: 'cabinet-login',
+    imports: [CommonModule, ReactiveFormsModule, InputComponent, RouterModule],
+    templateUrl: './login.component.html',
+    styleUrl: './login.component.scss',
+    animations: [bubbleAnimation]
 })
-export class LoginComponent {
-  constructor(private authServise: AuthService) {}
+export class LoginComponent implements OnInit {
+  constructor(private authServise: AuthService, private vkAuthService: VkAuthService) {}
+
   loginForm: FormGroup = new FormGroup({
-    email: new FormControl('', [
-      Validators.required,
-      Validators.pattern(
-        /^((([0-9A-Za-z]{1}[-0-9A-z\.]{1,}[0-9A-Za-z]{1})|([0-9А-Яа-я]{1}[-0-9А-я\.]{1,}[0-9А-Яа-я]{1}))@([-A-Za-z]{1,}\.){1,2}[-A-Za-z]{2,})$/u
-      ),
-    ]),
-    password: new FormControl('', [
-      Validators.required,
-      Validators.minLength(6),
-    ]),
+    email: new FormControl('', [Validators.required, Validators.pattern(/^((([0-9A-Za-z]{1}[-0-9A-z\.]{1,}[0-9A-Za-z]{1})|([0-9А-Яа-я]{1}[-0-9А-я\.]{1,}[0-9А-Яа-я]{1}))@([-A-Za-z]{1,}\.){1,2}[-A-Za-z]{2,})$/u)]),
+    password: new FormControl('', [Validators.required, Validators.minLength(6)]),
   });
 
   get email() {
@@ -51,6 +33,11 @@ export class LoginComponent {
 
   trackByIndex(index: number): number {
     return index;
+  }
+
+  ngOnInit(): void {
+    this.vkAuthService.initialVkConfig();
+    this.vkAuthService.initialOneTapButton();
   }
 
   onSubmit() {

@@ -48,19 +48,22 @@ export class EmailService {
     this.email = configService.get('EMAIL_USERNAME');
     this.password = configService.get('EMAIL_PASSWORD');
     this.transporter = nodemailer.createTransport({
-      host: 'smtp.mail.ru', // сервер SMTP для Mail.ru
-      port: 465, // порт для SSL
+      host: 'mail.filin.tech', 
+      port: 465,
       secure: true,
       auth: {
         user: this.email,
         pass: this.password,
       },
+      // NOTE Разобраться и настроить сертификат
+      tls: {
+        rejectUnauthorized: false, // Игнорировать ошибки проверки сертификата
+      },
     });
-
     this.mailOptions = {
-      from: 'Your App <chat.info@inbox.ru>',
+      from: 'Your App <cabinet@filin.tech>',
       to: '',
-      subject: 'Confirm your email',
+      subject: 'Подтвердите свою почту',
       html: '',
     };
   }

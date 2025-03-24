@@ -1,5 +1,5 @@
-@import "colors.scss";
-@import '../styles/mixins.scss';
+@use "colors.scss" as *;;
+@use '../styles/mixins.scss' as *;
 
 .ng-sectionList {
   display: flex;

@@ -1,53 +1,35 @@
-import {
-  Component,
-  ElementRef,
-  Inject,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, computed, inject, OnInit, Signal, viewChild, ViewContainerRef, WritableSignal } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
-import { RegistrationComponent } from './pages/registration/registration.component';
-import { LoginComponent } from './pages/login/login.component';
 import { HeaderComponent } from './components/header/header.component';
-import { AuthService } from './services/auth.service';
 import { LoadingService } from './services/loading.service';
 import { SectionListComponent } from './components/section-list/section-list.component';
-import { Observable } from 'rxjs';
 import { IsOpenCloseService } from './services/is-open-close.service';
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { slideInOutAnimation } from './animations/slide-in-out.animations';
+import { PopupComponent } from './shared/components/popup/popup.component';
+import { PopupService } from './services/popup.service';
+import { bubbleAnimation } from './animations/bubble.animation';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [
-    RouterOutlet,
-    RegistrationComponent,
-    LoginComponent,
-    HeaderComponent,
-    SectionListComponent,
-    RouterModule,
-    CommonModule,
-  ],
+  imports: [RouterOutlet, HeaderComponent, SectionListComponent, RouterModule, CommonModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  animations: [slideInOutAnimation],
+  animations: [slideInOutAnimation, bubbleAnimation],
 })
 export class AppComponent implements OnInit {
   title = 'personal_cabinet';
   isOpenMenu: boolean | null = null;
+  isOpenedPopup: Signal<boolean> = computed(() => this.popupService.isOpened());
   htmlRef: any;
-  constructor(
-    private authService: AuthService,
-    public loadingService: LoadingService,
-    private isOpenCloseService: IsOpenCloseService
-  ) {}
+  popupContainer: Signal<ViewContainerRef | undefined> = viewChild('popupContainer', { read: ViewContainerRef });
+
+  constructor(public loadingService: LoadingService, private isOpenCloseService: IsOpenCloseService, private popupService: PopupService) {}
 
   ngOnInit() {
-    // this.authService.authRequest().subscribe();
-    console.log(6);
     this.isOpenCloseService.dataToggle.subscribe((data) => {
       this.isOpenMenu = data['menu'];
     });
+    this.popupService.initialize(this.popupContainer()!);
   }
 }

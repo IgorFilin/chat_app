@@ -1,6 +1,6 @@
-import { User } from 'src/users/entities/user.entity';
 import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Answer } from './answer.entity';
+import { User } from '../../users/entities/user.entity';
 
 @Entity('question')
 export class Question {

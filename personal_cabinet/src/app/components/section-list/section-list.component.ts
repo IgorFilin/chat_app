@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal, WritableSignal } from '@angular/core';
+import { Component, computed, Signal, signal, WritableSignal } from '@angular/core';
 import { Router, RouterLinkActive, RouterModule } from '@angular/router';
 import { IconComponent } from '../../shared/components/icon/icon.component';
+import { UserService } from '../../services/user.service';
 
 interface ListType {
   title: string;
@@ -10,14 +11,14 @@ interface ListType {
   disabled: boolean;
 }
 @Component({
-  selector: 'cabinet-section-list',
-  standalone: true,
-  imports: [CommonModule, IconComponent, RouterModule, RouterLinkActive],
-  templateUrl: './section-list.component.html',
-  styleUrl: './section-list.component.scss',
+    selector: 'cabinet-section-list',
+    imports: [CommonModule, IconComponent, RouterModule, RouterLinkActive],
+    templateUrl: './section-list.component.html',
+    styleUrl: './section-list.component.scss'
 })
 export class SectionListComponent {
-  sectionLists: WritableSignal<Array<ListType>> = signal([
+
+  sectionLists: Signal<Array<ListType>> = computed(() => [
     {
       icon: 'main',
       title: 'Главная (в разработке)',
@@ -28,7 +29,7 @@ export class SectionListComponent {
       icon: 'bot',
       title: 'Создать вопрос',
       routeLink: '/questions',
-      disabled: false,
+      disabled: this.userService.userRole() !== 'admin',
     },
     {
       icon: 'article',
@@ -42,9 +43,18 @@ export class SectionListComponent {
       routeLink: '/knowledgeBase',
       disabled: false,
     },
+    {
+      icon: 'chat',
+      title: 'Общий чат',
+      routeLink: '/chat',
+      disabled: false,
+    },
   ]);
 
-  constructor(private route: Router) {
+  constructor(
+    private route: Router,
+    private userService: UserService,
+  ) {
     console.log(this.route);
   }
 }

@@ -1,10 +1,10 @@
-@import "colors.scss";
-@import "mixins.scss";
-@import "globalStyles.scss";
-@import "buttons.scss";
-@import "ngx-toastr/toastr";
-@import "styles/inputs.scss";
-@import "styles/loaders.scss";
+@use "colors.scss" as *;
+@use "mixins.scss" as *;
+@use "globalStyles.scss" as *;
+@use "buttons.scss" as *;
+@use "ngx-toastr/toastr" as *;
+@use "styles/inputs.scss" as *;
+@use "styles/loaders.scss" as *;
 
 html,
 body {

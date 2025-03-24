@@ -11,12 +11,7 @@ export class RequestService {
 
   constructor(private http: HttpClient) {}
 
-  get<T, R>(
-    path: string,
-    params?: T,
-    api: string = this.apiUrl
-  ): Observable<R> {
-    console.log(params);
+  get<T, R>(path: string, params?: T, api: string = this.apiUrl, withCredentials = true): Observable<R> {
     let httpParams = new HttpParams();
     if (params) {
       for (const key in params) {
@@ -26,12 +21,31 @@ export class RequestService {
 
     return this.http.get<R>(`${api}/${path}`, {
       params: httpParams,
-      withCredentials: true,
+      withCredentials,
     });
   }
 
   post<T, R>(path: string, body: T, api: string = this.apiUrl): Observable<R> {
     return this.http.post<R>(`${api}/${path}`, body, {
+      withCredentials: true,
+    });
+  }
+
+  patch<T, R>(path: string, body: T, api: string = this.apiUrl): Observable<R> {
+    return this.http.patch<R>(`${api}/${path}`, body, {
+      withCredentials: true,
+    });
+  }
+
+  put<T, R>(path: string, body: T, api: string = this.apiUrl): Observable<R> {
+    return this.http.put<R>(`${api}/${path}`, body, {
+      withCredentials: true,
+    });
+  }
+
+  delete<T, R>(path: string, body: T, api: string = this.apiUrl): Observable<R> {
+    return this.http.delete<R>(`${api}/${path}`, {
+      body,
       withCredentials: true,
     });
   }

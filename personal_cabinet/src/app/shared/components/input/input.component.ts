@@ -1,4 +1,4 @@
-import { Component, Input, Optional, Self } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, Optional, Self, SimpleChanges } from '@angular/core';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -9,11 +9,10 @@ import {
 import { FormErrorHandlerComponent } from '../form-error-handler/form-error-handler.component';
 
 @Component({
-  standalone: true,
-  selector: 'app-input',
-  templateUrl: './input.component.html',
-  styleUrls: ['./input.component.scss'],
-  imports: [FormsModule, FormErrorHandlerComponent],
+    selector: 'app-input',
+    templateUrl: './input.component.html',
+    styleUrls: ['./input.component.scss'],
+    imports: [FormsModule, FormErrorHandlerComponent]
 })
 export class InputComponent implements ControlValueAccessor {
   @Input() placeholder: string = '';
@@ -23,7 +22,10 @@ export class InputComponent implements ControlValueAccessor {
   onTouch(isTouch: boolean) {}
   onChange(value: string) {}
 
-  constructor(@Self() @Optional() private control: NgControl) {
+  constructor(
+    @Self() @Optional() private control: NgControl,
+    private changeDetector: ChangeDetectorRef
+  ) {
     if (this.control) {
       this.control.valueAccessor = this;
     }
@@ -50,7 +52,7 @@ export class InputComponent implements ControlValueAccessor {
   registerOnTouched(fn: any): void {
     this.onTouch = fn;
   }
-
+    
   handleBlur(): void {
     this.onTouch(true);
   }

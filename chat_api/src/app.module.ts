@@ -38,7 +38,7 @@ const configEnv = process.env.NODE_ENV === 'production' ? '.env.production' : '.
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
+      useFactory: async (configService: ConfigService) => ({
         type: 'postgres',
         host: configService.get('BD_HOST'),
         port: configService.get('BD_PORT'),

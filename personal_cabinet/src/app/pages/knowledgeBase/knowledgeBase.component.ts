@@ -1,7 +1,9 @@
 import {
   Component,
+  computed,
   effect,
   OnInit,
+  Signal,
   signal,
   WritableSignal,
 } from '@angular/core';
@@ -13,37 +15,60 @@ import { MarkdownModule } from 'ngx-markdown';
 import { Router, RouterModule, UrlSegment } from '@angular/router';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 import { TextSlicePipe } from '../../pipes/text-slice.pipe';
+import { KnowledgeService } from '../../services/knowledge.service';
 
 @Component({
-  standalone: true,
-  selector: 'app-knowledgeBase',
-  templateUrl: './knowledgeBase.component.html',
-  imports: [CommonModule, MarkdownModule, RouterModule, IconComponent, TextSlicePipe],
-  styleUrls: ['./knowledgeBase.component.scss'],
+    selector: 'app-knowledgeBase',
+    templateUrl: './knowledgeBase.component.html',
+    imports: [CommonModule, MarkdownModule, RouterModule, IconComponent, TextSlicePipe],
+    styleUrls: ['./knowledgeBase.component.scss']
 })
 export class KnowledgeBaseComponent implements OnInit {
-
-  dataArticles: any = [];
+  
+  dataArticles: Signal<any> = computed(() => this.knowledgeService.articles );
+  dataPaginationArticles: any = [];
   techologies: TechnologyStackType[] = TECHNOLOGY_STACK;
-  currentTech: WritableSignal<TechnologyStackType> = signal('Angular');
+  currentPage: WritableSignal<number> = signal(1);
+  dataArticlesInPage: number = 10;
+  start:number = 0;
+  end:number = 0;
+  pagination:number[] = [];
+  // currentTech: WritableSignal<TechnologyStackType> = signal('');
 
   constructor(
-    private questionAnswerService: QuestionAnswerService,
-    private router: Router
-  ) {
-    effect(() => {
-      this.questionAnswerService
-        .getArticles(this.currentTech())
-        .subscribe((data) => {
-          console.log('data', data);
-          this.dataArticles = data;
-        });
+    private router: Router,
+    private knowledgeService: KnowledgeService
+  ) {}
+
+  ngOnInit() {
+    this.knowledgeService
+    .getArticles()
+    .subscribe((data) => {
+      this.knowledgeService.articles = data;
+      this.dataPaginationArticles = this.dataArticles().slice(this.start, this.end + this.dataArticlesInPage);
+      this.initialPagination()
     });
   }
 
-  ngOnInit() {}
+  filteredPagination(page: number) {
+    const start = this.dataArticlesInPage * page
+    const end = (this.dataArticlesInPage * page) + this.dataArticlesInPage
+
+    this.dataPaginationArticles = this.dataArticles().slice(start, end);
+  }
+
+  initialPagination() {
+    for(let i = 0; i < Math.floor(this.dataArticles().length / this.dataArticlesInPage); i++) {
+      this.pagination.push(i + 1);
+    }
+  }
+
+  setPage(page: number) { 
+    this.currentPage.set(page);
+    this.filteredPagination(page);
+  }
 
   onClickTechTagHandler(tech: TechnologyStackType) {
-    this.currentTech.set(tech);
+    // this.currentTech.set(tech);
   }
 }

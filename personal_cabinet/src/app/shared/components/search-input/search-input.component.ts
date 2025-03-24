@@ -2,23 +2,23 @@ import { Component, EventEmitter, Input, OnInit, Optional, Output, Self } from '
 import { AbstractControl, ControlValueAccessor, FormsModule, NgControl, ValidationErrors } from '@angular/forms';
 import { FormErrorHandlerComponent } from '../form-error-handler/form-error-handler.component';
 import { CommonModule } from '@angular/common';
-import { BehaviorSubject, debounce, debounceTime, distinctUntilChanged, Observable, Subject, tap } from 'rxjs';
+import { BehaviorSubject, debounce, debounceTime, distinctUntilChanged, Observable, Subject, take, tap } from 'rxjs';
 import { IconComponent } from '../icon/icon.component';
 import { bubbleAnimation } from '../../../animations/bubble.animation';
 
 @Component({
-  standalone:true,
-  selector: 'app-search-input',
-  templateUrl: './search-input.component.html',
-  styleUrls: ['./search-input.component.scss'],
-  imports: [FormsModule, FormErrorHandlerComponent, IconComponent],
-  animations: [ bubbleAnimation]
+    selector: 'app-search-input',
+    templateUrl: './search-input.component.html',
+    styleUrls: ['./search-input.component.scss'],
+    imports: [FormsModule, FormErrorHandlerComponent, IconComponent],
+    animations: [bubbleAnimation]
 })
 export class SearchInputComponent implements OnInit, ControlValueAccessor  {
   
   @Input() placeholder: string = '';
   @Input() errorMessage: string = '';
-  @Input() searchedRequest$: ((value:string) => Observable<any>) | null = null;
+  @Input() isIcon: boolean = true;
+  @Input() searchedRequest: ((value:string) => Observable<any> | undefined) | null = null;
   @Output() onSelectTag = new EventEmitter<string>();
   searchData: Array<any> = []
   isLoadingData: boolean = false;
@@ -35,19 +35,27 @@ export class SearchInputComponent implements OnInit, ControlValueAccessor  {
   }
 
   ngOnInit(): void {
-    this.valueSubject.pipe(
-      tap(() => this.isLoadingData = true),
+    this.valueSubject
+    .asObservable()
+    .pipe(
+      tap(() => {
+        this.isLoadingData = true
+      }),
       debounceTime(1000),
-      distinctUntilChanged()
+      distinctUntilChanged(),
     ).subscribe((res) => {
       const valueSearch:string = res as string
-      if (this.searchedRequest$) {
-        this.searchedRequest$(valueSearch)
+      if(!this.searchedRequest) return
+
+      if (this.searchedRequest(valueSearch) instanceof Observable) {
+        this.searchedRequest(valueSearch)!
         .subscribe(res => {
-          console.log('1');
           this.searchData = res;
           this.isLoadingData = false;
         })
+      } else {
+        this.searchedRequest(valueSearch)
+        this.isLoadingData = false;
       }
     })
   }
@@ -68,6 +76,7 @@ export class SearchInputComponent implements OnInit, ControlValueAccessor  {
 
   writeValue(value: string): void {
     this.value = value;
+    this.searchData = []
   }
 
   registerOnChange(onChange: any): void {

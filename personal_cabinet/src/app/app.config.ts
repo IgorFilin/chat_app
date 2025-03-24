@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, ApplicationConfig, LOCALE_ID } from '@angular/core';
+import { ApplicationConfig, LOCALE_ID, inject, provideAppInitializer } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -41,12 +41,10 @@ export const appConfig: ApplicationConfig = {
         },
       },
     }),
-    {
-      provide: APP_INITIALIZER,
-      useFactory: initializeAppFactory,
-      multi: true,
-      deps: [AuthService],
-    },
+    provideAppInitializer(() => {
+        const initializerFn = (initializeAppFactory)(inject(AuthService));
+        return initializerFn();
+      }),
     {
       provide: LOCALE_ID,
       useValue: 'ru'

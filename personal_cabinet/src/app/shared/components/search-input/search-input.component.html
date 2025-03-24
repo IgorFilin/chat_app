@@ -10,25 +10,37 @@
     />
     <label [attr.placeholder]="placeholder">{{ placeholder }}</label>
   </div>
-  <app-form-error-handler [showError]="showError" [errorMessage]="errorMessage" />
+  <app-form-error-handler
+    [showError]="showError"
+    [errorMessage]="errorMessage"
+  />
   @if (isLoadingData){
-    <div class="search-input__iconContainer">
-      <div class="loader-spinner"></div>
-    </div>
-  } @else {
-    <div class="search-input__iconContainer">
-     <cabinet-icon [disabled]="!value" [id]="'circle-plus'" (iconClick)="onSelectTagHandler(value)"></cabinet-icon>
-    </div>
-  }
-  @if(searchData.length){
-     <div class="search-input__resultsContainer" @bubble>
-      @for(searchItem of searchData; track searchItem){
-        <div class="search-input__item">
-          <span class="search-input__itemTitle">{{searchItem.title}}</span>
-          <cabinet-icon [id]="'circle-plus'" (iconClick)="onSelectTagHandler(searchItem.title)"></cabinet-icon>
-        </div>
-      }
-     </div>
+  <div class="search-input__iconContainer">
+    <div class="loader-spinner"></div>
+  </div>
+  } @else if (isIcon) {
+  <div class="search-input__iconContainer">
+    <cabinet-icon
+      [disabled]="!value"
+      [id]="'circle-plus'"
+      (iconClick)="onSelectTagHandler(value)"
+    ></cabinet-icon>
+  </div>
   }
 </div>
-
+@if(searchData.length){
+<div
+  class="search-input__resultsContainer"
+  @bubble
+>
+  @for(searchItem of searchData; track searchItem){
+  <div class="search-input__item">
+    <span class="search-input__itemTitle">{{ searchItem.title }}</span>
+    <cabinet-icon
+      [id]="'circle-plus'"
+      (iconClick)="onSelectTagHandler(searchItem.title)"
+    ></cabinet-icon>
+  </div>
+  }
+</div>
+}

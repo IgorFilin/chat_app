@@ -5,12 +5,11 @@ import { User } from 'src/users/entities/user.entity';
 import { Question } from './entities/question.entity';
 import { Answer } from './entities/answer.entity';
 import { CreateQuestionDto } from './dto/createQuestion.dto';
-import { QuestionThemeEnum } from './model/learning-center.interface';
+import { IEditBodyArticle, QuestionThemeEnum } from './model/learning-center.interface';
 import { CreateArticleDto } from './dto/createArticle.dto';
 import { Article } from './entities/article.entity';
 import { Tags } from './entities/tags.entity';
 import { Views } from './entities/views-article.entity';
-import { View } from 'typeorm/schema-builder/view/View';
 
 @Injectable()
 export class LearningCenterService {
@@ -116,25 +115,24 @@ export class LearningCenterService {
       }
       const article = new Article();
       article.title = body.title;
-      article.theme = body.stack;
       article.views = [];
       article.description = body.text ?? '';
       article.user = user;
-      article.tags = []
-  
+      article.tags = [];
+
       for (const tag of body.tags) {
-        let existingTag = await this.TagsTable.findOne({ where:{ title: tag }, relations: ['article'] });
+        let existingTag = await this.TagsTable.findOne({ where: { title: tag }, relations: ['article'] });
 
         if (!existingTag) {
           existingTag = new Tags();
-          existingTag.title = tag
+          existingTag.title = tag;
           existingTag.article = [];
         }
-       
-        if(!existingTag.article.includes(article)) {
+
+        if (!existingTag.article.includes(article)) {
           existingTag.article.push(article);
         }
-        
+
         article.tags.push(existingTag);
 
         await this.TagsTable.save(existingTag);
@@ -152,77 +150,151 @@ export class LearningCenterService {
     }
   }
 
-  async getArticles(filter:string,) {
+  async getArticles(filter: string) {
     try {
-      let articles = await this.ArticleTable.find( { where: { theme: filter },
-        relations: ['tags','views'],
-      });
+      let articles: Article[];
 
-      if (articles)  {
-        return articles
+      if (filter === 'all') {
+        articles = await this.ArticleTable.find({
+          relations: ['tags', 'views'],
+        });
+      } else {
+        // articles = await this.ArticleTable.find({
+        //   where: { theme: filter },
+        //   relations: ['tags', 'views'],
+        // });
+      }
+
+      if (articles) {
+        return articles;
       }
     } catch (e) {
       return {
-        message: 'Произошла ошибка при получении статей'
-      }
+        message: 'Произошла ошибка при получении статей',
+      };
     }
   }
 
   private async setView(token: string, article: Article) {
-   try {
-    if (!token) return
-   
-    const user = await this.UserTable.findOneByOrFail({
-      authToken: token,
-    });
-    
-    if(!user) return
+    try {
+      if (!token) return;
 
-    const existingView = await this.ViewsTable.findOne({
+      const user = await this.UserTable.findOneByOrFail({
+        authToken: token,
+      });
+
+      if (!user) return;
+
+      const existingView = await this.ViewsTable.findOne({
         where: {
           userId: user.id,
           article: { id: article.id },
-
         },
-    });
+      });
 
-    if (!existingView) {
+      if (!existingView) {
         const view = new Views();
-        view.userId = user.id; 
-        view.article = article; 
+        view.userId = user.id;
+        view.article = article;
         await this.ViewsTable.save(view);
+      }
+    } catch (e) {
+      console.log(e.message);
     }
-   } catch(e) {
-     console.log(e.message)
-   }
   }
 
-  async getArticle(id:string, token:string) {
+  async getArticle(id: string, token: string) {
     try {
-      let article = await this.ArticleTable.findOne({ where:{ id }, relations: ['tags', 'views']});
+      let article = await this.ArticleTable.findOne({ where: { id }, relations: ['tags', 'views', 'user'] });
       await this.setView(token, article);
-      if (article)  {
-        return article
+
+      if (article) {
+        return {
+          ...article,
+          user: {
+            id: article.user.id,
+            name: article.user.name,
+          },
+        };
       }
     } catch (e) {
       return {
-        message: 'Произошла ошибка статья недоступна'
-      }
+        message: 'Произошла ошибка статья недоступна',
+      };
     }
   }
 
-  async getTags(filter?:string, isAll?:boolean) {
+  async getTags(filter?: string, isAll?: boolean) {
     try {
-      let tags = await this.TagsTable.find()
-      
-      if(isAll) return tags
+      let tags = await this.TagsTable.find();
 
-      if(filter) return tags.filter(tag => tag.title.toLowerCase().includes(filter.toLowerCase()))
-      return []
+      if (isAll) return tags;
+
+      if (filter) return tags.filter((tag) => tag.title.toLowerCase().includes(filter.toLowerCase()));
+      return [];
     } catch (e) {
       return {
         error: 'Произошла ошибка',
         message: e.message,
+      };
+    }
+  }
+
+  async editArticle(authToken: string, body: IEditBodyArticle) {
+    const user = await this.UserTable.findOneBy({ authToken });
+    if (!user) {
+      return {
+        message: 'Пользователь не найден',
+      };
+    }
+    const article = await this.ArticleTable.findOne({ where: { id: body.id }, relations: ['user'] });
+    if (article.user.id !== user.id) {
+      return {
+        message: 'У вас нет прав на редактирование статьи',
+      };
+    }
+    await this.ArticleTable.update(body.id, {
+      title: body.title,
+      description: body.description,
+    });
+    const updatedArticle = await this.ArticleTable.findOne({ where: { id: body.id }, relations: ['user'] });
+    return {
+      ...updatedArticle,
+      user: {
+        id: updatedArticle.user.id,
+        name: updatedArticle.user.name,
+      },
+    };
+  }
+
+  async deleteArticle(id: string, authToken: string) {
+    try {
+      const user = await this.UserTable.findOne({ where: { authToken }, relations: ['article'] });
+      if (!user) {
+        return {
+          message: 'Пользователь не найден',
+          return: false,
+        };
+      }
+      const isHasAtricleOnUser = user.article.some((atricle) => atricle.id === id);
+      console.log('isHasAtricleOnUser', isHasAtricleOnUser);
+      if (!isHasAtricleOnUser) {
+        return {
+          message: 'У вас нет прав на удаление статьи',
+          return: false,
+        };
+      }
+      const article = await this.ArticleTable.delete({ id });
+      if (article.affected) {
+        return {
+          message: 'Статья удалена',
+          result: true,
+        };
+      }
+    } catch (e) {
+      return {
+        message: 'Произошла ошибка',
+        result: false,
       };
     }
   }

@@ -1,4 +1,4 @@
-@import "../../../styles/colors.scss";
+@use "../../../styles/colors.scss" as *;
 :host {
   width: 100%;
 }
@@ -75,7 +75,7 @@
 }
 
 .knowledgeBase__markdown {
-  max-height: 57px;
+  max-height: 30px;
   height: 100%;
   display: block;
   overflow: hidden;
@@ -94,4 +94,18 @@
 
 .knowledgeBase__viewsIconContainer {
   width: fit-content;
+}
+
+.knowledgeBase__pagination {
+  display: flex;
+  gap: 15px;
+}
+
+.knowledgeBase__page {
+  font-size: 15px;
+  cursor: pointer;
+
+  &.active {
+    color: var(--success-color);
+  }
 }

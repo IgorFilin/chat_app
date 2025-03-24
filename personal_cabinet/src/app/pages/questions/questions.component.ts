@@ -29,18 +29,17 @@ export type CreateQuestionFormType = {
 } & Record<string, string>;
 
 @Component({
-  selector: 'cabinet-questions',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RadioButtonCustomComponent,
-    CdkTextareaAutosize,
-    MarkdownTextareaComponent,
-    CustomSelectComponent
-  ],
-  templateUrl: './questions.component.html',
-  styleUrl: './questions.component.scss',
+    selector: 'cabinet-questions',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        RadioButtonCustomComponent,
+        CdkTextareaAutosize,
+        MarkdownTextareaComponent,
+        CustomSelectComponent
+    ],
+    templateUrl: './questions.component.html',
+    styleUrl: './questions.component.scss'
 })
 export class QuestionsComponent implements OnInit {
   questionForm!: FormGroup;
