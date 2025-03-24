@@ -1,23 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, input, OnInit, Signal, WritableSignal } from '@angular/core';
 import { IconComponent } from '../icon/icon.component';
 import { PopupService } from '../../../services/popup.service';
 
 @Component({
-    selector: 'app-popup',
-    imports: [IconComponent],
-    templateUrl: './popup.component.html',
-    styleUrls: ['./popup.component.scss']
+  selector: 'app-popup',
+  imports: [IconComponent],
+  templateUrl: './popup.component.html',
+  styleUrls: ['./popup.component.scss'],
 })
 export class PopupComponent implements OnInit {
+  title: Signal<string> = input('');
+  description: Signal<string> = input('');
+  buttons: Signal<{ text: string; action: () => {} }[]> = input([]);
 
-  constructor(
-    private popupService: PopupService
-  ) { }
+  constructor(private popupService: PopupService) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   close() {
-    this.popupService.openedClosedPopup()
+    this.popupService.close();
   }
 }

@@ -1,10 +1,4 @@
-import {
-  Component,
-  computed,
-  inject,
-  OnInit,
-  Signal,
-} from '@angular/core';
+import { Component, computed, inject, OnInit, Signal, viewChild, ViewContainerRef, WritableSignal } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { LoadingService } from './services/loading.service';
@@ -17,34 +11,25 @@ import { PopupService } from './services/popup.service';
 import { bubbleAnimation } from './animations/bubble.animation';
 
 @Component({
-    selector: 'app-root',
-    imports: [
-        RouterOutlet,
-        HeaderComponent,
-        SectionListComponent,
-        RouterModule,
-        CommonModule,
-        PopupComponent
-    ],
-    templateUrl: './app.component.html',
-    styleUrl: './app.component.scss',
-    animations: [slideInOutAnimation, bubbleAnimation]
+  selector: 'app-root',
+  imports: [RouterOutlet, HeaderComponent, SectionListComponent, RouterModule, CommonModule],
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.scss',
+  animations: [slideInOutAnimation, bubbleAnimation],
 })
 export class AppComponent implements OnInit {
   title = 'personal_cabinet';
   isOpenMenu: boolean | null = null;
   isOpenedPopup: Signal<boolean> = computed(() => this.popupService.isOpened());
   htmlRef: any;
+  popupContainer: Signal<ViewContainerRef | undefined> = viewChild('popupContainer', { read: ViewContainerRef });
 
-  constructor(
-    public loadingService: LoadingService,
-    private isOpenCloseService: IsOpenCloseService,
-    private popupService: PopupService,
-  ) {}
+  constructor(public loadingService: LoadingService, private isOpenCloseService: IsOpenCloseService, private popupService: PopupService) {}
 
   ngOnInit() {
     this.isOpenCloseService.dataToggle.subscribe((data) => {
       this.isOpenMenu = data['menu'];
     });
+    this.popupService.initialize(this.popupContainer()!);
   }
 }

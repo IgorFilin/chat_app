@@ -17,13 +17,16 @@ export class Article {
   @CreateDateColumn()
   date: Date;
 
-  @OneToMany(() => Views, (views) => views.article)
+  @OneToMany(() => Views, (views) => views.article, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   views: Views[];
-  
+
   @ManyToOne(() => User, (user) => user.article)
   user: User;
 
-  @ManyToMany(()=> Tags, (tags) => tags.article)
+  @ManyToMany(() => Tags, (tags) => tags.article)
   @JoinTable()
-  tags: Tags[]
+  tags: Tags[];
 }

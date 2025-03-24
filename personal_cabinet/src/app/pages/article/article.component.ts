@@ -14,32 +14,27 @@ import { IEditArticleBody } from '../../models/request';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ToasterService } from '../../services/toaster.service';
 import { PopupService } from '../../services/popup.service';
+import { RequestService } from '../../services/request.service';
+import { catchError, EMPTY, finalize } from 'rxjs';
 
 @Component({
-    selector: 'app-article',
-    templateUrl: './article.component.html',
-    styleUrls: ['./article.component.scss'],
-    imports: [
-        CommonModule,
-        MarkdownModule,
-        IconComponent,
-        ReactiveFormsModule,
-        MarkdownTextareaComponent,
-        InputComponent,
-    ],
-    animations: [bubbleAnimation]
+  selector: 'app-article',
+  templateUrl: './article.component.html',
+  styleUrls: ['./article.component.scss'],
+  imports: [CommonModule, MarkdownModule, IconComponent, ReactiveFormsModule, MarkdownTextareaComponent, InputComponent],
+  animations: [bubbleAnimation],
 })
 export class ArticleComponent implements OnInit {
   isYourArticle: Signal<boolean> = computed(() => this.userStore.userId() === this.article()?.user.id);
-  articleId: WritableSignal<string> = signal<string>('')
-  article:WritableSignal<IArticleResponse | null> = signal(null);
+  articleId: WritableSignal<string> = signal<string>('');
+  article: WritableSignal<IArticleResponse | null> = signal(null);
   isEditMode: WritableSignal<boolean> = signal(false);
-  userStore = inject(UserStore)
+  userStore = inject(UserStore);
   editedArticleForm = this.formBuilder.group({
     title: ['', [Validators.required]],
     description: ['', [Validators.required]],
-  })
-  destroyRef = inject(DestroyRef)
+  });
+  destroyRef = inject(DestroyRef);
 
   constructor(
     private knowledgeService: KnowledgeService,
@@ -47,48 +42,86 @@ export class ArticleComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
     private toasterService: ToasterService,
-    private popupService: PopupService
-  ) { 
+    private popupService: PopupService,
+    private requestService: RequestService
+  ) {
     effect(() => {
       this.knowledgeService.getArticle(this.articleId()).subscribe((articleData) => {
-        this.article.set(articleData)
-        this.setInitialDataArticle()
-      })
-    })
+        this.article.set(articleData);
+        this.setInitialDataArticle();
+      });
+    });
   }
 
   setInitialDataArticle() {
     this.editedArticleForm.patchValue({
       title: this.article()?.title,
       description: this.article()?.description,
-    })
+    });
   }
 
   ngOnInit() {
-    const articleId = this.activatedRoute.snapshot.paramMap.get('id')
+    const articleId = this.activatedRoute.snapshot.paramMap.get('id');
     if (articleId) this.articleId.set(articleId);
   }
 
-  onSaveArticleHandler() { 
+  onSaveArticleHandler() {
     const formData = {
       id: this.article()?.id ?? '',
-      ...this.editedArticleForm.getRawValue()
-    } as IEditArticleBody
-    this.knowledgeService.editArticle(formData)
-    .pipe(takeUntilDestroyed(this.destroyRef))
-    .subscribe((updatedArticle) => {
-      this.isEditMode.set(false)
-      this.article.set(updatedArticle)
-      this.setInitialDataArticle()
-    },
-    (error) => {
-      const errorMessage = error.error.message || 'К сожалению произошла ошибка'
-      this.toasterService.error(errorMessage)
-    }
-   )
+      ...this.editedArticleForm.getRawValue(),
+    } as IEditArticleBody;
+    this.knowledgeService
+      .editArticle(formData)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(
+        (updatedArticle) => {
+          this.isEditMode.set(false);
+          this.article.set(updatedArticle);
+          this.setInitialDataArticle();
+        },
+        (error) => {
+          const errorMessage = error.error.message || 'К сожалению произошла ошибка';
+          this.toasterService.error(errorMessage);
+        }
+      );
   }
 
-  deleteArticle() { 
-     this.popupService.openedClosedPopup()
+  deleteArticleOpenPopup() {
+    this.popupService.createPopup({
+      title: 'Вы точно хотите удалить статью?',
+      buttons: [
+        {
+          text: 'Удалить',
+          action: this.deleteArticle.bind(this),
+        },
+        {
+          text: 'Отмена',
+          action: () => {
+            this.popupService.close();
+          },
+        },
+      ],
+    });
+  }
+
+  private deleteArticle() {
+    this.requestService
+      .delete<any, any>('learning/article', { id: this.articleId() })
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.popupService.close()),
+        catchError(() => {
+          this.toasterService.error('Произошла ошибка');
+          return EMPTY;
+        })
+      )
+      .subscribe((data) => {
+        if (data?.result) {
+          this.router.navigateByUrl('/knowledgeBase');
+          this.toasterService.success('Статья удалена');
+        } else {
+          this.toasterService.error(data.message);
+        }
+      });
   }
 }

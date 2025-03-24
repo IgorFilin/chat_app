@@ -8,7 +8,9 @@ export class Views {
 
   @Column()
   userId: string;
-  
-  @ManyToOne(() => Article, (article) => article.views)
+
+  @ManyToOne(() => Article, (article) => article.views, {
+    onDelete: 'CASCADE',
+  })
   article: Article;
 }
