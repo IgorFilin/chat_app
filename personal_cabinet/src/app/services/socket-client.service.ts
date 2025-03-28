@@ -1,11 +1,13 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { UserStore } from '../store/user/user.store';
 import { IResponseUserDataWs, IUsersWs } from '../models/interfaces';
+import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root',
 })
 export class SocketClientService {
   private socket: any;
+  private chatUrl: string = environment.chatBaseUrl;
   isConnected = signal(false);
   isLoading = signal(true);
   messages: WritableSignal<Array<any>> = signal([]);
@@ -17,7 +19,7 @@ export class SocketClientService {
   }
 
   initConnection() {
-    this.socket = new WebSocket(`ws://localhost:3001/ws/chat?id=${this.userStore.userInfoData()?.id}&name=${this.userStore.userInfoData()?.name}`);
+    this.socket = new WebSocket(`${this.chatUrl}/chat?id=${this.userStore.userInfoData()?.id}&name=${this.userStore.userInfoData()?.name}`);
 
     this.socket.onopen = () => {
       this.isConnected.set(true);
