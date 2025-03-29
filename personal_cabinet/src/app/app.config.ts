@@ -8,21 +8,18 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideToastr } from 'ngx-toastr';
 import { ToasterService } from './services/toaster.service';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import {
-  CLIPBOARD_OPTIONS,
-  ClipboardButtonComponent,
-  provideMarkdown,
-} from 'ngx-markdown';
+import { CLIPBOARD_OPTIONS, ClipboardButtonComponent, provideMarkdown } from 'ngx-markdown';
 import { AuthService } from './services/auth.service';
 import { Observable } from 'rxjs';
 import localeRu from '@angular/common/locales/ru';
 import { registerLocaleData } from '@angular/common';
+import { SocketUsersService } from './services/socket-users.service';
 
 registerLocaleData(localeRu);
 
 function initializeAppFactory(authService: AuthService): () => Observable<any> {
-  return () => authService.authRequest()
- }
+  return () => authService.authRequest();
+}
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -42,12 +39,12 @@ export const appConfig: ApplicationConfig = {
       },
     }),
     provideAppInitializer(() => {
-        const initializerFn = (initializeAppFactory)(inject(AuthService));
-        return initializerFn();
-      }),
+      const initializerFn = initializeAppFactory(inject(AuthService));
+      return initializerFn();
+    }),
     {
       provide: LOCALE_ID,
-      useValue: 'ru'
-    }
+      useValue: 'ru',
+    },
   ],
 };

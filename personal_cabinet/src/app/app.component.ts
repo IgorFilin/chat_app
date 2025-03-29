@@ -9,6 +9,7 @@ import { slideInOutAnimation } from './animations/slide-in-out.animations';
 import { PopupComponent } from './shared/components/popup/popup.component';
 import { PopupService } from './services/popup.service';
 import { bubbleAnimation } from './animations/bubble.animation';
+import { SocketUsersService } from './services/socket-users.service';
 
 @Component({
   selector: 'app-root',
@@ -24,9 +25,10 @@ export class AppComponent implements OnInit {
   htmlRef: any;
   popupContainer: Signal<ViewContainerRef | undefined> = viewChild('popupContainer', { read: ViewContainerRef });
 
-  constructor(public loadingService: LoadingService, private isOpenCloseService: IsOpenCloseService, private popupService: PopupService) {}
+  constructor(private socketUsersService: SocketUsersService, public loadingService: LoadingService, private isOpenCloseService: IsOpenCloseService, private popupService: PopupService) {}
 
   ngOnInit() {
+    this.socketUsersService.initConnection();
     this.isOpenCloseService.dataToggle.subscribe((data) => {
       this.isOpenMenu = data['menu'];
     });
