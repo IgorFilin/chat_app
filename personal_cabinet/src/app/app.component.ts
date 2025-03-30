@@ -10,6 +10,7 @@ import { PopupComponent } from './shared/components/popup/popup.component';
 import { PopupService } from './services/popup.service';
 import { bubbleAnimation } from './animations/bubble.animation';
 import { SocketUsersService } from './services/socket-users.service';
+import { UserService } from './services/user.service';
 
 @Component({
   selector: 'app-root',
@@ -25,10 +26,20 @@ export class AppComponent implements OnInit {
   htmlRef: any;
   popupContainer: Signal<ViewContainerRef | undefined> = viewChild('popupContainer', { read: ViewContainerRef });
 
-  constructor(private socketUsersService: SocketUsersService, public loadingService: LoadingService, private isOpenCloseService: IsOpenCloseService, private popupService: PopupService) {}
+  constructor(
+    private userService: UserService,
+    private socketUsersService: SocketUsersService,
+    public loadingService: LoadingService,
+    private isOpenCloseService: IsOpenCloseService,
+    private popupService: PopupService
+  ) {}
 
   ngOnInit() {
-    this.socketUsersService.initConnection();
+    this.userService.userInfo.asObservable().subscribe((userInfo) => {
+      if (userInfo.isAuth) {
+        this.socketUsersService.initConnection();
+      }
+    });
     this.isOpenCloseService.dataToggle.subscribe((data) => {
       this.isOpenMenu = data['menu'];
     });
