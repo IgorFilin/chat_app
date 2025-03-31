@@ -20,26 +20,31 @@ export class AuthService {
   isInitialApp: boolean = false;
   destroyRef = inject(DestroyRef);
 
-  userStore = inject(UserStore)
+  userStore = inject(UserStore);
 
-  constructor(private requestService: RequestService, private utilsService: UtilsService, private toastService: ToasterService, private loadingService: LoadingService, private cookieService: CookieService, private userService: UserService, private router: Router) {}
+  constructor(
+    private requestService: RequestService,
+    private utilsService: UtilsService,
+    private toastService: ToasterService,
+    private loadingService: LoadingService,
+    private cookieService: CookieService,
+    private userService: UserService,
+    private router: Router
+  ) {}
 
   authRequest(): Observable<any> {
     this.loadingService.startLoading();
     const authToken = this.cookieService.getCookieByName('authToken');
-    if (this.isInitialApp && authToken) return of(true);
     return this.requestService.get<any, GetAuthPesponseType>('user/auth').pipe(
       takeUntilDestroyed(this.destroyRef),
       map((data: GetAuthPesponseType) => {
         if (data.isAuth) {
-          if (!this.isInitialApp) {
-            this.toastService.success(`Приветствую ${data.name}`);
-          }
+          this.toastService.success(`Приветствую ${data.name}`);
           this.isAuth$.next(data.isAuth);
           this.isInitialApp = true;
         }
         this.userService.userInfo.next(data);
-        this.userStore.setUserInfo(data)
+        this.userStore.setUserInfo(data);
         this.loadingService.stopLoading();
         return data.isAuth;
       }),
@@ -124,6 +129,7 @@ export class AuthService {
       .subscribe((data: any) => {
         this.toastService.success('Вы успешно вышли, возращайтесь!');
         this.isAuth$.next(data.isAuth);
+        this.userStore.setUserInfo(null);
         this.router.navigateByUrl('registration');
       });
   }

@@ -39,7 +39,7 @@ export interface IUserInfo {
   name: string;
   id: string;
   isAcceptKey: boolean;
-  role: RoleType;
+  role?: RoleType;
 }
 
 export interface Tag {

@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, Signal, viewChild, ViewContainerRef, WritableSignal } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, Signal, viewChild, ViewContainerRef, WritableSignal } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { LoadingService } from './services/loading.service';
@@ -11,6 +11,7 @@ import { PopupService } from './services/popup.service';
 import { bubbleAnimation } from './animations/bubble.animation';
 import { SocketUsersService } from './services/socket-users.service';
 import { UserService } from './services/user.service';
+import { UserStore } from './store/user/user.store';
 
 @Component({
   selector: 'app-root',
@@ -25,21 +26,19 @@ export class AppComponent implements OnInit {
   isOpenedPopup: Signal<boolean> = computed(() => this.popupService.isOpened());
   htmlRef: any;
   popupContainer: Signal<ViewContainerRef | undefined> = viewChild('popupContainer', { read: ViewContainerRef });
+  userStore = inject(UserStore);
 
-  constructor(
-    private userService: UserService,
-    private socketUsersService: SocketUsersService,
-    public loadingService: LoadingService,
-    private isOpenCloseService: IsOpenCloseService,
-    private popupService: PopupService
-  ) {}
-
-  ngOnInit() {
-    this.userService.userInfo.asObservable().subscribe((userInfo) => {
-      if (userInfo.isAuth) {
+  constructor(private userService: UserService, private socketUsersService: SocketUsersService, public loadingService: LoadingService, private isOpenCloseService: IsOpenCloseService, private popupService: PopupService) {
+    effect(() => {
+      if (this.userStore.userInfoData()?.isAuth) {
         this.socketUsersService.initConnection();
+      } else {
+        this.socketUsersService.closeConnection();
       }
     });
+  }
+
+  ngOnInit() {
     this.isOpenCloseService.dataToggle.subscribe((data) => {
       this.isOpenMenu = data['menu'];
     });

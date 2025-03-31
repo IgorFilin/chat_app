@@ -7,13 +7,13 @@ import { RoleType } from '../models/types';
   providedIn: 'root',
 })
 export class UserService {
-  userInfo: Subject<IUserInfo> = new Subject();
+  userInfo = new BehaviorSubject<IUserInfo | null>(null);
   userRole: WritableSignal<RoleType | ''> = signal('');
 
   constructor() {
     this.userInfo.subscribe((userData) => {
       const userResponseData = userData as IUserInfo;
-      this.userRole.set(userResponseData.role);
+      this.userRole.set(userResponseData?.role || '');
     });
   }
 }
