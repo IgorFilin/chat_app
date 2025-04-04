@@ -11,10 +11,11 @@ import { canDeactivateGuard } from './core/guard/can-deactivate-guard';
 import { ArticleComponent } from './pages/article/article.component';
 import { PermissionGuard } from './core/guard/permission-guard';
 import { ChatComponent } from './pages/chat/chat.component';
+import { TerminalComponent } from './pages/terminal/terminal.component';
 
 export const routes: Routes = [
   // { path: '', canActivate: [authGuard] , component: MainComponent },
-  { path: '', redirectTo: 'knowledgeBase', pathMatch: 'full'},
+  { path: '', redirectTo: 'knowledgeBase', pathMatch: 'full' },
   { component: RegistrationComponent, path: 'registration' },
   { component: LoginComponent, path: 'login' },
   { component: ConfirmComponent, path: 'confirm' },
@@ -32,7 +33,7 @@ export const routes: Routes = [
     component: CreateArticleComponent,
     path: 'articles',
     canActivate: [authGuard],
-    canDeactivate: [canDeactivateGuard]
+    canDeactivate: [canDeactivateGuard],
   },
   {
     component: ArticleComponent,
@@ -42,6 +43,11 @@ export const routes: Routes = [
   {
     component: ChatComponent,
     path: 'chat',
+    canActivate: [authGuard],
+  },
+  {
+    component: TerminalComponent,
+    path: 'terminal',
     canActivate: [authGuard],
   },
 ];

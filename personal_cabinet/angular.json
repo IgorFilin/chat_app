@@ -23,15 +23,12 @@
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "assets": ["./src/favicon.ico", "src/assets"],
-            "styles": [
-              "src/styles.scss",
-              "node_modules/prismjs/themes/prism-okaidia.css",
-              "node_modules/prismjs/plugins/line-highlight/prism-line-highlight.css"
-            ],
+            "styles": ["src/styles.scss", "node_modules/@xterm/xterm/css/xterm.css", "node_modules/prismjs/themes/prism-okaidia.css", "node_modules/prismjs/plugins/line-highlight/prism-line-highlight.css"],
             "stylePreprocessorOptions": {
               "includePaths": ["src/styles"]
             },
             "scripts": [
+              "node_modules/@xterm/xterm/lib/xterm.js",
               "node_modules/prismjs/prism.js",
               "node_modules/prismjs/components/prism-csharp.min.js",
               "node_modules/prismjs/components/prism-css.min.js",

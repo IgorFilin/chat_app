@@ -11,13 +11,12 @@ interface ListType {
   disabled: boolean;
 }
 @Component({
-    selector: 'cabinet-section-list',
-    imports: [CommonModule, IconComponent, RouterModule, RouterLinkActive],
-    templateUrl: './section-list.component.html',
-    styleUrl: './section-list.component.scss'
+  selector: 'cabinet-section-list',
+  imports: [CommonModule, IconComponent, RouterModule, RouterLinkActive],
+  templateUrl: './section-list.component.html',
+  styleUrl: './section-list.component.scss',
 })
 export class SectionListComponent {
-
   sectionLists: Signal<Array<ListType>> = computed(() => [
     {
       icon: 'main',
@@ -49,12 +48,15 @@ export class SectionListComponent {
       routeLink: '/chat',
       disabled: false,
     },
+    {
+      icon: 'chat',
+      title: 'Терминал',
+      routeLink: '/terminal',
+      disabled: false,
+    },
   ]);
 
-  constructor(
-    private route: Router,
-    private userService: UserService,
-  ) {
+  constructor(private route: Router, private userService: UserService) {
     console.log(this.route);
   }
 }
