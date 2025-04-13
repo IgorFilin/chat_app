@@ -1,5 +1,15 @@
-#terminal {
-  width: 100%;
-  height: 100%;
-  padding: 10px;
+:host {
+  overflow: hidden;
+}
+
+::ng-deep {
+  .xterm {
+    padding: 10px;
+    span {
+      font-family: 'Ubuntu Mono';
+    }
+    .xterm-viewport {
+      overflow-y: hidden;
+    }
+  }
 }

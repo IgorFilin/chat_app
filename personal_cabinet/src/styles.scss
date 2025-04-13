@@ -1,10 +1,10 @@
-@use "colors.scss" as *;
-@use "mixins.scss" as *;
-@use "globalStyles.scss" as *;
-@use "buttons.scss" as *;
-@use "ngx-toastr/toastr" as *;
-@use "styles/inputs.scss" as *;
-@use "styles/loaders.scss" as *;
+@use 'colors.scss' as *;
+@use 'mixins.scss' as *;
+@use 'globalStyles.scss' as *;
+@use 'buttons.scss' as *;
+@use 'ngx-toastr/toastr' as *;
+@use 'styles/inputs.scss' as *;
+@use 'styles/loaders.scss' as *;
 
 html,
 body {
@@ -12,5 +12,5 @@ body {
 }
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
 }

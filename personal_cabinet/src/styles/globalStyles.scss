@@ -1,7 +1,7 @@
-@use "colors.scss" as *;
+@use 'colors.scss' as *;
 
 * {
-  font-family: "Oswald", sans-serif;
+  font-family: 'Oswald', sans-serif;
   font-optical-sizing: auto;
   font-weight: 400;
   color: var(--text-color);
@@ -22,11 +22,11 @@ body {
   padding: 0 10px;
 }
 markdown {
-  code[class*=language-] {
+  code[class*='language-'] {
     white-space: pre-wrap;
   }
 
-  pre[class*=language-] {
+  pre[class*='language-'] {
     max-width: fit-content;
   }
 
@@ -41,13 +41,15 @@ markdown {
   }
 
   code {
-      background-color: var(--secondary-color); 
-      color: var(--text-color); 
-      padding: 2px 4px;
-      border-radius: 4px; 
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    padding: 2px 4px;
+    border-radius: 4px;
   }
 
-  h1,h2,ul {
+  h1,
+  h2,
+  ul {
     margin: 0;
   }
 }
