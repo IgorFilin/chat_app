@@ -4,16 +4,16 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { RoleType } from '../models/types';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
-  userInfo:BehaviorSubject<IUserInfo | {}> = new BehaviorSubject({})
-  userRole: WritableSignal<RoleType | ''> = signal('')
-  
+  userInfo = new BehaviorSubject<IUserInfo | null>(null);
+  userRole: WritableSignal<RoleType | ''> = signal('');
+
   constructor() {
-   this.userInfo.subscribe((userData) => {
-    const userResponseData = userData as IUserInfo
-    this.userRole.set(userResponseData.role)
-   })
+    this.userInfo.subscribe((userData) => {
+      const userResponseData = userData as IUserInfo;
+      this.userRole.set(userResponseData?.role || '');
+    });
   }
 }

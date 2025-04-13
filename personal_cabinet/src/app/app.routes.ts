@@ -12,6 +12,7 @@ import { ArticleComponent } from './pages/article/article.component';
 import { PermissionGuard } from './core/guard/permission-guard';
 import { ChatComponent } from './pages/chat/chat.component';
 import { TerminalComponent } from './pages/terminal/terminal.component';
+import { GamesComponent } from './pages/games/games.component';
 
 export const routes: Routes = [
   // { path: '', canActivate: [authGuard] , component: MainComponent },
@@ -48,6 +49,11 @@ export const routes: Routes = [
   {
     component: TerminalComponent,
     path: 'terminal',
+    canActivate: [authGuard],
+  },
+  {
+    component: GamesComponent,
+    path: 'games',
     canActivate: [authGuard],
   },
 ];
