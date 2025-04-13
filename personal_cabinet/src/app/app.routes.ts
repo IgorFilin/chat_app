@@ -47,6 +47,11 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    component: GamesComponent,
+    path: 'games',
+    canActivate: [authGuard],
+  },
+  {
     component: TerminalComponent,
     path: 'terminal',
     canActivate: [authGuard],

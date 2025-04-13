@@ -15,10 +15,6 @@ interface ListType {
   imports: [CommonModule, IconComponent, RouterModule, RouterLinkActive],
   templateUrl: './section-list.component.html',
   styleUrl: './section-list.component.scss',
-  selector: 'cabinet-section-list',
-  imports: [CommonModule, IconComponent, RouterModule, RouterLinkActive],
-  templateUrl: './section-list.component.html',
-  styleUrl: './section-list.component.scss',
 })
 export class SectionListComponent {
   sectionLists: Signal<Array<ListType>> = computed(() => [
@@ -56,6 +52,12 @@ export class SectionListComponent {
       icon: 'chat',
       title: 'Терминал',
       routeLink: '/terminal',
+      disabled: false,
+    },
+    {
+      icon: 'games',
+      title: 'Игровая комната',
+      routeLink: '/games',
       disabled: false,
     },
     {
