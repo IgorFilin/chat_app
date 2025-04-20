@@ -34,11 +34,10 @@ export class AuthService {
 
   authRequest(): Observable<any> {
     this.loadingService.startLoading();
-    const authToken = this.cookieService.getCookieByName('authToken');
     return this.requestService.get<any, GetAuthPesponseType>('user/auth').pipe(
       takeUntilDestroyed(this.destroyRef),
       map((data: GetAuthPesponseType) => {
-        if (data.isAuth) {
+        if (data.isAuth && !this.isInitialApp) {
           this.toastService.success(`Приветствую ${data.name}`);
           this.isAuth$.next(data.isAuth);
           this.isInitialApp = true;

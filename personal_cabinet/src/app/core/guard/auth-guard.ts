@@ -9,14 +9,19 @@ export const authGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
   const appFacadeService = inject(AppFacadeService);
- 
-  return authService.authRequest().pipe(
-    map((isAuth) => {
-      console.log('-__', isAuth);
-      if(!isAuth) {
-        appFacadeService.resetAppSettings()
-        router.navigateByUrl('/login')
-      }
-      return isAuth
-    })
-)};
+  const cookieService = inject(CookieService);
+
+  const authToken = cookieService.getCookieByName('authToken');
+  if (authToken) return true;
+  else {
+    return authService.authRequest().pipe(
+      map((isAuth) => {
+        if (!isAuth) {
+          appFacadeService.resetAppSettings();
+          router.navigateByUrl('/login');
+        }
+        return isAuth;
+      })
+    );
+  }
+};
