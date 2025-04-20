@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, inject, viewChild, ViewChild, ElementRef,
 import { Terminal } from '@xterm/xterm';
 import { environment } from '../../../environments/environment';
 import { UserStore } from '../../store/user/user.store';
+import { isJson } from '../../shared/utils/functions';
 
 @Component({
   selector: 'app-terminal',
@@ -59,7 +60,7 @@ export class TerminalComponent implements OnInit, OnDestroy {
   }
 
   private connectWebSocket() {
-    const wsUrl = `${this.teminalUrl}?id=${this.userStore.userInfoData()?.id}&name=${this.userStore.userInfoData()?.name}`; // Замените на ваш URL
+    const wsUrl = `${this.teminalUrl}?id=${this.userStore.userInfoData()?.id}&name=${this.userStore.userInfoData()?.name}`;
     this.socket = new WebSocket(wsUrl);
 
     this.socket.onopen = () => {
@@ -68,12 +69,30 @@ export class TerminalComponent implements OnInit, OnDestroy {
     };
 
     this.socket.onmessage = (event) => {
+      let responseWsData = {
+        type: '',
+        data: null,
+      } as any;
+      if (!isJson(event.data)) {
+        console.log('event string', event.data);
+        responseWsData.data = event.data;
+      } else {
+        console.log('event json', event.data);
+        responseWsData = JSON.parse(event.data);
+      }
       try {
-        const message = JSON.parse(event.data);
-        console.log('message', message.data);
-        this.term.write(message.data);
+        if (responseWsData.type === 'ready') {
+          console.log('READY');
+          this.socket.send(
+            JSON.stringify({
+              type: 'ready',
+              data: '',
+            })
+          );
+        }
+        this.term.write(responseWsData.data);
       } catch (e) {
-        this.term.write(event.data);
+        this.term.write(responseWsData.data);
       }
     };
 
