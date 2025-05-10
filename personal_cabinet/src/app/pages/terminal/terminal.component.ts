@@ -28,10 +28,10 @@ export class TerminalComponent implements OnInit, OnDestroy {
 
   private initializeTerminal() {
     this.term = new Terminal({
-      fontWeight: 400,
-      fontSize: 14,
+      fontWeight: 500,
+      fontSize: 16,
       lineHeight: 1.2,
-      letterSpacing: 0.5,
+      letterSpacing: 0,
       rows: 22,
       cols: 90,
       cursorBlink: true,
