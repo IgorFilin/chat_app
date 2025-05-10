@@ -60,7 +60,7 @@ export class TerminalComponent implements OnInit, OnDestroy {
   }
 
   private connectWebSocket() {
-    const wsUrl = `${this.teminalUrl}?id=${this.userStore.userInfoData()?.id}&name=${this.userStore.userInfoData()?.name}`;
+    const wsUrl = `${this.teminalUrl}/term?id=${this.userStore.userInfoData()?.id}&name=${this.userStore.userInfoData()?.name}`;
     this.socket = new WebSocket(wsUrl);
 
     this.socket.onopen = () => {
