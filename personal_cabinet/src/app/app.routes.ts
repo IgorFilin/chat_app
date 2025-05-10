@@ -49,11 +49,11 @@ export const routes: Routes = [
   {
     component: TerminalComponent,
     path: 'terminal',
-    canActivate: [authGuard],
+    canActivate: [authGuard, PermissionGuard],
   },
   {
     component: GamesComponent,
     path: 'games',
-    canActivate: [authGuard],
+    canActivate: [authGuard, PermissionGuard],
   },
 ];
