@@ -1,6 +1,6 @@
 import { DestroyRef, Injectable, inject } from '@angular/core';
 import { RequestService } from './request.service';
-import { BehaviorSubject, Observable, catchError, map, of, tap } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, firstValueFrom, map, of, tap } from 'rxjs';
 import { UtilsService } from './utils.servise';
 import { ToasterService } from './toaster.service';
 import { LoadingService } from './loading.service';
@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IConfirm, ILoginBody, IRegistrationBody } from '../models/request';
 import { CookieService } from './cookie.service';
-import { GetAuthPesponseType } from '../models/interfaces';
+import { GetAuthPesponseType, IUserInfo } from '../models/interfaces';
 import { UserService } from './user.service';
 import { UserStore } from '../store/user/user.store';
 
@@ -32,6 +32,11 @@ export class AuthService {
     private router: Router
   ) {}
 
+  private setAuthData(data: IUserInfo):void {
+    this.userService.userInfo.next(data);
+    this.userStore.setUserInfo(data);
+  }
+
   authRequest(): Observable<any> {
     this.loadingService.startLoading();
     return this.requestService.get<any, GetAuthPesponseType>('user/auth').pipe(
@@ -41,9 +46,8 @@ export class AuthService {
           this.toastService.success(`Приветствую ${data.name}`);
           this.isAuth$.next(data.isAuth);
           this.isInitialApp = true;
+          this.setAuthData(data)
         }
-        this.userService.userInfo.next(data);
-        this.userStore.setUserInfo(data);
         this.loadingService.stopLoading();
         return data.isAuth;
       }),
@@ -63,7 +67,6 @@ export class AuthService {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(
         (data) => {
-          // this.toastService.success(data.message);
           this.setAuthAndNavigateMainPage(data);
         },
         (error) => {
@@ -133,7 +136,8 @@ export class AuthService {
       });
   }
 
-  setAuthAndNavigateMainPage(data: any): void {
+  async setAuthAndNavigateMainPage(data: any) {
+    await firstValueFrom(this.authRequest())
     this.isAuth$.next(data.isAuth);
     this.router.navigateByUrl('/');
   }
