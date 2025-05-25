@@ -5,7 +5,12 @@
 @use 'ngx-toastr/toastr' as *;
 @use 'styles/inputs.scss' as *;
 @use 'styles/loaders.scss' as *;
-
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('./assets/fonts/JetBrainsMono-Medium.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
 html,
 body {
   height: 100%;
