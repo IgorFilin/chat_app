@@ -30,6 +30,10 @@ export class TerminalComponent implements OnInit, OnDestroy {
     this.term = new Terminal({
       rows: 22,
       cols: 90,
+      fontWeight: 500,
+      fontSize: 16,
+      lineHeight: 1.2,
+      letterSpacing: 0,
       cursorBlink: true,
       disableStdin: false,
       windowsMode: false,
