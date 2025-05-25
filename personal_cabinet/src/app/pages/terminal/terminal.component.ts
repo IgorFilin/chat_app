@@ -3,6 +3,7 @@ import { Terminal } from '@xterm/xterm';
 import { environment } from '../../../environments/environment';
 import { UserStore } from '../../store/user/user.store';
 import { isJson } from '../../shared/utils/functions';
+import { FitAddon } from '@xterm/addon-fit';
 
 @Component({
   selector: 'app-terminal',
@@ -11,6 +12,7 @@ import { isJson } from '../../shared/utils/functions';
 })
 export class TerminalComponent implements OnInit, OnDestroy {
   private term!: Terminal;
+  private fitAddon!: any;
   private socket!: WebSocket;
   private teminalUrl: string = environment.teminalUrl;
   userStore = inject(UserStore);
@@ -25,7 +27,6 @@ export class TerminalComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.initializeTerminal();
-    // this.connectWebSocket();
   }
 
   ngOnDestroy() {
@@ -49,9 +50,14 @@ export class TerminalComponent implements OnInit, OnDestroy {
         cursor: '#A0A0A0',
       },
     });
+    const fitAddon = new FitAddon();
+    this.term.loadAddon(fitAddon);
+    this.fitAddon = fitAddon;
     const termElem = this.terminal()?.nativeElement;
     if (termElem) {
       this.term.open(termElem);
+      this.fitAddon.fit();
+      // window.addEventListener('resize', () => this.fitAddon.fit());
       this.term.write('Подключаемся к терминалу...\r\n');
     }
 
