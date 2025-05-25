@@ -8,8 +8,12 @@
 @font-face {
   font-family: 'JetBrains Mono';
   src: url('./assets/fonts/JetBrainsMono-Medium.ttf') format('truetype');
-  font-weight: bold;
+  font-weight: 400;
   font-style: normal;
+}
+@font-face {
+  font-family: 'JetBrains Mono thing';
+  src: url('./assets/fonts/JetBrainsMono-Thin.ttf') format('truetype');
 }
 html,
 body {

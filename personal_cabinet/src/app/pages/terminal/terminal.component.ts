@@ -28,10 +28,6 @@ export class TerminalComponent implements OnInit, OnDestroy {
 
   private initializeTerminal() {
     this.term = new Terminal({
-      fontWeight: 500,
-      fontSize: 16,
-      lineHeight: 1.2,
-      letterSpacing: 0,
       rows: 22,
       cols: 90,
       cursorBlink: true,
@@ -52,8 +48,6 @@ export class TerminalComponent implements OnInit, OnDestroy {
     // Обработка ввода с клавиатуры
     this.term.onData((data) => {
       if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-        console.log('term request', data);
-        // this.socket.send(data);
         this.socket.send(JSON.stringify({ type: 'input', data: data }));
       }
     });
@@ -74,15 +68,17 @@ export class TerminalComponent implements OnInit, OnDestroy {
         data: null,
       } as any;
       if (!isJson(event.data)) {
-        console.log('event string', event.data);
         responseWsData.data = event.data;
       } else {
-        console.log('event json', event.data);
-        responseWsData = JSON.parse(event.data);
+        const dataParsed = JSON.parse(event.data);
+        if (dataParsed.hasOwnProperty('data')) {
+          responseWsData = dataParsed;
+        } else {
+          responseWsData.data = dataParsed.toString();
+        }
       }
       try {
         if (responseWsData.type === 'ready') {
-          console.log('READY');
           this.socket.send(
             JSON.stringify({
               type: 'ready',
