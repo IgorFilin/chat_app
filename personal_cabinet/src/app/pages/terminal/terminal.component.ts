@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject, viewChild, ViewChild, ElementRef, WritableSignal, Signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, viewChild, ViewChild, ElementRef, WritableSignal, Signal, effect } from '@angular/core';
 import { Terminal } from '@xterm/xterm';
 import { environment } from '../../../environments/environment';
 import { UserStore } from '../../store/user/user.store';
@@ -17,9 +17,15 @@ export class TerminalComponent implements OnInit, OnDestroy {
   constructor() {}
   terminal: Signal<ElementRef<HTMLElement> | undefined> = viewChild('terminal');
 
+  #socketConnect = effect(() => {
+    if (this.userStore.userInfoData() && !this.socket) {
+      this.connectWebSocket();
+    }
+  });
+
   ngOnInit() {
     this.initializeTerminal();
-    this.connectWebSocket();
+    // this.connectWebSocket();
   }
 
   ngOnDestroy() {
@@ -38,9 +44,9 @@ export class TerminalComponent implements OnInit, OnDestroy {
       disableStdin: false,
       windowsMode: false,
       theme: {
-        foreground: '#F0F0F0', // Светло-серый текст
-        background: '#1E1E1E', // Тёмный фон (как в VSCode)
-        cursor: '#A0A0A0', // Умеренно-яркий курсор
+        foreground: '#F0F0F0',
+        background: '#1E1E1E',
+        cursor: '#A0A0A0',
       },
     });
     const termElem = this.terminal()?.nativeElement;
