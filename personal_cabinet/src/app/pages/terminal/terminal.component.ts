@@ -4,7 +4,6 @@ import { environment } from '../../../environments/environment';
 import { UserStore } from '../../store/user/user.store';
 import { isJson } from '../../shared/utils/functions';
 import { FitAddon } from '@xterm/addon-fit';
-import { WebglAddon } from '@xterm/addon-webgl';
 import { CanvasAddon } from '@xterm/addon-canvas';
 
 @Component({
