@@ -1,9 +1,11 @@
-import { Component, OnInit, OnDestroy, inject, viewChild, ViewChild, ElementRef, WritableSignal, Signal, effect } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, viewChild, ViewChild, ElementRef, WritableSignal, Signal, effect, HostListener } from '@angular/core';
 import { Terminal } from '@xterm/xterm';
 import { environment } from '../../../environments/environment';
 import { UserStore } from '../../store/user/user.store';
 import { isJson } from '../../shared/utils/functions';
 import { FitAddon } from '@xterm/addon-fit';
+import { WebglAddon } from '@xterm/addon-webgl';
+import { CanvasAddon } from '@xterm/addon-canvas';
 
 @Component({
   selector: 'app-terminal',
@@ -16,8 +18,15 @@ export class TerminalComponent implements OnInit, OnDestroy {
   private socket!: WebSocket;
   private teminalUrl: string = environment.teminalUrl;
   userStore = inject(UserStore);
-  constructor() {}
   terminal: Signal<ElementRef<HTMLElement> | undefined> = viewChild('terminal');
+  isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+  @HostListener('window:resize')
+  onResize() {
+    if (this.fitAddon && !this.isMobile) {
+      setTimeout(() => this.fitAddon.fit(), 500);
+    }
+  }
 
   #socketConnect = effect(() => {
     if (this.userStore.userInfoData() && !this.socket) {
@@ -35,29 +44,30 @@ export class TerminalComponent implements OnInit, OnDestroy {
 
   private initializeTerminal() {
     this.term = new Terminal({
-      rows: 22,
-      cols: 90,
-      fontWeight: 500,
-      fontSize: 16,
-      lineHeight: 1.2,
-      letterSpacing: 0,
-      cursorBlink: true,
-      disableStdin: false,
-      windowsMode: false,
+    fontSize: this.isMobile ? 10 : 16,
+    lineHeight: this.isMobile ? 1 : 1.2,
+    letterSpacing: 0,
+    cursorBlink: true,
       theme: {
         foreground: '#F0F0F0',
         background: '#1E1E1E',
         cursor: '#A0A0A0',
       },
     });
+
     const fitAddon = new FitAddon();
-    this.term.loadAddon(fitAddon);
+    const canvas = new CanvasAddon();
     this.fitAddon = fitAddon;
+    if(!this.isMobile) {
+      this.term.loadAddon(canvas);
+    }
+    this.term.loadAddon(fitAddon);
     const termElem = this.terminal()?.nativeElement;
     if (termElem) {
       this.term.open(termElem);
-      this.fitAddon.fit();
-      // window.addEventListener('resize', () => this.fitAddon.fit());
+      if(!this.isMobile) {
+        this.fitAddon.fit();
+      }
       this.term.write('Подключаемся к терминалу...\r\n');
     }
 

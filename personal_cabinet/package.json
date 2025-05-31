@@ -23,6 +23,7 @@
     "@ngrx/operators": "^19.0.1",
     "@ngrx/signals": "^19.0.1",
     "@vkid/sdk": "^2.4.0",
+    "@xterm/addon-canvas": "^0.7.0",
     "@xterm/addon-fit": "^0.10.0",
     "@xterm/xterm": "^5.5.0",
     "bad-words": "^4.0.0",

@@ -1,15 +1,9 @@
-:host {
-  overflow: hidden;
-}
-
 ::ng-deep {
   .xterm {
     padding: 10px;
-    span {
-      font-family: 'JetBrains Mono';
-    }
     .xterm-viewport {
       overflow-y: hidden;
     }
   }
+  
 }
