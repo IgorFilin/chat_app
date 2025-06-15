@@ -49,12 +49,13 @@
       }
     </div>
     }
-    <button
-      (click)="onClickLeaveHandler()"
-      class="ng-header__button"
-    >
-      Выход
-    </button>
+    <div class="ng-header__userInfoContainer">
+      {{ userName() }}
+      <cabinet-icon
+        id="exit"
+        (iconClick)="onClickLeaveHandler()"
+      ></cabinet-icon>
+    </div>
     }
   </div>
 </div>

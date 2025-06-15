@@ -162,3 +162,8 @@
   --b: 2px;
   --input_labelPadding: 2px;
 }
+
+.ng-header__userInfoContainer {
+  display: flex;
+  gap: 10px;
+}

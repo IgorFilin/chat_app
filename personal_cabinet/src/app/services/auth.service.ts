@@ -32,7 +32,7 @@ export class AuthService {
     private router: Router
   ) {}
 
-  private setAuthData(data: IUserInfo):void {
+  private setAuthData(data: IUserInfo): void {
     this.userService.userInfo.next(data);
     this.userStore.setUserInfo(data);
   }
@@ -46,8 +46,8 @@ export class AuthService {
           this.toastService.success(`Приветствую ${data.name}`);
           this.isAuth$.next(data.isAuth);
           this.isInitialApp = true;
-          this.setAuthData(data)
         }
+        this.setAuthData(data);
         this.loadingService.stopLoading();
         return data.isAuth;
       }),
@@ -137,7 +137,7 @@ export class AuthService {
   }
 
   async setAuthAndNavigateMainPage(data: any) {
-    await firstValueFrom(this.authRequest())
+    await firstValueFrom(this.authRequest());
     this.isAuth$.next(data.isAuth);
     this.router.navigateByUrl('/');
   }

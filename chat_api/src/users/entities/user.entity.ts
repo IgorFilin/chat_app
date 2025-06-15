@@ -3,7 +3,7 @@ import { UserKeyResetPass } from './userKeyResetPass.entity';
 import { Question } from '../../learning-center/entities/question.entity';
 import { Article } from '../../learning-center/entities/article.entity';
 import { IUserRoles } from '../model/models.interface';
-@Entity('Users')
+@Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -32,7 +32,7 @@ export class User {
   @Column()
   userPhoto: string;
 
-  @Column({default: 'user'})
+  @Column({ default: 'user' })
   role: IUserRoles;
 
   @CreateDateColumn()
@@ -47,5 +47,4 @@ export class User {
 
   @OneToMany(() => Article, (article) => article.user)
   article: Article[];
-  
 }
