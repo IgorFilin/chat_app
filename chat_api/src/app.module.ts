@@ -46,7 +46,7 @@ const configEnv = process.env.NODE_ENV === 'production' ? '.env.production' : '.
         password: configService.get('BD_PASSWORD'),
         database: configService.get('BD_DATABASE'),
         entities: [User, Room, Message, UserKeyResetPass, Question, Answer, Article, Tags, Views],
-        synchronize: true,
+        synchronize: false,
       }),
       inject: [ConfigService],
     }),
