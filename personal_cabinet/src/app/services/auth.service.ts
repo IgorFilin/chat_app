@@ -68,6 +68,16 @@ export class AuthService {
       .subscribe(
         (data) => {
           this.setAuthAndNavigateMainPage(data);
+          //@ts-ignore
+          if (window._tmr) {
+            console.log('отправка....');
+            //@ts-ignore
+            window._tmr.push({
+              id: '3679925',
+              type: 'reachGoal',
+              goal: 'register',
+            });
+          }
         },
         (error) => {
           const errorMessage = error.error.message || 'К сожалению произошла ошибка';
