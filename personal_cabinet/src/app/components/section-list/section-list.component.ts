@@ -58,10 +58,9 @@ export class SectionListComponent {
       icon: 'games',
       title: 'Игровая комната',
       routeLink: '/games',
+      disabled: true,
     },
   ]);
 
-  constructor(private route: Router, private userService: UserService) {
-    console.log(this.route);
-  }
+  constructor(private route: Router, private userService: UserService) {}
 }
