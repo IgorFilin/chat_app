@@ -9,18 +9,18 @@ export const PermissionGuard: CanActivateFn = (route, state) => {
   const userService = inject(UserService);
   const injector = inject(Injector);
 
-  return userService.userInfo
-  .asObservable()
-  .pipe(
-   map((data) => {
-    const responseUserData = data as IUserInfo
-    switch(route.routeConfig?.path) {
-      case 'questions':
-        if(responseUserData.role === 'admin') return true
-        else return false
-      default:
-        return true
-    }
-   })
-  )
+  return userService.userInfo.asObservable().pipe(
+    map((data) => {
+      const responseUserData = data as IUserInfo;
+      switch (route.routeConfig?.path) {
+        case 'questions':
+        case 'terminal':
+        case 'games':
+          if (responseUserData.role === 'admin') return true;
+          else return false;
+        default:
+          return true;
+      }
+    })
+  );
 };

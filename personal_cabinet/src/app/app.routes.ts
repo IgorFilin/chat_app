@@ -56,9 +56,4 @@ export const routes: Routes = [
     path: 'terminal',
     canActivate: [authGuard],
   },
-  {
-    component: GamesComponent,
-    path: 'games',
-    canActivate: [authGuard],
-  },
 ];

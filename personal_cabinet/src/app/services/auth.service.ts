@@ -1,6 +1,6 @@
 import { DestroyRef, Injectable, inject } from '@angular/core';
 import { RequestService } from './request.service';
-import { BehaviorSubject, Observable, catchError, map, of, tap } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, firstValueFrom, map, of, tap } from 'rxjs';
 import { UtilsService } from './utils.servise';
 import { ToasterService } from './toaster.service';
 import { LoadingService } from './loading.service';
@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IConfirm, ILoginBody, IRegistrationBody } from '../models/request';
 import { CookieService } from './cookie.service';
-import { GetAuthPesponseType } from '../models/interfaces';
+import { GetAuthPesponseType, IUserInfo } from '../models/interfaces';
 import { UserService } from './user.service';
 import { UserStore } from '../store/user/user.store';
 
@@ -32,19 +32,22 @@ export class AuthService {
     private router: Router
   ) {}
 
+  private setAuthData(data: IUserInfo): void {
+    this.userService.userInfo.next(data);
+    this.userStore.setUserInfo(data);
+  }
+
   authRequest(): Observable<any> {
     this.loadingService.startLoading();
-    const authToken = this.cookieService.getCookieByName('authToken');
     return this.requestService.get<any, GetAuthPesponseType>('user/auth').pipe(
       takeUntilDestroyed(this.destroyRef),
       map((data: GetAuthPesponseType) => {
-        if (data.isAuth) {
+        if (data.isAuth && !this.isInitialApp) {
           this.toastService.success(`Приветствую ${data.name}`);
           this.isAuth$.next(data.isAuth);
           this.isInitialApp = true;
         }
-        this.userService.userInfo.next(data);
-        this.userStore.setUserInfo(data);
+        this.setAuthData(data);
         this.loadingService.stopLoading();
         return data.isAuth;
       }),
@@ -64,8 +67,17 @@ export class AuthService {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(
         (data) => {
-          // this.toastService.success(data.message);
           this.setAuthAndNavigateMainPage(data);
+          //@ts-ignore
+          if (window._tmr) {
+            console.log('отправка....');
+            //@ts-ignore
+            window._tmr.push({
+              id: '3679925',
+              type: 'reachGoal',
+              goal: 'register',
+            });
+          }
         },
         (error) => {
           const errorMessage = error.error.message || 'К сожалению произошла ошибка';
@@ -134,7 +146,8 @@ export class AuthService {
       });
   }
 
-  setAuthAndNavigateMainPage(data: any): void {
+  async setAuthAndNavigateMainPage(data: any) {
+    await firstValueFrom(this.authRequest());
     this.isAuth$.next(data.isAuth);
     this.router.navigateByUrl('/');
   }

@@ -52,19 +52,12 @@ export class SectionListComponent {
       icon: 'chat',
       title: 'Терминал',
       routeLink: '/terminal',
-      disabled: false,
+      disabled: this.userService.userRole() !== 'admin',
     },
     {
       icon: 'games',
       title: 'Игровая комната',
       routeLink: '/games',
-      disabled: false,
-    },
-    {
-      icon: 'games',
-      title: 'Игровая комната',
-      routeLink: '/games',
-      disabled: false,
     },
   ]);
 
