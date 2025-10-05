@@ -30,7 +30,6 @@ export class UsersController {
     expirationDate.setDate(expirationDate.getDate() + 3);
     res.cookie('authToken', result.token, {
       httpOnly: true,
-      secure: true,
       expires: expirationDate,
     });
     res.setHeader('Authorization', `Bearer ${result.token}`);
