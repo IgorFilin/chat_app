@@ -1,9 +1,9 @@
 export const environment = {
   production: true,
-  apiBaseUrl: 'https://filin.tech/api',
-  chatBaseUrl: 'wss://filin.tech/ws',
+  apiBaseUrl: 'https://training-program.ru/api',
+  chatBaseUrl: 'wss://training-program.ru/ws',
   auth_vk: {
     app: 52897712,
-    redirectUrl: 'https://filin.tech/',
+    redirectUrl: 'https://training-program.ru/',
   },
 };

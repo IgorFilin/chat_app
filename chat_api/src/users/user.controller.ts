@@ -114,7 +114,7 @@ export class UsersController {
         expires: expirationDate,
       });
       if (mail) {
-        return res.redirect('https://filin.tech/');
+        return res.redirect('https://training-program.ru/');
       }
       res.send({ isAcceptKey: result.isAcceptKey, message: result.message });
     } else {
