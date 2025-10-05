@@ -189,14 +189,9 @@ export class UsersService {
         };
       }
       const user = await this.UserTable.findOneBy({ email: LoginUserDto.email });
-      if (user && !user.isAcceptKey) {
-        return {
-          message: 'Пожалуйста подтвердите вашу почту',
-        };
-      }
       if (user && Object.keys(user).length) {
         let isUserPasswordValid: boolean = false;
-        console.log('LoginUserDto', LoginUserDto);
+
         if (LoginUserDto.password.length === this.lenthBcryptPassword) isUserPasswordValid = LoginUserDto.password === user.password;
         else isUserPasswordValid = await bcrypt.compare(LoginUserDto.password, user.password);
 
