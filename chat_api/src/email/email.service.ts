@@ -26,7 +26,7 @@ export class EmailService {
       <p style="color: #ffa500;">Уважаемый(ая) ${email}</p>
       <p style="color: #ffa500;">Ваш код подтверждения: <b>${confirmationCode}</b></p>
       <p style="color: #ffa500;">Вы также можете подтвердить почту вручную или кликнув во ссылке:</p>
-      <a href="http://filin.tech/api/user/confirm?mail=true&key=${confirmationCode}" style="display: inline-block; padding: 10px 20px; background-color: #ffa500; color: #1a1a1a; text-decoration: none; font-weight: bold; border-radius: 5px;">Клик для подтверждения</a>
+      <a href="http://training-program.ru/api/user/confirm?mail=true&key=${confirmationCode}" style="display: inline-block; padding: 10px 20px; background-color: #ffa500; color: #1a1a1a; text-decoration: none; font-weight: bold; border-radius: 5px;">Клик для подтверждения</a>
       <p style="color: #ffa500;">Спасибо за регистрацию!</p>
       </div>
     `,
@@ -48,7 +48,7 @@ export class EmailService {
     this.email = configService.get('EMAIL_USERNAME');
     this.password = configService.get('EMAIL_PASSWORD');
     this.transporter = nodemailer.createTransport({
-      host: 'mail.filin.tech', 
+      host: 'mail.training-program.ru',
       port: 465,
       secure: true,
       auth: {
@@ -61,7 +61,7 @@ export class EmailService {
       },
     });
     this.mailOptions = {
-      from: 'Your App <cabinet@filin.tech>',
+      from: 'Your App <cabinet@training-program.ru>',
       to: '',
       subject: 'Подтвердите свою почту',
       html: '',

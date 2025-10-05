@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://filin.tech/sitemap.xml
+Sitemap: https://training-program.ru/sitemap.xml

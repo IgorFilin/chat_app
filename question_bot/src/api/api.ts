@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const mainInstance = axios.create({
-  baseURL: process.env.URL || 'https://filin.tech/api/',
+  baseURL: process.env.URL || 'https://training-program.ru/api/',
   withCredentials: true,
 });
 
