@@ -89,7 +89,7 @@ export class AuthService {
   registration(body: IRegistrationBody): void {
     this.loadingService.startLoading();
     this.requestService
-      .post<IRegistrationBody, any>('user/registration', body)
+      .post<IRegistrationBody, any>('gateway/registration', body)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError((error) => {

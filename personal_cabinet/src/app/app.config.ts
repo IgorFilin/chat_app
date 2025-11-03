@@ -2,7 +2,7 @@ import { ApplicationConfig, LOCALE_ID, inject, provideAppInitializer } from '@an
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
 import { UtilsService } from './services/utils.servise';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideToastr } from 'ngx-toastr';
@@ -13,7 +13,9 @@ import { AuthService } from './services/auth.service';
 import { Observable } from 'rxjs';
 import localeRu from '@angular/common/locales/ru';
 import { registerLocaleData } from '@angular/common';
-import { SocketUsersService } from './services/socket-users.service';
+import { errorHandlerInterceptor } from './core/interceptors/error-handler.interceptor';
+import { apiPrefixInterceptor } from './core/interceptors/api-prefix.interceptor';
+import { retryRequestInterceptor } from './core/interceptors/retry-request.interceptor';
 
 registerLocaleData(localeRu);
 
@@ -26,7 +28,7 @@ export const appConfig: ApplicationConfig = {
     UtilsService,
     ToasterService,
     provideRouter(routes),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([errorHandlerInterceptor, apiPrefixInterceptor, retryRequestInterceptor])),
     provideToastr(),
     provideAnimations(),
     provideAnimationsAsync(),

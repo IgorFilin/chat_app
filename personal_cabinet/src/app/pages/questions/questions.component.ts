@@ -1,26 +1,14 @@
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
-import {
-  FormArray,
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { QuestionAnswerService } from '../../services/question-answer.service';
 import { RadioButtonCustomComponent } from '../../shared/components/radio-button-custom/radio-button-custom.component';
 import { MatInputModule } from '@angular/material/input';
-import { TECHNOLOGY_STACK } from '../../models/constants';
+import { TECHNOLOGY_STACK } from '../../shared/models/constants';
 import { MarkdownModule } from 'ngx-markdown';
 import { MarkdownTextareaComponent } from '../../components/markdown-textarea/markdown-textarea.component';
 import { CustomSelectComponent } from '../../shared/components/custom-select/custom-select.component';
@@ -29,22 +17,15 @@ export type CreateQuestionFormType = {
 } & Record<string, string>;
 
 @Component({
-    selector: 'cabinet-questions',
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        RadioButtonCustomComponent,
-        CdkTextareaAutosize,
-        MarkdownTextareaComponent,
-        CustomSelectComponent
-    ],
-    templateUrl: './questions.component.html',
-    styleUrl: './questions.component.scss'
+  selector: 'cabinet-questions',
+  imports: [CommonModule, ReactiveFormsModule, RadioButtonCustomComponent, CdkTextareaAutosize, MarkdownTextareaComponent, CustomSelectComponent],
+  templateUrl: './questions.component.html',
+  styleUrl: './questions.component.scss',
 })
 export class QuestionsComponent implements OnInit {
   questionForm!: FormGroup;
   techologies: string[] = TECHNOLOGY_STACK;
-  
+
   constructor(
     private questionAnswerService: QuestionAnswerService,
     private ref: ChangeDetectorRef,
@@ -87,12 +68,10 @@ export class QuestionsComponent implements OnInit {
   }
 
   onSubmit() {
-    this.questionAnswerService
-      .addQuestion$(this.questionForm.getRawValue())
-      .subscribe(() => {
-        this.questionForm.reset();
-        this.initializeForm();
-        this.ref.markForCheck();
-      });
+    this.questionAnswerService.addQuestion$(this.questionForm.getRawValue()).subscribe(() => {
+      this.questionForm.reset();
+      this.initializeForm();
+      this.ref.markForCheck();
+    });
   }
 }

@@ -28,7 +28,13 @@ export class AppComponent implements OnInit {
   popupContainer: Signal<ViewContainerRef | undefined> = viewChild('popupContainer', { read: ViewContainerRef });
   userStore = inject(UserStore);
 
-  constructor(private userService: UserService, private socketUsersService: SocketUsersService, public loadingService: LoadingService, private isOpenCloseService: IsOpenCloseService, private popupService: PopupService) {
+  constructor(
+    private userService: UserService,
+    private socketUsersService: SocketUsersService,
+    public loadingService: LoadingService,
+    private isOpenCloseService: IsOpenCloseService,
+    private popupService: PopupService
+  ) {
     effect(() => {
       if (this.userStore.userInfoData()?.isAuth) {
         this.socketUsersService.initConnection();
