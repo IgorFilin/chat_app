@@ -4,7 +4,7 @@ import { retry } from 'rxjs';
 export const retryRequestInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     retry({
-      count: 2,
+      count: 0,
       delay: 400,
     })
   );
