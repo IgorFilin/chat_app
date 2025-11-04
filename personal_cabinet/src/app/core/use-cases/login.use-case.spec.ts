@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { LoginUseCase } from './login.use-case.service';
+import { LoginUseCase } from './login.use-case';
 
 describe('LoginUseCase', () => {
   let service: LoginUseCase;

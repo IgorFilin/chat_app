@@ -22,6 +22,16 @@ export class AuthService {
 
   userStore = inject(UserStore);
 
+  private _accessToken: string | null = null;
+
+  get accessToken() {
+    return this._accessToken;
+  }
+
+  set accessTokenUpdate(token: string) {
+    this._accessToken = token;
+  }
+
   constructor(
     private requestService: RequestService,
     private utilsService: UtilsService,
@@ -147,7 +157,7 @@ export class AuthService {
   }
 
   async setAuthAndNavigateMainPage(data: any) {
-    await firstValueFrom(this.authRequest());
+    this.accessTokenUpdate = data.accessToken;
     this.isAuth$.next(data.isAuth);
     this.router.navigateByUrl('/');
   }

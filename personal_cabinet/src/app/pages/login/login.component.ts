@@ -8,7 +8,7 @@ import { InputComponent } from '../../shared/components/input/input.component';
 import { slideInOutAnimation } from '../../animations/slide-in-out.animations';
 import { bubbleAnimation } from '../../animations/bubble.animation';
 import { VkAuthService } from '../../services/vk-auth.service';
-import { LoginUseCase } from '../../core/use-cases/login.use-case.service';
+import { LoginUseCase } from '../../core/use-cases/login.use-case';
 
 @Component({
   selector: 'cabinet-login',
@@ -20,7 +20,8 @@ import { LoginUseCase } from '../../core/use-cases/login.use-case.service';
 export class LoginComponent implements OnInit {
   constructor(
     private vkAuthService: VkAuthService,
-    private loginUseCase: LoginUseCase
+    private loginUseCase: LoginUseCase,
+    private router: Router
   ) {}
 
   loginForm: FormGroup = new FormGroup({
@@ -46,7 +47,9 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     // this.authServise.login(this.loginForm.getRawValue());
-    this.loginUseCase.execute(this.loginForm.value).subscribe();
+    this.loginUseCase.execute(this.loginForm.value).subscribe((data) => {
+      this.router.navigateByUrl('/');
+    });
     this.loginForm.reset();
   }
 }

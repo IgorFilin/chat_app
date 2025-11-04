@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { IApiResponse, ILoginUserPayload } from '../../shared/models';
+import { IApiResponse, ILoginResponse, ILoginUserPayload, ILoginUserPayloadByDevice } from '../../shared/models';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -9,8 +9,8 @@ import { Observable } from 'rxjs';
 export class LoginRepository {
   private readonly httpClient = inject(HttpClient);
 
-  login(loginUserPayload: ILoginUserPayload): Observable<IApiResponse> {
-    return this.httpClient.post<IApiResponse>('gateway/login', loginUserPayload, {
+  login(loginUserPayload: ILoginUserPayloadByDevice): Observable<IApiResponse<ILoginResponse>> {
+    return this.httpClient.post<IApiResponse<ILoginResponse>>('gateway/login', loginUserPayload, {
       withCredentials: true,
     });
   }
