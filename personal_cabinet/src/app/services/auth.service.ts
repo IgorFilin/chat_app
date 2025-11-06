@@ -1,4 +1,4 @@
-import { DestroyRef, Injectable, inject } from '@angular/core';
+import { DestroyRef, Injectable, inject, signal } from '@angular/core';
 import { RequestService } from './request.service';
 import { BehaviorSubject, Observable, catchError, firstValueFrom, map, of, tap } from 'rxjs';
 import { UtilsService } from './utils.servise';
@@ -10,17 +10,15 @@ import { IConfirm, ILoginBody, IRegistrationBody } from '../models/request';
 import { CookieService } from './cookie.service';
 import { GetAuthPesponseType, IUserInfo } from '../models/interfaces';
 import { UserService } from './user.service';
-import { UserStore } from '../store/user/user.store';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   isAuth$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  readonly isAuth = signal(false);
   isInitialApp: boolean = false;
   destroyRef = inject(DestroyRef);
-
-  userStore = inject(UserStore);
 
   private _accessToken: string | null = null;
 
@@ -44,7 +42,6 @@ export class AuthService {
 
   private setAuthData(data: IUserInfo): void {
     this.userService.userInfo.next(data);
-    this.userStore.setUserInfo(data);
   }
 
   authRequest(): Observable<any> {
@@ -151,7 +148,6 @@ export class AuthService {
       .subscribe((data: any) => {
         this.toastService.success('Вы успешно вышли, возращайтесь!');
         this.isAuth$.next(data.isAuth);
-        this.userStore.setUserInfo(null);
         this.router.navigateByUrl('registration');
       });
   }
@@ -159,6 +155,7 @@ export class AuthService {
   async setAuthAndNavigateMainPage(data: any) {
     this.accessTokenUpdate = data.accessToken;
     this.isAuth$.next(data.isAuth);
+    this.isAuth.set(true);
     this.router.navigateByUrl('/');
   }
 }

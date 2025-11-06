@@ -16,6 +16,7 @@ import { registerLocaleData } from '@angular/common';
 import { errorHandlerInterceptor } from './core/interceptors/error-handler.interceptor';
 import { apiPrefixInterceptor } from './core/interceptors/api-prefix.interceptor';
 import { retryRequestInterceptor } from './core/interceptors/retry-request.interceptor';
+import { mountAccessTokenInterceptor } from './core/interceptors/mount-access-token.interceptor';
 
 registerLocaleData(localeRu);
 
@@ -28,7 +29,7 @@ export const appConfig: ApplicationConfig = {
     UtilsService,
     ToasterService,
     provideRouter(routes),
-    provideHttpClient(withInterceptors([errorHandlerInterceptor, apiPrefixInterceptor, retryRequestInterceptor])),
+    provideHttpClient(withInterceptors([errorHandlerInterceptor, apiPrefixInterceptor, retryRequestInterceptor, mountAccessTokenInterceptor])),
     provideToastr(),
     provideAnimations(),
     provideAnimationsAsync(),
@@ -40,10 +41,10 @@ export const appConfig: ApplicationConfig = {
         },
       },
     }),
-    provideAppInitializer(() => {
-      const initializerFn = initializeAppFactory(inject(AuthService));
-      return initializerFn();
-    }),
+    // provideAppInitializer(() => {
+    //   const initializerFn = initializeAppFactory(inject(AuthService));
+    //   return initializerFn();
+    // }),
     {
       provide: LOCALE_ID,
       useValue: 'ru',

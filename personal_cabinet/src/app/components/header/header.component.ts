@@ -26,11 +26,20 @@ export class HeaderComponent {
   checked: boolean = false;
   currentRoute: string = '';
   searchedArticles: IArticle[] = [];
-  userName = computed(() => this.userStore.userInfo()?.name);
+  userName = computed(() => {
+    console.log('0)-00-0', this.userStore.userInfoData());
+    return this.userStore.userInfoData()?.name;
+  });
 
   public userStore = inject(UserStore);
 
-  constructor(private authService: AuthService, private isOpenCloseService: IsOpenCloseService, private themeService: ThemeService, private router: Router, private knowledgeService: KnowledgeService) {
+  constructor(
+    private authService: AuthService,
+    private isOpenCloseService: IsOpenCloseService,
+    private themeService: ThemeService,
+    private router: Router,
+    private knowledgeService: KnowledgeService
+  ) {
     this.checked = this.themeService.getCurrentTheme === 'dark';
     this.authService.isAuth$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((isAuth) => (this.isAuth = isAuth));
   }
