@@ -28,6 +28,7 @@
     "@xterm/xterm": "^5.5.0",
     "bad-words": "^4.0.0",
     "clipboard": "^2.0.11",
+    "jwt-decode": "^4.0.0",
     "ngx-markdown": "^19.0.0",
     "ngx-toastr": "^19.0.0",
     "prismjs": "^1.29.0",

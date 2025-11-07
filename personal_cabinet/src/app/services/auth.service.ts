@@ -1,6 +1,6 @@
 import { DestroyRef, Injectable, inject, signal } from '@angular/core';
 import { RequestService } from './request.service';
-import { BehaviorSubject, Observable, catchError, firstValueFrom, map, of, tap } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, finalize, firstValueFrom, map, of, shareReplay, tap } from 'rxjs';
 import { UtilsService } from './utils.servise';
 import { ToasterService } from './toaster.service';
 import { LoadingService } from './loading.service';
@@ -10,7 +10,8 @@ import { IConfirm, ILoginBody, IRegistrationBody } from '../models/request';
 import { CookieService } from './cookie.service';
 import { GetAuthPesponseType, IUserInfo } from '../models/interfaces';
 import { UserService } from './user.service';
-
+import { jwtDecode, JwtPayload } from 'jwt-decode';
+import { AuthRepository } from '../infrastructure/repositories/auth.repository';
 @Injectable({
   providedIn: 'root',
 })
@@ -19,6 +20,8 @@ export class AuthService {
   readonly isAuth = signal(false);
   isInitialApp: boolean = false;
   destroyRef = inject(DestroyRef);
+  authRepository = inject(AuthRepository);
+  refreshToken$: Observable<any> | null = null;
 
   private _accessToken: string | null = null;
 
@@ -28,6 +31,44 @@ export class AuthService {
 
   set accessTokenUpdate(token: string) {
     this._accessToken = token;
+  }
+
+  getDecodeToken(): JwtPayload | null {
+    if (this.accessToken) {
+      const decodedToken = jwtDecode(this.accessToken);
+      return decodedToken;
+    }
+    return null;
+  }
+
+  isValidToken() {
+    const decodedToken = this.getDecodeToken();
+
+    if (!decodedToken) return false;
+
+    return decodedToken.exp! >= new Date().getTime();
+  }
+
+  refresh(): any {
+    if (this.refreshToken$) {
+      return this.refreshToken$;
+    }
+
+    this.refreshToken$ = this.authRepository.refreshToken().pipe(
+      tap(({ data }) => {
+        const { accessToken } = data as any;
+        this.accessTokenUpdate = accessToken;
+      }),
+      finalize(() => {
+        this.refreshToken$ = null;
+      }),
+      shareReplay({
+        bufferSize: 1,
+        refCount: true,
+      })
+    );
+
+    return this.refreshToken$;
   }
 
   constructor(

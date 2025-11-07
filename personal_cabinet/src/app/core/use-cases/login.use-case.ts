@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { of, switchMap, tap } from 'rxjs';
-import { LoginRepository } from '../../infrastructure/repositories/login.repository';
 import { ILoginUserPayload, ILoginUserPayloadByDevice } from '../../shared/models';
 import { AuthService } from '../../services/auth.service';
 import { DeviceService } from '../../services/device.service';
+import { AuthRepository } from '../../infrastructure/repositories/auth.repository';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LoginUseCase {
   constructor(
-    private readonly loginRepository: LoginRepository,
+    private readonly authRepository: AuthRepository,
     private readonly authService: AuthService,
     private readonly deviceService: DeviceService
   ) {}
@@ -22,7 +22,7 @@ export class LoginUseCase {
       ...userPayload,
       deviceId,
     };
-    return this.loginRepository.login(userPayloadByDevice).pipe(
+    return this.authRepository.login(userPayloadByDevice).pipe(
       tap((response) => {
         const { data, success } = response;
         if (data) {

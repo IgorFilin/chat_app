@@ -17,6 +17,7 @@ import { errorHandlerInterceptor } from './core/interceptors/error-handler.inter
 import { apiPrefixInterceptor } from './core/interceptors/api-prefix.interceptor';
 import { retryRequestInterceptor } from './core/interceptors/retry-request.interceptor';
 import { mountAccessTokenInterceptor } from './core/interceptors/mount-access-token.interceptor';
+import { refreshTokenInterceptor } from './core/interceptors/refresh-token.interceptor';
 
 registerLocaleData(localeRu);
 
@@ -29,7 +30,7 @@ export const appConfig: ApplicationConfig = {
     UtilsService,
     ToasterService,
     provideRouter(routes),
-    provideHttpClient(withInterceptors([errorHandlerInterceptor, apiPrefixInterceptor, retryRequestInterceptor, mountAccessTokenInterceptor])),
+    provideHttpClient(withInterceptors([refreshTokenInterceptor, errorHandlerInterceptor, apiPrefixInterceptor, retryRequestInterceptor, mountAccessTokenInterceptor])),
     provideToastr(),
     provideAnimations(),
     provideAnimationsAsync(),

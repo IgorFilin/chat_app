@@ -12,6 +12,7 @@ import { bubbleAnimation } from './animations/bubble.animation';
 import { SocketUsersService } from './services/socket-users.service';
 import { UserService } from './services/user.service';
 import { UserStore } from './store/user/user.store';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -33,7 +34,8 @@ export class AppComponent implements OnInit {
     private socketUsersService: SocketUsersService,
     public loadingService: LoadingService,
     private isOpenCloseService: IsOpenCloseService,
-    private popupService: PopupService
+    private popupService: PopupService,
+    private httpClient: HttpClient
   ) {
     effect(() => {
       if (this.userStore.userInfoData()?.isAuth) {
@@ -49,5 +51,8 @@ export class AppComponent implements OnInit {
       this.isOpenMenu = data['menu'];
     });
     this.popupService.initialize(this.popupContainer()!);
+    this.httpClient.get('/gateway/test').subscribe();
+    this.httpClient.get('/gateway/test2').subscribe();
+    this.httpClient.get('/gateway/test3').subscribe();
   }
 }

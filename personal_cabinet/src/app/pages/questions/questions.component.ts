@@ -1,15 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatSelectModule } from '@angular/material/select';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { CdkTextareaAutosize } from '@angular/cdk/text-field';
-import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { QuestionAnswerService } from '../../services/question-answer.service';
-import { RadioButtonCustomComponent } from '../../shared/components/radio-button-custom/radio-button-custom.component';
-import { MatInputModule } from '@angular/material/input';
 import { TECHNOLOGY_STACK } from '../../shared/models/constants';
-import { MarkdownModule } from 'ngx-markdown';
 import { MarkdownTextareaComponent } from '../../components/markdown-textarea/markdown-textarea.component';
 import { CustomSelectComponent } from '../../shared/components/custom-select/custom-select.component';
 export type CreateQuestionFormType = {
@@ -18,7 +11,7 @@ export type CreateQuestionFormType = {
 
 @Component({
   selector: 'cabinet-questions',
-  imports: [CommonModule, ReactiveFormsModule, RadioButtonCustomComponent, CdkTextareaAutosize, MarkdownTextareaComponent, CustomSelectComponent],
+  imports: [CommonModule, ReactiveFormsModule, MarkdownTextareaComponent, CustomSelectComponent],
   templateUrl: './questions.component.html',
   styleUrl: './questions.component.scss',
 })
