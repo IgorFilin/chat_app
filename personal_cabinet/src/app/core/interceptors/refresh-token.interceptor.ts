@@ -7,7 +7,7 @@ const IS_IGNORE_REQUESTS = ['refresh', 'login', 'registration'];
 
 export const refreshTokenInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
-
+  console.log('req.url', req.url);
   const isInvalidReqExist = IS_IGNORE_REQUESTS.some((ignoredReq) => req.url.includes(ignoredReq));
 
   if (isInvalidReqExist) {

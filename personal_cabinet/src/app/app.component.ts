@@ -51,8 +51,5 @@ export class AppComponent implements OnInit {
       this.isOpenMenu = data['menu'];
     });
     this.popupService.initialize(this.popupContainer()!);
-    this.httpClient.get('/gateway/test').subscribe();
-    this.httpClient.get('/gateway/test2').subscribe();
-    this.httpClient.get('/gateway/test3').subscribe();
   }
 }

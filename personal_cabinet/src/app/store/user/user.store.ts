@@ -11,9 +11,7 @@ export const UserStore = signalStore(
     _recource: rxResource({
       request: () => authService.isAuth(),
       loader: ({ request }) => {
-        console.log('isAuth', request);
         if (!request) return EMPTY;
-        console.log('isAuth 2 ', request);
         return userApi.me();
       },
     }).asReadonly(),

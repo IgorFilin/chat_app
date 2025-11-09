@@ -4,34 +4,27 @@ import { IEditArticleBody } from '../models/request';
 import { RequestService } from './request.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ToasterService } from './toaster.service';
-import { Observable, tap } from 'rxjs';
+import { Observable, of, tap } from 'rxjs';
 import { TechnologyStackType } from '../models/types';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class KnowledgeService {
-
   dataArticles: WritableSignal<IArticle[]> = signal([]);
-  
-  constructor(
-    private requestService: RequestService,
-    private toastService: ToasterService,
-  ) { }
-  
+
+  constructor(private requestService: RequestService, private toastService: ToasterService) {}
+
   get articles() {
-    return this.dataArticles()
-  }
-  
-  set articles(articles:Array<IArticle>) {
-    this.dataArticles.set(articles)
+    return this.dataArticles();
   }
 
-  
+  set articles(articles: Array<IArticle>) {
+    this.dataArticles.set(articles);
+  }
+
   createArticle(payload: any): Observable<any> {
-    return this.requestService
-    .post<any,any>('learning/create-article', { ...payload })
-    .pipe(
+    return this.requestService.post<any, any>('learning/create-article', { ...payload }).pipe(
       tap((data) => {
         if (data.message) {
           this.toastService.info(data.message);
@@ -40,10 +33,8 @@ export class KnowledgeService {
     );
   }
 
-  getTag(filter:string){
-    return this.requestService
-    .get<any,any>('learning/tags', { filter })
-    .pipe(
+  getTag(filter: string) {
+    return this.requestService.get<any, any>('learning/tags', { filter }).pipe(
       tap((data) => {
         if (data.message) {
           this.toastService.info(data.message);
@@ -53,23 +44,23 @@ export class KnowledgeService {
   }
 
   getArticles(filter?: TechnologyStackType): Observable<any> {
-    return this.requestService
-    .get<any,any>('learning/articles', { filter : filter ?? '' })
-    .pipe(
-      tap((data) => {
-        if (data.message) {
-          this.toastService.info(data.message);
-        }
-      })
-    );
+    // return this.requestService
+    // .get<any,any>('learning/articles', { filter : filter ?? '' })
+    // .pipe(
+    //   tap((data) => {
+    //     if (data.message) {
+    //       this.toastService.info(data.message);
+    //     }
+    //   })
+    // );
+    return of([]);
   }
 
   getArticle(id: string): Observable<any> {
-    return this.requestService
-    .get<any, IArticleResponse>('learning/article', { id })
+    return this.requestService.get<any, IArticleResponse>('learning/article', { id });
   }
 
   editArticle(body: IEditArticleBody): Observable<any> {
-    return this.requestService.put<IEditArticleBody, any>('learning/edit_article', body)
+    return this.requestService.put<IEditArticleBody, any>('learning/edit_article', body);
   }
 }

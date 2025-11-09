@@ -9,9 +9,9 @@ import { Observable } from 'rxjs';
 export class AuthRepository {
   private readonly httpClient = inject(HttpClient);
 
-  refreshToken(): Observable<IApiResponse> {
-    return this.httpClient.get<IApiResponse>('gateway/refresh', {
-      withCredentials: true
+  refreshToken(): Observable<IApiResponse<any>> {
+    return this.httpClient.get<IApiResponse<any>>('gateway/refresh', {
+      withCredentials: true,
     });
   }
 

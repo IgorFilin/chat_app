@@ -13,12 +13,13 @@ import { PermissionGuard } from './core/guard/permission-guard';
 import { ChatComponent } from './pages/chat/chat.component';
 import { TerminalComponent } from './pages/terminal/terminal.component';
 import { GamesComponent } from './pages/games/games.component';
+import { PublicGuard } from './core/guard/public-guard';
 
 export const routes: Routes = [
   // { path: '', canActivate: [authGuard] , component: MainComponent },
   { path: '', redirectTo: 'knowledgeBase', pathMatch: 'full' },
   { component: RegistrationComponent, path: 'registration' },
-  { component: LoginComponent, path: 'login' },
+  { component: LoginComponent, path: 'login', canActivate: [PublicGuard] },
   { component: ConfirmComponent, path: 'confirm' },
   {
     component: QuestionsComponent,

@@ -1,6 +1,6 @@
 import { DestroyRef, Injectable, inject, signal } from '@angular/core';
 import { RequestService } from './request.service';
-import { BehaviorSubject, Observable, catchError, finalize, firstValueFrom, map, of, shareReplay, tap } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, catchError, finalize, firstValueFrom, map, of, shareReplay, tap } from 'rxjs';
 import { UtilsService } from './utils.servise';
 import { ToasterService } from './toaster.service';
 import { LoadingService } from './loading.service';
@@ -46,7 +46,7 @@ export class AuthService {
 
     if (!decodedToken) return false;
 
-    return decodedToken.exp! >= new Date().getTime();
+    return decodedToken.exp! >= new Date().getTime() / 1000;
   }
 
   refresh(): any {
@@ -55,12 +55,18 @@ export class AuthService {
     }
 
     this.refreshToken$ = this.authRepository.refreshToken().pipe(
-      tap(({ data }) => {
-        const { accessToken } = data as any;
+      tap((data) => {
+        const { accessToken } = data.data?.tokens as any;
+        console.log('установили в рефреше', accessToken);
         this.accessTokenUpdate = accessToken;
+        this.isAuth.set(true);
+        this.isAuth$.next(true);
       }),
       finalize(() => {
         this.refreshToken$ = null;
+      }),
+      catchError(() => {
+        return EMPTY;
       }),
       shareReplay({
         bufferSize: 1,

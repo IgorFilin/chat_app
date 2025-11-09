@@ -8,8 +8,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
   const appFacadeService = inject(AppFacadeService);
-  const cookieService = inject(CookieService);
-  return true;
+  return authService.isAuth$.asObservable();
   // const authToken = cookieService.getCookieByName('authToken');
   // if (authToken) return true;
   // else {

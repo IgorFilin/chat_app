@@ -22,7 +22,7 @@ import { refreshTokenInterceptor } from './core/interceptors/refresh-token.inter
 registerLocaleData(localeRu);
 
 function initializeAppFactory(authService: AuthService): () => Observable<any> {
-  return () => authService.authRequest();
+  return () => authService.refresh();
 }
 
 export const appConfig: ApplicationConfig = {
@@ -42,10 +42,10 @@ export const appConfig: ApplicationConfig = {
         },
       },
     }),
-    // provideAppInitializer(() => {
-    //   const initializerFn = initializeAppFactory(inject(AuthService));
-    //   return initializerFn();
-    // }),
+    provideAppInitializer(() => {
+      const initializerFn = initializeAppFactory(inject(AuthService));
+      return initializerFn();
+    }),
     {
       provide: LOCALE_ID,
       useValue: 'ru',
