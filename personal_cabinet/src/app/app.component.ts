@@ -11,7 +11,7 @@ import { PopupService } from './services/popup.service';
 import { bubbleAnimation } from './animations/bubble.animation';
 import { SocketUsersService } from './services/socket-users.service';
 import { UserService } from './services/user.service';
-import { UserStore } from './store/user/user.store';
+import { UserStore } from './store/user.store';
 import { HttpClient } from '@angular/common/http';
 
 @Component({

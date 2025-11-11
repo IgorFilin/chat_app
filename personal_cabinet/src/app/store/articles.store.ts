@@ -1,24 +1,24 @@
 import { signalStore, withComputed, withProps } from '@ngrx/signals';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { computed, inject } from '@angular/core';
-import { UserRepository } from '../../infrastructure/repositories/user.repository';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../services/auth.service';
 import { EMPTY } from 'rxjs';
+import { KnowledgeRepository } from '../infrastructure/repositories/knowledge.repository';
+import { IArticleResponse } from '../models/interfaces';
 
-export const UserStore = signalStore(
+export const ArticleStore = signalStore(
   { providedIn: 'root' },
-  withProps((_, authService = inject(AuthService), userApi = inject(UserRepository)) => ({
+  withProps((_, authService = inject(AuthService), knowledgeApi = inject(KnowledgeRepository)) => ({
     _recource: rxResource({
       request: () => authService.isAuth(),
       loader: ({ request }) => {
         if (!request) return EMPTY;
-        return userApi.me();
+        return knowledgeApi.articles();
       },
     }).asReadonly(),
   })),
   withComputed((store) => ({
-    userInfoData: computed(() => store._recource.value()?.data),
+    articles: computed<IArticleResponse[]>(() => store._recource.value()?.data || []),
     isLoading: computed(() => store._recource.isLoading()),
-    userId: computed(() => store._recource.value()?.data?.id),
   }))
 );

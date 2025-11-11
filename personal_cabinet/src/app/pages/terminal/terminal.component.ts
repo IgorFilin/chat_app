@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, inject, viewChild, ViewChild, ElementRef, WritableSignal, Signal, effect, HostListener } from '@angular/core';
 import { Terminal } from '@xterm/xterm';
 import { environment } from '../../../environments/environment';
-import { UserStore } from '../../store/user/user.store';
+import { UserStore } from '../../store/user.store';
 import { isJson } from '../../shared/utils/functions';
 import { FitAddon } from '@xterm/addon-fit';
 import { CanvasAddon } from '@xterm/addon-canvas';
@@ -43,10 +43,10 @@ export class TerminalComponent implements OnInit, OnDestroy {
 
   private initializeTerminal() {
     this.term = new Terminal({
-    fontSize: this.isMobile ? 10 : 16,
-    lineHeight: this.isMobile ? 1 : 1.2,
-    letterSpacing: 0,
-    cursorBlink: true,
+      fontSize: this.isMobile ? 10 : 16,
+      lineHeight: this.isMobile ? 1 : 1.2,
+      letterSpacing: 0,
+      cursorBlink: true,
       theme: {
         foreground: '#F0F0F0',
         background: '#1E1E1E',
@@ -57,14 +57,14 @@ export class TerminalComponent implements OnInit, OnDestroy {
     const fitAddon = new FitAddon();
     const canvas = new CanvasAddon();
     this.fitAddon = fitAddon;
-    if(!this.isMobile) {
+    if (!this.isMobile) {
       this.term.loadAddon(canvas);
     }
     this.term.loadAddon(fitAddon);
     const termElem = this.terminal()?.nativeElement;
     if (termElem) {
       this.term.open(termElem);
-      if(!this.isMobile) {
+      if (!this.isMobile) {
         this.fitAddon.fit();
       }
       this.term.write('Подключаемся к терминалу...\r\n');

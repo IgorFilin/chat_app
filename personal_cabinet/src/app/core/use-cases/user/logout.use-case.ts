@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { tap } from 'rxjs';
-import { AuthService } from '../../services/auth.service';
-import { AuthRepository } from '../../infrastructure/repositories/auth.repository';
+import { AuthService } from '../../../services/auth.service';
+import { AuthRepository } from '../../../infrastructure/repositories/auth.repository';
 import { Router } from '@angular/router';
-import { TokenService } from '../../services/token.service';
+import { TokenService } from '../../../services/token.service';
 
 @Injectable({
   providedIn: 'root',

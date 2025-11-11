@@ -10,8 +10,8 @@ import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { filter } from 'rxjs';
 import { KnowledgeService } from '../../services/knowledge.service';
 import { IArticle } from '../../models/interfaces';
-import { UserStore } from '../../store/user/user.store';
-import { LogoutUseCase } from '../../core/use-cases/logout.use-case';
+import { UserStore } from '../../store/user.store';
+import { LogoutUseCase } from '../../core/use-cases/user/logout.use-case';
 
 @Component({
   selector: 'cabinet-header',

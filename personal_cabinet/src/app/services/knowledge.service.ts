@@ -1,11 +1,11 @@
-import { DestroyRef, inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { Injectable, signal, WritableSignal } from '@angular/core';
 import { IArticle, IArticleResponse } from '../models/interfaces';
 import { IEditArticleBody } from '../models/request';
 import { RequestService } from './request.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ToasterService } from './toaster.service';
 import { Observable, of, tap } from 'rxjs';
 import { TechnologyStackType } from '../models/types';
+import { KnowledgeRepository } from '../infrastructure/repositories/knowledge.repository';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +13,7 @@ import { TechnologyStackType } from '../models/types';
 export class KnowledgeService {
   dataArticles: WritableSignal<IArticle[]> = signal([]);
 
-  constructor(private requestService: RequestService, private toastService: ToasterService) {}
+  constructor(private requestService: RequestService, private toastService: ToasterService, private knowledgeRepository: KnowledgeRepository) {}
 
   get articles() {
     return this.dataArticles();
@@ -44,8 +44,11 @@ export class KnowledgeService {
   }
 
   getArticles(filter?: TechnologyStackType): Observable<any> {
+    this.knowledgeRepository.articles().subscribe((data) => {
+      console.log('data', data);
+    });
     // return this.requestService
-    // .get<any,any>('learning/articles', { filter : filter ?? '' })
+    // .get<any,any>('gateway/articles', { filter : filter ?? '' })
     // .pipe(
     //   tap((data) => {
     //     if (data.message) {

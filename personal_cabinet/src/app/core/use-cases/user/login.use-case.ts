@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { tap } from 'rxjs';
-import { ILoginUserPayload, ILoginUserPayloadByDevice } from '../../shared/models';
-import { AuthService } from '../../services/auth.service';
-import { DeviceService } from '../../services/device.service';
-import { AuthRepository } from '../../infrastructure/repositories/auth.repository';
-import { TokenService } from '../../services/token.service';
+import { ILoginUserPayload, ILoginUserPayloadByDevice } from '../../../shared/models';
+import { AuthService } from '../../../services/auth.service';
+import { DeviceService } from '../../../services/device.service';
+import { AuthRepository } from '../../../infrastructure/repositories/auth.repository';
+import { TokenService } from '../../../services/token.service';
 import { Router } from '@angular/router';
 
 @Injectable({

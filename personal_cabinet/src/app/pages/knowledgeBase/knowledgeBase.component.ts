@@ -1,4 +1,4 @@
-import { Component, computed, effect, OnInit, Signal, signal, WritableSignal } from '@angular/core';
+import { Component, computed, effect, inject, Inject, OnInit, Signal, signal, WritableSignal } from '@angular/core';
 import { QuestionAnswerService } from '../../services/question-answer.service';
 import { CommonModule } from '@angular/common';
 import { TECHNOLOGY_STACK } from '../../shared/models/constants';
@@ -8,6 +8,7 @@ import { Router, RouterModule, UrlSegment } from '@angular/router';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 import { TextSlicePipe } from '../../pipes/text-slice.pipe';
 import { KnowledgeService } from '../../services/knowledge.service';
+import { ArticleStore } from '../../store/articles.store';
 
 @Component({
   selector: 'app-knowledgeBase',
@@ -15,8 +16,7 @@ import { KnowledgeService } from '../../services/knowledge.service';
   imports: [CommonModule, MarkdownModule, RouterModule, IconComponent, TextSlicePipe],
   styleUrls: ['./knowledgeBase.component.scss'],
 })
-export class KnowledgeBaseComponent implements OnInit {
-  dataArticles: Signal<any> = computed(() => this.knowledgeService.articles);
+export class KnowledgeBaseComponent {
   dataPaginationArticles: any = [];
   techologies: TechnologyStackType[] = TECHNOLOGY_STACK;
   currentPage: WritableSignal<number> = signal(1);
@@ -24,20 +24,19 @@ export class KnowledgeBaseComponent implements OnInit {
   start: number = 0;
   end: number = 0;
   pagination: number[] = [];
-  // currentTech: WritableSignal<TechnologyStackType> = signal('');
 
-  constructor(
-    private router: Router,
-    private knowledgeService: KnowledgeService
-  ) {}
+  readonly articleStore = inject(ArticleStore);
 
-  ngOnInit() {
-    this.knowledgeService.getArticles().subscribe((data) => {
-      this.knowledgeService.articles = data;
-      this.dataPaginationArticles = this.dataArticles().slice(this.start, this.end + this.dataArticlesInPage);
-      this.initialPagination();
-    });
-  }
+  constructor(private router: Router) {}
+
+  readonly dataArticles = computed(() => this.articleStore.articles());
+  readonly isLoading = computed(() => this.articleStore.isLoading());
+
+  private readonly setDataArticles = effect(() => {
+    if (this.isLoading()) return;
+    this.dataPaginationArticles = this.dataArticles().slice(this.start, this.end + this.dataArticlesInPage);
+    this.initialPagination();
+  });
 
   filteredPagination(page: number) {
     const start = this.dataArticlesInPage * page;
@@ -55,9 +54,5 @@ export class KnowledgeBaseComponent implements OnInit {
   setPage(page: number) {
     this.currentPage.set(page);
     this.filteredPagination(page);
-  }
-
-  onClickTechTagHandler(tech: TechnologyStackType) {
-    // this.currentTech.set(tech);
   }
 }

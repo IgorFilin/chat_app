@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { MarkdownModule } from 'ngx-markdown';
 import { IArticleResponse } from '../../models/interfaces';
 import { IconComponent } from '../../shared/components/icon/icon.component';
-import { UserStore } from '../../store/user/user.store';
+import { UserStore } from '../../store/user.store';
 import { bubbleAnimation } from '../../animations/bubble.animation';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MarkdownTextareaComponent } from '../../components/markdown-textarea/markdown-textarea.component';
@@ -16,6 +16,7 @@ import { ToasterService } from '../../services/toaster.service';
 import { PopupService } from '../../services/popup.service';
 import { RequestService } from '../../services/request.service';
 import { catchError, EMPTY, finalize } from 'rxjs';
+import { KnowledgeRepository } from '../../infrastructure/repositories/knowledge.repository';
 
 @Component({
   selector: 'app-article',
@@ -25,7 +26,7 @@ import { catchError, EMPTY, finalize } from 'rxjs';
   animations: [bubbleAnimation],
 })
 export class ArticleComponent implements OnInit {
-  isYourArticle: Signal<boolean> = computed(() => this.userStore.userId() === this.article()?.user.id);
+  isYourArticle: Signal<boolean> = computed(() => this.userStore.userId() === this.article()?.user?.id);
   articleId: WritableSignal<string> = signal<string>('');
   article: WritableSignal<IArticleResponse | null> = signal(null);
   isEditMode: WritableSignal<boolean> = signal(false);
@@ -36,6 +37,14 @@ export class ArticleComponent implements OnInit {
   });
   destroyRef = inject(DestroyRef);
 
+  private readonly initializeEffect = effect(() => {
+    this.knowledgeRepository.getArticle(this.articleId()).subscribe((articleData) => {
+      this.article.set(articleData.data!);
+      this.setInitialDataArticle();
+      this.initializeEffect.destroy();
+    });
+  });
+
   constructor(
     private knowledgeService: KnowledgeService,
     private router: Router,
@@ -43,15 +52,9 @@ export class ArticleComponent implements OnInit {
     private formBuilder: FormBuilder,
     private toasterService: ToasterService,
     private popupService: PopupService,
-    private requestService: RequestService
-  ) {
-    effect(() => {
-      this.knowledgeService.getArticle(this.articleId()).subscribe((articleData) => {
-        this.article.set(articleData);
-        this.setInitialDataArticle();
-      });
-    });
-  }
+    private requestService: RequestService,
+    private knowledgeRepository: KnowledgeRepository
+  ) {}
 
   setInitialDataArticle() {
     this.editedArticleForm.patchValue({

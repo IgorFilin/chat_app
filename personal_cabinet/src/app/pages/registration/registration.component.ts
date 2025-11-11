@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { InputComponent } from '../../shared/components/input/input.component';
 import { AuthService } from '../../services/auth.service';
 import { bubbleAnimation } from '../../animations/bubble.animation';
-import { RegistrationUseCase } from '../../core/use-cases/registration.use-case';
+import { RegistrationUseCase } from '../../core/use-cases/user/registration.use-case';
 
 @Component({
   selector: 'cabinet-registration',
@@ -15,10 +15,7 @@ import { RegistrationUseCase } from '../../core/use-cases/registration.use-case'
   animations: [bubbleAnimation],
 })
 export class RegistrationComponent {
-  constructor(
-    private authService: AuthService,
-    private registrationUseCase: RegistrationUseCase
-  ) {}
+  constructor(private authService: AuthService, private registrationUseCase: RegistrationUseCase) {}
 
   registrationForm: FormGroup = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(15)]),

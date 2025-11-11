@@ -1,5 +1,5 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
-import { UserStore } from '../store/user/user.store';
+import { UserStore } from '../store/user.store';
 import { IResponseUserDataWs, IUsersWs } from '../models/interfaces';
 import { environment } from '../../environments/environment';
 @Injectable({

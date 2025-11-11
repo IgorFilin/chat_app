@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { IRegUserPayload } from '../../shared/models';
+import { IRegUserPayload } from '../../../shared/models';
 import { of, switchMap } from 'rxjs';
-import { AuthRepository } from '../../infrastructure/repositories/auth.repository';
+import { AuthRepository } from '../../../infrastructure/repositories/auth.repository';
 
 @Injectable({
   providedIn: 'root',

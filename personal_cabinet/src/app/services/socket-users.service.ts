@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { UserStore } from '../store/user/user.store';
+import { UserStore } from '../store/user.store';
 
 @Injectable({
   providedIn: 'root',
