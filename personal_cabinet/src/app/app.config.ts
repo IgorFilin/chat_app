@@ -18,11 +18,13 @@ import { apiPrefixInterceptor } from './core/interceptors/api-prefix.interceptor
 import { retryRequestInterceptor } from './core/interceptors/retry-request.interceptor';
 import { mountAccessTokenInterceptor } from './core/interceptors/mount-access-token.interceptor';
 import { refreshTokenInterceptor } from './core/interceptors/refresh-token.interceptor';
+import { TokenService } from './services/token.service';
+import { ILoginDataSuccessAuth } from './shared/models';
 
 registerLocaleData(localeRu);
 
-function initializeAppFactory(authService: AuthService): () => Observable<any> {
-  return () => authService.refresh();
+function initializeAppFactory(tokenService: TokenService): () => Observable<ILoginDataSuccessAuth> {
+  return () => tokenService.refresh();
 }
 
 export const appConfig: ApplicationConfig = {
@@ -43,7 +45,7 @@ export const appConfig: ApplicationConfig = {
       },
     }),
     provideAppInitializer(() => {
-      const initializerFn = initializeAppFactory(inject(AuthService));
+      const initializerFn = initializeAppFactory(inject(TokenService));
       return initializerFn();
     }),
     {

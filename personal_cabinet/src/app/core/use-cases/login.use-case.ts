@@ -1,18 +1,22 @@
 import { Injectable } from '@angular/core';
-import { of, switchMap, tap } from 'rxjs';
+import { tap } from 'rxjs';
 import { ILoginUserPayload, ILoginUserPayloadByDevice } from '../../shared/models';
 import { AuthService } from '../../services/auth.service';
 import { DeviceService } from '../../services/device.service';
 import { AuthRepository } from '../../infrastructure/repositories/auth.repository';
+import { TokenService } from '../../services/token.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LoginUseCase {
   constructor(
+    private readonly router: Router,
     private readonly authRepository: AuthRepository,
     private readonly authService: AuthService,
-    private readonly deviceService: DeviceService
+    private readonly deviceService: DeviceService,
+    private readonly tokenService: TokenService
   ) {}
 
   execute(userPayload: ILoginUserPayload) {
@@ -22,14 +26,14 @@ export class LoginUseCase {
       ...userPayload,
       deviceId,
     };
+
     return this.authRepository.login(userPayloadByDevice).pipe(
       tap((response) => {
         const { data, success } = response;
         if (data) {
-          this.authService.setAuthAndNavigateMainPage({
-            accessToken: data.accessToken,
-            isAuth: success,
-          });
+          this.tokenService.accessTokenUpdate = data.accessToken;
+          this.authService.setAuthData(true);
+          this.router.navigateByUrl('/');
         }
       })
     );

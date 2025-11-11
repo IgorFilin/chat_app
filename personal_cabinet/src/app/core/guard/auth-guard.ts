@@ -1,25 +1,18 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { CookieService } from '../../services/cookie.service';
-import { AppFacadeService } from '../../services/app-facade.service';
+import { map } from 'rxjs';
 
 export const authGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
-  const appFacadeService = inject(AppFacadeService);
-  return authService.isAuth$.asObservable();
-  // const authToken = cookieService.getCookieByName('authToken');
-  // if (authToken) return true;
-  // else {
-  //   return authService.authRequest().pipe(
-  //     map((isAuth) => {
-  //       if (!isAuth) {
-  //         appFacadeService.resetAppSettings();
-  //         router.navigateByUrl('/login');
-  //       }
-  //       return isAuth;
-  //     })
-  //   );
-  // }
+
+  return authService.isAuth$.asObservable().pipe(
+    map((isAuth) => {
+      if (!isAuth) {
+        return router.createUrlTree(['/login']);
+      }
+      return isAuth;
+    })
+  );
 };

@@ -30,7 +30,7 @@ export class DeviceService {
     if (UUID) return UUID;
 
     const newUUID = this.generateUUIDDevice();
-
+    console.log('newUUID', newUUID);
     this.setLocalStorageDeviceId(newUUID);
     return UUID;
   }

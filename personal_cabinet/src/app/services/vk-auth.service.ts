@@ -30,7 +30,7 @@ export class VkAuthService {
   private getAuthVkRequest(payload: any) {
     return this.requestService.post<any, any>('user/vk_auth', payload).pipe(
       map((data: any) => {
-        this.authService.setAuthAndNavigateMainPage(data);
+        // this.authService.setAuthAndNavigateMainPage(data);
       }),
       catchError((error) => {
         const errorMessage = error.error.message;

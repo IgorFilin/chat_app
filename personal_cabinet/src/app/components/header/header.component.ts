@@ -11,6 +11,7 @@ import { filter } from 'rxjs';
 import { KnowledgeService } from '../../services/knowledge.service';
 import { IArticle } from '../../models/interfaces';
 import { UserStore } from '../../store/user/user.store';
+import { LogoutUseCase } from '../../core/use-cases/logout.use-case';
 
 @Component({
   selector: 'cabinet-header',
@@ -38,7 +39,8 @@ export class HeaderComponent {
     private isOpenCloseService: IsOpenCloseService,
     private themeService: ThemeService,
     private router: Router,
-    private knowledgeService: KnowledgeService
+    private knowledgeService: KnowledgeService,
+    private logoutUseCase: LogoutUseCase
   ) {
     this.checked = this.themeService.getCurrentTheme === 'dark';
     this.authService.isAuth$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((isAuth) => (this.isAuth = isAuth));
@@ -76,7 +78,7 @@ export class HeaderComponent {
 
   onClickLeaveHandler() {
     this.isOpenCloseService.reset();
-    this.authService.exit();
+    this.logoutUseCase.execute().subscribe();
   }
 
   onCheckHandler(event: any) {
