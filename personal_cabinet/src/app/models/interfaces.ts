@@ -56,7 +56,7 @@ export interface IArticle {
   date: string;
   description: string;
   id: string;
-  tags: Tag[];
+  tags: ITag[];
   title: string;
   views: View[];
 }
@@ -75,4 +75,8 @@ export interface IResponseMessage {
 export interface IUsersWs {
   Name: string;
   Id: string;
+}
+
+export interface ITagsResponse {
+  tags: ITag[];
 }

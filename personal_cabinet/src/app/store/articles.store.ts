@@ -1,4 +1,4 @@
-import { signalStore, withComputed, withProps } from '@ngrx/signals';
+import { signalStore, withComputed, withMethods, withProps } from '@ngrx/signals';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { computed, inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
@@ -20,5 +20,8 @@ export const ArticleStore = signalStore(
   withComputed((store) => ({
     articles: computed<IArticleResponse[]>(() => store._recource.value()?.data || []),
     isLoading: computed(() => store._recource.isLoading()),
+  })),
+  withMethods((store) => ({
+    refresh:() => store._recource.reload()
   }))
 );

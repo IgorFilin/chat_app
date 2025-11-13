@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { IArticleResponse } from '../../models/interfaces';
+import { IArticleResponse, ITagsResponse } from '../../models/interfaces';
 import { IApiResponse } from '../../shared/models';
 import { Observable } from 'rxjs';
 
@@ -18,5 +18,11 @@ export class KnowledgeRepository {
     let httpParams = new HttpParams();
     httpParams = httpParams.append('id', id);
     return this.httpClient.get<IApiResponse<IArticleResponse>>('gateway/article', { params: httpParams });
+  }
+
+  getTags(filter: string): Observable<IApiResponse<ITagsResponse>> {
+    let httpParams = new HttpParams();
+    httpParams = httpParams.append('filter', filter);
+    return this.httpClient.get<IApiResponse<ITagsResponse>>('gateway/tags', { params: httpParams });
   }
 }

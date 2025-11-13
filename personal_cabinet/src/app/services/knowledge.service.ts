@@ -11,17 +11,7 @@ import { KnowledgeRepository } from '../infrastructure/repositories/knowledge.re
   providedIn: 'root',
 })
 export class KnowledgeService {
-  dataArticles: WritableSignal<IArticle[]> = signal([]);
-
   constructor(private requestService: RequestService, private toastService: ToasterService, private knowledgeRepository: KnowledgeRepository) {}
-
-  get articles() {
-    return this.dataArticles();
-  }
-
-  set articles(articles: Array<IArticle>) {
-    this.dataArticles.set(articles);
-  }
 
   createArticle(payload: any): Observable<any> {
     return this.requestService.post<any, any>('learning/create-article', { ...payload }).pipe(
@@ -57,10 +47,6 @@ export class KnowledgeService {
     //   })
     // );
     return of([]);
-  }
-
-  getArticle(id: string): Observable<any> {
-    return this.requestService.get<any, IArticleResponse>('learning/article', { id });
   }
 
   editArticle(body: IEditArticleBody): Observable<any> {

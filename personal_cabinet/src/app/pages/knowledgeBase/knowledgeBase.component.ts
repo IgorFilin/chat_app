@@ -16,7 +16,7 @@ import { ArticleStore } from '../../store/articles.store';
   imports: [CommonModule, MarkdownModule, RouterModule, IconComponent, TextSlicePipe],
   styleUrls: ['./knowledgeBase.component.scss'],
 })
-export class KnowledgeBaseComponent {
+export class KnowledgeBaseComponent implements OnInit {
   dataPaginationArticles: any = [];
   techologies: TechnologyStackType[] = TECHNOLOGY_STACK;
   currentPage: WritableSignal<number> = signal(1);
@@ -27,10 +27,12 @@ export class KnowledgeBaseComponent {
 
   readonly articleStore = inject(ArticleStore);
 
-  constructor(private router: Router) {}
-
   readonly dataArticles = computed(() => this.articleStore.articles());
   readonly isLoading = computed(() => this.articleStore.isLoading());
+
+  ngOnInit(): void {
+    this.articleStore.refresh();
+  }
 
   private readonly setDataArticles = effect(() => {
     if (this.isLoading()) return;

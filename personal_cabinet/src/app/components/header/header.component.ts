@@ -70,10 +70,10 @@ export class HeaderComponent {
 
   onSearchArticles: any = (searchValue: string) => {
     if (!searchValue) this.searchedArticles = [];
-    else
-      this.searchedArticles = this.knowledgeService.articles.filter(
-        (article) => article.title.toLowerCase().includes(searchValue.toLowerCase()) || article.tags.some((tag) => tag.title.toLowerCase().includes(searchValue.toLowerCase()))
-      );
+    // else
+    // this.searchedArticles = this.knowledgeService.articles.filter(
+    //   (article) => article.title.toLowerCase().includes(searchValue.toLowerCase()) || article.tags.some((tag) => tag.title.toLowerCase().includes(searchValue.toLowerCase()))
+    // );
   };
 
   onClickLeaveHandler() {

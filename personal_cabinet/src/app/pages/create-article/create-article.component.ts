@@ -10,8 +10,9 @@ import { SearchInputComponent } from '../../shared/components/search-input/searc
 import { IconComponent } from '../../shared/components/icon/icon.component';
 import { ToasterService } from '../../services/toaster.service';
 import { bubbleAnimation } from '../../animations/bubble.animation';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { KnowledgeService } from '../../services/knowledge.service';
+import { KnowledgeRepository } from '../../infrastructure/repositories/knowledge.repository';
 
 @Component({
   selector: 'app-create-article',
@@ -30,11 +31,7 @@ export class CreateArticleComponent implements CanDeactivate<void> {
     tags: new FormControl([], [Validators.required]),
   });
 
-  constructor(
-    private changeDetection: ChangeDetectorRef,
-    private knowledgeService: KnowledgeService,
-    private toasterService: ToasterService
-  ) {}
+  constructor(private changeDetection: ChangeDetectorRef, private knowledgeService: KnowledgeService, private KnowledgeRepository: KnowledgeRepository, private toasterService: ToasterService) {}
 
   canDeactivate(): CanDeactivateType {
     if (this.articleForm.dirty) {
@@ -51,7 +48,7 @@ export class CreateArticleComponent implements CanDeactivate<void> {
   }
 
   searchTag: (value: string) => Observable<any> | undefined = (searchValue: string) => {
-    return this.knowledgeService.getTag(searchValue);
+    return this.KnowledgeRepository.getTags(searchValue).pipe(map((resnonse) => resnonse.data?.tags));
   };
 
   onSetTag(tag: string) {
